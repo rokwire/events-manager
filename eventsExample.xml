@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<responseWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33331273</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17724</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Yoga at Beckman</title>
+        <titleURL></titleURL>
+        <eventType>Health/Fitness</eventType>
+        <sponsor>Beckman Institute Administration</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/8/2019</startDate>
+        <endDate>5/8/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>12:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, 5th Floor Tower Room 5269</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Erica Malloch</contactName>
+        <contactEmail>emalloch@illinois.edu</contactEmail>
+        <contactPhone>217-244-0052</contactPhone>
+        <cost></cost>
+        <createdBy>khunt3@illinois.edu</createdBy>
+        <createdDate>1/14/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>1/14/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33340167</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Benefit Choice Outreach Session</title>
+        <titleURL></titleURL>
+        <eventType>Conference/Workshop</eventType>
+        <sponsor>University Payroll and Benefits</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/8/2019</startDate>
+        <endDate>5/8/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>2:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Auditorium, Room 1025</location>
+        <description></description>
+        <speaker>Pamela Kennie and Matthew Gladney</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Harris, Cheryl Ann</contactName>
+        <contactEmail>caharris@uillinois.edu</contactEmail>
+        <contactPhone>+1 217 265 6363</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/1/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/1/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33333084</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17764</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>BRL Seminar and Journal Club</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Bioacoustics Research Laboratory</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/8/2019</startDate>
+        <endDate>5/8/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>4:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, 4th Floor Tower Room, 4269</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Sheena Marshall</contactName>
+        <contactEmail>shemar@illinois.edu</contactEmail>
+        <contactPhone>217-300-8376</contactPhone>
+        <cost></cost>
+        <createdBy>juliemc@illinois.edu</createdBy>
+        <createdDate>1/18/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>1/18/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341089</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Thursdays at 12:20 Concert</title>
+        <titleURL>https://beckman.illinois.edu/events/calendars/thursday-concerts</titleURL>
+        <eventType>Performance</eventType>
+        <sponsor>Beckman Institute Administration</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/9/2019</startDate>
+        <endDate>5/9/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>12:20 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Central Atrium</location>
+        <description>&lt;p&gt;No&amp;euml;l Wan presents a solo recital inspired by works of Edgar Allen Poe and Paul Verlaine, featuring Uno Vesje's award-winning composition, "Life is flashing before my eyes" and "I realized that it all started with a blackbird," for harp and avian-inspired soundtrack. Program includes J.B. Loeillet's Toccata, G. Faur&amp;eacute;'s Une ch&amp;acirc;telaine en sa tour, and H. Reni&amp;eacute;'s Ballade Fantastique.&lt;/p&gt;</description>
+        <speaker>Noël Wan</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Dahl, Doris K</contactName>
+        <contactEmail>dkdahl@illinois.edu</contactEmail>
+        <contactPhone>+1 217 333 2895</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/23/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>5/2/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33340420</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>iOptics Seminar</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Popescu, Gabriel</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/10/2019</startDate>
+        <endDate>5/10/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>11:30 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 2269 - 2nd Floor Tower Room</location>
+        <description>&lt;p&gt;Razvan Stoian graduated in 1995 from the Bucharest University with a degree in Physics and received his doctoral degree in Natural Sciences in 2000 from the Free University, Berlin. He was with the Ultrafast Laser Material Processing Group at the Max-Born Institute, Berlin between 1997 and 2004. In 2004 he joined the Centre Nationale de la Recherche Scientifique (CNRS) France where he is currently research director. He is leading the Laser-Matter Interaction group at Laboratoire Hubert Curien, St. Etienne, France, a joint research unit of the CNRS and Jean Monnet University. His research interests include laser matter interactions and material processing. His work focuses on ultrafast laser micro-nano fabrication, process monitoring, and the development of smart, adaptive techniques based on pulse spatio-temporal engineering for processing functional surfaces and photonic systems.&lt;/p&gt;
+&lt;p&gt;Ultrafast lasers contribute essentially to the development of micro/nanotechnologies, being able to structure materials with utmost precision. This originates specifically in their strong ability to confine light energy in nonlinear interactions and to suppress thermal effects, reducing thus collateral damage. I will discuss in my talk ultrafast laser irradiation concepts capable of achieving structuring features with sub-wavelength characteristic sizes. After briefly introducing achievements in surface texturing based on self-induced periodic patterns. I will focus on laser fabrication of embedded optical systems.&lt;/p&gt;
+&lt;p&gt;Present advances in photonics include the development of optical devices based on laser-induced refractive index engineering. Relying on nonlinear energy deposition, ultrafast laser photoinscription can locally modify the material molecular structure and thus the material refractive index. This operation can be performed in arbitrary geometries in bulk optical materials, laying down the concept of 3D design for efficient optical functions. Here nanoscale precision can deliver high levels of performance. Therefore bypassing the diffraction limit is key for a new range of applications in optics requiring optical access at the nanoscale. I will discuss the capability of Gauss and Bessel-Gauss pulses with engineered dispersion to localize light on subwavelength scales. I&amp;rsquo;ll show how sculpting beams in space and time can bring advantages for controlling the interaction between light and matter and for achieving extreme confinement of energy. Then I will discuss physical mechanisms of photoinscription by following the time dynamics of excitation over the entire evolution cycle, serving as guidelines for control. The talk will explore the influence of pulse temporal and spatial design in achieving index structures on 100 nm scales, either in direct focusing or in self-organization schemes in fused silica. Non-diffractive beam excitation takes advantage of this localization and achieve unprecedented high-aspect-ratio structuring. Subsequently I will present photonic systems where hybrid micro/nanoscale features can develop advanced optical functionalities. The results show a high capability to transport, manipulate and access electrical fields in integrated optical systems, either for Bragg sensing or for reconstruction spectral information. Finally I will indicate a range of applications, from telecom to astrophotonics.&lt;/p&gt;</description>
+        <speaker>Razvan Stoian, Hubert Curien Laboratory in France</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>McKinley, Kelly Ann</contactName>
+        <contactEmail>kmckinle@illinois.edu</contactEmail>
+        <contactPhone>+1 217 244 9210</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/5/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/5/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33338296</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17930</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Molecular Science Discussion Group</title>
+        <titleURL></titleURL>
+        <eventType>Meeting</eventType>
+        <sponsor>Charles Schroeder and Yang Zhang</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/10/2019</startDate>
+        <endDate>5/10/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>1:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 3269 - 3rd Floor Tower Room</location>
+        <description>&lt;p&gt;Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Thurlwell, Laura B</contactName>
+        <contactEmail>thurlwel@illinois.edu</contactEmail>
+        <contactPhone>+1 217 300 1166</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>3/7/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>3/7/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341093</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Amplify the Signal Sci Comm Workshop</title>
+        <titleURL>https://amplifythesignal.web.illinois.edu/</titleURL>
+        <eventType>Conference/Workshop</eventType>
+        <sponsor>Beckman Institute Administration</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/14/2019</startDate>
+        <endDate>5/15/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>7:00 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 1003, 1005, 1025 (Auditorium), and central atrium</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel>Registration</registrationLabel>
+        <registrationURL>https://amplifythesignal.web.illinois.edu/</registrationURL>
+        <contactName>Yates, Diana</contactName>
+        <contactEmail>+1 217 333 5802</contactEmail>
+        <contactPhone>+1 217 333 5802</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/23/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/23/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33333085</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17764</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>BRL Seminar and Journal Club</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Bioacoustics Research Laboratory</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/15/2019</startDate>
+        <endDate>5/15/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>4:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, 4th Floor Tower Room, 4269</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Sheena Marshall</contactName>
+        <contactEmail>shemar@illinois.edu</contactEmail>
+        <contactPhone>217-300-8376</contactPhone>
+        <cost></cost>
+        <createdBy>juliemc@illinois.edu</createdBy>
+        <createdDate>1/18/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>1/18/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33338297</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17930</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Molecular Science Discussion Group</title>
+        <titleURL></titleURL>
+        <eventType>Meeting</eventType>
+        <sponsor>Charles Schroeder and Yang Zhang</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/17/2019</startDate>
+        <endDate>5/17/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>1:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 3269 - 3rd Floor Tower Room</location>
+        <description>&lt;p&gt;Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Thurlwell, Laura B</contactName>
+        <contactEmail>thurlwel@illinois.edu</contactEmail>
+        <contactPhone>+1 217 300 1166</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>3/7/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>3/7/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33333086</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17764</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>BRL Seminar and Journal Club</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Bioacoustics Research Laboratory</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/22/2019</startDate>
+        <endDate>5/22/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>4:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, 4th Floor Tower Room, 4269</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Sheena Marshall</contactName>
+        <contactEmail>shemar@illinois.edu</contactEmail>
+        <contactPhone>217-300-8376</contactPhone>
+        <cost></cost>
+        <createdBy>juliemc@illinois.edu</createdBy>
+        <createdDate>1/18/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>1/18/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33327822</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>NSF I/UCRC Center for Advanced Research in Drying Spring 2019 Meeting</title>
+        <titleURL>https://www.dryingresearch.org/semi-annual-industrial-advisory-board-iab-meeting-registration/</titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Center for Advanced Research in Drying</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/23/2019</startDate>
+        <endDate>5/24/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>8:30 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Varies</location>
+        <description>&lt;p&gt;Industrial Advisory Board Meeting for the National Science Foundation Industry/University Cooperative Research Centers Program for Advanced Research in Drying (CARD). Thursday, May 23, will be a symposium in Beckman Room 1005 during the day and a reception and dinner in the Beckman Institute center Atrium, with a poster display in the east Atrium. Friday's events will be hosted in Beckman Room 4269. The agenda will be announced. Registration required at http://bit.ly/register-CARD&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Mark Lippi</contactName>
+        <contactEmail>mlippi@wpi.edu</contactEmail>
+        <contactPhone></contactPhone>
+        <cost></cost>
+        <createdBy>dkdahl@illinois.edu</createdBy>
+        <createdDate>12/17/2018</createdDate>
+        <editedBy></editedBy>
+        <editedDate>12/17/2018</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33338298</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17930</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Molecular Science Discussion Group</title>
+        <titleURL></titleURL>
+        <eventType>Meeting</eventType>
+        <sponsor>Charles Schroeder and Yang Zhang</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/24/2019</startDate>
+        <endDate>5/24/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>1:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 3269 - 3rd Floor Tower Room</location>
+        <description>&lt;p&gt;Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Thurlwell, Laura B</contactName>
+        <contactEmail>thurlwel@illinois.edu</contactEmail>
+        <contactPhone>+1 217 300 1166</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>3/7/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>3/7/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33320915</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Bench to Bedside Series-Carle Internal Medicine</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Beckman Administration</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/29/2019</startDate>
+        <endDate>5/29/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>12:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, room 1005</location>
+        <description>&lt;p&gt;Residents Grover&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Kelli Hunt</contactName>
+        <contactEmail>khunt3@illinois.edu</contactEmail>
+        <contactPhone>217-841-3299</contactPhone>
+        <cost></cost>
+        <createdBy>khunt3@illinois.edu</createdBy>
+        <createdDate>9/26/2018</createdDate>
+        <editedBy></editedBy>
+        <editedDate>9/26/2018</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33340731</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Bench to Bedside Series</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Beckman Institute Administration</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/29/2019</startDate>
+        <endDate>5/29/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>12:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 1005</location>
+        <description></description>
+        <speaker>Dr. Skinner and Dr. Devanand</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Patty Jones</contactName>
+        <contactEmail>pmjones5@illinois.edu</contactEmail>
+        <contactPhone>+1 217 300 3580</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/12/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/12/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33333087</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17764</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>BRL Seminar and Journal Club</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Bioacoustics Research Laboratory</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/29/2019</startDate>
+        <endDate>5/29/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>4:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, 4th Floor Tower Room, 4269</location>
+        <description></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Sheena Marshall</contactName>
+        <contactEmail>shemar@illinois.edu</contactEmail>
+        <contactPhone>217-300-8376</contactPhone>
+        <cost></cost>
+        <createdBy>juliemc@illinois.edu</createdBy>
+        <createdDate>1/18/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>1/18/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33339539</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Theoretical and Computational Biophysics Group Seminar</title>
+        <titleURL></titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>Theoretical and Computational Biophysics Group</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/31/2019</startDate>
+        <endDate>5/31/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>11:00 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 3269 - 3rd Floor Tower Room</location>
+        <description>&lt;p&gt;&amp;#8220;Machine Learning in Molecular Systems&amp;#8221;&lt;/p&gt;</description>
+        <speaker>Dr. Argyris Politis, King's College London - Dept. of Chemistry</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Donna Hutchcraft Fackler</contactName>
+        <contactEmail>dhfackler@ks.uiuc.edu</contactEmail>
+        <contactPhone>217-300-8022</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>3/25/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/1/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341442</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>CRISPR/CAS Presentation</title>
+        <titleURL></titleURL>
+        <eventType>Lecture</eventType>
+        <sponsor>Cancer Center at Illinois</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/31/2019</startDate>
+        <endDate>5/31/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>11:00 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 4269 - 4th Floor Tower Room</location>
+        <description></description>
+        <speaker>Speaker affiliation: Synthego</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Fain, Andrea Mae</contactName>
+        <contactEmail>amfain@illinois.edu</contactEmail>
+        <contactPhone>+1 217 333 2022</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>4/30/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/30/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341519</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Microscopy Suite Workshop with Rigaku</title>
+        <titleURL>https://www.rigaku.com/mailers/2019/xrm/</titleURL>
+        <eventType>Conference/Workshop</eventType>
+        <sponsor>Rigaku and the Beckman Institute</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>6/6/2019</startDate>
+        <endDate>6/6/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>8:00 am</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman Institute, Room 5602</location>
+        <description>&lt;p&gt;The University of Illinois at Urbana-Champaign, in conjunction with Rigaku, would like to extend an invitation for you to join us at a seminar and workshop on X-ray microscopy. This University of Illinois-Rigaku event will take place on Thursday, June 6, 2019 in The Beckman Institute.&lt;/p&gt;
+&lt;p&gt;X-ray microscopy is a non-destructive 3D imaging technique and has become one of the most useful tools in materials science and medicine in recent years. In this seminar, you will learn the latest advances in X-ray microscopy from the top level innovators in the field. You can also participate in the workshop to learn the basics of X-ray microscopy and have hands-on lab experience.&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Jonathan Dusting, Director of Innovation, 4Dx, &amp;ldquo;Next Generation Functional Lung Imaging&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Mariana Kersh, Assistant Professor of Mechanical Science and Engineering, Illinois, "Microstructural analyses of bone and their relation to musculoskeletal biomechanics"&lt;/li&gt;
+&lt;li&gt;Joe Neilly, Principal Research Scientist, Abbvie, "X-ray microscopy of crystals in amorphous solid dispersions"&lt;/li&gt;
+&lt;li&gt;Aya Takase, Senior&amp;nbsp;Scientist, Rigaku America, &lt;em&gt;title TBA&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+        <speaker>Leilei Yin and Aya Takase</speaker>
+        <registrationLabel>Registration</registrationLabel>
+        <registrationURL>https://www.rigaku.com/mailers/2019/xrm/register.php</registrationURL>
+        <contactName>Michelle Goodwin</contactName>
+        <contactEmail>Michelle.Goodwin@rigaku.com</contactEmail>
+        <contactPhone>281-362-2300 ex 122</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>5/2/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>5/3/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33336139</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Bhargava's PhD Student Defense</title>
+        <titleURL></titleURL>
+        <eventType>Meeting</eventType>
+        <sponsor>Bhargava, Rohit</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>6/7/2019</startDate>
+        <endDate>6/7/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>12:45 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Beckman 4269</location>
+        <description>&lt;p&gt;PhD defense of UIUC graduate student Shachi Mittal.&lt;/p&gt;</description>
+        <speaker>Shachi Mittal</speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>James McGraw</contactName>
+        <contactEmail>jmcgraw@illinois.edu</contactEmail>
+        <contactPhone>217-244-0822</contactPhone>
+        <cost></cost>
+        <createdBy>lereid@illinois.edu</createdBy>
+        <createdDate>2/11/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>2/11/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341348</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Beckman Institute 2021 Open House</title>
+        <titleURL></titleURL>
+        <eventType>Reception/Open House</eventType>
+        <sponsor>Beckman Institute for Advanced Science and Technology</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>3/26/2021</startDate>
+        <endDate>3/26/2021</endDate>
+        <timeType>START_AND_END_TIME</timeType>
+        <startTime>9:00 am</startTime>
+        <endTime>4:00 pm</endTime>
+        <endTimeLabel></endTimeLabel>
+        <location></location>
+        <description>&lt;p&gt;Beckman Institute hosts its biennial open house March 26-27, 2021. With an array of exhibitors from Beckman lab and research groups (usually more than 40 exhibits), visitors get an inside look at the interdisciplinary research being done at the institute.&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Doris Dahl</contactName>
+        <contactEmail>dkdahl@illinois.edu</contactEmail>
+        <contactPhone></contactPhone>
+        <cost></cost>
+        <createdBy>dkdahl@illinois.edu</createdBy>
+        <createdDate>4/30/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/30/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>true</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>117</calendarId>
+        <calendarName>Beckman Main Calendar</calendarName>
+        <eventId>33341350</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>117</originatingCalendarId>
+        <originatingCalendarName>Beckman Main Calendar</originatingCalendarName>
+        <title>Beckman Institute 2021 Open House</title>
+        <titleURL></titleURL>
+        <eventType>Reception/Open House</eventType>
+        <sponsor>Beckman Institute for Advanced Science and Technology</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>3/27/2021</startDate>
+        <endDate>3/27/2021</endDate>
+        <timeType>START_AND_END_TIME</timeType>
+        <startTime>9:00 am</startTime>
+        <endTime>3:00 pm</endTime>
+        <endTimeLabel></endTimeLabel>
+        <location></location>
+        <description>&lt;p&gt;Beckman Institute hosts its biennial open house March 26-27, 2021. With an array of exhibitors from Beckman lab and research groups, visitors get an inside look at the interdisciplinary research being done at the institute.&lt;/p&gt;</description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Doris Dahl</contactName>
+        <contactEmail>dkdahl@illinois.edu</contactEmail>
+        <contactPhone></contactPhone>
+        <cost></cost>
+        <createdBy>dkdahl@illinois.edu</createdBy>
+        <createdDate>4/30/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/30/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>true</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+</responseWS>
