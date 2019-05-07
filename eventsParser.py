@@ -69,6 +69,9 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
                 soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
                 eventDetail[elem.tag] = soup.get_text()
 
+            elif elem.tag == "topic":
+                eventDetail[elem.tag] = elem[1].text
+
             elif elem.text == None:
                 continue
             
@@ -159,9 +162,12 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
         if len(contacts) != 0:
             entry['contacts']= contacts
 
-        # tags store eventID now
+        # tags store eventID and topic now
         tags = {}
         tags['eventId'] = pe['eventId']
+        if 'topic' in pe:
+            tags['topic'] = pe['topic']
+
         if len(tags) != 0:
             entry['tags'] = tags
 
@@ -221,6 +227,6 @@ if __name__ == "__main__":
     
 
     # url = "https://urldefense.proofpoint.com/v2/url?u=https-3A__calendars.illinois.edu_eventXML11_25.xml&d=DwMFAg&c=OCIEmEwdEq_aNlsP4fF3gFqSN-E3mlr2t9JcDdfOZag&r=zSYD-leOsEp1PCmcy2SID6ksFPDJQDoexqAdxiBTDbg&m=7Tr33Vua2nrTVscJbfsKxTqIcoCpz_rfczepxDwATno&s=q9iUrc2PUVrWN38PyfZBep2hw8BINvurvZHk09Xg-2U&e="
-    url = "https://calendars.illinois.edu/eventXML11/117.xml"
+    url = "https://calendars.illinois.edu/eventXML11/33.xml"
     extractEventXMLandParse(url=url)
     # parseEventXML()
