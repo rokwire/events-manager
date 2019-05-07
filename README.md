@@ -4,8 +4,8 @@
 
 This parser converts XML content from target URLs to json format defined by [Rokwire YAML file](https://github.com/rokwire/rokwire-building-blocks-api/blob/develop/rokwire.yaml), the usage of the YAML file is explained [here](https://github.com/rokwire/rokwire-building-blocks-api)
 
-The parsing is divided into two sections:
-(elements in regular style are elements in parsed json content)
+The parsing is divided into two sections:<br />
+(elements in regular style are elements in parsed json content)<br />
 (elements in **bold style** are elements in raw XML content)
 - Required Fields:
     - eventType: extracted from **eventType**
@@ -55,5 +55,5 @@ The parsing is divided into two sections:
 
 ## Results and Raw XML content
 
-JSON file after parsing is [here](./eventsExample.json)
+JSON file after parsing is [here](./eventsExample.json)<br />
 Original XML content is [here](./eventsExample.xml)
