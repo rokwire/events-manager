@@ -160,8 +160,8 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
             entry['contacts']= contacts
 
         # tags store eventID now
-        tags = []
-        tags.append(pe['eventId']) if 'eventId' in pe else None
+        tags = {}
+        tags['eventId'] = pe['eventId']
         if len(tags) != 0:
             entry['tags'] = tags
 
@@ -218,8 +218,9 @@ def parseEventXML(xml='eventsExample.txt', jsonF='eventsExample.json'):
 
 
 if __name__ == "__main__":
+    
 
     # url = "https://urldefense.proofpoint.com/v2/url?u=https-3A__calendars.illinois.edu_eventXML11_25.xml&d=DwMFAg&c=OCIEmEwdEq_aNlsP4fF3gFqSN-E3mlr2t9JcDdfOZag&r=zSYD-leOsEp1PCmcy2SID6ksFPDJQDoexqAdxiBTDbg&m=7Tr33Vua2nrTVscJbfsKxTqIcoCpz_rfczepxDwATno&s=q9iUrc2PUVrWN38PyfZBep2hw8BINvurvZHk09Xg-2U&e="
-    url = "https://calendars.illinois.edu/eventXML11/33.xml"
+    url = "https://calendars.illinois.edu/eventXML11/117.xml"
     extractEventXMLandParse(url=url)
     # parseEventXML()

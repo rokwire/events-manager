@@ -1,738 +1,432 @@
 [
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-05-30T17:00:00",
-		"endDate": "2019-05-30T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-6",
-		"cost": "Free",
+		"eventType": "Health/Fitness",
+		"sponsor": "Beckman Institute Administration",
+		"title": "Yoga at Beckman",
+		"startDate": "2019-05-08T12:00:00",
+		"endDate": "2019-05-08T13:00:00",
+		"description": "\n",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Erica",
+				"lastName": "Malloch",
+				"email": "emalloch@illinois.edu",
+				"phone": "217-244-0052"
 			}
 		],
-		"tags": [
-			"33341441"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33331273"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-06-06T17:00:00",
-		"endDate": "2019-06-06T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-5",
-		"cost": "Free",
+		"eventType": "Conference/Workshop",
+		"sponsor": "University Payroll and Benefits",
+		"title": "Benefit Choice Outreach Session",
+		"startDate": "2019-05-08T14:00:00",
+		"endDate": "2019-05-08T15:00:00",
+		"description": "\n",
+		"speaker": "Pamela Kennie and Matthew Gladney",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Harris,",
+				"lastName": "Cheryl",
+				"email": "caharris@uillinois.edu",
+				"phone": "+1 217 265 6363"
 			}
 		],
-		"tags": [
-			"33341446"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33340167"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-06-13T17:00:00",
-		"endDate": "2019-06-13T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-4",
-		"cost": "Free",
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Bioacoustics Research Laboratory",
+		"title": "BRL Seminar and Journal Club",
+		"startDate": "2019-05-08T16:00:00",
+		"endDate": "2019-05-08T17:00:00",
+		"description": "\n",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Sheena",
+				"lastName": "Marshall",
+				"email": "shemar@illinois.edu",
+				"phone": "217-300-8376"
 			}
 		],
-		"tags": [
-			"33341449"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33333084"
 		}
 	},
 	{
 		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-06-20T17:00:00",
-		"endDate": "2019-06-20T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-3",
-		"cost": "Free",
+		"sponsor": "Beckman Institute Administration",
+		"title": "Thursdays at 12:20 Concert",
+		"startDate": "2019-05-09T12:20:00",
+		"endDate": "2019-05-09T13:20:00",
+		"description": "No&euml;l Wan presents a solo recital inspired by works of Edgar Allen Poe and Paul Verlaine, featuring Uno Vesje's award-winning composition, \"Life is flashing before my eyes\" and \"I realized that it all started with a blackbird,\" for harp and avian-inspired soundtrack. Program includes J.B. Loeillet's Toccata, G. Faur&eacute;'s Une ch&acirc;telaine en sa tour, and H. Reni&eacute;'s Ballade Fantastique.\n",
+		"titleURL": "https://beckman.illinois.edu/events/calendars/thursday-concerts",
+		"speaker": "No\u00ebl Wan",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Dahl,",
+				"lastName": "Doris",
+				"email": "dkdahl@illinois.edu",
+				"phone": "+1 217 333 2895"
 			}
 		],
-		"tags": [
-			"33341450"
-		],
+		"tags": {
+			"eventId": "33341089"
+		},
 		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+			"latitude": "29.863204",
+			"longitude": "-95.365168",
+			"description": "Beckman Street, Hawthorne Place, Houston, Harris County, Texas, 77076, USA"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-06-27T17:00:00",
-		"endDate": "2019-06-27T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-2",
-		"cost": "Free",
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Popescu, Gabriel",
+		"title": "iOptics Seminar",
+		"startDate": "2019-05-10T11:30:00",
+		"endDate": "2019-05-10T12:30:00",
+		"description": "Razvan Stoian graduated in 1995 from the Bucharest University with a degree in Physics and received his doctoral degree in Natural Sciences in 2000 from the Free University, Berlin. He was with the Ultrafast Laser Material Processing Group at the Max-Born Institute, Berlin between 1997 and 2004. In 2004 he joined the Centre Nationale de la Recherche Scientifique (CNRS) France where he is currently research director. He is leading the Laser-Matter Interaction group at Laboratoire Hubert Curien, St. Etienne, France, a joint research unit of the CNRS and Jean Monnet University. His research interests include laser matter interactions and material processing. His work focuses on ultrafast laser micro-nano fabrication, process monitoring, and the development of smart, adaptive techniques based on pulse spatio-temporal engineering for processing functional surfaces and photonic systems.\nUltrafast lasers contribute essentially to the development of micro/nanotechnologies, being able to structure materials with utmost precision. This originates specifically in their strong ability to confine light energy in nonlinear interactions and to suppress thermal effects, reducing thus collateral damage. I will discuss in my talk ultrafast laser irradiation concepts capable of achieving structuring features with sub-wavelength characteristic sizes. After briefly introducing achievements in surface texturing based on self-induced periodic patterns. I will focus on laser fabrication of embedded optical systems.\nPresent advances in photonics include the development of optical devices based on laser-induced refractive index engineering. Relying on nonlinear energy deposition, ultrafast laser photoinscription can locally modify the material molecular structure and thus the material refractive index. This operation can be performed in arbitrary geometries in bulk optical materials, laying down the concept of 3D design for efficient optical functions. Here nanoscale precision can deliver high levels of performance. Therefore bypassing the diffraction limit is key for a new range of applications in optics requiring optical access at the nanoscale. I will discuss the capability of Gauss and Bessel-Gauss pulses with engineered dispersion to localize light on subwavelength scales. I&rsquo;ll show how sculpting beams in space and time can bring advantages for controlling the interaction between light and matter and for achieving extreme confinement of energy. Then I will discuss physical mechanisms of photoinscription by following the time dynamics of excitation over the entire evolution cycle, serving as guidelines for control. The talk will explore the influence of pulse temporal and spatial design in achieving index structures on 100 nm scales, either in direct focusing or in self-organization schemes in fused silica. Non-diffractive beam excitation takes advantage of this localization and achieve unprecedented high-aspect-ratio structuring. Subsequently I will present photonic systems where hybrid micro/nanoscale features can develop advanced optical functionalities. The results show a high capability to transport, manipulate and access electrical fields in integrated optical systems, either for Bragg sensing or for reconstruction spectral information. Finally I will indicate a range of applications, from telecom to astrophotonics.\n",
+		"speaker": "Razvan Stoian, Hubert Curien Laboratory in France",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "McKinley,",
+				"lastName": "Kelly",
+				"email": "kmckinle@illinois.edu",
+				"phone": "+1 217 244 9210"
 			}
 		],
-		"tags": [
-			"33341451"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33340420"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-07-11T17:00:00",
-		"endDate": "2019-07-11T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-1",
-		"cost": "Free",
+		"eventType": "Meeting",
+		"sponsor": "Charles Schroeder and Yang Zhang",
+		"title": "Molecular Science Discussion Group",
+		"startDate": "2019-05-10T13:00:00",
+		"endDate": "2019-05-10T14:00:00",
+		"description": "Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups\n",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Thurlwell,",
+				"lastName": "Laura",
+				"email": "thurlwel@illinois.edu",
+				"phone": "+1 217 300 1166"
 			}
 		],
-		"tags": [
-			"33341452"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33338296"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-07-18T17:00:00",
-		"endDate": "2019-07-18T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music-0",
-		"cost": "Free",
+		"eventType": "Conference/Workshop",
+		"sponsor": "Beckman Institute Administration",
+		"title": "Amplify the Signal Sci Comm Workshop",
+		"startDate": "2019-05-14T07:00:00",
+		"endDate": "2019-05-15T07:00:00",
+		"description": "\n",
+		"titleURL": "https://amplifythesignal.web.illinois.edu/",
+		"registrationURL": "https://amplifythesignal.web.illinois.edu/",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calf",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Yates,",
+				"lastName": "Diana",
+				"email": "+1 217 333 5802",
+				"phone": "+1 217 333 5802"
 			}
 		],
-		"tags": [
-			"33341454"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33341093"
 		}
 	},
 	{
-		"eventType": "Performance",
-		"sponsor": "Marquee",
-		"title": "Krannert Uncorked with Music",
-		"startDate": "2019-07-25T17:00:00",
-		"endDate": "2019-07-25T18:00:00",
-		"description": "At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.\nStage 5 now offers previously featured wines at half price during Krannert Uncorked.\n",
-		"titleURL": "https://krannertcenter.com/events/krannert-uncorked-music",
-		"cost": "Free",
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Bioacoustics Research Laboratory",
+		"title": "BRL Seminar and Journal Club",
+		"startDate": "2019-05-15T16:00:00",
+		"endDate": "2019-05-15T17:00:00",
+		"description": "\n",
 		"contacts": [
 			{
-				"firstName": "Bridget",
-				"lastName": "Lee-Calfas",
-				"email": "bklee@illinois.edu",
-				"phone": "217-333-6282"
+				"firstName": "Sheena",
+				"lastName": "Marshall",
+				"email": "shemar@illinois.edu",
+				"phone": "217-300-8376"
 			}
 		],
-		"tags": [
-			"33341455"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33333085"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Opening Night Party with Toko Telo, Bombino, and Samantha Fish with Luther Dickinson",
-		"startDate": "2019-09-05T17:30:00",
-		"endDate": "2019-09-05T18:30:00",
-		"description": "Krannert Center&rsquo;s 50th season opens at high speed with the return of ELLNORA | The Guitar Festival and the Opening Night Party! Get ready to gather and groove as the entire community comes together for a night of exceptional music-making, fabulous food and drink, and all-ages amenities.\nSlide in by 6pm when music begins with Toko Telo. This Madagascar-based supergroup features two of the country&rsquo;s most renowned guitarists&mdash;D&rsquo;Gary and Jo&euml;l Rabesolo&mdash;who dazzle audiences on sparkling, island-inspired folk compositions in the&nbsp;tsapiky,&nbsp;jihe, and&nbsp;beko&nbsp;styles that glitter with the soulful vocals of Monika Niava. (Catch Toko Telo again at 7:30pm.)\nAt 6:30pm, enjoy a sizzling set of&nbsp;tichumaren&nbsp;(North African desert blues) from Niger-born artist Bombino. He says of his Sahara homeland that &ldquo;sound and music there carries a power with it, so you get the feeling when you&rsquo;re holding an instrument in your hand and playing it, you&rsquo;re completing a picture that was otherwise incomplete&rdquo; (The New York Times).\nA pair of ELLNORA alums takes to the stage at 8pm. Long-time Krannert Center collaborator Luther Dickinson frequents the &ldquo;best of&rdquo; lists in the guitar world and garners devotion for his powerful slide style, exceptional songwriting, and deep connection to the music of Memphis. Kansas City-born guitarist/singer/songwriter Samantha Fish continues her meteoric rise as a blues artist who really knows how to rock. Together with Fish&lsquo;s band, you can expect them to deliver an over-the-top Opening Night Party finale to remember.\n\nFood sales begin and doors open at 5:30pm.\nToko Telo, 6pm and 7:30pm&mdash;Amphitheatre (rain location Studio Theatre)\nBombino, 6:30pm, Lobby&mdash;Stage 6\nSamantha Fish with Luther Dickinson, 8pm, Lobby&mdash;Stage 6\n\nFollowing the Opening Night Party, head to the Studio Theatre at 9:30pm for&nbsp;Spontaneous Combustion, a late-night, ticketed set featuring a powerhouse lineup of six-string practitioners.\n",
-		"titleURL": "https://krannertcenter.com/events/opening-night-party-toko-telo-bombino-and-samantha-fish-luther-dickinson",
-		"cost": "FREE",
-		"tags": [
-			"33341533"
+		"eventType": "Meeting",
+		"sponsor": "Charles Schroeder and Yang Zhang",
+		"title": "Molecular Science Discussion Group",
+		"startDate": "2019-05-17T13:00:00",
+		"endDate": "2019-05-17T14:00:00",
+		"description": "Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups\n",
+		"contacts": [
+			{
+				"firstName": "Thurlwell,",
+				"lastName": "Laura",
+				"email": "thurlwel@illinois.edu",
+				"phone": "+1 217 300 1166"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33338297"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Spontaneous Combustion",
-		"startDate": "2019-09-05T21:30:00",
-		"endDate": "2019-09-05T22:30:00",
-		"description": "\n\n\n\nLuther Dickinson, Steve Dawson, Rob Ickes, Trey Hensley, and Molly Tuttle\n\n\n\n\n\n\n\n\nOnce you&rsquo;ve experienced some&nbsp;Opening Night Party&nbsp;goodness, head to the Studio Theatre for this late-night set featuring a powerhouse lineup of six-string practitioners in a totally improvised concert. Luther Dickinson, Steve Dawson, Rob Ickes, Trey Hensley, and Molly Tuttle will light up the night with this collaborative and excitingly extemporaneous experience.\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/spontaneous-combustion-0",
-		"tags": [
-			"33341538"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Bioacoustics Research Laboratory",
+		"title": "BRL Seminar and Journal Club",
+		"startDate": "2019-05-22T16:00:00",
+		"endDate": "2019-05-22T17:00:00",
+		"description": "\n",
+		"contacts": [
+			{
+				"firstName": "Sheena",
+				"lastName": "Marshall",
+				"email": "shemar@illinois.edu",
+				"phone": "217-300-8376"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33333086"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "The 21st Live with Niala Boodhoo",
-		"startDate": "2019-09-06T11:00:00",
-		"endDate": "2019-09-06T12:00:00",
-		"description": "Experience a live broadcast of Illinois Public Media&rsquo;s The 21st&mdash;a public radio talk show that celebrates news, culture, and the stories that matter to Illinois. Host Niala Boodhoo will welcome special&nbsp;ELLNORA&nbsp;guests for this new festival feature.\n",
-		"titleURL": "https://krannertcenter.com/events/21st-live-niala-boodhoo",
-		"tags": [
-			"33341541"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Center for Advanced Research in Drying",
+		"title": "NSF I/UCRC Center for Advanced Research in Drying Spring 2019 Meeting",
+		"startDate": "2019-05-23T08:30:00",
+		"endDate": "2019-05-24T08:30:00",
+		"description": "Industrial Advisory Board Meeting for the National Science Foundation Industry/University Cooperative Research Centers Program for Advanced Research in Drying (CARD). Thursday, May 23, will be a symposium in Beckman Room 1005 during the day and a reception and dinner in the Beckman Institute center Atrium, with a poster display in the east Atrium. Friday's events will be hosted in Beckman Room 4269. The agenda will be announced. Registration required at http://bit.ly/register-CARD\n",
+		"titleURL": "https://www.dryingresearch.org/semi-annual-industrial-advisory-board-iab-meeting-registration/",
+		"contacts": [
+			{
+				"firstName": "Mark",
+				"lastName": "Lippi",
+				"email": "mlippi@wpi.edu"
+			}
 		],
+		"tags": {
+			"eventId": "33327822"
+		},
 		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+			"latitude": "40.1238859",
+			"longitude": "21.6673489",
+			"description": "\u0392\u03ac\u03c1\u03b7\u03c2, \u0394\u03ae\u03bc\u03bf\u03c2 \u0393\u03c1\u03b5\u03b2\u03b5\u03bd\u03ce\u03bd, \u03a0.\u0395. \u0393\u03c1\u03b5\u03b2\u03b5\u03bd\u03ce\u03bd, \u03a0\u03b5\u03c1\u03b9\u03c6\u03ad\u03c1\u03b5\u03b9\u03b1 \u0394\u03c5\u03c4\u03b9\u03ba\u03ae\u03c2 \u039c\u03b1\u03ba\u03b5\u03b4\u03bf\u03bd\u03af\u03b1\u03c2, \u0389\u03c0\u03b5\u03b9\u03c1\u03bf\u03c2 - \u0394\u03c5\u03c4\u03b9\u03ba\u03ae \u039c\u03b1\u03ba\u03b5\u03b4\u03bf\u03bd\u03af\u03b1, 51100, \u0395\u03bb\u03bb\u03ac\u03b4\u03b1"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Across the Sea: Jeff Peterson, Greg Sardinha, Tsun-Hui Hung",
-		"startDate": "2019-09-06T12:00:00",
-		"endDate": "2019-09-06T13:00:00",
-		"description": "Slow life down for a moment with the tranquil sounds of slack key guitar&mdash;the distinctly Hawaiian finger-style genre known as&nbsp;k\u012b h\u014d&rsquo;alu&nbsp;in the islands. ELLNORA alum and Grammy Award winner Jeff Peterson returns with his versatile, jazz-influenced sound in an imaginative program that unites the beauty of Peterson&rsquo;s slack key with the Hawaiian steel guitar of Greg Sardinha and Tsun-Hui Hung&rsquo;s innovative interpretations on the two-stringed Chinese erhu.\nFollowed by a Talkback with the artists, moderated by&nbsp;Rachel Rosenkrantz, luthier.\n",
-		"titleURL": "https://krannertcenter.com/events/across-sea-jeff-peterson-greg-sardinha-tsun-hui-hung",
-		"tags": [
-			"33341544"
+		"eventType": "Meeting",
+		"sponsor": "Charles Schroeder and Yang Zhang",
+		"title": "Molecular Science Discussion Group",
+		"startDate": "2019-05-24T13:00:00",
+		"endDate": "2019-05-24T14:00:00",
+		"description": "Weekly discussion meetings for the Computational Molecular Science and Molecular Design Engineering research groups\n",
+		"contacts": [
+			{
+				"firstName": "Thurlwell,",
+				"lastName": "Laura",
+				"email": "thurlwel@illinois.edu",
+				"phone": "+1 217 300 1166"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33338298"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Panel Discussion with Fabi Reyna",
-		"startDate": "2019-09-06T13:30:00",
-		"endDate": "2019-09-06T14:30:00",
-		"description": "Fabi Reyna&mdash;founder of&nbsp;She Shreds&nbsp;magazine, the only print publication in the world dedicated to women guitarists and bassists&mdash;will lead this lively conversation about gender and genre in the music industry. Don&rsquo;t miss Reyna&rsquo;s free performance with her band&nbsp;S&aacute;vila&nbsp;on Saturday, September 7, at 1:30pm.\n",
-		"titleURL": "https://krannertcenter.com/events/panel-discussion-fabi-reyna",
-		"tags": [
-			"33341546"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Beckman Administration",
+		"title": "Bench to Bedside Series-Carle Internal Medicine",
+		"startDate": "2019-05-29T12:00:00",
+		"endDate": "2019-05-29T13:00:00",
+		"description": "Residents Grover\n&nbsp;\n",
+		"contacts": [
+			{
+				"firstName": "Kelli",
+				"lastName": "Hunt",
+				"email": "khunt3@illinois.edu",
+				"phone": "217-841-3299"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33320915"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Live Podcast\u2014Music Makers and Soul Shakers with Steve Dawson",
-		"startDate": "2019-09-06T14:45:00",
-		"endDate": "2019-09-06T15:45:00",
-		"description": "ELLNORA alum Steve Dawson brings his insightful series of interviews with guitarists and other music makers live to the festival. In addition to this talk event, Dawson performs in&nbsp;Spontaneous Combustion&nbsp;on Thursday, September 5, at 9:30pm, and with&nbsp;Molly Tuttle&nbsp;on Friday, September 6, at 6pm.\n",
-		"titleURL": "https://krannertcenter.com/events/live-podcast%E2%80%94music-makers-and-soul-shakers-steve-dawson",
-		"tags": [
-			"33341550"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Beckman Institute Administration",
+		"title": "Bench to Bedside Series",
+		"startDate": "2019-05-29T12:00:00",
+		"endDate": "2019-05-29T13:00:00",
+		"description": "\n",
+		"speaker": "Dr. Skinner and Dr. Devanand",
+		"contacts": [
+			{
+				"firstName": "Patty",
+				"lastName": "Jones",
+				"email": "pmjones5@illinois.edu",
+				"phone": "+1 217 300 3580"
+			}
 		],
+		"tags": {
+			"eventId": "33340731"
+		},
 		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+			"latitude": "29.8632793261427",
+			"longitude": "-95.3656521193623",
+			"description": "1005, Beckman Street, Hawthorne Place, Houston, Harris County, Texas, 77076, USA"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Panel Discussion with Rachel Rosenkrantz, luthier: Innovation in Building",
-		"startDate": "2019-09-06T16:00:00",
-		"endDate": "2019-09-06T17:00:00",
-		"description": "Rhode Island-based French luthier Rachel Rosenkrantz approaches guitar making from her experience as both a performing artist and a product and furniture designer. Her luthiery combines traditional and contemporary techniques and aesthetics that inform her signature style. She&rsquo;ll lead this panel in an engaging exploration of long-standing guitar-making traditions and modern craftsmanship. Be sure to catch&nbsp;Rosenkrantz&rsquo;s free workshop&nbsp;on Saturday, September 7, at 11am.\n",
-		"titleURL": "https://krannertcenter.com/events/panel-discussion-rachel-rosenkrantz-luthier-innovation-playing-innovation-building",
-		"tags": [
-			"33341560"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Bioacoustics Research Laboratory",
+		"title": "BRL Seminar and Journal Club",
+		"startDate": "2019-05-29T16:00:00",
+		"endDate": "2019-05-29T17:00:00",
+		"description": "\n",
+		"contacts": [
+			{
+				"firstName": "Sheena",
+				"lastName": "Marshall",
+				"email": "shemar@illinois.edu",
+				"phone": "217-300-8376"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33333087"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Sona Jobarteh",
-		"startDate": "2019-09-06T17:00:00",
-		"endDate": "2019-09-06T18:00:00",
-		"description": "The African kora legacy has been handed down for seven centuries from father to son, but Sona Jobarteh has broken new ground as a female pioneer in this male-dominated tradition. Jobarteh, born into a griot hereditary music family, is the first female of West Africa&rsquo;s Manding peoples to pursue the 21-stringed instrument professionally and has quickly found her own voice as an exceptional artist who connects ancient tradition with contemporary Afropop sensibilities.\n",
-		"titleURL": "https://krannertcenter.com/events/sona-jobarteh",
-		"tags": [
-			"33341561"
+		"eventType": "Seminar/Symposium",
+		"sponsor": "Theoretical and Computational Biophysics Group",
+		"title": "Theoretical and Computational Biophysics Group Seminar",
+		"startDate": "2019-05-31T11:00:00",
+		"endDate": "2019-05-31T12:00:00",
+		"description": "&#8220;Machine Learning in Molecular Systems&#8221;\n",
+		"speaker": "Dr. Argyris Politis, King's College London - Dept. of Chemistry",
+		"contacts": [
+			{
+				"firstName": "Donna",
+				"lastName": "Hutchcraft",
+				"email": "dhfackler@ks.uiuc.edu",
+				"phone": "217-300-8022"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33339539"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Molly Tuttle and Steve Dawson",
-		"startDate": "2019-09-06T18:00:00",
-		"endDate": "2019-09-06T19:00:00",
-		"description": "Luminous vocals and intricate fingerwork cast a spell on audiences when International Bluegrass Music Association Guitarist of the Year and Americana Music Association Instrumentalist of the Year Molly Tuttle takes the stage. Her prowess has prompted&nbsp;Premier Guitar&nbsp;to exclaim, &ldquo;Among the most brilliant guitarists in this new generation is Molly Tuttle, who seems as effortlessly conversant when flatpicking as when playing in the clawhammer style, and who is equally gifted as a singer-songwriter.&rdquo;\nThe latest album release of Canadian-born Nashville resident Steve Dawson&mdash;an ELLNORA alum who performed his own composition with the Jupiter String Quartet at Krannert Center&rsquo;s 50th-anniversary weekend in April 2019&mdash;drew meaningful praise from fellow Canadian musician Bruce Cockburn: &ldquo;Steve Dawson&rsquo;s&nbsp;Lucky&nbsp;Hand&nbsp;is a beautiful, genre-stretching collection of guitar instrumentals&mdash;moods from joyful to poignant, expressed through some of the coolest finger-picking you&rsquo;re likely to hear.&rdquo;\n",
-		"titleURL": "https://krannertcenter.com/events/molly-tuttle-and-steve-dawson",
-		"tags": [
-			"33341563"
+		"eventType": "Lecture",
+		"sponsor": "Cancer Center at Illinois",
+		"title": "CRISPR/CAS Presentation",
+		"startDate": "2019-05-31T11:00:00",
+		"endDate": "2019-05-31T12:00:00",
+		"description": "\n",
+		"speaker": "Speaker affiliation: Synthego",
+		"contacts": [
+			{
+				"firstName": "Fain,",
+				"lastName": "Andrea",
+				"email": "amfain@illinois.edu",
+				"phone": "+1 217 333 2022"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33341442"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Kaki King: Data Not Found",
-		"startDate": "2019-09-06T19:30:00",
-		"endDate": "2019-09-06T20:30:00",
-		"description": "Hailed by&nbsp;Rolling Stone&nbsp;as &ldquo;a genre unto herself,&rdquo; King is a favorite among Krannert Center audiences. Her newest performance project, DATA NOT FOUND&mdash;for which Krannert Center is a commissioning partner and which will premiere at the Center&mdash;is an audiovisual expedition featuring new music, projection mapping, and a host of new performative tools. In DATA NOT FOUND, King explores a broad range of contemporary issues, including artificial intelligence, the natural world, &ldquo;big data,&rdquo; and personal empowerment&mdash;using her guitar as her proverbial magnifying glass. Humans have been collecting data since the dawn of time, but in today&rsquo;s world, data collection is not limited to academic study and record-keeping; it is omnipresent, powerful, and increasingly controversial. How are we harnessing this power? How&nbsp;should&nbsp;we harness this power?\nFollowed by a Talkback with the artist, moderated by David Spelman, ELLNORA artistic advisor.\nDATA NOT FOUND, directed by Annie Dorsen, was made in collaboration with video designer Max Bernstein and data designer/data humanist Giorgia Lupi. DATA NOT FOUND is a joint co-commission made possible by the The Arts Center at NYU Abu Dhabi; International Festival of Arts &amp; Ideas, New Haven, Connecticut; the Moss Arts Center at Virginia Tech; ARTS@TECH at Georgia Tech; and Krannert Center for the Performing Arts at the University of Illinois at Urbana-Champaign. Developmental support provided by MASS MoCA. Technical support provided by POTION Design. Co-Creative Producers: Greg Kastelman and Vickie Starr.\n",
-		"titleURL": "https://krannertcenter.com/events/kaki-king-data-not-found",
-		"tags": [
-			"33341565"
+		"eventType": "Conference/Workshop",
+		"sponsor": "Rigaku and the Beckman Institute",
+		"title": "Microscopy Suite Workshop with Rigaku",
+		"startDate": "2019-06-06T08:00:00",
+		"endDate": "2019-06-06T09:00:00",
+		"description": "The University of Illinois at Urbana-Champaign, in conjunction with Rigaku, would like to extend an invitation for you to join us at a seminar and workshop on X-ray microscopy. This University of Illinois-Rigaku event will take place on Thursday, June 6, 2019 in The Beckman Institute.\nX-ray microscopy is a non-destructive 3D imaging technique and has become one of the most useful tools in materials science and medicine in recent years. In this seminar, you will learn the latest advances in X-ray microscopy from the top level innovators in the field. You can also participate in the workshop to learn the basics of X-ray microscopy and have hands-on lab experience.\n&nbsp;\n\nJonathan Dusting, Director of Innovation, 4Dx, &ldquo;Next Generation Functional Lung Imaging&rdquo;\nMariana Kersh, Assistant Professor of Mechanical Science and Engineering, Illinois, \"Microstructural analyses of bone and their relation to musculoskeletal biomechanics\"\nJoe Neilly, Principal Research Scientist, Abbvie, \"X-ray microscopy of crystals in amorphous solid dispersions\"\nAya Takase, Senior&nbsp;Scientist, Rigaku America, title TBA\n\n",
+		"titleURL": "https://www.rigaku.com/mailers/2019/xrm/",
+		"speaker": "Leilei Yin and Aya Takase",
+		"registrationURL": "https://www.rigaku.com/mailers/2019/xrm/register.php",
+		"contacts": [
+			{
+				"firstName": "Michelle",
+				"lastName": "Goodwin",
+				"email": "Michelle.Goodwin@rigaku.com",
+				"phone": "281-362-2300 ex 122"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33341519"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Stephane Wrembel Band",
-		"startDate": "2019-09-06T20:00:00",
-		"endDate": "2019-09-06T21:00:00",
-		"description": "Discover the rich and colorful lyricism of this French-born gypsy jazz musician. Past ELLNORA attendees will recall Wrembel&rsquo;s soaring 2013 fresh-air Amphitheatre sets, filled with flamenco rhythms, Django Reinhardt-inspired odes, and a healthy infusion of rock and blues. Now, audiences old and new alike will experience the exquisite artistry of Wrembel and his band in the intimate setting of the Studio Theatre.\n",
-		"titleURL": "https://krannertcenter.com/events/stephane-wrembel-band",
-		"tags": [
-			"33341568"
+		"eventType": "Meeting",
+		"sponsor": "Bhargava, Rohit",
+		"title": "Bhargava's PhD Student Defense",
+		"startDate": "2019-06-07T12:45:00",
+		"endDate": "2019-06-07T13:45:00",
+		"description": "PhD defense of UIUC graduate student Shachi Mittal.\n",
+		"speaker": "Shachi Mittal",
+		"contacts": [
+			{
+				"firstName": "James",
+				"lastName": "McGraw",
+				"email": "jmcgraw@illinois.edu",
+				"phone": "217-244-0822"
+			}
 		],
+		"tags": {
+			"eventId": "33336139"
+		},
 		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+			"latitude": "29.863204",
+			"longitude": "-95.365168",
+			"description": "Beckman Street, Hawthorne Place, Houston, Harris County, Texas, 77076, USA"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Pat Metheny Side Eye",
-		"startDate": "2019-09-06T21:00:00",
-		"endDate": "2019-09-06T22:00:00",
-		"description": "In 2005, Krannert Center&rsquo;s very own guitar festival was taking shape for the first time, and jazz icon Pat Metheny made his third visit to the Center&rsquo;s stages. Fourteen years later, this National Endowment for the Arts Jazz Master returns with young jazz frontrunners for a musical incarnation called &ldquo;Side Eye&rdquo;&mdash;a product of Metheny&rsquo;s interest in collaborating with next-generation players that includes a changing lineup of musicians. The ever-revolutionary musical influencer, Metheny has enjoyed an astounding career that includes seven consecutive&mdash;and 20 overall&mdash;Grammy Awards, including wins in an unprecedented 10 different categories. Don&rsquo;t miss this explosive set!\n",
-		"titleURL": "https://krannertcenter.com/events/pat-metheny-side-eye",
-		"tags": [
-			"33341572"
+		"eventType": "Reception/Open House",
+		"sponsor": "Beckman Institute for Advanced Science and Technology",
+		"title": "Beckman Institute 2021 Open House",
+		"startDate": "2021-03-26T09:00:00",
+		"endDate": "2021-03-26T16:00:00",
+		"description": "Beckman Institute hosts its biennial open house March 26-27, 2021. With an array of exhibitors from Beckman lab and research groups (usually more than 40 exhibits), visitors get an inside look at the interdisciplinary research being done at the institute.\n",
+		"contacts": [
+			{
+				"firstName": "Doris",
+				"lastName": "Dahl",
+				"email": "dkdahl@illinois.edu"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33341348"
 		}
 	},
 	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Stephane Wrembel Band",
-		"startDate": "2019-09-06T22:00:00",
-		"endDate": "2019-09-06T23:00:00",
-		"description": "Discover the rich and colorful lyricism of this French-born gypsy jazz musician. Past ELLNORA attendees will recall Wrembel&rsquo;s soaring 2013 fresh-air Amphitheatre sets, filled with flamenco rhythms, Django Reinhardt-inspired odes, and a healthy infusion of rock and blues. Now, audiences old and new alike will experience the exquisite artistry of Wrembel and his band in the intimate setting of the Studio Theatre.\n",
-		"titleURL": "https://krannertcenter.com/events/stephane-wrembel-band",
-		"tags": [
-			"33341570"
+		"eventType": "Reception/Open House",
+		"sponsor": "Beckman Institute for Advanced Science and Technology",
+		"title": "Beckman Institute 2021 Open House",
+		"startDate": "2021-03-27T09:00:00",
+		"endDate": "2021-03-27T15:00:00",
+		"description": "Beckman Institute hosts its biennial open house March 26-27, 2021. With an array of exhibitors from Beckman lab and research groups, visitors get an inside look at the interdisciplinary research being done at the institute.\n",
+		"contacts": [
+			{
+				"firstName": "Doris",
+				"lastName": "Dahl",
+				"email": "dkdahl@illinois.edu"
+			}
 		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "The Messthetics",
-		"startDate": "2019-09-06T22:30:00",
-		"endDate": "2019-09-06T23:30:00",
-		"description": "Jazz and experimental guitarist Anthony Pirog leads this instrumental power trio that includes bassist Joe Lally and Brendan Canty on drums (the rhythm section of the legendary punk rock band Fugazi). Pirog is a mainstay on Washington, DC&rsquo;s avant-garde jazz scene, who in this collaboration with Lally and Canty creates &ldquo;guitar acrobatics and rhythmic fury&rdquo; while also fostering &ldquo;beautifully meditative moments&rdquo; (pitchfork.com).\n",
-		"titleURL": "https://krannertcenter.com/events/messthetics",
-		"tags": [
-			"33341573"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Yoga with GLOW by Lola",
-		"startDate": "2019-09-07T09:00:00",
-		"endDate": "2019-09-07T10:00:00",
-		"description": "Stretch into the final day of&nbsp;ELLNORA 2019&nbsp;with a refreshing morning yoga session from Lola Pittenger of GLOW by Lola, including live musical accompaniment.\n",
-		"titleURL": "https://krannertcenter.com/events/yoga-glow-lola-0",
-		"tags": [
-			"33341574"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Danny Weinkauf and the Red Pants Band",
-		"startDate": "2019-09-07T10:00:00",
-		"endDate": "2019-09-07T11:00:00",
-		"description": "Bassist Danny Weinkauf is a Grammy Award winner and longtime member of They Might Be Giants&mdash;with whom he wrote songs for the albums&nbsp;No!,&nbsp;Here Come the 123s,&nbsp;Here Comes Science, and&nbsp;Why?&nbsp;(all awarded Recording Industry Association of America Gold certification). Now with the Red Pants Band, Weinkauf packs his deliciously catchy tunes with pop beats and intelligent topics that reach kids with fun facts and life lessons ranging from cloud science and botany to self-esteem and voting. And yes, they really wear red pants, and you&rsquo;re welcome to, too!\n",
-		"titleURL": "https://krannertcenter.com/events/danny-weinkauf-and-red-pants-band",
-		"tags": [
-			"33341575"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Stephane Wrembel Solo",
-		"startDate": "2019-09-07T10:15:00",
-		"endDate": "2019-09-07T11:15:00",
-		"description": "Hear Wrembel&rsquo;s arrangements of Django Reinhardt&rsquo;s rare solo guitar works in this 30-minute set.\nAlso enjoy the&nbsp;Stephane Wrembel Band&nbsp;on September 6.\n",
-		"titleURL": "https://krannertcenter.com/events/stephane-wrembel-solo",
-		"tags": [
-			"33341576"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Bokyung Byun and Jason Vieaux",
-		"startDate": "2019-09-07T11:00:00",
-		"endDate": "2019-09-07T12:00:00",
-		"description": "Emerging Korean guitarist Bokyung Byun enjoys a growing reputation sparked by her first-place finishes in international competitions and proven by her numerous performances across Asia and North America. Known for elevating contemporary compositions alongside traditional repertoire, she is celebrated by&nbsp;Classical&nbsp;Guitar Magazine&nbsp;as &ldquo;quite extraordinary.&rdquo;\nNPR describes Grammy Award winner Jason Vieaux as &ldquo;perhaps the most precise and soulful classical guitarist of his generation.&rdquo; Vieaux has earned a reputation for putting his expressive gifts and virtuosity at the service of a wonderfully wide range of music, which you will be sure to enjoy in his versatile set.\n",
-		"titleURL": "https://krannertcenter.com/events/bokyung-byun-and-jason-vieaux",
-		"tags": [
-			"33341577"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Workshop with Rachel Rosenkrantz, luthier: Anatomy of Sound",
-		"startDate": "2019-09-07T11:00:00",
-		"endDate": "2019-09-07T12:00:00",
-		"description": "Go up close with the craft of guitar making! Rhode Island-based French luthier Rachel Rosenkrantz is a contemporary luthier with a strong sense of instrument-making traditions. Also, hear Rosenkrantz lead a&nbsp;free panel discussion&nbsp;on Friday, September 6, at 4pm.\n",
-		"titleURL": "https://krannertcenter.com/events/workshop-rachel-rosenkrantz-luthier-anatomy-sound",
-		"tags": [
-			"33341578"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Rob Ickes and Trey Hensley",
-		"startDate": "2019-09-07T12:30:00",
-		"endDate": "2019-09-07T13:30:00",
-		"description": "Ickes and Hensley are a Grammy-nominated duo made in bluegrass heaven. The International Bluegrass Music Association has named Rob Ickes, who honed his bluegrass chops with the veteran band Blue Highway, Dobro Player of the Year 15 times. His fluid slide playing is the perfect complement to Trey Hensley&rsquo;s quick-fire flatpicking and powerhouse vocals that first turned heads when he debuted at the Grand Ole Opry at the age of 11 (alongside no less than Earl Scruggs and Marty Stuart). Together, Ickes and Hensley create a supercharged collaboration that Stuart says affirms &ldquo;that the real deal still exists.&rdquo;\n",
-		"titleURL": "https://krannertcenter.com/events/rob-ickes-and-trey-hensley",
-		"tags": [
-			"33341579"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "S\u00e1vila",
-		"startDate": "2019-09-07T13:30:00",
-		"endDate": "2019-09-07T14:30:00",
-		"description": "S&aacute;vila is a medicinal plant that grows wild in tropical climates all over the world, as well as the name of the cumbia/Latin/world/R&amp;B-inspired ensemble of guitarist Fabi Reyna, vocalist Brisa Gonzalez, and percussionist Papi Fimbres. English and Spanish vocals mix in the hypnotizing music of this trio that was recently named one of the Portland, Oregon, area&rsquo;s best new bands. Their otherworldly blend has been compared to &ldquo;a warm embrace . . . everything melds into a groove so deep, you can&rsquo;t help but sink in, too&rdquo; (Willamette Week).\nAlso, hear a&nbsp;free panel discussion&nbsp;about gender and genre in the music industry led by S&aacute;vila guitarist Fabi Reyna on Friday, September 6, at 1:30pm.\n",
-		"titleURL": "https://krannertcenter.com/events/s%C3%A1vila",
-		"tags": [
-			"33341580"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Anat Cohen and Marcello Gon\u00e7alves; Aritmia: Merima Klju\u010do and Miroslav Tadi\u0107",
-		"startDate": "2019-09-07T14:30:00",
-		"endDate": "2019-09-07T15:30:00",
-		"description": "Noted musical director, arranger, and performing artist Marcello Gon&ccedil;alves&rsquo; seven-stringed spontaneity is born of his Rio de Janeiro roots&mdash;celebrating Brazil&rsquo;s great classical tradition but sprinkled with the mischief of popular music. He joins forces with clarinetist Anat Cohen, whose sensitive interpretations and charming stage presence are &ldquo;a woodwind revelation&rdquo; (DownBeat).\nAcclaimed guitarist Miroslav Tadi\u0107 and renowned accordionist Merima Klju\u010do celebrate their common Balkan heritage in their duo, Aritmia, performing original work, exquisite arrangements of music by Erik Satie and Manuel de Falla, and the expressive music of&nbsp;sevdah&mdash;sometimes called &ldquo;Bosnian blues.&rdquo; This virtuosic pair shares the fruits of their unique musical partnership, offering a singular mix of joy, yearning, and aching beauty.\n",
-		"titleURL": "https://krannertcenter.com/events/anat-cohen-and-marcello-goncalves-aritmia-merima-klju%C4%8Do-and-miroslav-tadi%C4%87",
-		"tags": [
-			"33341581"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Danilo Brito Quartet",
-		"startDate": "2019-09-07T14:30:00",
-		"endDate": "2019-09-07T15:30:00",
-		"description": "\n\n\n\nAs a young prodigy, Danilo Brito would play the bandolim, a Brazilian-style mandolin, alongside his elders at&nbsp;rodas de choro&mdash;informal gatherings of musicians that celebrated Brazil&rsquo;s popular&nbsp;choro music style. He quickly earned comparisons to Brazil&rsquo;s pioneering mandolin player Jacob do Bandolim, from whom the bandolim takes its name. Joined by collaborators on seven-string guitar, six-string guitar, and pandeiro (percussion), Brito will dazzle ELLNORA audiences with his dexterity, romanticism, and verve.\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/danilo-brito-quartet",
-		"tags": [
-			"33341582"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Danilo Brito Quartet",
-		"startDate": "2019-09-07T16:00:00",
-		"endDate": "2019-09-07T17:00:00",
-		"description": "\n\n\n\nAs a young prodigy, Danilo Brito would play the bandolim, a Brazilian-style mandolin, alongside his elders at&nbsp;rodas de choro&mdash;informal gatherings of musicians that celebrated Brazil&rsquo;s popular&nbsp;choro music style. He quickly earned comparisons to Brazil&rsquo;s pioneering mandolin player Jacob do Bandolim, from whom the bandolim takes its name. Joined by collaborators on seven-string guitar, six-string guitar, and pandeiro (percussion), Brito will dazzle ELLNORA audiences with his dexterity, romanticism, and verve.\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/danilo-brito-quartet",
-		"tags": [
-			"33341583"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Sonic Meditation",
-		"startDate": "2019-09-07T17:00:00",
-		"endDate": "2019-09-07T18:00:00",
-		"description": "\n\n\n\nExperience a little sonic rejuvenation with this new offering that combines the wisdom of spiritual leaders with acoustic musical sets.\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/sonic-meditation",
-		"tags": [
-			"33341585"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "The Bluebonnets",
-		"startDate": "2019-09-07T17:00:00",
-		"endDate": "2019-09-07T18:00:00",
-		"description": "These Austin-based rock and rollers own the stage with &ldquo;irresistible swagger,&rdquo; unforgettable melodies, and inflections of punk, pop, funk, and soul (The Austin Chronicle). The lineup includes Dominique Davalos (bass, lead vocals), Eve Monsees (guitar, vocals), Kathy Valentine (guitar, vocals&mdash;of The Go-Go's), and Christina Comley (drums). Catch their scorching set at Stage 5 and get hooked on the roaring rhythms of this gutsy foursome as they &ldquo;play it fast, loud, and true&rdquo; (Houston Press).\n",
-		"titleURL": "https://krannertcenter.com/events/bluebonnets",
-		"tags": [
-			"33341743"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Tony McManus and Julia Toaspern",
-		"startDate": "2019-09-07T18:00:00",
-		"endDate": "2019-09-07T19:00:00",
-		"description": "\n\n\n\nTony McManus, recently named one of&nbsp;Guitar Player&nbsp;magazine&rsquo;s &ldquo;50 transcendent acoustic guitarists,&rdquo; weaves beautifully ornamented musical tapestries of Celtic music in masterfully picked patterns that astound the eyes and ears of audiences worldwide. For this, his second Krannert Center appearance, he&rsquo;s joined by the classically trained German &ldquo;folk jazz&rdquo; artist Julia Toaspern, whose lilting, clear vocals and remarkable guitar and fiddle talents combine with McManus&rsquo; signature style to create an evening of &ldquo;breathtaking duets&rdquo; (Folker).\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/tony-mcmanus-and-julia-toaspern",
-		"tags": [
-			"33341744"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Rafiq Bhatia",
-		"startDate": "2019-09-07T19:15:00",
-		"endDate": "2019-09-07T20:15:00",
-		"description": "Early influences on Rafiq Bhatia such as Jimi Hendrix, John Coltrane, and Madlib&mdash;as well as mentors and collaborators including Vijay Iyer and Billy Hart&mdash;prompted him to see music as a way to actively shape and represent his own identity, not limited by anyone else&rsquo;s prescribed perspective. With his embrace of electronica, jazz, rock, and multiple Indian and American musical influences, Bhatia&mdash;a first-generation son of Muslim immigrants and the guitarist of the band Son Lux&mdash;&ldquo;blows up all expectations about what can be done with the instrument and how it should sound&rdquo; (The New York Times).\n",
-		"titleURL": "https://krannertcenter.com/events/rafiq-bhatia",
-		"tags": [
-			"33341745"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Sonic Meditation",
-		"startDate": "2019-09-07T20:00:00",
-		"endDate": "2019-09-07T21:00:00",
-		"description": "\n\n\n\nExperience a little sonic rejuvenation with this new offering that combines the wisdom of spiritual leaders with acoustic musical sets.\n\n\n\n\n",
-		"titleURL": "https://krannertcenter.com/events/sonic-meditation",
-		"tags": [
-			"33341587"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Buddy Guy",
-		"startDate": "2019-09-07T20:30:00",
-		"endDate": "2019-09-07T21:30:00",
-		"description": "Chicago&rsquo;s West Side sound heads south of I-80 for another thrilling ELLNORA appearance. You might know guitar legend Buddy Guy from his eight Grammy wins, his Grammy Lifetime Achievement Award, 37 Blues Music Awards (yes, that&rsquo;s the most ever!), a Kennedy Center Honor, a Presidential National Medal of Arts,&nbsp;Rolling Stone&rsquo;s list of &ldquo;100 Greatest Guitarists of All Time,&rdquo; or that occasion when he was inducted into the Rock and Roll Hall of Fame. Or, maybe you just love listening to one of the great titans of the blues&mdash;an absolutely electrifying artist, who in his 80s is still tearing up stages with blistering vocals and raucous riffs.\n",
-		"titleURL": "https://krannertcenter.com/events/buddy-guy",
-		"tags": [
-			"33341749"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
-		}
-	},
-	{
-		"eventType": "Festival/Celebration",
-		"sponsor": "Krannert Center for the Performing Arts",
-		"title": "Rafiq Bhatia",
-		"startDate": "2019-09-07T21:00:00",
-		"endDate": "2019-09-07T22:00:00",
-		"description": "Early influences on Rafiq Bhatia such as Jimi Hendrix, John Coltrane, and Madlib&mdash;as well as mentors and collaborators including Vijay Iyer and Billy Hart&mdash;prompted him to see music as a way to actively shape and represent his own identity, not limited by anyone else&rsquo;s prescribed perspective. With his embrace of electronica, jazz, rock, and multiple Indian and American musical influences, Bhatia&mdash;a first-generation son of Muslim immigrants and the guitarist of the band Son Lux&mdash;&ldquo;blows up all expectations about what can be done with the instrument and how it should sound&rdquo; (The New York Times).\n",
-		"titleURL": "https://krannertcenter.com/events/rafiq-bhatia",
-		"tags": [
-			"33341746"
-		],
-		"location": {
-			"latitude": "40.1080112",
-			"longitude": "-88.2225280064983",
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA"
+		"tags": {
+			"eventId": "33341350"
 		}
 	}
 ]
