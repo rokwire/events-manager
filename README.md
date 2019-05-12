@@ -1,5 +1,11 @@
 # Command Line Parser Tool for XML Event Parsing
 
+## Usage
+python eventsParser.py url_file json_file<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction
+&nbsp;&nbsp;&nbsp;&nbsp;json_file: it stores parsed result
+
+
 ## Description
 
 This parser converts XML content from target URLs to json format defined by [Rokwire YAML file](https://github.com/rokwire/rokwire-building-blocks-api/blob/develop/rokwire.yaml), the usage of the YAML file is explained [here](https://github.com/rokwire/rokwire-building-blocks-api)
