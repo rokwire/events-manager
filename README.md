@@ -2,7 +2,7 @@
 
 ## Usage
 python eventsParser.py url_file json_file<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction
+&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction</br>
 &nbsp;&nbsp;&nbsp;&nbsp;json_file: it stores parsed result
 
 
