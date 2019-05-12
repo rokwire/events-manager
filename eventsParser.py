@@ -8,6 +8,7 @@ import json
 import os
 import logging
 import re
+import sys
 
 # set up logger globally and in flask, it can be done using app.logging
 if not os.path.exists('logs'):
@@ -27,7 +28,7 @@ xmlLogger.setLevel(logging.INFO)
 GeoUrl = "https://nominatim.openstreetmap.org/search?"
 
 
-def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
+def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
 
     if url is None:
         return None
@@ -63,14 +64,19 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
         
         eventDetail = {}
         for elem in publicEvent:
-
+            
             # description's field does not have text but a series of bytes
             if elem.tag == "description":
                 soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
                 eventDetail[elem.tag] = soup.get_text()
 
+            # it is possible that there are multiple topic tags in existence
             elif elem.tag == "topic":
-                eventDetail[elem.tag] = elem[1].text
+                if 'topic' in eventDetail:
+                    eventDetail['topic'].append(elem[1].text)
+                else:
+                    eventDetail['topic'] = [elem[1].text]
+            
 
             elif elem.text == None:
                 continue
@@ -95,6 +101,7 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
         entry = {}
 
         # Required Field
+        entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
         entry['eventType'] = pe['eventType'] if 'eventType' in pe else ""
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
@@ -106,14 +113,18 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
             startDateObj = datetime.strptime(startDate+' '+startTime, '%m/%d/%Y %I:%M %p')
 
             endDate = pe['endDate']
-            if endDate == startDate:
-                endDateObj = startDateObj + timedelta(hours=1)
-            else:
-                endDateObj = datetime.strptime(endDate+' '+startTime, '%m/%d/%Y %I:%M %p')
+            endDateObj = datetime.strptime(endDate+' 11:59 pm', '%m/%d/%Y %I:%M %p')
             
             entry['startDate'] = startDateObj.isoformat()
             entry['endDate'] = endDateObj.isoformat()
-            
+
+        if pe['timeType'] == "ALL_DAY":
+            startDate = pe['startDate']
+            endDate = pe['endDate']
+            startDateObj = datetime.strptime(startDate+' 12:00 am', '%m/%d/%Y %I:%M %p')
+            endDateObj = datetime.strptime(endDate+' 11:59 pm', '%m/%d/%Y %I:%M %p')
+            entry['startDate'] = startDateObj.isoformat()
+            entry['endDate'] = endDateObj.isoformat()
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -139,6 +150,8 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
             entry['registrationURL'] = pe['registrationURL']
         if 'cost' in pe:
             entry['cost'] = pe['cost']
+        if 'topic' in pe: 
+            entry['tag'] = pe['topic']
 
         targetAudience = []
         targetAudience.extend(["faculty", "staff"]) if pe['audienceFacultyStaff'] == True else None
@@ -162,22 +175,13 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
         if len(contacts) != 0:
             entry['contacts']= contacts
 
-        # tags store eventID and topic now
-        tags = {}
-        tags['eventId'] = pe['eventId']
-        if 'topic' in pe:
-            tags['topic'] = pe['topic']
-
-        if len(tags) != 0:
-            entry['tags'] = tags
-
         # find geographical location
         # TODO: do it in re match and set some file to record special conditions
         if 'location' in pe:
             if ("Stage" in pe['location'] or "Studio" in pe['location']) and "Krannert Center" in pe['calendarName']:
                 location = "Krannert Center for the Performing Arts"
             else:
-                location = pe['location']
+                location = pe['location']+',UIUC'
         else:
             if "Krannert Center" in pe['calendarName']:
                 location = "Krannert Center for the Performing Arts"
@@ -202,10 +206,7 @@ def extractEventXMLandParse(url=None, jsonF='eventsExample.json'):
 
         xmltoMongoDB.append(entry)
     
-
-    # output to a json file
-    with open(jsonF, 'w') as jsonFile:
-        json.dump(xmltoMongoDB, jsonFile, indent='\t')
+    return xmltoMongoDB
 
     
 def parseEventXML(xml='eventsExample.txt', jsonF='eventsExample.json'):
@@ -220,13 +221,24 @@ def parseEventXML(xml='eventsExample.txt', jsonF='eventsExample.json'):
         
 
 
-    
-
-
 if __name__ == "__main__":
     
+    if len(sys.argv) != 3:
+        print("Usage: python eventsParser.py urls_file json_file")
+        print("       urls_file: file that contains events urls separated by newline")
+        print("       json_file: file that stores parsed result")
+        exit()
 
-    # url = "https://urldefense.proofpoint.com/v2/url?u=https-3A__calendars.illinois.edu_eventXML11_25.xml&d=DwMFAg&c=OCIEmEwdEq_aNlsP4fF3gFqSN-E3mlr2t9JcDdfOZag&r=zSYD-leOsEp1PCmcy2SID6ksFPDJQDoexqAdxiBTDbg&m=7Tr33Vua2nrTVscJbfsKxTqIcoCpz_rfczepxDwATno&s=q9iUrc2PUVrWN38PyfZBep2hw8BINvurvZHk09Xg-2U&e="
-    url = "https://calendars.illinois.edu/eventXML11/33.xml"
-    extractEventXMLandParse(url=url)
-    # parseEventXML()
+    urls_file = sys.argv[1]
+    json_file = sys.argv[2]
+    parseResult = []
+    with open(urls_file, "r") as urlsList:
+        urls = urlsList.read().split("\n")
+
+    for url in urls:
+        parseResult = parseResult + extractEventXMLandParse(parseResult, url=url, jsonF=json_file)
+    
+    with open(json_file, 'w') as parseContainer:
+        json.dump(parseResult, parseContainer, indent='\t')
+
+
