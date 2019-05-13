@@ -1,9 +1,13 @@
 # Command Line Parser Tool for XML Event Parsing
 
 ## Usage
-python eventsParser.py url_file json_file<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction</br>
-&nbsp;&nbsp;&nbsp;&nbsp;json_file: it stores parsed result
+python -g|-e eventsParser.py url_file store_file|json_file<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;-g: get raw material from urls<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;store_file: it stores raw xml content<br />
+&nbsp;&nbsp;&nbsp;&nbsp;-e: parse raw xml material into json content from urls<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json_file: json file that stores parsed result
 
 
 ## Description
@@ -12,25 +16,28 @@ This parser converts XML content from target URLs to json format defined by [Rok
 
 The parsing is divided into two sections:<br />
 (elements in regular style are elements in parsed json content)<br />
-(elements in **bold style** are elements in raw XML content)
+(elements in **bold style** are elements in raw XML content)<br />
+(time elements are output in format YY/MM/DDTHH:mm:ss)
 - Required Fields:
     - eventType: extracted from **eventType**
     - sponsor: extracted from **sponsor** 
     - title: extracted from **title**
     - startDate: **timeType** will provide information about whether **startTime** exists or not
         * if **timeType** is **ALL_TIME**, 
-            - startDate is set to 12:00 am in the **startDate** in *ISO-8601* format
-        * else extracted from **startDate** and **startTime** and convert them into *ISO-8601* format
+            - startDate is set to 00:00 in the **startDate**
+        * else extracted from **startDate** and **startTime**
     - endDate: **timeType** will provide information about whether **endTime** exists or not
         * if **timeType** is **START_TIME_ONLY** or **ALL_TIME**, 
-            - endDate is set to 11:59 pm in the **endDate** in *ISO-8601* format
-        * else extracted from **endDate** and **endTime** and convert them into *ISO-8601* format
+            - endDate is set to 23:59 in the **endDate**
+        * else extracted from **endDate** and **endTime**
 - Optional Fields:
     - description: extracted from **description** and furthered parsed by *Beautiful Soup 4.4* 
     - titleURL: extracted from **titleURL** 
     - speaker: extracted from **speaker** 
     - registrationURL: extracted from **registrationURL** 
     - cost: extracted from **cost**, it is likely to be String Type
+    - icalUrl: composed ical file url from **calendarId** and **eventId**
+    - outlookUrl: composed outlook 2010 file url from **calendarId** and **eventId**
     - targetAudience: extracted from
         * **audienceFacultyStaff**
         * **audienceStudents**
@@ -64,5 +71,5 @@ The parsing is divided into two sections:<br />
 
 ## Results and Raw XML content
 
-JSON file after parsing is [here](./eventsExample.json)<br />
-Original XML content is [here](./eventsExample.xml)
+JSON file after parsing is [here](./display.json)<br />
+Original XML content is [here](./display.xml)

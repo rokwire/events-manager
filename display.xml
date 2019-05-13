@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<responseWS>
+    <publicEventWS>
+        <calendarId>7</calendarId>
+        <calendarName>General Events</calendarName>
+        <eventId>33336319</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17875</recurrenceId>
+        <originatingCalendarId>717</originatingCalendarId>
+        <originatingCalendarName>Spurlock Museum - General</originatingCalendarName>
+        <title>exhibit: From the Subcontinent to the Prairie: Stories of Immigration and Identity</title>
+        <titleURL>https://www.spurlock.illinois.edu/exhibits/profiles/subcontinent-to-the-prairie.html</titleURL>
+        <eventType>Exhibition</eventType>
+        <topic>
+            <id>48</id>
+            <name>culture</name>
+        </topic>
+        <topic>
+            <id>487</id>
+            <name>immigration</name>
+        </topic>
+        <topic>
+            <id>274</id>
+            <name>india</name>
+        </topic>
+        <sponsor>Spurlock Museum</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/14/2019</startDate>
+        <endDate>5/14/2019</endDate>
+        <timeType>ALL_DAY</timeType>
+        <startTime></startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Spurlock Museum, 600 S Gregory St, Urbana</location>
+        <description><p>The Museum is pleased to open a new exhibit exploring themes from the <em>The Namesake</em> (by Jhumpa Lahiri, 2003), the cornerstone of our National Endowment for the Arts Big Read in 2019. With Guest Community Curator Koeli Goel,<em> From the Subcontinent to the Prairie: Stories of Immigration and Identity</em> features objects and photographs loaned by members of campus and Champaign-Urbana South Asian and South Asian-American communities.</p>
+<p>&amp;nbsp;</p>
+<p>Also on display are <em>The Indian American Experience in Chicago</em> from <a href="https://iahmuseum.org/">the National Indo-American Museum</a> and <em><a href="http://www.saapri.org/1436/2014-uic-exhibit/">Memories and Milestones</a></em> from <a href="http://www.saapri.org/">the South Asian American Policy and Research Institute</a>.</p>
+<p>&amp;nbsp;</p>
+<p>For other Big Read events, visit <a title="Big Read CU: The Namesake" href="https://www.spurlock.illinois.edu/blog/p/the-nea-big/288" target="_blank" rel="noopener">go.illinois.edu/TheNamesake</a>.</p></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Beth Watkins</contactName>
+        <contactEmail>ewatkins@Illinois.edu</contactEmail>
+        <contactPhone>265-5485</contactPhone>
+        <cost>free</cost>
+        <createdBy>ewatkins@illinois.edu</createdBy>
+        <createdDate>2/12/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>2/12/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>true</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>7</calendarId>
+        <calendarName>General Events</calendarName>
+        <eventId>33336320</eventId>
+        <recurrence>true</recurrence>
+        <recurrenceId>17875</recurrenceId>
+        <originatingCalendarId>717</originatingCalendarId>
+        <originatingCalendarName>Spurlock Museum - General</originatingCalendarName>
+        <title>exhibit: From the Subcontinent to the Prairie: Stories of Immigration and Identity</title>
+        <titleURL>https://www.spurlock.illinois.edu/exhibits/profiles/subcontinent-to-the-prairie.html</titleURL>
+        <eventType>Exhibition</eventType>
+        <topic>
+            <id>48</id>
+            <name>culture</name>
+        </topic>
+        <topic>
+            <id>487</id>
+            <name>immigration</name>
+        </topic>
+        <topic>
+            <id>274</id>
+            <name>india</name>
+        </topic>
+        <sponsor>Spurlock Museum</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/15/2019</startDate>
+        <endDate>5/15/2019</endDate>
+        <timeType>ALL_DAY</timeType>
+        <startTime></startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Spurlock Museum, 600 S Gregory St, Urbana</location>
+        <description><p>The Museum is pleased to open a new exhibit exploring themes from the <em>The Namesake</em> (by Jhumpa Lahiri, 2003), the cornerstone of our National Endowment for the Arts Big Read in 2019. With Guest Community Curator Koeli Goel,<em> From the Subcontinent to the Prairie: Stories of Immigration and Identity</em> features objects and photographs loaned by members of campus and Champaign-Urbana South Asian and South Asian-American communities.</p>
+<p>&amp;nbsp;</p>
+<p>Also on display are <em>The Indian American Experience in Chicago</em> from <a href="https://iahmuseum.org/">the National Indo-American Museum</a> and <em><a href="http://www.saapri.org/1436/2014-uic-exhibit/">Memories and Milestones</a></em> from <a href="http://www.saapri.org/">the South Asian American Policy and Research Institute</a>.</p>
+<p>&amp;nbsp;</p>
+<p>For other Big Read events, visit <a title="Big Read CU: The Namesake" href="https://www.spurlock.illinois.edu/blog/p/the-nea-big/288" target="_blank" rel="noopener">go.illinois.edu/TheNamesake</a>.</p></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Beth Watkins</contactName>
+        <contactEmail>ewatkins@Illinois.edu</contactEmail>
+        <contactPhone>265-5485</contactPhone>
+        <cost>free</cost>
+        <createdBy>ewatkins@illinois.edu</createdBy>
+        <createdDate>2/12/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>2/12/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>true</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>7</calendarId>
+        <calendarName>General Events</calendarName>
+        <eventId>33325440</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>2074</originatingCalendarId>
+        <originatingCalendarName>Campus Wellbeing Services - ALL UIUC Wellness Events</originatingCalendarName>
+        <title>Japanese Tea Ceremony</title>
+        <titleURL></titleURL>
+        <eventType>Health/Fitness</eventType>
+        <topic>
+            <id>661</id>
+            <name>campus</name>
+        </topic>
+        <topic>
+            <id>48</id>
+            <name>culture</name>
+        </topic>
+        <sponsor>Japan House</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/15/2019</startDate>
+        <endDate>5/15/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>5:30 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>2000 South Lincoln Avenue Urbana, IL 61802</location>
+        <description><p>Join us for a traditional Japanese tea ceremony. Chado, or the Way of Tea, is one of the most ancient and revered arts of Japan, and is at the very heart of Japan House. Learn the history behind this art, and enjoy a bowl of matcha tea and a traditional sweet. Experience a moment of peace.</p>
+<p>Reservations are required. You will be asked to remove your shoes (or use shoe covers) when you enter, and to wear white socks (we have some to lend you if you forget). We also ask that legs be covered as is traditional in Japan. You will be kneeling or sitting on the tatami mats, but if that is a problem we can easily pull a chair up to the tea room for you, and you still still be at the same height as the other participants.</p></description>
+        <speaker></speaker>
+        <registrationLabel>Registration</registrationLabel>
+        <registrationURL>https://www.eventbrite.com/e/japanese-tea-ceremony-tickets-39933806089?aff=erelexpmlt</registrationURL>
+        <contactName></contactName>
+        <contactEmail></contactEmail>
+        <contactPhone></contactPhone>
+        <cost>$10-$12</cost>
+        <createdBy>kmking4@illinois.edu</createdBy>
+        <createdDate>12/5/2018</createdDate>
+        <editedBy></editedBy>
+        <editedDate>12/5/2018</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>true</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>7</calendarId>
+        <calendarName>General Events</calendarName>
+        <eventId>33341235</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>1435</originatingCalendarId>
+        <originatingCalendarName>NCSA events</originatingCalendarName>
+        <title>NCSA Gravity Group Spring Symposium 2019</title>
+        <titleURL>http://gravity.ncsa.illinois.edu/events/ncsa-gravity-group-spring-symposium-2019/</titleURL>
+        <eventType>Seminar/Symposium</eventType>
+        <sponsor>NCSA</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>5/13/2019</startDate>
+        <endDate>5/13/2019</endDate>
+        <timeType>ALL_DAY</timeType>
+        <startTime></startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>1040 NCSA</location>
+        <description><p>The <a href="http://gravity.ncsa.illinois.edu/">NCSA Gravity Group</a> spearheads a transdisciplinary science program at the interface of deep learning, large scale computing and data-driven science to push back the frontiers of multi-messenger astrophysics. We are the central hub of gravitational wave astrophysics at Illinois, hosting the LIGO, NANOGrav and LISA science teams.</p>
+<p>The <a href="http://gravity.ncsa.illinois.edu/events/ncsa-gravity-group-spring-symposium-2019/">NCSA Gravity Group Spring Symposium 2019</a> is the second event in this series in which we showcase research accomplishments of high school, undergraduate, graduate, postdoctoral and faculty members of the NCSA Gravity Group.</p>
+<p>Students will present lightning talks based on their published research to catalyze new collaborations with faculty across units and departments that are already represented in our group, which include: astronomy, physics, electrical and computing engineering, computer science, and industrial and enterprise engineering.</p>
+<p>Registration is now open at <a href="https://forms.illinois.edu/sec/2866620">https://forms.illinois.edu/sec/2866620</a>. Lunch will be provided, but registration is limited to 50 people&amp;mdash;first come first served.</p>
+<p>On behalf of the organizers</p>
+<ul>
+<li>Gabrielle Allen</li>
+<li>Roland Haas</li>
+<li>Eliu Huerta, chair</li>
+</ul></description>
+        <speaker></speaker>
+        <registrationLabel>Registration</registrationLabel>
+        <registrationURL>https://forms.illinois.edu/sec/2866620</registrationURL>
+        <contactName></contactName>
+        <contactEmail></contactEmail>
+        <contactPhone></contactPhone>
+        <cost></cost>
+        <createdBy>kleinveh@illinois.edu</createdBy>
+        <createdDate>4/26/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>5/8/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+    <publicEventWS>
+        <calendarId>33</calendarId>
+        <calendarName>Krannert Center</calendarName>
+        <eventId>33341446</eventId>
+        <recurrence>false</recurrence>
+        <recurrenceId>0</recurrenceId>
+        <originatingCalendarId>33</originatingCalendarId>
+        <originatingCalendarName>Krannert Center</originatingCalendarName>
+        <title>Krannert Uncorked with Music</title>
+        <titleURL>https://krannertcenter.com/events/krannert-uncorked-music-5</titleURL>
+        <eventType>Performance</eventType>
+        <topic>
+            <id>46</id>
+            <name>wine tasting</name>
+        </topic>
+        <sponsor>Marquee</sponsor>
+        <dateDisplay>true</dateDisplay>
+        <startDate>6/6/2019</startDate>
+        <endDate>6/6/2019</endDate>
+        <timeType>START_TIME_ONLY</timeType>
+        <startTime>5:00 pm</startTime>
+        <endTime></endTime>
+        <endTimeLabel></endTimeLabel>
+        <location>Stage 5</location>
+        <description><p>At Krannert Uncorked, Stage 5 is the crossroads to gather, make connections, and try a new wine.</p>
+<p><em>Stage 5 now offers previously featured wines at half price during Krannert Uncorked.</em></p></description>
+        <speaker></speaker>
+        <registrationLabel></registrationLabel>
+        <registrationURL></registrationURL>
+        <contactName>Bridget Lee-Calfas</contactName>
+        <contactEmail>bklee@illinois.edu</contactEmail>
+        <contactPhone>217-333-6282</contactPhone>
+        <cost>Free</cost>
+        <createdBy>jdhuber@illinois.edu</createdBy>
+        <createdDate>4/30/2019</createdDate>
+        <editedBy></editedBy>
+        <editedDate>4/30/2019</editedDate>
+        <audienceFacultyStaff>false</audienceFacultyStaff>
+        <audienceStudents>false</audienceStudents>
+        <audiencePublic>false</audiencePublic>
+        <audienceAlumni>false</audienceAlumni>
+        <audienceParents>false</audienceParents>
+    </publicEventWS>
+</responseWS>

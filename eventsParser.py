@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
 from logging.handlers import RotatingFileHandler
+from constants import CalName2Location, int2CalDB
 import xml.etree.ElementTree as ET
 import requests
 import json
@@ -115,16 +116,16 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate+' 11:59 pm', '%m/%d/%Y %I:%M %p')
             
-            entry['startDate'] = startDateObj.isoformat()
-            entry['endDate'] = endDateObj.isoformat()
+            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
 
         if pe['timeType'] == "ALL_DAY":
             startDate = pe['startDate']
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate+' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate+' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            entry['startDate'] = startDateObj.isoformat()
-            entry['endDate'] = endDateObj.isoformat()
+            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -135,13 +136,16 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
             startDateObj = datetime.strptime(startDate+' '+startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate+' '+endTime, '%m/%d/%Y %I:%M %p')
 
-            entry['startDate'] = startDateObj.isoformat()
-            entry['endDate'] = endDateObj.isoformat()
+            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
         
 
         # Optional Field
         if 'description' in pe:
-            entry['description'] = pe['description']
+            if pe['description'] == '\n':
+                entry['description'] = ''
+            else:
+                entry['description'] = pe['description']
         if 'titleURL' in pe:
             entry['titleURL'] = pe['titleURL']
         if 'speaker' in pe:
@@ -151,7 +155,10 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         if 'cost' in pe:
             entry['cost'] = pe['cost']
         if 'topic' in pe: 
-            entry['tag'] = pe['topic']
+            entry['tags'] = pe['topic']
+        
+        entry['icalUrl'] = "https://calendars.illinois.edu/ical/{}/{}.ics".format(pe['calendarId'], pe['eventId'])
+        entry['outlookUrl'] = "https://calendars.illinois.edu/outlook2010/{}/{}.ics".format(pe['calendarId'], pe['eventId'])
 
         targetAudience = []
         targetAudience.extend(["faculty", "staff"]) if pe['audienceFacultyStaff'] == True else None
@@ -178,67 +185,105 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         # find geographical location
         # TODO: do it in re match and set some file to record special conditions
         if 'location' in pe:
-            if ("Stage" in pe['location'] or "Studio" in pe['location']) and "Krannert Center" in pe['calendarName']:
-                location = "Krannert Center for the Performing Arts"
+            location = pe['location']+', Urbana'
+
+            QueryUrl = "{}{}".format(GeoUrl, urlencode({'q': location, 'format': 'json'}))
+            GeoResponse = requests.get(QueryUrl)
+
+            if GeoResponse.status_code != 200:
+                xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
+            
+            GeoContent = json.loads(GeoResponse.text)
+            if len(GeoContent) != 0:
+                lat = float(GeoContent[0]['lat'])
+                lon = float(GeoContent[0]['lon'])
+                # for now, since app is applied to Urbana, Champaign range, latitude and longitude are ranged
+                if lat < 42 and lat > 40 and lon < -87 and lon > -89:
+                    GeoInfo = {}
+                    GeoInfo['latitude'] = lat
+                    GeoInfo['longitude'] = lon
+                    GeoInfo['description'] = GeoContent[0]['display_name']
+                    GeoInfo['rawDescription'] = pe['location']
+                    entry['location'] = GeoInfo
+                else:
+                    entry['location'] = {'rawDescription': pe['location']}
+            # when it does not show any result, refer to its default location
             else:
-                location = pe['location']+',UIUC'
-        else:
-            if "Krannert Center" in pe['calendarName']:
-                location = "Krannert Center for the Performing Arts"
-            else:
-                location = ''
-
-
-        QueryUrl = "{}{}".format(GeoUrl, urlencode({'q': location, 'format': 'json'}))
-        GeoResponse = requests.get(QueryUrl)
-
-        if GeoResponse.status_code != 200:
-            xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
-        
-        GeoContent = json.loads(GeoResponse.text)
-        if len(GeoContent) != 0:
-            GeoInfo = {}
-            GeoInfo['latitude'] = GeoContent[0]['lat']
-            GeoInfo['longitude'] = GeoContent[0]['lon']
-            GeoInfo['description'] = GeoContent[0]['display_name']
-            entry['location'] = GeoInfo
-
+                QueryUrl2="{}{}".format(GeoUrl, urlencode({'q': CalName2Location[pe['calendarName']], 'format': 'json'}))
+                GeoResponse2 = requests.get(QueryUrl2)
+                if GeoResponse2.status_code != 200:
+                    xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
+                GeoContent2 = json.loads(GeoResponse2.text)
+                if len(GeoContent2) != 0:
+                    GeoInfo = {}
+                    GeoInfo['latitude'] = float(GeoContent2[0]['lat'])
+                    GeoInfo['longitude'] = float(GeoContent2[0]['lon'])
+                    GeoInfo['description'] = GeoContent2[0]['display_name']
+                    GeoInfo['rawDescription'] = pe['location']
+                    entry['location'] = GeoInfo
+                else:
+                    entry['location'] = {'rawDescription': pe['location']}
 
         xmltoMongoDB.append(entry)
     
     return xmltoMongoDB
 
     
-def parseEventXML(xml='eventsExample.txt', jsonF='eventsExample.json'):
+def accessEventXML(store, url):
 
-    with open(xml, "r") as sample:
-        content = sample.read()
+    if url is None:
+        return None
 
-    tree = ET.fromstring(content)
+    response = requests.get(url)
 
-    XML2Json = []
+    # Response Code should be 200 (OK)
+    if response.status_code != 200:
+        xmlLogger.error("Invalid URL Link", extra={'url': url, 'eventid': None})
+        return None
+
+
+    with open(store, "a") as sample:
+        sample.write(response.text.replace("&gt;", ">").replace("&lt;", "<"))
 
         
 
 
 if __name__ == "__main__":
     
-    if len(sys.argv) != 3:
-        print("Usage: python eventsParser.py urls_file json_file")
+    if len(sys.argv) != 4:
+        print("Usage: python eventsParser.py -g|-e urls_file store_file|json_file")
+        print("       -g: get raw XML contents")
         print("       urls_file: file that contains events urls separated by newline")
-        print("       json_file: file that stores parsed result")
+        print("       store_file: file that stores raw material")
+        print("       -e: extract events information from urls")
+        print("       urls_file: file that contains events urls separated by newline")
+        print("       json_file: json file that stores parsed results")
         exit()
 
-    urls_file = sys.argv[1]
-    json_file = sys.argv[2]
-    parseResult = []
-    with open(urls_file, "r") as urlsList:
-        urls = urlsList.read().split("\n")
+    option = sys.argv[1]
+    if option == '-e':
+        urls_file = sys.argv[2]
+        json_file = sys.argv[3]
+        parseResult = []
+        with open(urls_file, "r") as urlsList:
+            urls = urlsList.read().split("\n")
 
-    for url in urls:
-        parseResult = parseResult + extractEventXMLandParse(parseResult, url=url, jsonF=json_file)
-    
-    with open(json_file, 'w') as parseContainer:
-        json.dump(parseResult, parseContainer, indent='\t')
+        for url in urls:
+            parseResult = parseResult + extractEventXMLandParse(parseResult, url=url, jsonF=json_file)
+        
+        with open(json_file, 'w') as parseContainer:
+            json.dump(parseResult, parseContainer, indent='\t')
 
+    elif option == '-g':
 
+        urls_file = sys.argv[2]
+        store_file = sys.argv[3]
+
+        with open(urls_file, "r") as urlsList:
+            urls = urlsList.read().split("\n")
+        
+        with open(store_file, "w") as storeFile:
+            pass
+        
+        for url in urls:
+            accessEventXML(store_file, url)
