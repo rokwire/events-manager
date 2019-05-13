@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
-from logging.handlers import RotatingFileHandler
+from logging import FileHandler
+from dotenv import load_dotenv
 from constants import CalName2Location, int2CalDB
 import xml.etree.ElementTree as ET
+import googlemaps 
 import requests
 import json
 import os
@@ -11,15 +13,19 @@ import logging
 import re
 import sys
 
+
 # set up logger globally and in flask, it can be done using app.logging
 if not os.path.exists('logs'):
         os.mkdir('logs')
-    
+
+# load subtle information
+load_dotenv()
+
 # CAUTION: logging message will not write to log file if its level is lower than file handler level
 #          also it does not print to console if its level is less than root level
-file_handler = RotatingFileHandler('logs/events.log', maxBytes=10240, backupCount=10)
+file_handler = FileHandler('logs/events.log')
 file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s: %(message)s-URL:'%(url)s'-EventID: %(eventid)s"))
-file_handler.setLevel(logging.ERROR)
+file_handler.setLevel(logging.INFO)
 
 xmlLogger = logging.getLogger('xmlParser')
 xmlLogger.addHandler(file_handler)
@@ -27,6 +33,9 @@ xmlLogger.setLevel(logging.INFO)
 
 # store metadata globally
 GeoUrl = "https://nominatim.openstreetmap.org/search?"
+GOOGLEKEY= os.getenv('GOOGLEKEY')
+gmaps = googlemaps.Client(key=GOOGLEKEY)
+
 
 
 def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
@@ -53,6 +62,8 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         xmlLogger.error("Invalid XML data", extra={'url': url, 'eventid': None})
         return None
     
+    xmlLogger.info("Found {} events".format(len(tree)), extra={'url': url, 'eventid': None})
+
     XML2Json = []
 
     # extract all contents from publicEvents
@@ -68,7 +79,10 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
             
             # description's field does not have text but a series of bytes
             if elem.tag == "description":
-                soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
+                try:
+                    soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
+                except Exception:
+                    xmlLogger.error("Error parsing html content under descriptions", extra={'url': url, 'eventid': publicEvent['eventId']})
                 eventDetail[elem.tag] = soup.get_text()
 
             # it is possible that there are multiple topic tags in existence
@@ -100,6 +114,7 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
     for pe in XML2Json:
 
         entry = {}
+        xmlLogger.info("Checking requests", extra={'url': url, 'eventid': pe['eventId']})
 
         # Required Field
         entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -107,7 +122,6 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
 
-        # TODO: there is a field called "dateDisplay" that seems to define whether there is a date
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
             startTime = pe['startTime']
@@ -172,7 +186,7 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         contacts = []
         contact = {}
         if 'contactName' in pe:
-            contact['firstName'] = pe['contactName'].split(' ')[0]
+            contact['firstName'] = pe['contactName'].split(' ')[0].rstrip(',')
             contact['lastName'] = pe['contactName'].split(' ')[1]
         if 'contactEmail' in pe:
             contact['email'] = pe['contactEmail']
@@ -183,7 +197,6 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
             entry['contacts']= contacts
 
         # find geographical location
-        # TODO: do it in re match and set some file to record special conditions
         if 'location' in pe:
             location = pe['location']+', Urbana'
 
@@ -226,6 +239,7 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
 
         xmltoMongoDB.append(entry)
     
+    xmlLogger.info("Parsed {} events".format(len(xmltoMongoDB)), extra={'url': url, 'eventid': None})
     return xmltoMongoDB
 
     
@@ -273,6 +287,8 @@ if __name__ == "__main__":
         
         with open(json_file, 'w') as parseContainer:
             json.dump(parseResult, parseContainer, indent='\t')
+
+        file_handler.close()
 
     elif option == '-g':
 
