@@ -60,9 +60,26 @@ The parsing is divided into two sections:<br />
                 * There are multiple results appeared usually. For simplicity, it picks the first result
                 * For more usage, [Documentation](http://nominatim.org/release-docs/latest/api/Overview/) is provided
 
+## Logging and Exception:
+
+(The logging format is: **asctime levelname: message -URL:'url'-EventID: eventid**)<br />
+
+Exception has been placed on: 
+- Error accessing XML url
+- Error analyzing XML data
+- Error finding distinguished tags from *publicEventWS*
+- Error parsing html content from *description*
+- Error accesing geographical API
+
+Logging has been placed on:
+- Record the amount of received events
+- Record event that is under parsing
+- Record the amount of parsed events
+
+
 ## TO-DO List and Potential Issues:
-- [] Insert logging utility for future debugging
-- [] Insert Exception Catch unit
+- [x] Insert logging utility for future debugging
+- [x] Insert Exception Catch unit
 - [x] Insert arguments handling for potential flask CLI usage
 - [x] Decides how to set endDate by default
 - [] Decides which geolocation API we should use
