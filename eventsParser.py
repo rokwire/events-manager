@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlencode
 from logging import FileHandler
 from dotenv import load_dotenv
-from constants import CalName2Location, int2CalDB
+from constants import CalName2Location, int2CalDB, tip4CalALoc
 import xml.etree.ElementTree as ET
 import googlemaps 
 import requests
@@ -71,7 +71,7 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
         
         # check for publicEvent tag
         if publicEvent.tag != "publicEventWS":
-            xmlLogger.warn("There is a new child tagName under root", extra={'url': url, 'eventid': None})
+            xmlLogger.error("There is a new child tagName under root", extra={'url': url, 'eventid': None})
             continue
         
         eventDetail = {}
@@ -198,44 +198,66 @@ def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
 
         # find geographical location
         if 'location' in pe:
-            location = pe['location']+', Urbana'
-
-            QueryUrl = "{}{}".format(GeoUrl, urlencode({'q': location, 'format': 'json'}))
-            GeoResponse = requests.get(QueryUrl)
-
-            if GeoResponse.status_code != 200:
-                xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
+            location = pe['location']
+            calendarName = pe['calendarName']
+            sponsor = pe['sponsor']
+            found = 0
+            for tip in tip4CalALoc:
+                if (calendarName == tip[0]) and ((tip[1] in sponsor.lower()) or (tip[2] in location.lower())):
+                    GeoInfo = {
+                        'latitude': CalName2Location[tip[3]][0],
+                        'longitude': CalName2Location[tip[3]][1],
+                        'description': pe['location']
+                    }
+                    entry['location'] = GeoInfo
+                    found = 1
+                    break
             
-            GeoContent = json.loads(GeoResponse.text)
-            if len(GeoContent) != 0:
-                lat = float(GeoContent[0]['lat'])
-                lon = float(GeoContent[0]['lon'])
-                # for now, since app is applied to Urbana, Champaign range, latitude and longitude are ranged
-                if lat < 42 and lat > 40 and lon < -87 and lon > -89:
-                    GeoInfo = {}
-                    GeoInfo['latitude'] = lat
-                    GeoInfo['longitude'] = lon
-                    GeoInfo['description'] = GeoContent[0]['display_name']
-                    GeoInfo['rawDescription'] = pe['location']
-                    entry['location'] = GeoInfo
-                else:
-                    entry['location'] = {'rawDescription': pe['location']}
-            # when it does not show any result, refer to its default location
-            else:
-                QueryUrl2="{}{}".format(GeoUrl, urlencode({'q': CalName2Location[pe['calendarName']], 'format': 'json'}))
-                GeoResponse2 = requests.get(QueryUrl2)
-                if GeoResponse2.status_code != 200:
-                    xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
-                GeoContent2 = json.loads(GeoResponse2.text)
-                if len(GeoContent2) != 0:
-                    GeoInfo = {}
-                    GeoInfo['latitude'] = float(GeoContent2[0]['lat'])
-                    GeoInfo['longitude'] = float(GeoContent2[0]['lon'])
-                    GeoInfo['description'] = GeoContent2[0]['display_name']
-                    GeoInfo['rawDescription'] = pe['location']
-                    entry['location'] = GeoInfo
-                else:
-                    entry['location'] = {'rawDescription': pe['location']}
+            if found == 0:
+                try:
+                    GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
+                except Exception:
+                    xmlLogger.error("Error Accessing Google Geocoding", extra={'url': url, 'eventid': pe['eventid']})
+
+                # QueryUrl = "{}{}".format(GeoUrl, urlencode({'q': location, 'format': 'json'}))
+                # GeoResponse = requests.get(QueryUrl)
+
+                # if GeoResponse.status_code != 200:
+                #     xmlLogger.error("Invalid GeoURL Link", extra={'url': url, 'eventid': pe['eventid']})
+                
+                # GeoContent = json.loads(GeoResponse.text)
+                if len(GeoResponse) != 0:
+                    # # for now, since app is applied to Urbana, Champaign range, latitude and longitude are ranged
+                    # if lat < 42 and lat > 40 and lon < -87 and lon > -89:
+                    #     GeoInfo = {}
+                    #     GeoInfo['latitude'] = lat
+                    #     GeoInfo['longitude'] = lon
+                    #     GeoInfo['description'] = pe['location']
+                    #     entry['location'] = GeoInfo
+                    # else:
+                    #     entry['location'] = {'description': pe['location']}
+                    
+                    lat = GeoResponse[0]['geometry']['location']['lat']
+                    lng = GeoResponse[0]['geometry']['location']['lng']
+                    # This location means UIUC in general
+                    if lat == 40.1019523 and lng == -88.2271615:
+                        if len(CalName2Location[calendarName]) != 0:
+                            GeoInfo = {
+                                'latitude': CalName2Location[calendarName][0],
+                                'longitude': CalName2Location[calendarName][1],
+                                'description': pe['location']
+                            }
+                            entry['location'] = GeoInfo
+                        else:
+                            entry['location'] = {'description': pe['location']}
+                    else:
+                        GeoInfo = {
+                            'latitude': GeoResponse[0]['geometry']['location']['lat'],
+                            'longitude': GeoResponse[0]['geometry']['location']['lng'],
+                            'description': pe['location']
+                        }
+                        entry['location'] = GeoInfo
+                    
 
         xmltoMongoDB.append(entry)
     
@@ -281,6 +303,9 @@ if __name__ == "__main__":
         parseResult = []
         with open(urls_file, "r") as urlsList:
             urls = urlsList.read().split("\n")
+        
+        with open('logs/events.log', 'w'):
+            pass
 
         for url in urls:
             parseResult = parseResult + extractEventXMLandParse(parseResult, url=url, jsonF=json_file)

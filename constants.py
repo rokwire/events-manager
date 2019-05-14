@@ -11,11 +11,20 @@ int2CalDB = {
 
 CalName2Location = {
     'General Events': '',
-    'Krannert Center': 'Krannert Center for the Performing Arts, Urbana',
+    'Krannert Center': (40.1080244,-88.224704),
     'Library Calendar': '',
     'Facility Hours': '',
-    'Beckman Main Calendar': 'Beckman Institute',
-    'Lincoln Hall Theater Events': 'Lincoln Hall, Urbana',
-    'Foellinger Auditorium Events': 'Foellinger Auditorium, Urbana',
-    'Department of Sociology': '702 S Wright St, Urbana, IL 61801',
+    'Beckman Main Calendar': (40.1157707,-88.229393),
+    'Lincoln Hall Theater Events': (40.1066066,-88.2304212),
+    'Foellinger Auditorium Events': (40.1059431,-88.2294751),
+    'Department of Sociology': (40.1066528,-88.2305061),
+    'NCSA': (40.9951304,-89.0669566),
 }
+
+# This is for confusing maps localization
+# Usage is for enforce matching: [Name, Sponsor keyword, location keyword, accessName]
+tip4CalALoc = [
+    ['Krannert Center', '', 'studio', 'Krannert Center'],
+    ['Krannert Center', '', 'stage', 'Krannert Center']
+    ['General Events', 'ncsa', 'ncsa', 'NCSA'],
+]
