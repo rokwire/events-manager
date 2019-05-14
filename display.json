@@ -1,5 +1,5 @@
 [
-    {
+	{
 		"eventId": "33336319",
 		"eventType": "Exhibition",
 		"sponsor": "Spurlock Museum",
@@ -25,13 +25,12 @@
 			}
 		],
 		"location": {
-			"latitude": 40.10759785,
-			"longitude": -88.2207852786464,
-			"description": "Spurlock Museum, 600, South Gregory Street, Urbana, Champaign County, Illinois, 61801, USA",
-			"rawDescription": "Spurlock Museum, 600 S Gregory St, Urbana"
+			"latitude": 40.10756550000001,
+			"longitude": -88.2208528,
+			"description": "Spurlock Museum, 600 S Gregory St, Urbana"
 		}
-    },
-    {
+	},
+	{
 		"eventId": "33336320",
 		"eventType": "Exhibition",
 		"sponsor": "Spurlock Museum",
@@ -57,13 +56,12 @@
 			}
 		],
 		"location": {
-			"latitude": 40.10759785,
-			"longitude": -88.2207852786464,
-			"description": "Spurlock Museum, 600, South Gregory Street, Urbana, Champaign County, Illinois, 61801, USA",
-			"rawDescription": "Spurlock Museum, 600 S Gregory St, Urbana"
+			"latitude": 40.10756550000001,
+			"longitude": -88.2208528,
+			"description": "Spurlock Museum, 600 S Gregory St, Urbana"
 		}
-    },
-    {
+	},
+	{
 		"eventId": "33325440",
 		"eventType": "Health/Fitness",
 		"sponsor": "Japan House",
@@ -80,13 +78,12 @@
 		"icalUrl": "https://calendars.illinois.edu/ical/7/33325440.ics",
 		"outlookUrl": "https://calendars.illinois.edu/outlook2010/7/33325440.ics",
 		"location": {
-			"latitude": 40.0927957,
-			"longitude": -88.2179429432438,
-			"description": "Japan House, 2000, South Lincoln Avenue, West Urbana, Urbana, Champaign County, Illinois, IL 61801, USA",
-			"rawDescription": "2000 South Lincoln Avenue Urbana, IL 61802"
+			"latitude": 40.0927651,
+			"longitude": -88.21788749999999,
+			"description": "2000 South Lincoln Avenue Urbana, IL 61802"
 		}
-    },
-    {
+	},
+	{
 		"eventId": "33341235",
 		"eventType": "Seminar/Symposium",
 		"sponsor": "NCSA",
@@ -99,10 +96,12 @@
 		"icalUrl": "https://calendars.illinois.edu/ical/7/33341235.ics",
 		"outlookUrl": "https://calendars.illinois.edu/outlook2010/7/33341235.ics",
 		"location": {
-			"rawDescription": "1040 NCSA"
+			"latitude": 40.9951304,
+			"longitude": -89.0669566,
+			"description": "1040 NCSA"
 		}
-    },
-    {
+	},
+	{
 		"eventId": "33341446",
 		"eventType": "Performance",
 		"sponsor": "Marquee",
@@ -126,10 +125,9 @@
 			}
 		],
 		"location": {
-			"latitude": 40.1080112,
-			"longitude": -88.2225280064983,
-			"description": "Krannert Center for the Performing Arts, 500, South Goodwin Avenue, Urbana, Champaign County, Illinois, 61801, USA",
-			"rawDescription": "Stage 5"
+			"latitude": 40.1080244,
+			"longitude": -88.224704,
+			"description": "Stage 5"
 		}
 	}
 ]

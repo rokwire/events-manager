@@ -38,24 +38,26 @@ gmaps = googlemaps.Client(key=GOOGLEKEY)
 
 
 
-def extractEventXMLandParse(results, url=None, jsonF='eventsExample.json'):
+def extractEventXMLandParse(provided_file=None, url=None):
 
-    if url is None:
+    if url is None and provided_file is None:
         return None
     
-    response = requests.get(url)
-
-    # Response Code should be 200 (OK)
-    if response.status_code != 200:
-        xmlLogger.error("Invalid URL Link", extra={'url': url, 'eventid': None})
-        return None
+    if url is not None:
+        response = requests.get(url)
+        # Response Code should be 200 (OK)
+        if response.status_code != 200:
+            xmlLogger.error("Invalid URL Link", extra={'url': url, 'eventid': None})
+            return None
+        
+        # CAUTION: text involved decode, may need to consider it later. Content may be useful to
+        # handle byte data like photo
+        content = response.text
+        content = content.replace("&gt;", ">").replace("&lt;", "<")
+    else:
+        with open(provided_file, 'r') as source:
+            content = source.read()
     
-    # CAUTION: text involved decode, may need to consider it later. Content may be useful to
-    # handle byte data like photo
-    content = response.text
-
-    content = content.replace("&gt;", ">").replace("&lt;", "<")
-
     try:
         tree = ET.fromstring(content)
     except:
@@ -287,12 +289,15 @@ def accessEventXML(store, url):
 if __name__ == "__main__":
     
     if len(sys.argv) != 4:
-        print("Usage: python eventsParser.py -g|-e urls_file store_file|json_file")
+        print("Usage: python eventsParser.py -g|-e|-f urls_file|xml_file store_file|json_file")
         print("       -g: get raw XML contents")
         print("       urls_file: file that contains events urls separated by newline")
         print("       store_file: file that stores raw material")
         print("       -e: extract events information from urls")
         print("       urls_file: file that contains events urls separated by newline")
+        print("       json_file: json file that stores parsed results")
+        print("       -f: extract events information from xml file")
+        print("       xml_file: file that stores events in xml format")
         print("       json_file: json file that stores parsed results")
         exit()
 
@@ -328,3 +333,14 @@ if __name__ == "__main__":
         
         for url in urls:
             accessEventXML(store_file, url)
+
+    elif option == '-f':
+
+        xml_file = sys.argv[2]
+        json_file = sys.argv[3]
+
+        parseResult = extractEventXMLandParse(provided_file=xml_file)
+        with open(json_file, 'w') as parseContainer:
+            json.dump(parseResult, parseContainer, indent='\t')
+
+        file_handler.close()
