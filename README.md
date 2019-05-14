@@ -8,6 +8,9 @@ python -g|-e eventsParser.py url_file store_file|json_file<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;-e: parse raw xml material into json content from urls<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url_file: it contains list of urls separated by line for events extraction<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json_file: json file that stores parsed result
+&nbsp;&nbsp;&nbsp;&nbsp;-f: parse raw xml material into json content from events xml file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xml_file: it contains raw xml contents for events extraction<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;json_file: json file that stores parsed result
 
 
 ## Description
@@ -55,6 +58,11 @@ The parsing is divided into two sections:<br />
     - location: extracted from **location** 
         * location information provided by URL is usually not exact, there are two API service to solve it
             - [Google Geocoding API](https://cloud.google.com/maps-platform/), it has relatively accurate and complete database for lookup and it may has a fast response towards request but it is not tested yet. However, it requires a paid private account for accessing
+            - The usage for API is through googlmap module which is completed by Google. The Documentation is 
+              [here](https://googlemaps.github.io/google-maps-services-python/docs/)
+            - It is proven that google API provides more comprehensive results by location inputs
+            - For the current process, initially, location will be used to do hardcode matching because some descriptions are confusing. If there are no match, it will be searched through API and extract out the corresponding information. 
+            - For simplicity, pick the first one of the results.
             - [Nominatim](http://nominatim.org/), it is currently in use for this parser. It is free with unlimited access. 
                 * The usage for Nominatim is quite straighforward, this parser use *https://nominatim.openstreetmap.org/search?q=location&format=json* with location found in XML
                 * There are multiple results appeared usually. For simplicity, it picks the first result
