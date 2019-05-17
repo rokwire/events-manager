@@ -25,6 +25,6 @@ CalName2Location = {
 # Usage is for enforce matching: [Name, Sponsor keyword, location keyword, accessName]
 tip4CalALoc = [
     ['Krannert Center', '', 'studio', 'Krannert Center'],
-    ['Krannert Center', '', 'stage', 'Krannert Center']
+    ['Krannert Center', '', 'stage', 'Krannert Center'],
     ['General Events', 'ncsa', 'ncsa', 'NCSA'],
 ]

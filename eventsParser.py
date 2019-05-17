@@ -14,6 +14,11 @@ import re
 import sys
 
 
+# 1. add schema fields: events status
+# 2. fill out floor
+# 3. 
+
+
 # set up logger globally and in flask, it can be done using app.logging
 if not os.path.exists('logs'):
         os.mkdir('logs')
@@ -79,13 +84,20 @@ def extractEventXMLandParse(provided_file=None, url=None):
         eventDetail = {}
         for elem in publicEvent:
             
-            # description's field does not have text but a series of bytes
+            # # description's field does not have text but a series of bytes
+            # if elem.tag == "description":
+            #     try:
+            #         soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
+            #     except Exception:
+            #         xmlLogger.error("Error parsing html content under descriptions", extra={'url': url, 'eventid': publicEvent['eventId']})
+            #     eventDetail[elem.tag] = soup.get_text()
             if elem.tag == "description":
-                try:
-                    soup = BeautifulSoup(ET.tostring(elem), 'html.parser')
-                except Exception:
-                    xmlLogger.error("Error parsing html content under descriptions", extra={'url': url, 'eventid': publicEvent['eventId']})
-                eventDetail[elem.tag] = soup.get_text()
+                if len(elem) < 1:
+                    if elem.text is None:
+                        continue
+                    eventDetail[elem.tag] = elem.text.decode('utf-8')
+                else:
+                    eventDetail[elem.tag] = ET.tostring(elem[0]).decode('utf-8')
 
             # it is possible that there are multiple topic tags in existence
             elif elem.tag == "topic":
@@ -123,6 +135,10 @@ def extractEventXMLandParse(provided_file=None, url=None):
         entry['eventType'] = pe['eventType'] if 'eventType' in pe else ""
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
+        entry['source'] = pe['calendarId'] if 'calendarId' in pe else ""
+        entry['eventStatus'] = "incomplete"
+        entry['allDay'] = False
+        
 
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
@@ -136,6 +152,7 @@ def extractEventXMLandParse(provided_file=None, url=None):
             entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
 
         if pe['timeType'] == "ALL_DAY":
+            entry['allDay'] = True
             startDate = pe['startDate']
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate+' 12:00 am', '%m/%d/%Y %I:%M %p')
@@ -205,7 +222,7 @@ def extractEventXMLandParse(provided_file=None, url=None):
             sponsor = pe['sponsor']
             found = 0
             for tip in tip4CalALoc:
-                if (calendarName == tip[0]) and ((tip[1] in sponsor.lower()) or (tip[2] in location.lower())):
+                if (calendarName == tip[0]) and ((tip[1] in sponsor.lower()) and (tip[2] in location.lower())):
                     GeoInfo = {
                         'latitude': CalName2Location[tip[3]][0],
                         'longitude': CalName2Location[tip[3]][1],
@@ -313,7 +330,7 @@ if __name__ == "__main__":
             pass
 
         for url in urls:
-            parseResult = parseResult + extractEventXMLandParse(parseResult, url=url, jsonF=json_file)
+            parseResult = parseResult + extractEventXMLandParse(url=url)
         
         with open(json_file, 'w') as parseContainer:
             json.dump(parseResult, parseContainer, indent='\t')
@@ -339,6 +356,9 @@ if __name__ == "__main__":
         xml_file = sys.argv[2]
         json_file = sys.argv[3]
 
+        with open('logs/events.log', 'w'):
+            pass
+        
         parseResult = extractEventXMLandParse(provided_file=xml_file)
         with open(json_file, 'w') as parseContainer:
             json.dump(parseResult, parseContainer, indent='\t')
