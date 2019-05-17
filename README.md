@@ -1,4 +1,4 @@
-# Command Line Parser Tool for XML Event Parsing
+# Command Line Parser Tool for XML Event Parsing for School XML calendar
 
 ## Usage
 python -g|-e eventsParser.py url_file store_file|json_file<br/>
@@ -25,6 +25,8 @@ The parsing is divided into two sections:<br />
     - eventType: extracted from **eventType**
     - sponsor: extracted from **sponsor** 
     - title: extracted from **title**
+    - allDay: default set to False. When **timeType** is ALL_DAY, it is set to True
+    - source: extracted from **calendarId**
     - startDate: **timeType** will provide information about whether **startTime** exists or not
         * if **timeType** is **ALL_TIME**, 
             - startDate is set to 00:00 in the **startDate**
@@ -33,6 +35,7 @@ The parsing is divided into two sections:<br />
         * if **timeType** is **START_TIME_ONLY** or **ALL_TIME**, 
             - endDate is set to 23:59 in the **endDate**
         * else extracted from **endDate** and **endTime**
+    - eventStauts: now defaulted to incomplete but from reliable sources, it should be marked as approved
 - Optional Fields:
     - description: extracted from **description** and furthered parsed by *Beautiful Soup 4.4* 
     - titleURL: extracted from **titleURL** 
@@ -53,7 +56,6 @@ The parsing is divided into two sections:<br />
         * **contactEmail**
         * **contactPhone** 
     - tags: extracted from 
-        * **eventId** 
         * **topic.name** 
     - location: extracted from **location** 
         * location information provided by URL is usually not exact, there are two API service to solve it
@@ -90,9 +92,9 @@ Logging has been placed on:
 - [x] Insert Exception Catch unit
 - [x] Insert arguments handling for potential flask CLI usage
 - [x] Decides how to set endDate by default
-- [] Decides which geolocation API we should use
+- [x] Decides which geolocation API we should use
 - [x] Figure out what does the number in ical and outlook download links refer to. For example, a sample event has ical download like: **"https://calendars.illinois.edu/ical/7/33338116.ics"**. Then, what does **7** means here. (The answer is that the number refers to events location. For example, 33 means Krannert Center)
-- [] Fix encoding issue. Some characters are encoded in unicode and parsed into ascii. It appears usually in **speaker**
+- [x] Fix encoding issue. Some characters are encoded in unicode and parsed into ascii. It appears usually in **speaker**
 
 ## Results and Raw XML content
 
