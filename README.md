@@ -10,3 +10,22 @@ pip install -r requirements.txt
 ```
 
 ## Run in Development Mode
+There are two ways to do so:
+
+The first one (Linux or MAC):
+- export FLASK_APP=flaskr
+- export FLASK_ENV=development
+- flask run
+
+(Windows):
+- set FLASK_APP=flaskr
+- set FLASK_ENV=development
+- flask run
+
+The second one:
+- create a file called .flaskenv
+- fill in file with: 
+    - FLASK_APP=\_\_init\_\_.py
+    - FLASK_ENV=development
+    - FLASK_DEBUG=1
+
