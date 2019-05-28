@@ -26,7 +26,8 @@ The parsing is divided into two sections:<br />
     - sponsor: extracted from **sponsor** 
     - title: extracted from **title**
     - allDay: default set to False. When **timeType** is ALL_DAY, it is set to True
-    - source: extracted from **calendarId**
+    - calendarId: extracted from **calendarId**
+    - source: corresponding to source where we extracted data from
     - startDate: **timeType** will provide information about whether **startTime** exists or not
         * if **timeType** is **ALL_TIME**, 
             - startDate is set to 00:00 in the **startDate**

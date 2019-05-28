@@ -135,7 +135,8 @@ def extractEventXMLandParse(provided_file=None, url=None):
         entry['eventType'] = pe['eventType'] if 'eventType' in pe else ""
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
-        entry['source'] = pe['calendarId'] if 'calendarId' in pe else ""
+        entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
+        entry['sourceId'] = '0'
         entry['eventStatus'] = "incomplete"
         entry['allDay'] = False
         
