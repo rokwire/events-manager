@@ -1,0 +1,5 @@
+class Config(object):
+    MONGO_URI='...'
+    DBTYPE='...'
+    SECRET_KEY='...'
+    

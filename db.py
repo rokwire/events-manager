@@ -10,16 +10,16 @@ from flask import current_app
 # TODO: insert try and catch function
 # TODO: complete mysql function if needed
 
-def find_one(co_or_ta, filter=None):
+def find_one(co_or_ta, filter=None, *args, **kwargs):
     
     dbType = current_app.config['DBTYPE']
     dbClient = current_app.config['DBCLIENT']
-    if co_or_ta is None or filter is None:
+    if co_or_ta is None:
         return 
     
     if dbType == "mongoDB":
         collection = dbClient.db.get_collection(co_or_ta)
-        return collection.find_one(filter)
+        return collection.find_one(filter, *args, **kwargs)
     
     elif dbType == "mysql":
         cursor = dbClient.get_db().cursor()
@@ -35,19 +35,19 @@ def find_one(co_or_ta, filter=None):
         except:
             print("Error: unable to fetch data")
 
-def insert_one(co_or_ta, entry=None):
+def insert_one(co_or_ta, document=None, **kwargs):
     dbType = current_app.config['DBTYPE']
     dbClient = current_app.config['DBCLIENT']
-    if entry is None or co_or_ta is None:
+    if document is None or co_or_ta is None:
         return
     
     if dbType == "mongoDB":
         collection = dbClient.db.get_collection(co_or_ta)
-        collection.insert_one(entry)
+        collection.insert_one(document=document, **kwargs)
     elif dbType == "mysql":
         pass
 
-def find_one_and_update(co_or_ta, filter=None, update=None):
+def find_one_and_update(co_or_ta, filter=None, update=None, **kwargs):
     dbClient = current_app.config['DBCLIENT']
     dbType = current_app.config['DBTYPE']
     if co_or_ta is None or filter is None or update is None:
@@ -55,6 +55,19 @@ def find_one_and_update(co_or_ta, filter=None, update=None):
     
     if dbType == "mongoDB":
         collection = dbClient.db.get_collection(co_or_ta)
-        collection = dbClient.find_one_and_update(filter, update)
+        dbClient.find_one_and_update(filter, update, **kwargs)
+    elif dbType == "mysql":
+        pass
+
+def find_all(co_or_ta, **kwarg):
+    dbClient = current_app.config['DBCLIENT']
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None:
+        return
+    
+    if dbType == "mongoDB":
+        collection = dbClient.db.get_collection(co_or_ta)
+        return collection.find(**kwarg)
     elif dbType == "mysql":
         pass
