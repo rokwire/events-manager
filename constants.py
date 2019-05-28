@@ -1,8 +1,3 @@
-int2SrcDB= {
-    '0': 'WebTools',
-    '1': 'EMS',
-}
-
 int2CalDB = {
     '7': "General Events",
     '33': "Krannert Center",
@@ -12,6 +7,11 @@ int2CalDB = {
     '127': "Lincoln Hall Theater Events",
     '128': 'Foellinger Auditorium Events',
     '169': 'Department of Sociology',
+}
+
+int2SrcDB= {
+    '0': ('WebTools', int2CalDB),
+    '1': ('EMS', ),
 }
 
 CalName2Location = {
