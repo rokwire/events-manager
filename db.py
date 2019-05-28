@@ -29,7 +29,6 @@ def init_db(app):
     app.teardown_appcontext(close_db)
 
 def find_one(co_or_ta, filter=None, *args, **kwargs):
-    
     db = get_db()
     dbType = current_app.config['DBTYPE']
     
@@ -42,7 +41,6 @@ def find_one(co_or_ta, filter=None, *args, **kwargs):
     
 
 def insert_one(co_or_ta, document=None, **kwargs):
-
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
@@ -65,7 +63,6 @@ def find_one_and_update(co_or_ta, filter=None, update=None, **kwargs):
         db.find_one_and_update(filter, update, **kwargs)
 
 def find_all(co_or_ta, **kwarg):
-
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
