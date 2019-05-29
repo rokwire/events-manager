@@ -7,6 +7,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskr.db import find_one, insert_one, find_one_and_update
 
+from bson.objectid import ObjectId
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
@@ -25,7 +27,7 @@ def register():
 
         if error is None:
             password_hash = generate_password_hash(password)
-            insert_one('user', entry={"username": username, "password_hash": password_hash})
+            insert_one('user', document={"username": username, "password_hash": password_hash})
             return redirect(url_for('auth.login'))
 
         flash(error)
@@ -47,11 +49,11 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['_id']
+            session['user_id'] = string(user['_id'])
             if request.form['source-login']:
-                return redirect(url_for('event.event_source'))
+                return redirect(url_for('event.user'))
             if request.form['user-login']:
-                return redirect(url_for('event.event_user'))
+                return redirect(url_for('event.user'))
 
         flash(error)
 
@@ -59,7 +61,7 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    user_id = ObjectId(session.get('user_id'))
 
     if user_id is None:
         g.user = None
