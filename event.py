@@ -23,7 +23,7 @@ def source(sourceId):
   total = math.ceil(len(calendars)/current_app.config['PAGINATION'])
   next_page = url_for('event.source', sourceId=sourceId, page=page+1)) if len(calendars) > current_app.config['PAGINATION'] else None
   prev_page = url_for('event.source', sourceId=sourceId, page=page-1)) if page > 1 else None
-  return render_template('events/sources-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, current_page=page, next_page=next_page, prev_page=prev_page, total=total)
+  return render_template('events/sources.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, current_page=page, next_page=next_page, prev_page=prev_page, total=total)
 
 @bp.route('calendar/<calendarId>', methods=('GET', 'POST'))
  @login_required
