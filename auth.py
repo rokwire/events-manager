@@ -49,7 +49,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = string(user['_id'])
+            session['user_id'] = str(user['_id'])
             if request.form['source-login']:
                 return redirect(url_for('event.user'))
             if request.form['user-login']:
