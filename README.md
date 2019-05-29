@@ -13,12 +13,12 @@ pip install -r requirements.txt
 There are two ways to do so:
 
 The first one (Linux or MAC):
-- export FLASK_APP=flaskr
+- export FLASK_APP=eventsmanager
 - export FLASK_ENV=development
 - flask run
 
 (Windows):
-- set FLASK_APP=flaskr
+- set FLASK_APP=eventsmanager
 - set FLASK_ENV=development
 - flask run
 
