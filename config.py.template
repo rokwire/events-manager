@@ -1,7 +1,15 @@
 class Config(object):
+
+    # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
+    # MONGO_DATABASE refers to the mongoDB's database that we are about to access to
     MONGO_HOST="..."
     MONGO_PORT=...
     MONGO_DATABASE="..."
+
+    # It refers to database system we use. Currently it should be "mongoDB". 
     DBTYPE='...'
+
+    # SECRET_KEY aims to generate hash for user input password and join some other security
+    # protect measurements. 
     SECRET_KEY='...'
     

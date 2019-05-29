@@ -1,12 +1,6 @@
 import pymongo
 from flask import current_app,g
 
-# Currently, assume there are only one database
-# Also, in query, there are no range filter like x>1 for mysql
-
-# TODO: insert try and catch function
-# TODO: complete mysql function if needed
-
 def get_db():
     if 'dbclient' not in g:
         if current_app.config['DBTYPE'] == 'mongoDB':
@@ -31,7 +25,6 @@ def init_db(app):
 def find_one(co_or_ta, filter=None, *args, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
-    
     if co_or_ta is None:
         return 
     
