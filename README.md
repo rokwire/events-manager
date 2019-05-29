@@ -10,3 +10,17 @@ pip install -r requirements.txt
 ```
 
 ## Run in Development Mode
+This repository should be put inside a folder `/flaskr`. Run these commands outside the folder.
+
+For Linux and Mac:
+```
+export FLASK_APP=flaskr
+export FLASK_ENV=develop
+flask run
+```
+For Windows:
+```
+set FLASK_APP=flaskr
+set FLASK_ENV=develop
+flask run
+```
