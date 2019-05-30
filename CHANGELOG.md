@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [0.0.2] - 2019-05-30
+### Added
+- Login and register pages and `auth` blueprint
+
+
 ## [0.0.1] - 2019-05-24
 ### Added
 - db.py that has needed functions to support DB usage in authentication function
@@ -17,4 +22,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - html files in template
 
 ### Removed
-

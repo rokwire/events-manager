@@ -1,5 +1,5 @@
 # events-manager
-The goal of the events manager is to provide a web interface to manage events in the Rokwire platform. This includes the crawling events from event sources, the approval of the events ingestion to Rokwire events building block and the visualization of the events, etc. 
+The goal of the events manager is to provide a web interface to manage events in the Rokwire platform. This includes the crawling events from event sources, the approval of the events ingestion to Rokwire events building block and the visualization of the events, etc.
 
 ## Setup Environment
 
@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 
 ## Run in Development Mode
-There are two ways to do so:
+This repository should be put inside `/eventsmanager` and run outside the folder. There are two ways to do so:
 
 The first one (Linux or MAC):
 - export FLASK_APP=eventsmanager
@@ -24,8 +24,7 @@ The first one (Linux or MAC):
 
 The second one:
 - create a file called .flaskenv
-- fill in file with: 
+- fill in file with:
     - FLASK_APP=\_\_init\_\_.py
     - FLASK_ENV=development
     - FLASK_DEBUG=1
-
