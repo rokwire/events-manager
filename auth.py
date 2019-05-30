@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from flaskr.db import find_one, insert_one, find_one_and_update
+from .db import find_one, insert_one, find_one_and_update
 
 from bson.objectid import ObjectId
 
@@ -50,9 +50,9 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = str(user['_id'])
-            if request.form['source-login']:
+            if 'source-login' in request.form:
                 return "success", 200
-            if request.form['user-login']:
+            if 'user-login' in request.form:
                 return "success", 200
 
         flash(error)

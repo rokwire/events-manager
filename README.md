@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 
 ## Run in Development Mode
-This repository should be put inside `/flaskr` and run outside the folder. There are two ways to do so:
+This repository should be put inside `/eventsmanager` and run outside the folder. There are two ways to do so:
 
 The first one (Linux or MAC):
 - export FLASK_APP=eventsmanager
