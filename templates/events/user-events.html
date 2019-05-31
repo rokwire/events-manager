@@ -1,114 +1,90 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
+{% extends 'base.html' %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+{% block title %}
+  User Events
+{% endblock %}
 
-    <title>User Events</title>
-</head>
-
-<body>
-    <header class="sitebar">
-      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="/">Events Manager</a>
-        </div>
-        <button type="button" class="btn btn-light">Log out</button>
-      </nav>
-    </header>
-
-    <!-- filter and select operations -->
-    <main role="main" class="container" >
-      <div class = "container d-none d-md-block">
-          <div class="row row-content">
-            <div class="col-12 col-sm-1 order-sm-first">
-              <h4>Show</h4>
-            </div>
-            <!--  checkbox group -->
-            <div class="form-check form-check-inline">
-              <input type="checkbox" class="form-check-input" id="materialInline1">
-              <label class="form-check-label" for="materialInline1">Approved</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input type="checkbox" class="form-check-input" id="materialInline2">
-                <label class="form-check-label" for="materialInline2">Disapproved</label>
-            </div>
-            <div class="form-check form-check-inline col-sm-3">
-                <input type="checkbox" class="form-check-input" id="materialInline3">
-                <label class="form-check-label" for="materialInline3">Published</label>
-            </div>
-            <!-- Search form -->
-            <div class="md-form mt-0">
-              <input class="form-control" type="text" placeholder="Search Events..." aria-label="Search">
-            </div>
-            <div class="col-12 col-sm-1 order-sm-last">
-              <button type="button" class="btn btn-outline-primary">Search</button>
-            </div>
+{% block content %}
+  <!-- filter and select operations -->
+  <main role="main" class="container" >
+    <div class = "container d-none d-md-block">
+        <div class="row row-content">
+          <div class="col-12 col-sm-1 order-sm-first">
+            <h4>Show</h4>
           </div>
-
-          <div class="row row-content">
-            <div class="col-12">
-              <hr class="divider"/>
-              <center><h2>User Events</h2></center>
-              <div id = "accordion">
-                {% for post in posts%}
-                    <div class="card">
-                      <div class="card-header" role="tab", id = "head">
-                      <h3 class="mb-0">
-                          <a data-toggle="collapse" data-target="#{{post.eventId}}">
-                            {{ post.title }}
-                          </a>
-                          <a href="/user-events/event{{post.eventId}}" class="btn btn-default ml-auto float-right">
-                            <!-- <span class="fa fa-home fa-lg"></span> -->
-                            <h5>></h5>
-                          </a>
-                      </h3>
-
-                      </div>
-                      <div role="tabpanel" class="collapse" id="{{post.eventId}}">
-                          <div class="card-body">
-                            <p class="d-none d-sm-block">
-                              {% autoescape false %}
-                              <p>  {{post.description}} </p>
-                              {% endautoescape %}
-                            </p>
-                          </div>
-                      </div>
-                  </div class = "card">
-                {% endfor%}
-              </div class = "accordion">
-            </div>
+          <!--  checkbox group -->
+          <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="materialInline1">
+            <label class="form-check-label" for="materialInline1">Approved</label>
+          </div>
+          <div class="form-check form-check-inline">
+              <input type="checkbox" class="form-check-input" id="materialInline2">
+              <label class="form-check-label" for="materialInline2">Disapproved</label>
+          </div>
+          <div class="form-check form-check-inline col-sm-3">
+              <input type="checkbox" class="form-check-input" id="materialInline3">
+              <label class="form-check-label" for="materialInline3">Published</label>
+          </div>
+          <!-- Search form -->
+          <div class="md-form mt-0">
+            <input class="form-control" type="text" placeholder="Search Events..." aria-label="Search">
+          </div>
+          <div class="col-12 col-sm-1 order-sm-last">
+            <button type="button" class="btn btn-outline-primary">Search</button>
+          </div>
         </div>
 
-        <!-- page navigation -->
-        <nav aria-label="Page navigation example">
-          <ul class="pagination justify-content-center">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-              </a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </main>
+        <div class="row row-content">
+          <div class="col-12">
+            <hr class="divider"/>
+            <center><h2>User Events</h2></center>
+            <div id = "accordion">
+              {% for post in posts%}
+                  <div class="card">
+                    <div class="card-header" role="tab", id = "head">
+                    <h3 class="mb-0">
+                        <a data-toggle="collapse" data-target="#{{post._id}}">
+                          {{ post.title }}
+                        </a>
+                        <a href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" class="btn btn-default ml-auto float-right">
+                          <!-- <span class="fa fa-home fa-lg"></span> -->
+                          <h5>></h5>
+                        </a>
+                    </h3>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</body>
+                    </div>
+                    <div role="tabpanel" class="collapse" id="{{post._id}}">
+                        <div class="card-body">
+                          <p class="d-none d-sm-block">
+                            {% autoescape false %}
+                            <p>  {{post.description}} </p>
+                            {% endautoescape %}
+                          </p>
+                        </div>
+                    </div>
+                </div class = "card">
+              {% endfor%}
+            </div class = "accordion">
+          </div>
+      </div>
+
+      <!-- page navigation -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </main>
+{% endblock %}

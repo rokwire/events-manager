@@ -22,7 +22,7 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif find_one('user', filter={"username": username}) is not None:
+        elif find_one('user', condition={"username": username}) is not None:
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
@@ -40,7 +40,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = find_one('user', filter={"username": username})
+        user = find_one('user', condition={"username": username})
 
         if user is None:
             error = 'Incorrect username.'
@@ -66,7 +66,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = find_one('user', filter={'_id': user_id})
+        g.user = find_one('user', condition={'_id': user_id})
 
 @bp.route('/logout')
 def logout():
