@@ -1,9 +1,11 @@
-def find_user_event(eventId, posts):
+def get_all_user_events():
     pass
 
-
-def edit_user_event(eventId, posts):
+def find_user_event(eventId):
     pass
 
-def delete_user_event(eventId, posts):
+def update_user_event(eventId):
+    pass
+
+def delete_user_event(eventId):
     pass

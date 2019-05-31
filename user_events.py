@@ -9,8 +9,8 @@ def user_events():
 
 @userbp.route('/event<id>',  methods=['GET'])
 def user_an_event(id):
-	return render_template("events/event.html", post = find_user_event(id, posts))
+	return render_template("events/event.html", post = find_user_event(id))
 
 @userbp.route('/event<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
-    return render_template("events/event-edit.html", post = find_user_event(id, posts))
+    return render_template("events/event-edit.html", post = find_user_event(id))
