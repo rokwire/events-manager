@@ -7,13 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
-## [0.0.2] - 2019-05-30
 ### Added
+- user events page and user event subpage and `user_events` blueprint
+- user events templates
 - Login and register pages and `auth` blueprint
-
-
-## [0.0.1] - 2019-05-24
-### Added
 - db.py that has needed functions to support DB usage in authentication function
 - \_\_init\_\_.py that creates an app instance but its config loading is different than the one in tutorial
 
