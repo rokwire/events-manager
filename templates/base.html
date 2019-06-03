@@ -21,7 +21,13 @@
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Events Manager</a>
         </div>
-        <button type="button" class="btn btn-light">Log out</button>
+        {% if g.user %}
+          <span>Hello, {{ g.user.username }}</span>
+          <a role="button" class="btn btn-light" href="{{ url_for('auth.logout') }}">Logout</a>
+        {% else %}
+          <a role="button" class="btn btn-light" href="{{ url_for('auth.register') }}">Register</a>
+          <a role="button" class="btn btn-light" href="{{ url_for('auth.login') }}">Login</a>
+        {% endif %}
       </nav>
     </header>
 
