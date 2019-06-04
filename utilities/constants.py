@@ -1,3 +1,4 @@
+# This a mapping between webtools calendars id to name
 int2CalDB = {
     '7': "General Events",
     '33': "Krannert Center",
@@ -9,11 +10,15 @@ int2CalDB = {
     '169': 'Department of Sociology',
 }
 
+
+# This is a mapping between different sources to different calendar mapping
 int2SrcDB= {
     '0': ('WebTools', int2CalDB),
     '1': ('EMS', ),
 }
 
+
+# This is used as customed geolocation for different calendar sources
 CalName2Location = {
     'General Events': '',
     'Krannert Center': (40.1080244,-88.224704),
@@ -26,6 +31,7 @@ CalName2Location = {
     'NCSA': (40.9951304,-89.0669566),
 }
 
+
 # This is for confusing maps localization
 # Usage is for enforce matching: [Name, Sponsor keyword, location keyword, accessName]
 tip4CalALoc = [
@@ -34,6 +40,8 @@ tip4CalALoc = [
     ['General Events', 'ncsa', 'ncsa', 'NCSA'],
 ]
 
+
+# Mapping between webtool calendar event type to Rokwire event type
 eventTypeMap = {
     "Exhibition":               "Entertainment", 
     "Festival/Celebration":     "Entertainment", 

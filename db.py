@@ -1,4 +1,6 @@
 import pymongo
+from pymongo.errors import ConnectionFailure
+from pymongo.results import InsertOneResult, UpdateResult
 from flask import current_app,g
 
 ######################################################################
@@ -7,12 +9,17 @@ from flask import current_app,g
 def get_db():
     if 'dbclient' not in g:
         if current_app.config['DBTYPE'] == 'mongoDB':
-            g.dbclient = pymongo.MongoClient(
-                host=current_app.config['MONGO_HOST'],
-                port=current_app.config['MONGO_PORT'],
-            )
+            try:
+                g.dbclient = pymongo.MongoClient(
+                    host=current_app.config['MONGO_HOST'],
+                    port=current_app.config['MONGO_PORT'],
+                )
+            except ConnectionFailure:
+                print("MongoDB connection failed.")
+                if 'dbclient' in g:
+                    g.pop('dbclient', None)
+                return None
             g.db = g.dbclient.get_database(name=current_app.config['MONGO_DATABASE'])
-    
     return g.db
 
 
@@ -34,8 +41,8 @@ def init_db(app):
 def find_one(co_or_ta, condition=None, *args, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
-    if co_or_ta is None:
-        return 
+    if co_or_ta is None or db is None:
+        return {}
     
     if dbType == "mongoDB":
         collection = db.get_collection(co_or_ta)
@@ -46,8 +53,8 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if co_or_ta is None or condition is None or update is None:
-        return
+    if co_or_ta is None or condition is None or update is None or db is None:
+        return {}
     
     if dbType == "mongoDB":
         collection = db.get_collection(co_or_ta)
@@ -58,8 +65,8 @@ def find_all(co_or_ta, **kwarg):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if co_or_ta is None:
-        return
+    if co_or_ta is None or db is None:
+        return []
     
     if dbType == "mongoDB":
         collection = db.get_collection(co_or_ta)
@@ -70,8 +77,8 @@ def insert_one(co_or_ta, document=None, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if document is None or co_or_ta is None:
-        return
+    if document is None or co_or_ta is None or db is None:
+        return InsertOneResult()
 
     if dbType == "mongoDB":
         collection = db.get_collection(co_or_ta)
@@ -82,8 +89,8 @@ def update_one(co_or_ta, condition=None, update=None, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if update is None or co_or_ta is None or condition is None:
-        return
+    if update is None or co_or_ta is None or condition is None or db is None:
+        return UpdateResult()
 
     if dbType == "mongoDB":
         collection = db.get_collection(co_or_ta)

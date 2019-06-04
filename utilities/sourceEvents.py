@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from ..db import update_one
 
@@ -13,6 +13,13 @@ import requests
 ######################################################################
 ### parsing helper functions
 ######################################################################
+
+# this function is used for providing a customed geoinformation when 
+# google API can not be utilized. For example, in Krannert Art Center 
+# events, studio 5 and stage 5 are often appeared which by API, they
+# points to different unrelated location in Champaign. These conditions
+# are rare and for now, this function will search for keywords in location
+# description and combine with calendar name to find the mapped geoinfo
 def search_static_location(calendarName, sponsor, location):
     for tip in tip4CalALoc:
         if calendarName==tip[0] and ((tip[1] in sponsor.lower()) and (tip[2] in location.lower())):
@@ -40,7 +47,8 @@ def download(url):
     if response.status_code != 200:
         print("Invalid URL link: {}".format(url))
 
-    content = response.text.replace("&gt;", ">").replace("&lt;", "<")
+    # content = response.text.replace("&gt;", ">").replace("&lt;", "<")
+    content = response.text
     return content
 
 
@@ -64,9 +72,9 @@ def parse(content, gmaps):
                 if len(elem) < 1:
                     if elem.text is None:
                         continue
-                    eventDetail[elem.tag] = elem.text.decode('utf-8')
+                    eventDetail[elem.tag] = elem.text
                 else:
-                    eventDetail[elem.tag] = ET.tostring(elem[0]).decode('utf-8')
+                    eventDetail[elem.tag] = ET.tostring(elem[0])
             elif elem.tag == "topic":
                 if 'topic' in eventDetail:
                     eventDetail['topic'].append(elem[1].text)
@@ -104,11 +112,12 @@ def parse(content, gmaps):
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
             startTime = pe['startTime']
-            startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
+            startDateObj = datetime.strptime(startDate + ' ' + startTime + '', '%m/%d/%Y %I:%M %p')
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
-            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            # Convert CDT to UTC (offset by 5 hours)
+            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         if pe['timeType'] == "ALL_DAY":
             entry['allDay'] = True
@@ -116,8 +125,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
-            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            # Convert CDT to UTC (offset by 5 hours)
+            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -126,8 +136,9 @@ def parse(content, gmaps):
             endTime = pe['endTime']
             startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
-            entry['startDate'] = startDateObj.strftime('%Y/%m/%dT%H:%M:%S')
-            entry['endDate'] = endDateObj.strftime('%Y/%m/%dT%H:%M:%S')
+            # Convert CDT to UTC (offset by 5 hours)
+            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         # Optional Field
         if 'description' in pe:
@@ -208,16 +219,16 @@ def parse(content, gmaps):
 
 def store(documents):
 
-    new = 0
-    old = 0
+    update = 0
+    insert = 0
     for document in documents:
         result = update_one(current_app.config['EVENT_COLLECTION'], condition={'eventId': document['eventId']},
                             update={'$set': document}, upsert=True)
         if result.matched_count == result.modified_count:
-            new += 1
+            insert += 1
         else:
-            old += 1
-    print("During storing, {} are updated and {} are inserted.".format(old, new))
+            update += 1
+    return (insert, update)
 
 
 def start():
@@ -233,18 +244,26 @@ def start():
     except ValueError as e:
         print("Error in connecting Google Api: {}".format(e))
     
+    update_in_total = 0
+    insert_in_total = 0
     urls = geturl(current_app.config['EVENT_URLS'])
     for url in urls:
-        rawEvents = download(url)
-        if rawEvents is None:
-            print("Invalid content in: {}".format(url))
-            continue
-        print("Begin parsing url: {}".format(url))
         try:
+            rawEvents = download(url)
+            if rawEvents is None:
+                print("Invalid content in: {}".format(url))
+                continue
+            print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
+            (insert, update) = store(parsedEvents)
+            insert_in_total += insert
+            update_in_total += update
+            print("{} are updated, {} are inserted".format(update, insert))
         except Exception as e:
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
-        store(parsedEvents)
+    print("DateTime: {}, overall parsing result: {} are updated, {} are inserted".format(
+        datetime.utcnow(), update_in_total, insert_in_total
+    ))
 
     
