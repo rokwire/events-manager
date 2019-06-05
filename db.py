@@ -102,8 +102,11 @@ def insert_one(co_or_ta, document=None, **kwargs):
         return InsertOneResult()
 
     if dbType == "mongoDB":
-        collection = db.get_collection(co_or_ta)
-        return collection.insert_one(document=document, **kwargs)
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.insert_one(document=document, **kwargs)
+        except:
+            return UpdateResult()
 
 
 def update_one(co_or_ta, condition=None, update=None, **kwargs):
@@ -114,7 +117,10 @@ def update_one(co_or_ta, condition=None, update=None, **kwargs):
         return UpdateResult()
 
     if dbType == "mongoDB":
-        collection = db.get_collection(co_or_ta)
-        return collection.update_one(condition, update, **kwargs)
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.update_one(condition, update, **kwargs)
+        except Exception:
+            return UpdateResult()
 
 
