@@ -45,8 +45,15 @@ def find_one(co_or_ta, condition=None, *args, **kwargs):
         return {}
     
     if dbType == "mongoDB":
-        collection = db.get_collection(co_or_ta)
-        return collection.find_one(filter=condition, *args, **kwargs)
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.find_one(filter=condition, *args, **kwargs)
+        except TypeError:
+            print("Invalid arguments inserted")
+            return {}
+        except Exception:
+            print("Unknown error using find_one")
+            return {}
 
 
 def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
@@ -57,8 +64,15 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
         return {}
     
     if dbType == "mongoDB":
-        collection = db.get_collection(co_or_ta)
-        return collection.find_one_and_update(condition, update, **kwargs)
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.find_one_and_update(condition, update, **kwargs)
+        except TypeError:
+            print("Invalid arguments inserted")
+            return {}
+        except Exception:
+            print("Unknown error using find_one")
+            return {}
 
 
 def find_all(co_or_ta, **kwarg):
@@ -69,8 +83,15 @@ def find_all(co_or_ta, **kwarg):
         return []
     
     if dbType == "mongoDB":
-        collection = db.get_collection(co_or_ta)
-        return collection.find(**kwarg)
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.find(**kwarg)
+        except TypeError:
+            print("Invalid arguments inserted")
+            return []
+        except Exception:
+            print("Unknown error using find_one")
+            return []
 
 
 def insert_one(co_or_ta, document=None, **kwargs):

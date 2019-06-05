@@ -224,7 +224,9 @@ def store(documents):
     for document in documents:
         result = update_one(current_app.config['EVENT_COLLECTION'], condition={'eventId': document['eventId']},
                             update={'$set': document}, upsert=True)
-        if result.matched_count == result.modified_count:
+        if result.modified_count == 0 and result.matched_count == 0 and result.upserted_id is None:
+            print("Store {} failed".format(document['eventId']))
+        elif result.matched_count == result.modified_count:
             insert += 1
         else:
             update += 1

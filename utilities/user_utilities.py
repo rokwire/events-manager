@@ -21,11 +21,12 @@ def update_user_event(objectId, update):
         _id = ObjectId(objectId)
     except InvalidId:
         return {}
-    return update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
-                      update={
-                          "$set": update
-                      })
-
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
+                              update={
+                                  "$set": update
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Update {} fails".format(objectId))
  
 def delete_user_event(eventId):
     pass
