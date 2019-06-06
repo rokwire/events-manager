@@ -12,4 +12,14 @@ class Config(object):
     # SECRET_KEY aims to generate hash for user input password and join some other security
     # protect measurements. 
     SECRET_KEY='...'
-    
+
+    # GOOGLE_KEY is used to access Google Geocoding service
+    GOOGLE_KEY='...'
+
+    # EVENT_COLLECTION defines the event collection name we are using to store events
+    EVENT_COLLECTION='...'
+
+    # EVENT_URLS is the path to file that sets the calendar urls for accessing calendar events
+    # By default, it should be a txt file and its path shall be relative to block folder, in this 
+    # case, eventsmanager
+    EVENT_URLS='...'

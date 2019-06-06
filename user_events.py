@@ -1,10 +1,11 @@
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint
-from utilities.user_utilities import *
+from .utilities.user_utilities import *
 
 userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
 @userbp.route('/')
 def user_events():
+    posts = get_all_user_events()
     return render_template("events/user-events.html", posts=posts)
 
 @userbp.route('/event<id>',  methods=['GET'])
