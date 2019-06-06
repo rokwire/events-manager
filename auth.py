@@ -51,7 +51,7 @@ def login():
             session.clear()
             session['user_id'] = str(user['_id'])
             if 'source-login' in request.form:
-                return "success", 200
+                return redirect(url_for('event.source', sourceId=0))
             if 'user-login' in request.form:
                 return "success", 200
 

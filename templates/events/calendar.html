@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}{{title}}{% endblock %}</h1>
+{% endblock %}
+
+
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{url_for('event.source', sourceId=source[0])}}">{{source[1]}}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{title}}</li>
+  </ol>
+</nav>
+
+<h1 class="text-center">{{title}}</h1>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col text-center">
+      <button type="button" class="btn btn-primary text-center">Approve calendar</button>
+    </div>
+  </div>
+  
+  <div class="row row-content">
+    <div class="col-12 col-sm-1 order-sm-first">
+      <h4>Show</h4>
+    </div>
+    <!--  checkbox group -->
+    <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline1">
+      <label class="form-check-label" for="materialInline1">Approved</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="materialInline2">
+        <label class="form-check-label" for="materialInline2">Disapproved</label>
+    </div>
+    <div class="form-check form-check-inline col-sm-3">
+        <input type="checkbox" class="form-check-input" id="materialInline3">
+        <label class="form-check-label" for="materialInline3">Published</label>
+    </div>
+    <!-- Search form -->
+      <div class="md-form mt-0">
+        <input class="form-control" type="text" placeholder="Search Events..." aria-label="Search">
+      </div>
+      <div class="col-12 col-sm-1 order-sm-last">
+        <button type="button" class="btn btn-outline-primary">Search</button>
+      </div>
+  </div>
+</div>
+
+
+
+
+<div id = "accordion">
+  {% for post in posts %}
+      <div class="card">
+        <div class="card-header" role="tab" id = "head">
+        <h3 class="mb-0">
+            <a data-toggle="collapse" data-target="#{{post._id}}">
+              {{ post.title }}
+            </a>
+            <a href="/user-events/event/{{post._id}}" class="btn btn-default ml-auto float-right">
+              <h5>></h5>
+            </a>
+        </h3>
+
+        </div>
+        <div role="tabpanel" class="collapse" id="{{post._id}}">
+            <div class="card-body">
+              <p class="d-none d-sm-block">
+                {% autoescape false %}
+                {{post.description}}
+                {% endautoescape %}
+              </p>
+            </div>
+        </div>
+    </div class = "card">
+  {% endfor %}
+</div class = "accordion">
+<!--
+<nav aria-label="...">
+  <ul class="pagination justify-content-center">
+    {% if not prev_page %}
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Previous</a>
+    </li>
+    {% else %}
+    <li class="page-item">
+	    <a class="page-link" href={{prev_page}}>Previous</a>
+    </li>
+    {% endif %}
+    {% for i in range(total) %}
+      {% if i == current_page %}
+    <li class="page-item active">
+	    <a class="page-link" href="#">{{i}}<span class="sr-only">(current)</span></a>
+    </li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="{{url_for('event.source', sourceId=sourceId, page=i)}}">{{i}}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if not next_page %}
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1">Next</a>
+    </li>
+    {% else %}
+    <li class="page-item">
+	    <a class="page-link" href={{next_page}}>Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+-->
+{% endblock %}
