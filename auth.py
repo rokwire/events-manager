@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .db import find_one, insert_one, find_one_and_update
+from .db import find_one, insert_one
 
 from bson.objectid import ObjectId
 
