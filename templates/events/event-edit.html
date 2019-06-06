@@ -73,33 +73,25 @@
            {% endif %}
 
            <!-- event type -->
-           <!-- TODO add option scroll down list-->
            <div class="form-group row row-content">
              <div class="col-12 col-sm-2">
                <h5>Category: </h5>
              </div>
              <div class="col-sm-9">
                <div class="form-group">
-                 <select class="selectpicker" title="Event Type..." >
-                   {% if post.eventType %}
-                     <option>Exhibition</option>
-                     <option>Health/Fitness</option>
-                     <option>Seminar/Symposium</option>
-                     <option>Performance</option>
-                     <option selected = true>None</option>
-                   {%else%}
-                     <option>Exhibition</option>
-                     <option>Health/Fitness</option>
-                     <option>Seminar/Symposium</option>
-                     <option>Performance</option>
-                     <option selected = true> None </option>
-                   {%endif%}
+                 <select id = "selectlist" class="selectpicker" title="Event Type..." >
+                   {% for key in eventTypeMap %}
+                     {% if post.eventType == key %}
+                       <option id = {{key}} selected = true>{{key}}</option>
+                     {% else %}
+                       <option id = {{key}}>{{key}}</option>
+                     {% endif %}
+                   {% endfor %}
                  </select>
                </div>
              </div>
            </div>
-
-
+           
            <!-- startDate -->
            {% if post.startDate%}
              <div class="form-group row row-content">
