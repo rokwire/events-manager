@@ -1,5 +1,6 @@
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint
 from .utilities.user_utilities import *
+from .utilities.constants import *
 
 userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
@@ -16,4 +17,4 @@ def user_an_event(id):
 @userbp.route('/event<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post = find_user_event(id)
-    return render_template("events/event-edit.html", post = post)
+    return render_template("events/event-edit.html", post = post, eventTypeMap = eventTypeMap)
