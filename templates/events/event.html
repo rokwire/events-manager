@@ -85,9 +85,9 @@
             {% if post.eventType%}
               <div class="row row-content">
                 <div class="col-12 col-sm-2">
-                  <h5>Event Type: </h5>
+                  <h5>Category: </h5>
                 </div>
-                <p>{{ post.eventType }}</p>
+                <p class="col-sm-9">{{ post.eventType }}</p>
               </div>
             {% endif %}
 
@@ -97,7 +97,9 @@
                 <div class="col-12 col-sm-2">
                   <h5>Start Date: </h5>
                 </div>
-                <p>{{ post.startDate }}</p>
+                <p class="col-sm-9" id="startDate">
+                  {{post.startDate}}
+                </p>
               </div>
             {% endif %}
 
@@ -107,7 +109,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>End Date: </h5>
                 </div>
-                <p>{{ post.endDate}}</p>
+                <p class="col-sm-9" id="endDate">{{ post.endDate}}</p>
               </div>
             {% endif %}
 
