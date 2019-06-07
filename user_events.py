@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint
+from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request
 from .utilities.user_utilities import *
 from .utilities.constants import *
 
@@ -16,5 +16,17 @@ def user_an_event(id):
 
 @userbp.route('/event<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
-    post = find_user_event(id)
-    return render_template("events/event-edit.html", post = post, eventTypeMap = eventTypeMap)
+    post_by_id = find_user_event(id)
+	if request.method == 'POST':
+        # change the specific event
+        post_by_id['titleURL'] = request.form['titleURL']
+        post_by_id['startDate'] = request.form['startDate']
+		post_by_id['endDate'] = request.form['endDate']
+        post_by_id['cost'] = request.form['cost']
+        post_by_id['sponsor'] = request.form['sponsor']
+        # more parts editable TODO ....
+
+        # TODO insert update_user_event function here later
+        #all_post = get_all_user_events();
+
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap)
