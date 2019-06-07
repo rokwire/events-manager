@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .db import find_one, insert_one, find_one_and_update
+from .db import find_one, insert_one
 
 from bson.objectid import ObjectId
 
@@ -51,7 +51,7 @@ def login():
             session.clear()
             session['user_id'] = str(user['_id'])
             if 'source-login' in request.form:
-                return "success", 200
+                return redirect(url_for('event.source', sourceId=0))
             if 'user-login' in request.form:
                 return "success", 200
 

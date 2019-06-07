@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Added
+- source and calendar pages, `event` blueprint
 - user events page and user event subpage and `user_events` blueprint
 - user events templates
 - Login and register pages and `auth` blueprint
@@ -16,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - python scripts in *utilities* subfolder for providing wrapper db functions and source events crawling
 
 ### Changed
+- `base.html` to add spacing between items in navigation bar
 - Modify some functions in auth.py written by Phoebe to accommodate mongDB's usage
 - html files in template
 
 ### Removed
-
