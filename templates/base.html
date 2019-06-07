@@ -21,13 +21,15 @@
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Events Manager</a>
         </div>
+        <div class="row align-items-center">
         {% if g.user %}
-          <span>Hello, {{ g.user.username }}</span>
-          <a role="button" class="btn btn-light" href="{{ url_for('auth.logout') }}">Logout</a>
+          <div class="col"><span class="text-light">Hello, {{ g.user.username }}</span></div>
+          <div class="col"><a role="button" class="btn btn-light col" href="{{ url_for('auth.logout') }}">Logout</a></div>
         {% else %}
-          <a role="button" class="btn btn-light" href="{{ url_for('auth.register') }}">Register</a>
-          <a role="button" class="btn btn-light" href="{{ url_for('auth.login') }}">Login</a>
+          <div class="col"><a role="button" class="btn btn-light" href="{{ url_for('auth.register') }}">Register</a></div>
+          <div class="col"><a role="button" class="btn btn-light" href="{{ url_for('auth.login') }}">Login</a></div>
         {% endif %}
+        </div>
       </nav>
     </header>
 
@@ -35,9 +37,12 @@
       <div class="flash">{{ message }}</div>
     {% endfor %}
 
-    {% block content%}
-    {% endblock %}
-
+    <main role="main" class="container" >
+      <div class = "container d-none d-md-block">
+        {% block content%}
+        {% endblock %}
+      </div>
+    </main>
 
     {% block scripts %}
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

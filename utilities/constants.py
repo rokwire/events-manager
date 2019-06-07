@@ -1,20 +1,20 @@
 # This a mapping between webtools calendars id to name
-int2CalDB = {
-    '7': "General Events",
-    '33': "Krannert Center",
-    '47': 'Library Calendar',
-    '63': 'Facility Hours',
-    '117': 'Beckman Main Calendar',
-    '127': "Lincoln Hall Theater Events",
-    '128': 'Foellinger Auditorium Events',
-    '169': 'Department of Sociology',
-}
+int2CalDB = [
+    {'7': 'General Events'},
+    {'33': 'Krannert Center'},
+    {'47': 'Library Calendar'},
+    {'63': 'Facility Hours'},
+    {'117': 'Beckman Main Calendar'},
+    {'127': 'Lincoln Hall Theater Events'},
+    {'128': 'Foellinger Auditorium Events'},
+    {'169': 'Department of Sociology'}
+]
 
 
 # This is a mapping between different sources to different calendar mapping
 int2SrcDB= {
     '0': ('WebTools', int2CalDB),
-    '1': ('EMS', ),
+    '1': ('EMS', []),
 }
 
 
@@ -43,22 +43,22 @@ tip4CalALoc = [
 
 # Mapping between webtool calendar event type to Rokwire event type
 eventTypeMap = {
-    "Exhibition":               "Entertainment", 
-    "Festival/Celebration":     "Entertainment", 
+    "Exhibition":               "Entertainment",
+    "Festival/Celebration":     "Entertainment",
     "Film Screening":           "Entertainment",
-    "Performance":              "Entertainment", 
-    "Informational":            "Academic", 
-    "Lecture":                  "Academic", 
+    "Performance":              "Entertainment",
+    "Informational":            "Academic",
+    "Lecture":                  "Academic",
     "Meeting":                  "Academic",
-    "Reception/Open House":     "Academic", 
-    "Seminar/Symposium":        "Academic",  
-    "Ceremony/Service":         "Community", 
+    "Reception/Open House":     "Academic",
+    "Seminar/Symposium":        "Academic",
+    "Ceremony/Service":         "Community",
     "Community Service":        "Community",
-    "Social/Informal Event":    "Community", 
-    "Conference/Workshop":      "Career Development", 
-    "Professional Development": "Career Development", 
-    "Health/Fitness":           "Recreation", 
-    "Sporting Event":           "Recreation", 
+    "Social/Informal Event":    "Community",
+    "Conference/Workshop":      "Career Development",
+    "Professional Development": "Career Development",
+    "Health/Fitness":           "Recreation",
+    "Sporting Event":           "Recreation",
     "Sidearm":                  "Athletics",
     "Other":                    "Other",
 }
