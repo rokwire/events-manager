@@ -62,3 +62,29 @@ eventTypeMap = {
     "Sidearm":                  "Athletics",
     "Other":                    "Other",
 }
+
+
+# Mapping between Rokwire event type and its subcatorgories(if the event type do have it)
+subcategoriesMap = {
+    "Athletics": [
+        "Men's Basketball", 
+        "Women's Basketball",
+        "Men's Cross Country", 
+        "Women's Cross Country",
+        "Men's Golf", 
+        "Women's Golf", 
+        "Men's Gymnastics", 
+        "Women's Gymnastics", 
+        "Men's Tennis", 
+        "Women's Tennis", 
+        "Men's Track & Field",
+        "Women's Track & Field",  
+        "Women's Soccer", 
+        "Baseball",
+        "Football",
+        "Softball", 
+        "Swim & Dive", 
+        "Wrestling", 
+        "Volleyball"
+    ]
+}
