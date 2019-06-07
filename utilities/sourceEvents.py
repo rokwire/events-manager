@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from ..db import update_one
 
-from .constants import CalName2Location, int2CalDB, tip4CalALoc, eventTypeMap
+from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 
 from flask import current_app
 
