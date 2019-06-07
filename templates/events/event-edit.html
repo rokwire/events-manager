@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 {% endblock %}
 
-{% block content %}
+{% block modals %}
 <!-- the save Confirmation form -->
 <div id="SaveModal" class="modal fade" role="dialog">
  <div class="modal-dialog modal-lg" role="content">
@@ -38,331 +38,334 @@
      </div>
    </div>
  </div>
+{% endblock %}
 
+
+{% block content %}
  <!-- filter and select operations -->
- <main role="main" class="container" >
-   <div class = "container d-none d-md-block">
-     <form role="form">
-     <div class="row row-content">
-       <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+<form role="form">
+  <!-- back to all events button -->
+  <div class="row row-content">
+   <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+  </div>
+
+  <!-- form inputs -->
+  <div class="row row-content">
+     <article class="media content-section">
+       <div class="media-body">
+          <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
+          <hr class="divider"/>
+          <!-- event url -->
+          {% if post.titleURL%}
+            <div class="form-group row row-content">
+              <label class="col-12 col-sm-2 form-control-label">
+                <h5>Event URL: </h5>
+              </label>
+              <div class="col-sm-9">
+                <input class="form-control" type="url" value={{post.titleURL}} />
+              </div>
+            </div>
+          {% else %}
+          <div class="form-group row row-content">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Event URL: </h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="url" />
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- event type -->
+          <div class="form-group row row-content">
+            <div class="col-12 col-sm-2">
+              <h5>Category: </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select id = "selectlist" class="selectpicker" title="Event Type..." >
+                  {% for key in eventTypeMap %}
+                    {% if post.eventType == key %}
+                      <option id = {{key}} selected = true>{{key}}</option>
+                    {% else %}
+                      <option id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- startDate -->
+          {% if post.startDate%}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5> Start Date: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="datetime-local" value={{post.startDate}} min="2000-01-01T00:00" max="2050-01-01T00:00" />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5> Start Date: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- endDate -->
+          {% if post.endDate%}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>End Date: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="datetime-local" value={{post.endDate}} />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5> End Date: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- location -->
+          {% if post.location.description %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Location: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" value={{post.location.description}} />
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- target audience -->
+          {% if post.targetAudience %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Target Audience: </h5>
+              </div>
+              <div class = "col-sm-2">
+              {%for audience in post.targetAudience%}
+                <input class="form-control" type="text" value={{audience}} />
+              {% endfor%}
+              </div>
+            </div>
+          <!-- if there is no target audience TODO -->
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Target Audience: </h5>
+              </div>
+              <div class = "col-sm-2">
+              <input class="form-control" type="text"  />
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- cost -->
+          {% if post.cost%}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Cost: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" value={{post.cost}} />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Cost: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" />
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- contacts -->
+          {% if post.contacts %}
+            {% for contact in post.contacts %}
+              {% if contact.firstName and contact.lastName %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Person: </h5>
+                  </div>
+                  <div class="col-sm-2">
+                    <input class="form-control" type="text" value={{contact.firstName}} />
+                  </div>
+                  <div class="col-offset-6 col-sm-2">
+                    <input class="form-control" type="text" value={{contact.lastName}} />
+                  </div>
+                </div>
+              {% elif contact.firstName %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Person: </h5>
+                  </div>
+                  <div class="col-sm-2">
+                    <input class="form-control" type="text" value={{contact.firstName}} />
+                  </div>
+                  <div class="col-offset-6 col-sm-2">
+                    <input class="form-control" type="text" />
+                  </div>
+                </div>
+              {% elif contact.lastName %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Person: </h5>
+                  </div>
+                  <div class="col-sm-2">
+                    <input class="form-control" type="text" />
+                  </div>
+                  <div class="col-offset-6 col-sm-2">
+                    <input class="form-control" type="text" value={{contact.lastName}} />
+                  </div>
+                </div>
+              {% else %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Person: </h5>
+                  </div>
+                  <div class="col-sm-2">
+                    <input class="form-control" type="text" />
+                  </div>
+                  <div class="col-offset-6 col-sm-2">
+                    <input class="form-control" type="text" />
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if contact.email %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Email: </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="email" value={{contact.email}} />
+                  </div>
+                </div>
+              {% else %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Email: </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="email"/>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if contact.phone %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Phone: </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value={{contact.phone}} />
+                  </div>
+                </div>
+              {% else %}
+                <div class="form-group row row-content">
+                  <div class="col-12 col-sm-2">
+                    <h5>Contact Phone: </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="form-control" type="text" value=/>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor%}
+          <!-- if there is no contact currently TODO -->
+          {% else %}
+
+
+          {% endif %}
+
+          <!-- tags TODO-->
+          {% if post.tags%}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Tags: </h5>
+              </div>
+              <div class = "col-sm-2">
+              {% for tag in post.tags%}
+                  <input class="form-control" type="text" value={{tag}} />
+              {% endfor%}
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- sponsor -->
+          {% if post.sponsor%}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Sponsor: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" value={{post.sponsor}} />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Sponsor: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text"/>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- description -->
+          {% if post.description%}
+          <div class="form-group row row-content">
+            <div class="col-12 col-sm-2">
+              <h5>Description: </h5>
+            </div>
+            <div class="col-12 col-sm-9">
+                <textarea class="form-control" rows="12">{{post.description}}</textarea>
+            </div>
+          </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Description: </h5>
+              </div>
+              <div class="col-12 col-sm-9">
+                  <textarea id="description" class="form-control" rows="12"></textarea>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+     </article>
+  </div>
+
+  <!-- cancel/submit button groups -->
+  <div class="row justify-content-center">
+   <div role="toolbar" aria-label="Toolbar with button groups">
+     <div class="btn-group mr-2" role="group" aria-label="first group">
+       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
      </div>
-     <div class="row row-content">
-       <article class="media content-section">
-         <div class="media-body">
-           <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
-           <hr class="divider"/>
-           <!-- event url -->
-           {% if post.titleURL%}
-             <div class="form-group row row-content">
-               <label class="col-12 col-sm-2 form-control-label">
-                 <h5>Event URL: </h5>
-               </label>
-               <div class="col-sm-9">
-                 <input class="form-control" type="url" value={{post.titleURL}} />
-               </div>
-             </div>
-           {% else %}
-           <div class="form-group row row-content">
-             <label class="col-12 col-sm-2 form-control-label">
-               <h5>Event URL: </h5>
-             </label>
-             <div class="col-sm-9">
-               <input class="form-control" type="url" />
-             </div>
-           </div>
-           {% endif %}
-
-           <!-- event type -->
-           <div class="form-group row row-content">
-             <div class="col-12 col-sm-2">
-               <h5>Category: </h5>
-             </div>
-             <div class="col-sm-9">
-               <div class="form-group">
-                 <select id = "selectlist" class="selectpicker" title="Event Type..." >
-                   {% for key in eventTypeMap %}
-                     {% if post.eventType == key %}
-                       <option id = {{key}} selected = true>{{key}}</option>
-                     {% else %}
-                       <option id = {{key}}>{{key}}</option>
-                     {% endif %}
-                   {% endfor %}
-                 </select>
-               </div>
-             </div>
-           </div>
-           
-           <!-- startDate -->
-           {% if post.startDate%}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5> Start Date: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="datetime-local" value={{post.startDate}} min="2000-01-01T00:00" max="2050-01-01T00:00" />
-               </div>
-             </div>
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5> Start Date: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- endDate -->
-           {% if post.endDate%}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>End Date: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="datetime-local" value={{post.endDate}} />
-               </div>
-             </div>
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5> End Date: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- location -->
-           {% if post.location.description %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Location: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="text" value={{post.location.description}} />
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- target audience -->
-           {% if post.targetAudience %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Target Audience: </h5>
-               </div>
-               <div class = "col-sm-2">
-               {%for audience in post.targetAudience%}
-                 <input class="form-control" type="text" value={{audience}} />
-               {% endfor%}
-               </div>
-             </div>
-           <!-- if there is no target audience TODO -->
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Target Audience: </h5>
-               </div>
-               <div class = "col-sm-2">
-               <input class="form-control" type="text"  />
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- cost -->
-           {% if post.cost%}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Cost: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="text" value={{post.cost}} />
-               </div>
-             </div>
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Cost: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="text" />
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- contacts -->
-           {% if post.contacts %}
-             {% for contact in post.contacts %}
-               {% if contact.firstName and contact.lastName %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Person: </h5>
-                   </div>
-                   <div class="col-sm-2">
-                     <input class="form-control" type="text" value={{contact.firstName}} />
-                   </div>
-                   <div class="col-offset-6 col-sm-2">
-                     <input class="form-control" type="text" value={{contact.lastName}} />
-                   </div>
-                 </div>
-               {% elif contact.firstName %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Person: </h5>
-                   </div>
-                   <div class="col-sm-2">
-                     <input class="form-control" type="text" value={{contact.firstName}} />
-                   </div>
-                   <div class="col-offset-6 col-sm-2">
-                     <input class="form-control" type="text" />
-                   </div>
-                 </div>
-               {% elif contact.lastName %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Person: </h5>
-                   </div>
-                   <div class="col-sm-2">
-                     <input class="form-control" type="text" />
-                   </div>
-                   <div class="col-offset-6 col-sm-2">
-                     <input class="form-control" type="text" value={{contact.lastName}} />
-                   </div>
-                 </div>
-               {% else %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Person: </h5>
-                   </div>
-                   <div class="col-sm-2">
-                     <input class="form-control" type="text" />
-                   </div>
-                   <div class="col-offset-6 col-sm-2">
-                     <input class="form-control" type="text" />
-                   </div>
-                 </div>
-               {% endif %}
-
-               {% if contact.email %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Email: </h5>
-                   </div>
-                   <div class="col-sm-9">
-                     <input class="form-control" type="email" value={{contact.email}} />
-                   </div>
-                 </div>
-               {% else %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Email: </h5>
-                   </div>
-                   <div class="col-sm-9">
-                     <input class="form-control" type="email"/>
-                   </div>
-                 </div>
-               {% endif %}
-
-               {% if contact.phone %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Phone: </h5>
-                   </div>
-                   <div class="col-sm-9">
-                     <input class="form-control" type="text" value={{contact.phone}} />
-                   </div>
-                 </div>
-               {% else %}
-                 <div class="form-group row row-content">
-                   <div class="col-12 col-sm-2">
-                     <h5>Contact Phone: </h5>
-                   </div>
-                   <div class="col-sm-9">
-                     <input class="form-control" type="text" value=/>
-                   </div>
-                 </div>
-               {% endif %}
-             {% endfor%}
-           <!-- if there is no contact currently TODO -->
-           {% else %}
-
-
-           {% endif %}
-
-           <!-- tags TODO-->
-           {% if post.tags%}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Tags: </h5>
-               </div>
-               <div class = "col-sm-2">
-               {% for tag in post.tags%}
-                   <input class="form-control" type="text" value={{tag}} />
-               {% endfor%}
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- sponsor -->
-           {% if post.sponsor%}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Sponsor: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="text" value={{post.sponsor}} />
-               </div>
-             </div>
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Sponsor: </h5>
-               </div>
-               <div class="col-sm-9">
-                 <input class="form-control" type="text"/>
-               </div>
-             </div>
-           {% endif %}
-
-           <!-- description -->
-           {% if post.description%}
-           <div class="form-group row row-content">
-             <div class="col-12 col-sm-2">
-               <h5>Description: </h5>
-             </div>
-             <div class="col-12 col-sm-9">
-                 <textarea class="form-control" rows="12">{{post.description}}</textarea>
-             </div>
-           </div>
-           {% else %}
-             <div class="form-group row row-content">
-               <div class="col-12 col-sm-2">
-                 <h5>Description: </h5>
-               </div>
-               <div class="col-12 col-sm-9">
-                   <textarea class="form-control" rows="12"></textarea>
-               </div>
-             </div>
-           {% endif %}
-
-         </div class = "media-body">
-       </article>
+     <div class="btn-group mr-2" role="group" aria-label="Second group">
+       <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a>
      </div>
-     <div class="row justify-content-center">
-       <div role="toolbar" aria-label="Toolbar with button groups">
-         <div class="btn-group mr-2" role="group" aria-label="first group">
-           <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
-         </div>
-         <div class="btn-group mr-2" role="group" aria-label="Second group">
-           <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a>
-         </div>
-       </div>
-     </div>
-     </form>
    </div>
- </main>
+  </div>
+</form>
+{% endblock %}
 
 <!-- js script for select list in form -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-{% endblock %}
