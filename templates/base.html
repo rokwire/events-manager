@@ -37,6 +37,9 @@
       <div class="flash">{{ message }}</div>
     {% endfor %}
 
+    {% block modals %}
+    {% endblock %}
+
     <main role="main" class="container" >
       <div class = "container d-none d-md-block">
         {% block content%}
