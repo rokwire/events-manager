@@ -77,6 +77,7 @@
           {% endif %}
 
           <!-- event type -->
+          <!-- update TODO -->
           <div class="form-group row row-content">
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
@@ -364,7 +365,9 @@
        <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
-       <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a>
+       <!-- discard the modal use js to alarm Confirmation later -->
+       <!-- <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a> -->
+       <button class="btn btn-block nav-link btn-primary" role="submit" >Save</button>
      </div>
    </div>
   </div>
