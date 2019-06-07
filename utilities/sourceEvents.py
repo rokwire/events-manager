@@ -106,7 +106,6 @@ def parse(content, gmaps):
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
         entry['sourceId'] = '0'
-        entry['eventStatus'] = "disapproved"
         entry['allDay'] = False
 
         if pe['timeType'] == "START_TIME_ONLY":
