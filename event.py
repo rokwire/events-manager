@@ -6,24 +6,20 @@ from werkzeug.exceptions import abort
 from .auth import login_required
 from .db import find_all
 
-import sys
 from .utilities.constants import int2SrcDB
-import math
-
-from bson.objectid import ObjectId
 
 bp = Blueprint('event', __name__, url_prefix='/event')
 
-@bp.route('/source/<sourceId>', methods=('GET', 'POST'))
+@bp.route('/source/<sourceId>')
 @login_required
 def source(sourceId):
-    page = request.args.get('page', 0, type=int)
+    # page = request.args.get('page', 0, type=int)
     allsources = int2SrcDB
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
     return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0)
 
-@bp.route('calendar/<calendarId>', methods=('GET', 'POST'))
+@bp.route('calendar/<calendarId>')
 @login_required
 def calendar(calendarId):
     # find source of current calendar
