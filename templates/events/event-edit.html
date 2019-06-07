@@ -46,7 +46,7 @@
 <form id = "form" action = "{{url_for('user_events.user_an_event', id=post['_id'])}}" method="POST">
   <!-- back to all events button -->
   <div class="row row-content">
-   <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
 
   <!-- form inputs -->
@@ -62,7 +62,7 @@
                 <h5>Event URL: </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" value={{post.titleURL}} />
+                <input class="form-control" type="url" name="titleURL" value={{post.titleURL}} />
               </div>
             </div>
           {% else %}
@@ -71,7 +71,7 @@
               <h5>Event URL: </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" />
+              <input class="form-control" type="url" name="titleURL"/>
             </div>
           </div>
           {% endif %}
@@ -103,7 +103,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" value={{post.startDate}} min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="startDate" value={{post.startDate}} min="2000-01-01T00:00" max="2050-01-01T00:00" />
               </div>
             </div>
           {% else %}
@@ -112,7 +112,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="startDate" min="2000-01-01T00:00" max="2050-01-01T00:00" />
               </div>
             </div>
           {% endif %}
@@ -124,7 +124,7 @@
                 <h5>End Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" value={{post.endDate}} />
+                <input class="form-control" type="datetime-local" name="endDate" value={{post.endDate}} />
               </div>
             </div>
           {% else %}
@@ -133,12 +133,13 @@
                 <h5> End Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="endDate" min="2000-01-01T00:00" max="2050-01-01T00:00" />
               </div>
             </div>
           {% endif %}
 
           <!-- location -->
+          <!-- TODO -->
           {% if post.location.description %}
             <div class="form-group row row-content">
               <div class="col-12 col-sm-2">
@@ -151,6 +152,7 @@
           {% endif %}
 
           <!-- target audience -->
+          <!-- TODO -->
           {% if post.targetAudience %}
             <div class="form-group row row-content">
               <div class="col-12 col-sm-2">
@@ -181,7 +183,7 @@
                 <h5>Cost: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" value={{post.cost}} />
+                <input class="form-control" type="text" name="cost" value={{post.cost}} />
               </div>
             </div>
           {% else %}
@@ -190,12 +192,13 @@
                 <h5>Cost: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" />
+                <input class="form-control" type="text" name="cost"/>
               </div>
             </div>
           {% endif %}
 
           <!-- contacts -->
+          <!--  TODO -->
           {% if post.contacts %}
             {% for contact in post.contacts %}
               {% if contact.firstName and contact.lastName %}
@@ -315,7 +318,7 @@
                 <h5>Sponsor: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" value={{post.sponsor}} />
+                <input class="form-control" type="text" name="sponsor" value={{post.sponsor}} />
               </div>
             </div>
           {% else %}
@@ -324,12 +327,13 @@
                 <h5>Sponsor: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text"/>
+                <input class="form-control" type="text" name="sponsor"/>
               </div>
             </div>
           {% endif %}
 
           <!-- description -->
+          <!-- TODO -->
           {% if post.description%}
           <div class="form-group row row-content">
             <div class="col-12 col-sm-2">
