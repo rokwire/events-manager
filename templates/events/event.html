@@ -221,10 +221,11 @@
   <div class="row row-content justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
-        <a role="button" class="btn btn-block nav-link btn-outline-primary"
+        <!-- <a role="button" class="btn btn-block nav-link btn-outline-primary"
           data-toggle="modal" data-html="true" data-target="#ApproveModal">
           Approve
-        </a>
+        </a> -->
+         <button class="btn btn-block nav-link btn-outline-primary" role="submit" >Approve</button>
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
