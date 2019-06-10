@@ -21,7 +21,7 @@ def user_an_event_edit(id):
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
         post_by_id['startDate'] = request.form['startDate']
-		post_by_id['endDate'] = request.form['endDate']
+        post_by_id['endDate'] = request.form['endDate']
         post_by_id['cost'] = request.form['cost']
         post_by_id['sponsor'] = request.form['sponsor']
         # more parts editable TODO ....

@@ -53,7 +53,7 @@ def login():
             if 'source-login' in request.form:
                 return redirect(url_for('event.source', sourceId=0))
             if 'user-login' in request.form:
-                return "success", 200
+                return redirect(url_for('user_events.user_events'))
 
         flash(error)
 
