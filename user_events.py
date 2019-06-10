@@ -26,6 +26,6 @@ def user_an_event_edit(id):
         post_by_id['sponsor'] = request.form['sponsor']
         # more parts editable TODO ....
 
-        # TODO insert update_user_event function here later
-        #all_post = get_all_user_events();
+        # insert update_user_event function here later
+        update_user_event(id, post_by_id)
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap)
