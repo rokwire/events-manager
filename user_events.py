@@ -13,15 +13,15 @@ def user_events():
         search_type = None
         if '&' in searchInput:
         	input_list = searchInput.split('&')
-        	if input_list[0][0:2]=='id':
+        	if len(input_list[0]) > 3 and input_list[0][0:2]=='id':
         		search_id = input_list[0][3:]
-        	if input_list[1][0:4]=='type':
+        	if len(input_list[1]) > 5 and input_list[1][0:4]=='type':
         		search_type = input_list[1][5:]
         else:
-        	if searchInput[0:2]=='id':
-        		search_id = input_list[0][3:]
-        	elif searchInput[0:4]=='type':
-        		search_type = input_list[1][5:]
+        	if len(searchInput) > 3 and searchInput[0:2]=='id':
+        		search_id = searchInput[3:]
+        	elif len(searchInput) > 5 and searchInput[0:4]=='type':
+        		search_type = searchInput[5:]
         result_dic = {}
         if search_id != None:
         	result_dic['eventId'] = search_id
