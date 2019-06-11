@@ -25,7 +25,7 @@ def source(sourceId):
 @bp.route('/calendar/<calendarId>')
 def calendar(calendarId):
     # find source of current calendar
-    sourceId = 0
+    sourceId = '0'
     sourcetitle = "error: None"
     title = ""
     for key, source in current_app.config['INT2SRC'].items():
@@ -34,7 +34,7 @@ def calendar(calendarId):
                 title = item[calendarId]
                 sourceId = key
                 sourcetitle = source[0]
-
+    
     events = get_calendar_events(sourceId, calendarId)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
 
