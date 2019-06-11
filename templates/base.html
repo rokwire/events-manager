@@ -21,7 +21,7 @@
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Events Manager</a>
         </div>
-        <div class="row align-items-center">
+        <div class="row align-items-center flex-nowrap">
         {% if g.user %}
           <div class="col"><span class="text-light">Hello, {{ g.user.username }}</span></div>
           <div class="col"><a role="button" class="btn btn-light col" href="{{ url_for('auth.logout') }}">Logout</a></div>
@@ -37,6 +37,8 @@
       <div class="flash">{{ message }}</div>
     {% endfor %}
 
+    {% block modals %}
+    {% endblock %}
     <main role="main" class="container" >
       <div class = "container d-none d-md-block">
         {% block content%}

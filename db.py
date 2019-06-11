@@ -71,7 +71,7 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
             print("Invalid arguments inserted")
             return {}
         except Exception:
-            print("Unknown error using find_one")
+            print("Unknown error using find_one_and_update")
             return {}
 
 
@@ -90,7 +90,7 @@ def find_all(co_or_ta, **kwarg):
             print("Invalid arguments inserted")
             return []
         except Exception:
-            print("Unknown error using find_one")
+            print("Unknown error using find_all")
             return []
 
 
