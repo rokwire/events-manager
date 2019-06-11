@@ -4,9 +4,33 @@ from .utilities.constants import *
 
 userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
-@userbp.route('/')
+@userbp.route('/', methods=['GET', 'POST'])
 def user_events():
-    posts = get_all_user_events()
+    if request.method == 'POST':
+		#format : 'id=1234' /'type=Academic'/'id=1234&type=Academic'
+        searchInput = request.form['searchInput']
+        search_id = None
+        search_type = None
+        if '&' in searchInput:
+        	input_list = searchInput.split('&')
+        	if input_list[0][0:2]=='id':
+        		search_id = input_list[0][3:]
+        	if input_list[1][0:4]=='type':
+        		search_type = input_list[1][5:]
+        else:
+        	if searchInput[0:2]=='id':
+        		search_id = input_list[0][3:]
+        	elif searchInput[0:4]=='type':
+        		search_type = input_list[1][5:]
+        result_dic = {}
+        if search_id != None:
+        	result_dic['eventId'] = search_id
+        if search_type != None:
+        	result_dic['eventType'] = search_type
+        #print(result_dic)
+        posts = get_searched_user_events(result_dic)
+    else:
+        posts = get_all_user_events()
     return render_template("events/user-events.html", posts=posts)
 
 @userbp.route('/event<id>',  methods=['GET'])
