@@ -7,6 +7,7 @@ from .auth import login_required
 from .db import find_all
 
 from .utilities.constants import int2SrcDB
+from .utilities.source_utilities import *
 
 bp = Blueprint('event', __name__, url_prefix='/event')
 
@@ -33,7 +34,7 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
 
-    events = list(find_all("rawevents"))
+    events = get_calendar_events(sourceId, calendarId)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
 
 @bp.route('/setting')
