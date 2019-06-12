@@ -80,6 +80,17 @@
       <div class="media-body">
         <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
         <hr class="divider"/>
+
+        <!-- TODO approve status display : need real format in json example -->
+        {% if post.ApproveStatus%}
+          <div class="row row-content">
+            <div class="col-12 col-sm-2">
+              <h5>: </h5>
+            </div>
+            <p class="col-sm-9">{{ post.ApproveStatus }}</p>
+          </div>
+        {% endif %}
+
         <!-- event url -->
         {% if post.titleURL%}
           <div class="row row-content">

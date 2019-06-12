@@ -9,9 +9,9 @@ from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap
 
-import sys
 
 bp = Blueprint('event', __name__, url_prefix='/event')
+
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
@@ -34,15 +34,17 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
 
-    events = list(get_calendar_events(sourceId, calendarId))
+    events = get_calendar_events(sourceId, calendarId)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
-    print(events)
+    events = list(events)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
+
 
 @bp.route('/setting')
 @login_required
 def setting():
     return render_template('events/setting.html', sources=current_app.config['INT2SRC'])
+
 
 @bp.route('/download')
 @login_required
@@ -57,6 +59,7 @@ def approveCalendar(calendarId):
     approve_calendar_db(calendarId)
     return "success", 200
 
+
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)
@@ -68,6 +71,7 @@ def detail(eventId):
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
     return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName)
+
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
 def edit(eventId):
@@ -82,7 +86,6 @@ def edit(eventId):
         # more parts editable TODO ....
 
         # insert update_user_event function here later
-        print(post_by_id)
-        print(request.form)
         update_event(eventId, post_by_id)
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
+
