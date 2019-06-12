@@ -134,13 +134,25 @@
         {% endif %}
 
         <!-- location -->
-        {% if post.location and post.location.description %}
-          <div class="row row-content">
-            <div class="col-12 col-sm-2">
-              <h5>Location: </h5>
+        {% if post.location %}
+          <!-- description -->
+          {% post.location.description %}
+            <div class="row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Location: </h5>
+              </div>
+              <p class="col-sm-9">{{ post.location.description}}</p>
             </div>
-            <p class="col-sm-9">{{ post.location.description}}</p>
-          </div>
+          {% endif %}
+          <!-- address -->
+          {% post.location.address %}
+            <div class="row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Address: </h5>
+              </div>
+              <p class="col-sm-9">{{ post.location.address}}</p>
+            </div>
+          {% endif %}
         {% endif %}
 
         <!-- target audience -->
