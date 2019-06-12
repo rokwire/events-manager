@@ -4,12 +4,14 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from .auth import login_required
-from .db import find_all
 
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
+from .utilities.constants import eventTypeMap
+
 
 bp = Blueprint('event', __name__, url_prefix='/event')
+
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
@@ -31,15 +33,18 @@ def calendar(calendarId):
                 title = item[calendarId]
                 sourceId = key
                 sourcetitle = source[0]
-    
+
     events = get_calendar_events(sourceId, calendarId)
-    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+    events = list(events)
+    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(events)))
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
+
 
 @bp.route('/setting')
 @login_required
 def setting():
     return render_template('events/setting.html', sources=current_app.config['INT2SRC'])
+
 
 @bp.route('/download')
 @login_required
@@ -47,3 +52,40 @@ def download():
     print("downloaded")
     start()
     return redirect(url_for('event.setting'))
+
+@bp.route('/approve/<calendarId>')
+@login_required
+def approveCalendar(calendarId):
+    approve_calendar_db(calendarId)
+    return "success", 200
+
+
+@bp.route('/detail/<eventId>')
+def detail(eventId):
+    event = get_event(eventId)
+    print("event: {}".format(event))
+    source = current_app.config['INT2SRC'][event['sourceId']]
+    sourceName = source[0]
+    calendarName = ''
+    for dict in source[1]:
+        if event['calendarId'] in dict:
+            calendarName = dict[event['calendarId']]
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName)
+
+
+@bp.route('/edit/<eventId>', methods=('GET', 'POST'))
+def edit(eventId):
+    post_by_id = get_event(eventId)
+    if request.method == 'POST':
+        # change the specific event
+        post_by_id['titleURL'] = request.form['titleURL']
+        post_by_id['startDate'] = request.form['startDate']
+        post_by_id['endDate'] = request.form['endDate']
+        post_by_id['cost'] = request.form['cost']
+        post_by_id['sponsor'] = request.form['sponsor']
+        # more parts editable TODO ....
+
+        # insert update_user_event function here later
+        update_event(eventId, post_by_id)
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
+
