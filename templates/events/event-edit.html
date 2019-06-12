@@ -43,14 +43,23 @@
 
 {% block content %}
  <!-- filter and select operations -->
-<form id = "form" action = "{{url_for('user_events.user_an_event', id=post['_id'])}}" method="POST">
   <!-- back to all events button -->
+  {% if isUser %}
+  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
   <div class="row row-content">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
-
+  {% else %}
+  <form id = "form" action = "{{url_for('event.edit', eventId=post['_id'])}}" method="POST">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('event.source', sourceId=post['sourceId']) }}">{{sourceName}}</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('event.calendar', calendarId=post['calendarId']) }}">{{calendarName}}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{post['title']}}</li>
+    </ol>
+  </nav>
+  {% endif %}
   <!-- form inputs -->
-  <div class="row row-content">
      <article class="media content-section">
        <div class="media-body">
           <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
@@ -141,7 +150,7 @@
 
           <!-- location -->
           <!-- TODO -->
-          {% if post.location.description %}
+          {% if post.location and post.location.description %}
             <div class="form-group row row-content">
               <div class="col-12 col-sm-2">
                 <h5>Location: </h5>
@@ -356,13 +365,16 @@
           {% endif %}
         </div>
      </article>
-  </div>
 
   <!-- cancel/submit button groups -->
   <div class="row justify-content-center">
    <div role="toolbar" aria-label="Toolbar with button groups">
      <div class="btn-group mr-2" role="group" aria-label="first group">
+       {% if isUser %}
        <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
+       {% else %}
+       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('event.detail', eventId=post['_id']) }}" role="button">Cancel</a>
+       {% endif %}
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
        <!-- discard the modal use js to alarm Confirmation later -->

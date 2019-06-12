@@ -33,10 +33,10 @@ def user_events():
         posts = get_all_user_events()
     return render_template("events/user-events.html", posts=posts)
 
-@userbp.route('/event<id>',  methods=['GET'])
+@userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
-    return render_template("events/event.html", post = post)
+    return render_template("events/event.html", post = post, isUser=True)
 
 @userbp.route('/event<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
@@ -52,7 +52,7 @@ def user_an_event_edit(id):
 
         # insert update_user_event function here later
         update_user_event(id, post_by_id)
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap)
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
 
 @userbp.route('/event<id>/approve')
 def user_an_event_approve(id):
