@@ -4,8 +4,6 @@
 <h1>{% block title %}{{title}}{% endblock %}</h1>
 {% endblock %}
 
-
-
 {% block content %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -50,9 +48,6 @@
   </div>
 </div>
 
-
-
-
 <div id = "accordion">
   {% for post in posts %}
       <div class="card">
@@ -61,7 +56,7 @@
             <a data-toggle="collapse" data-target="#{{post._id}}">
               {{ post.title }}
             </a>
-            <a href="/user-events/event/{{post._id}}" class="btn btn-default ml-auto float-right">
+            <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-right">
               <h5>></h5>
             </a>
         </h3>

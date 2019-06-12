@@ -14,9 +14,22 @@ def get_calendar_events(sourceId, calendarId, select_status):
                                                                     "eventStatus": {"$in": select_status} }))        
 
 
-def approve_event(id):
-    print("{} is going to be approved".format(id))
-    return update_one(current_app.config['EVENT_COLLECTION'], condition={"id": ObjectId(id), "update": {
-        "eventStatus": {"$set": "approved"}
-    }})
-    
+def get_event(objectId):
+    return find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+
+
+def update_event(objectId, update):
+    try:
+        _id = ObjectId(objectId)
+    except InvalidId:
+        return {}
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
+                              update={
+                                  "$set": update
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Update {} fails".format(objectId))
+
+
+def approve_calendar_db(calendarId):
+    pass
