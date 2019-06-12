@@ -149,16 +149,29 @@
           {% endif %}
 
           <!-- location -->
-          <!-- TODO -->
-          {% if post.location and post.location.description %}
-            <div class="form-group row row-content">
-              <div class="col-12 col-sm-2">
-                <h5>Location: </h5>
+          {% if post.location %}
+            <!-- description -->
+            {% if post.location.description %}
+              <div class="form-group row row-content">
+                <div class="col-12 col-sm-2">
+                  <h5>Location: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value={{post.location.description}} />
+                </div>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="text" value={{post.location.description}} />
+            {% endif %}
+            <!-- address -->
+            {% if post.location.address %}
+              <div class="form-group row row-content">
+                <div class="col-12 col-sm-2">
+                  <h5>Address: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value={{post.location.address}} />
+                </div>
               </div>
-            </div>
+            {% endif %}
           {% endif %}
 
           <!-- target audience -->
