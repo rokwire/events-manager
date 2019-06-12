@@ -35,8 +35,8 @@ def calendar(calendarId):
                 sourcetitle = source[0]
 
     events = get_calendar_events(sourceId, calendarId)
-    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
     events = list(events)
+    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(events)))
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
 
 
