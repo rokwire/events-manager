@@ -31,7 +31,8 @@ class Config(object):
         # {'117': 'Beckman Main Calendar'},
         # {'127': 'Lincoln Hall Theater Events'},
         # {'128': 'Foellinger Auditorium Events'},
-        {'169': 'Department of Sociology'}
+        {'169': 'Department of Sociology'},
+        {'772': 'NCSA Master Calendar'}
     ]
 
     # This is a mapping between different sources to different calendar mapping
