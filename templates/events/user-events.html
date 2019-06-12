@@ -5,14 +5,15 @@
 {% endblock %}
 
 {% block content %}
-  <!-- filter and select operations -->
-  <!-- change title position -->
-  <center><h1>User Events</h1>&nbsp</center>
+    <div class="row row-content justify-content-center">
+      <h1>User Events</h1>&nbsp
+    </div>
+    <!-- filter and select operations -->
     <div class="row row-content">
-      <div class="col-12 col-sm-1 order-sm-first">
-        <h4>Show</h4>
-      </div>
       <!--  checkbox group -->
+      <div class="form-check form-check-inline">
+        <label class="form-check-label" for="materialInline1"><h4>Show</h4></label>
+      </div>
       <div class="form-check form-check-inline">
         <input type="checkbox" class="form-check-input" id="materialInline1">
         <label class="form-check-label" for="materialInline1">Approved</label>
@@ -26,12 +27,12 @@
           <label class="form-check-label" for="materialInline3">Published</label>
       </div>
       <!-- Search form -->
-      <div class="md-form mt-0">
-        <input class="form-control" type="text" placeholder="Search Events..." aria-label="Search">
-      </div>
-      <div class="col-12 col-sm-1 order-sm-last">
-        <button type="button" class="btn btn-outline-primary">Search</button>
-      </div>
+      <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
+        <div class="form-group mx-sm-3 mb-2">
+          <input type="text" class="form-control" name = "searchInput" placeholder="Search Events..." aria-label="Search">
+        </div>
+        <button type="submit" class="btn btn-outline-primary mb-2">Search</button>
+      </form>
     </div>
 
     <div class="row row-content">
@@ -60,9 +61,9 @@
                         {% endautoescape %}
                     </div>
                 </div>
-            </div class = "card">
+            </div>
           {% endfor%}
-        </div class = "accordion">
+        </div>
       </div>
   </div>
 
