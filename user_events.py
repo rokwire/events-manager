@@ -51,9 +51,14 @@ def user_an_event_edit(id):
         post_by_id['sponsor'] = request.form['sponsor']
         # more parts editable TODO ....
 
-        # insert update_user_event function here later
         update_user_event(id, post_by_id)
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
+
+        # create dic for eventType values - new category
+        eventTypeValues = {}
+        for key in eventTypeMap:
+            value = eventTypeMap[key]
+            eventTypeValues[value] = 0
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
 
 @userbp.route('/event/<id>/approve')
 def user_an_event_approve(id):
