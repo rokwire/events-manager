@@ -44,6 +44,7 @@ def user_an_event_edit(id):
     if request.method == 'POST':
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
+        post_by_id['subcategory'] = request.form['subcategory']
         post_by_id['startDate'] = request.form['startDate']
         post_by_id['endDate'] = request.form['endDate']
         post_by_id['cost'] = request.form['cost']

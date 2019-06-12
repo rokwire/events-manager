@@ -85,7 +85,7 @@
           </div>
           {% endif %}
 
-          <!-- event type -->
+          <!-- event category -->
           <!-- update TODO -->
           <div class="form-group row row-content">
             <div class="col-12 col-sm-2">
@@ -95,7 +95,7 @@
               <div class="form-group">
                 <select id = "selectlist" class="selectpicker" title="Event Type..." >
                   {% for key in eventTypeMap %}
-                    {% if post.eventType == key %}
+                    {% if post.category == key %}
                       <option id = {{key}} selected = true>{{key}}</option>
                     {% else %}
                       <option id = {{key}}>{{key}}</option>
@@ -105,6 +105,27 @@
               </div>
             </div>
           </div>
+
+          <!-- subcategory -->
+          {% if post.subcategory %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Sub Category: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="subcategory" value={{post.subcategory}} />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row row-content">
+              <div class="col-12 col-sm-2">
+                <h5>Sub Category: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="subcategory"/>
+              </div>
+            </div>
+          {% endif %}
 
           <!-- startDate -->
           {% if post.startDate%}
