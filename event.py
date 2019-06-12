@@ -9,9 +9,6 @@ from .db import find_all
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 
-import sys
-
-
 bp = Blueprint('event', __name__, url_prefix='/event')
 
 @bp.route('/source/<sourceId>')
@@ -36,6 +33,7 @@ def calendar(calendarId):
                 sourcetitle = source[0]
 
     events = get_calendar_events(sourceId, calendarId)
+    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
 
 @bp.route('/setting')
@@ -46,6 +44,6 @@ def setting():
 @bp.route('/download')
 @login_required
 def download():
-    print("downloaded", file=sys.stderr)
+    print("downloaded")
     start()
     return redirect(url_for('event.setting'))
