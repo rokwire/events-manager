@@ -99,11 +99,11 @@ def parse(content, gmaps):
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
-        entry['eventType'] = pe['eventType'] if 'eventType' in pe else ""
-        if entry['eventType'] not in eventTypeMap:
-            print("find unknown eventType: {}".format(entry['eventType']))
+        entry['catorgories'] = pe['eventType'] if 'eventType' in pe else ""
+        if entry['catorgories'] not in eventTypeMap:
+            print("find unknown eventType: {}".format(entry['catorgories']))
         else:
-            entry['eventType'] = eventTypeMap[entry['eventType']]
+            entry['catorgories'] = eventTypeMap[entry['catorgories']]
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
@@ -229,6 +229,7 @@ def store(documents):
 
         if len(result) == 0:
             document['submitType'] = 'post'
+            document['eventStatus'] = 'pending'
             # change eventId to be mongdb _id
             insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
             document['eventId'] = insert_result.inserted_id

@@ -1,5 +1,7 @@
+import json 
+
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, current_app
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session
 )
 from werkzeug.exceptions import abort
 
@@ -21,6 +23,12 @@ def source(sourceId):
 
 @bp.route('/calendar/<calendarId>')
 def calendar(calendarId):
+
+    if 'select_status' in session:
+        select_status = session['select_status']
+    else:
+        select_status = []
+        session['select_status'] = select_status
     # find source of current calendar
     sourceId = '0'
     sourcetitle = "error: None"
@@ -32,9 +40,10 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
     
-    events = get_calendar_events(sourceId, calendarId)
+    events = get_calendar_events(sourceId, calendarId, select_status)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
-    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
+    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
+                            select_status=select_status)
 
 @bp.route('/setting')
 @login_required
@@ -47,3 +56,22 @@ def download():
     print("downloaded")
     start()
     return redirect(url_for('event.setting'))
+
+@bp.route('/<calendarId>/select', methods=['POST'])
+@login_required
+def select(calendarId):
+    select_status = []
+    if request.form.get('approved') == '1':
+        select_status.append('approved')
+    if request.form.get('disapproved') == '1':
+        select_status.append('disapproved')
+    if request.form.get('published') == '1':
+        select_status.append('published')
+
+    session["select_status"] = select_status
+    return redirect(url_for("event.calendar", calendarId=calendarId))
+
+# @bp.route('/source/event/<id>')
+# def approve_event_status(id):
+#     approve_event(id)
+#     redirect("")
