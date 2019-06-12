@@ -14,8 +14,8 @@ import requests
 ### parsing helper functions
 ######################################################################
 
-# this function is used for providing a customed geoinformation when 
-# google API can not be utilized. For example, in Krannert Art Center 
+# this function is used for providing a customed geoinformation when
+# google API can not be utilized. For example, in Krannert Art Center
 # events, studio 5 and stage 5 are often appeared which by API, they
 # points to different unrelated location in Champaign. These conditions
 # are rare and for now, this function will search for keywords in location
@@ -34,10 +34,11 @@ def search_static_location(calendarName, sponsor, location):
 ######################################################################
 ### Normal parse process functions
 ######################################################################
-def geturl(filename):
-    with open(filename, "r") as urlFile:
-        return urlFile.read().split("\n")
-
+def geturl():
+    urls = []
+    for eventMap in current_app.config['INT2SRC']['0'][1]:
+        urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], list(eventMap.keys())[0], current_app.config['EVENT_URL_SUFFIX']))
+    return urls
 
 def download(url):
     if url is None:
@@ -159,7 +160,7 @@ def parse(content, gmaps):
         entry['icalUrl'] = "https://calendars.illinois.edu/ical/{}/{}.ics".format(pe['calendarId'], pe['eventId'])
         entry['outlookUrl'] = "https://calendars.illinois.edu/outlook2010/{}/{}.ics".format(pe['calendarId'],
                                                                                             pe['eventId'])
-        
+
         targetAudience = []
         targetAudience.extend(["faculty", "staff"]) if pe['audienceFacultyStaff'] == "true" else None
         targetAudience.append("students") if pe['audienceStudents'] == "true" else None
@@ -187,7 +188,7 @@ def parse(content, gmaps):
             location = pe['location']
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
-            
+
             (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
             if found:
                 entry['location'] = GeoInfo
@@ -239,15 +240,15 @@ def start():
         return
 
     GOOGLEKEY = current_app.config['GOOGLE_KEY']
-    
+
     try:
         gmaps = googlemaps.Client(key=GOOGLEKEY)
     except ValueError as e:
         print("Error in connecting Google Api: {}".format(e))
-    
+
     update_in_total = 0
     insert_in_total = 0
-    urls = geturl(current_app.config['EVENT_URLS'])
+    urls = geturl()
     for url in urls:
         try:
             rawEvents = download(url)
@@ -266,5 +267,3 @@ def start():
     print("DateTime: {}, overall parsing result: {} are updated, {} are inserted".format(
         datetime.utcnow(), update_in_total, insert_in_total
     ))
-
-    
