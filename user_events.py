@@ -38,7 +38,7 @@ def user_an_event(id):
     post = find_user_event(id)
     return render_template("events/event.html", post = post, isUser=True)
 
-@userbp.route('/event<id>/edit', methods=['GET', 'POST'])
+@userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
     if request.method == 'POST':
@@ -54,7 +54,7 @@ def user_an_event_edit(id):
         update_user_event(id, post_by_id)
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
 
-@userbp.route('/event<id>/approve')
+@userbp.route('/event/<id>/approve')
 def user_an_event_approve(id):
     update_user_event(id, {"eventStatus": "approve"})
     return redirect(url_for("user_events.user_an_event", id=id))
