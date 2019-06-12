@@ -46,7 +46,7 @@
   <!-- back to all events button -->
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
-  <div class="row row-content">
+  <div class="media row-content">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
   {% else %}
