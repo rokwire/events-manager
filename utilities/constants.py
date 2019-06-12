@@ -1,23 +1,3 @@
-# This a mapping between webtools calendars id to name
-int2CalDB = [
-    {'7': 'General Events'},
-    {'33': 'Krannert Center'},
-    {'47': 'Library Calendar'},
-    {'63': 'Facility Hours'},
-    {'117': 'Beckman Main Calendar'},
-    {'127': 'Lincoln Hall Theater Events'},
-    {'128': 'Foellinger Auditorium Events'},
-    {'169': 'Department of Sociology'}
-]
-
-
-# This is a mapping between different sources to different calendar mapping
-int2SrcDB= {
-    '0': ('WebTools', int2CalDB),
-    '1': ('EMS', []),
-}
-
-
 # This is used as customed geolocation for different calendar sources
 CalName2Location = {
     'General Events': '',
@@ -67,24 +47,24 @@ eventTypeMap = {
 # Mapping between Rokwire event type and its subcatorgories(if the event type do have it)
 subcategoriesMap = {
     "Athletics": [
-        "Men's Basketball", 
+        "Men's Basketball",
         "Women's Basketball",
-        "Men's Cross Country", 
+        "Men's Cross Country",
         "Women's Cross Country",
-        "Men's Golf", 
-        "Women's Golf", 
-        "Men's Gymnastics", 
-        "Women's Gymnastics", 
-        "Men's Tennis", 
-        "Women's Tennis", 
+        "Men's Golf",
+        "Women's Golf",
+        "Men's Gymnastics",
+        "Women's Gymnastics",
+        "Men's Tennis",
+        "Women's Tennis",
         "Men's Track & Field",
-        "Women's Track & Field",  
-        "Women's Soccer", 
+        "Women's Track & Field",
+        "Women's Soccer",
         "Baseball",
         "Football",
-        "Softball", 
-        "Swim & Dive", 
-        "Wrestling", 
+        "Softball",
+        "Swim & Dive",
+        "Wrestling",
         "Volleyball"
     ]
 }

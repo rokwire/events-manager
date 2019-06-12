@@ -14,7 +14,7 @@ pip install -r requirements.txt
 This repository should be put inside `/events-manager` and run outside the folder. There are two ways to do so:
 
 The first one (Linux or MAC):
-- export FLASK_APP=eventsmanager
+- export FLASK_APP=events-manager
 - export FLASK_ENV=development
 - flask run
 

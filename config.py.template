@@ -17,9 +17,26 @@ class Config(object):
     GOOGLE_KEY='...'
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
-    EVENT_COLLECTION='events'
+    EVENT_COLLECTION='eventsmanager-events'
 
-    # EVENT_URLS is the path to file that sets the calendar urls for accessing calendar events
-    # By default, it should be a txt file and its path shall be relative to block folder, in this
-    # case, eventsmanager
-    EVENT_URLS='...'
+    EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
+    EVENT_URL_SUFFIX='.xml'
+
+    # This a mapping between webtools calendars id to name
+    INT2CAL = [
+        {'7': 'General Events'},
+        # {'33': 'Krannert Center'},
+        # {'47': 'Library Calendar'},
+        # {'63': 'Facility Hours'},
+        # {'117': 'Beckman Main Calendar'},
+        # {'127': 'Lincoln Hall Theater Events'},
+        # {'128': 'Foellinger Auditorium Events'},
+        {'169': 'Department of Sociology'},
+        {'772': 'NCSA Master Calendar'}
+    ]
+
+    # This is a mapping between different sources to different calendar mapping
+    INT2SRC= {
+        '0': ('WebTools', INT2CAL),
+        '1': ('EMS', []),
+    }
