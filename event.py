@@ -81,11 +81,16 @@ def approveCalendar(calendarId):
     approve_calendar_db(calendarId)
     return "success", 200
 
+@bp.route("/source/<id>/approve")
+@login_required
+def approveEvent(id):
+    approve_event(id)
+    return redirect(url_for("event.detail", eventId=id))
 
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)
-    print("event: {}".format(event))
+    # print("event: {}".format(event))
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
