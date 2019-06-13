@@ -56,5 +56,5 @@ def user_an_event_edit(id):
 
 @userbp.route('/event<id>/approve')
 def user_an_event_approve(id):
-    update_user_event(id, {"eventStatus": "approve"})
+    update_user_event(id, {"eventStatus": "approved"})
     return redirect(url_for("user_events.user_an_event", id=id))

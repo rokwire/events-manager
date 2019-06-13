@@ -27,15 +27,15 @@
     </div>
     <!--  checkbox group -->
     <div class="form-check form-check-inline">
-      <input type="checkbox" class="form-check-input" id="materialInline1">
+      <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
       <label class="form-check-label" for="materialInline1">Approved</label>
     </div>
     <div class="form-check form-check-inline">
-        <input type="checkbox" class="form-check-input" id="materialInline2">
+        <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
         <label class="form-check-label" for="materialInline2">Disapproved</label>
     </div>
     <div class="form-check form-check-inline col-sm-3">
-        <input type="checkbox" class="form-check-input" id="materialInline3">
+        <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
         <label class="form-check-label" for="materialInline3">Published</label>
     </div>
     <!-- Search form -->
@@ -109,6 +109,28 @@
 -->
 {% endblock %}
 
-{% block scripts %}
-
+{% block scripts%}
+  {{ super() }}
+  <script>
+    $("#materialInline1, #materialInline2, #materialInline3").on('click', function() {
+      let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
+      let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
+      let published = ( $('#materialInline3').is(':checked') ? 1: 0);
+      console.log(approved, disapproved, published);
+      $.ajax(
+        {
+          url: "{{ url_for('event.select', calendarId=calendarId) }}",
+          dataType: 'json',
+          type    : 'POST',
+          data    : {
+            approved: approved, 
+            disapproved: disapproved, 
+            published: published
+          },
+        }
+      ).always(function() {
+        location.reload(true);
+      });
+    })
+  </script>
 {% endblock %}
