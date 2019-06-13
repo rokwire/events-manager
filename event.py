@@ -121,3 +121,4 @@ def edit(eventId):
         update_event(eventId, post_by_id)
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
+
