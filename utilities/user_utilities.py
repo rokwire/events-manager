@@ -29,6 +29,7 @@ def update_user_event(objectId, update):
                               update={
                                   "$set": update
                               })
+
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails".format(objectId))
 

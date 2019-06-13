@@ -102,12 +102,12 @@
         {% endif %}
 
         <!-- event type -->
-        {% if post.eventType%}
+        {% if post.category%}
           <div class="row row-content">
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
             </div>
-            <p class="col-sm-9">{{ post.eventType }}</p>
+            <p class="col-sm-9">{{ post.category }}</p>
           </div>
         {% endif %}
 
@@ -247,7 +247,7 @@
         {% if isUser %}
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}" role="button">Approve</a>
         {% else %}
-        <a class="btn btn-block nav-link btn-secondary" href="#" role="button">Approve</a>
+        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">

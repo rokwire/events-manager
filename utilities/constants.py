@@ -44,7 +44,7 @@ eventTypeMap = {
 }
 
 
-# Mapping between Rokwire event type and its subcatorgories(if the event type do have it)
+# Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
     "Athletics": [
         "Men's Basketball",
