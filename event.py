@@ -1,3 +1,5 @@
+import json
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app
 )
@@ -34,12 +36,10 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
 
-    events = get_calendar_events(sourceId, calendarId)
-    events = list(events)
-    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(events)))
-    status = get_calendar_status(calendarId)
-    print(status)
-    return render_template('events/calendar.html', calendarId=calendarId, title=title, source=(sourceId, sourcetitle), status=status, posts=events, total=0)
+    events = get_calendar_events(sourceId, calendarId, select_status)
+    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
+                            select_status=select_status)
 
 
 @bp.route('/setting', methods=('GET', 'POST'))
@@ -84,7 +84,7 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName)
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, eventTypeMap = eventTypeMap)
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
