@@ -48,8 +48,11 @@ def publish_event(id):
                                         data=json.dumps(event))
 
             if result.status_code not in (200, 201):
-                print("Submission fails")
-
+                print("Event {} submission fails".format(id))
+            else:
+                update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                    "$set": {"eventStatus": "published"}
+                })
     except Exception:
         traceback.print_exc()
 
