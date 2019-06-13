@@ -37,13 +37,20 @@ def calendar(calendarId):
     events = get_calendar_events(sourceId, calendarId)
     events = list(events)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(events)))
-    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0)
+    status = get_calendar_status(calendarId)
+    print(status)
+    return render_template('events/calendar.html', calendarId=calendarId, title=title, source=(sourceId, sourcetitle), status=status, posts=events, total=0)
 
 
-@bp.route('/setting')
+@bp.route('/setting', methods=('GET', 'POST'))
 @login_required
 def setting():
-    return render_template('events/setting.html', sources=current_app.config['INT2SRC'])
+    if request.method == 'POST':
+        print(request.form)
+        allstatus = get_all_calendar_status()
+        update_calendars_status(request.form, allstatus)
+    allstatus = get_all_calendar_status()
+    return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
 
 
 @bp.route('/download')
@@ -53,12 +60,12 @@ def download():
     start()
     return redirect(url_for('event.setting'))
 
-@bp.route('/approve/<calendarId>')
+@bp.route('/approve', methods=('GET', 'POST'))
 @login_required
-def approveCalendar(calendarId):
+def approveCalendar():
+    calendarId = request.form['calendarId']
     approve_calendar_db(calendarId)
     return "success", 200
-
 
 @bp.route('/detail/<eventId>')
 def detail(eventId):
@@ -88,4 +95,3 @@ def edit(eventId):
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
-
