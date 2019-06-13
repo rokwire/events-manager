@@ -95,7 +95,7 @@
               <div class="form-group">
                 <select id = "selectlist" class="selectpicker" title="Event Type..." >
                   {% for key in eventTypeValues %}
-                    {% if eventTypeMap[post.category] == key %}
+                    {% if post.category == key %}
                       <option id = {{key}} selected = true>{{key}}</option>
                     {% else %}
                       <option id = {{key}}>{{key}}</option>
@@ -134,7 +134,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" value={{post.startDate}} min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="startDate" value={{post.startDate}} />
               </div>
             </div>
           {% else %}
@@ -143,7 +143,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="startDate" />
               </div>
             </div>
           {% endif %}
@@ -164,7 +164,7 @@
                 <h5> End Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="endDate" min="2000-01-01T00:00" max="2050-01-01T00:00" />
+                <input class="form-control" type="datetime-local" name="endDate"/>
               </div>
             </div>
           {% endif %}
