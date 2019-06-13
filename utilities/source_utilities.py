@@ -17,10 +17,14 @@ def get_calendar_events(sourceId, calendarId, select_status):
     return list(find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} }))
+
+
 def approve_calendar_events(calendarId):
-    update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
+    updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
         "set": {"eventStatus": "approved"}
     })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
 def publish_event(id):
@@ -54,18 +58,24 @@ def publish_event(id):
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
             else:
-                update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
                     "$set": {"eventStatus": "published"}
                 })
+                if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                    print("Publish event {} fails in publish_event".format(id))
+                
     except Exception:
         traceback.print_exc()
 
 
 def approve_event(id):
     print("{} is going to be approved".format(id))
-    update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "approved"}
     })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Approve event {} fails in approve_event".format(id))
+    
     publish_event(id)
 
     
@@ -84,5 +94,5 @@ def update_event(objectId, update):
                                   "$set": update
                               })
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
+        print("Update {} fails in update_event".format(objectId))
 
