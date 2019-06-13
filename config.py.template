@@ -40,3 +40,5 @@ class Config(object):
         '0': ('WebTools', INT2CAL),
         '1': ('EMS', []),
     }
+
+    EVENT_BUILDING_BLOCK_URL='...'

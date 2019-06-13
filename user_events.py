@@ -1,3 +1,6 @@
+import traceback
+from .utilities import source_utilities
+
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request
 from .utilities.user_utilities import *
 from .utilities.constants import *
@@ -62,5 +65,10 @@ def user_an_event_edit(id):
 
 @userbp.route('/event/<id>/approve')
 def user_an_event_approve(id):
-    update_user_event(id, {"eventStatus": "approve"})
+    try:
+        update_user_event(id, {"eventStatus": "approved"})
+        source_utilities.publish_event(id)
+    except Exception:
+        traceback.print_exc()
+
     return redirect(url_for("user_events.user_an_event", id=id))
