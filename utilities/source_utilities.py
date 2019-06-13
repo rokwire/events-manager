@@ -1,4 +1,8 @@
+import json
+import datetime
 import requests
+import traceback
+
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -12,25 +16,36 @@ def get_calendar_events(sourceId, calendarId, select_status):
     print(select_status)
     return list(find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
-                                                                    "eventStatus": {"$in": select_status} }))        
-def publish_event(id):
-    try:
-        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, 
-                        projection={'_id': 0, 'eventStatus':0})
-        print("event {} submit method: {}".format(id, event['submitType']))
-        if event['submitType'] == 'post':
-            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], data=event)
-        elif event['submitType'] == 'put':
-            result = requests.put(current_app.config['EVENT_BUILDING_BLOCK_URL'], data=event)
-        elif event['submitType'] == 'patch':
-            result = requests.patch(current_app.config['EVENT_BUILDING_BLOCK_URL'], data=event)
-        
-        if result.status_code != 200:
-            print("Submission fails")
-        
+                                                                    "eventStatus": {"$in": select_status} }))
 
-    except Exception as e :
-        print(e)
+
+def publish_event(id):
+    headers = {'Content-Type': 'application/json'}
+    try:
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
+                         projection={'_id': 0, 'eventStatus': 0})
+        print("event {} submit method: {}".format(id, event['submitType']))
+        if event:
+            event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+            event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+            event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+
+            if event['submitType'] == 'post':
+                result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+                                       data=json.dumps(event))
+            elif event['submitType'] == 'put':
+                result = requests.put(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+                                      data=json.dumps(event))
+            elif event['submitType'] == 'patch':
+                result = requests.patch(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+                                        data=json.dumps(event))
+
+            if result.status_code != 200:
+                print("Submission fails")
+
+    except Exception:
+        traceback.print_exc()
 
 
 def approve_event(id):
