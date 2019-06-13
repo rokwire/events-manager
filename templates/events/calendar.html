@@ -126,9 +126,11 @@
             approved: approved, 
             disapproved: disapproved, 
             published: published
-          }
+          },
         }
-      )
+      ).always(function() {
+        location.reload(true);
+      });
     })
   </script>
 {% endblock %}

@@ -73,7 +73,7 @@ def select(calendarId):
         select_status.append('published')
 
     session["select_status"] = select_status
-    return redirect(url_for("event.calendar", calendarId=calendarId))
+    return "", 200
 
 @bp.route('/approve/<calendarId>')
 @login_required
