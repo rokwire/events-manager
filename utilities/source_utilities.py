@@ -41,7 +41,7 @@ def publish_event(id):
                 result = requests.patch(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                         data=json.dumps(event))
 
-            if result.status_code != 200:
+            if result.status_code not in (200, 201):
                 print("Submission fails")
 
     except Exception:
