@@ -12,15 +12,14 @@ def user_events():
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         searchInput = request.form['searchInput']
-        search_id = None
-        search_type = None
         query_dic = {}
         search_list = searchInput.split('&')
         for search in search_list:
             params = search.split('=')
-            key = params[0]
-            value = params[1]
-            query_dic[key] = value
+            if params and len(params) == 2:
+                key = params[0]
+                value = params[1]
+                query_dic[key] = value
         posts = get_searched_user_events(query_dic)
     else:
         posts = get_all_user_events()
