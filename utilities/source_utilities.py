@@ -9,7 +9,7 @@ from bson.errors import InvalidId
 
 from ..db import find_all, find_one, update_one, update_many
 
-
+# find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
     if not select_status:
         select_status = ['pending']
@@ -18,10 +18,18 @@ def get_calendar_events(sourceId, calendarId, select_status):
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} }))
 
-
+# Approve events from a calendar
 def approve_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
-        "set": {"eventStatus": "approved"}
+        "$set": {"eventStatus": "approved"}
+    })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
+
+# Disapprove events from a calendar
+def disapprove_calendar_events(calendarId):
+    updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
+        "$set": {"eventStatus": "disapproved"}
     })
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("approve calendar {} fails in approve_calendar_events".format(calendarId))
@@ -63,7 +71,7 @@ def publish_event(id):
                 })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
-                
+
     except Exception:
         traceback.print_exc()
 
@@ -75,10 +83,9 @@ def approve_event(id):
     })
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Approve event {} fails in approve_event".format(id))
-    
+
     publish_event(id)
 
-    
 
 def get_event(objectId):
     return find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
@@ -96,3 +103,43 @@ def update_event(objectId, update):
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails in update_event".format(objectId))
 
+# Approve a calendar and relevant events
+def approve_calendar_db(calendarId):
+    updateResult = update_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
+                              update={
+                                  "$set": {"status": "approved"}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Update {} fails".format(objectId))
+    approve_calendar_events(calendarId)
+
+# Disapprove a calendar and relevant events
+def disapprove_calendar_db(calendarId):
+    updateResult = update_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
+                              update={
+                                  "$set": {"status": "disapproved"}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Update {} fails".format(objectId))
+    disapprove_calendar_events(calendarId)
+
+# Find the approval status for one calendar
+def get_calendar_status(calendarId):
+    calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
+    return calendar['status']
+
+# Find the approval status for many calendars
+def get_all_calendar_status():
+    calendars = find_all(current_app.config['CALENDAR_COLLECTION'], filter={})
+    result = {}
+    for calendar in calendars:
+        result[calendar["calendarId"]] = calendar["status"]
+    return result
+
+# Update approval status for many calendars (and relevant events)
+def update_calendars_status(update, allstatus):
+    for calendarId in allstatus.keys():
+        if calendarId in update: # approve
+            approve_calendar_db(calendarId)
+        else: # disapprove
+            disapprove_calendar_db(calendarId)
