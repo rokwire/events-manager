@@ -1,4 +1,5 @@
 import pymongo
+import traceback
 from pymongo.errors import ConnectionFailure
 from pymongo.results import InsertOneResult, UpdateResult
 from flask import current_app,g
@@ -49,10 +50,10 @@ def find_one(co_or_ta, condition=None, *args, **kwargs):
             collection = db.get_collection(co_or_ta)
             return collection.find_one(filter=condition, *args, **kwargs)
         except TypeError:
-            print("Invalid arguments inserted")
+            print("Invalid arguments inserted using find_one")
             return {}
         except Exception:
-            print("Unknown error using find_one")
+            traceback.print_exc()
             return {}
 
 
@@ -68,10 +69,10 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
             collection = db.get_collection(co_or_ta)
             return collection.find_one_and_update(condition, update, **kwargs)
         except TypeError:
-            print("Invalid arguments inserted")
+            print("Invalid arguments inserted using find_one_and_update")
             return {}
         except Exception:
-            print("Unknown error using find_one_and_update")
+            traceback.print_exc()
             return {}
 
 
@@ -87,10 +88,10 @@ def find_all(co_or_ta, **kwarg):
             collection = db.get_collection(co_or_ta)
             return collection.find(**kwarg)
         except TypeError:
-            print("Invalid arguments inserted")
+            print("Invalid arguments inserted using find_all")
             return []
         except Exception:
-            print("Unknown error using find_all")
+            traceback.print_exc()
             return []
 
 
@@ -105,8 +106,9 @@ def insert_one(co_or_ta, document=None, **kwargs):
         try:
             collection = db.get_collection(co_or_ta)
             return collection.insert_one(document=document, **kwargs)
-        except:
-            return UpdateResult()
+        except Exception:
+            traceback.print_exc()
+            return InsertOneResult()
 
 
 def update_one(co_or_ta, condition=None, update=None, **kwargs):
@@ -121,6 +123,20 @@ def update_one(co_or_ta, condition=None, update=None, **kwargs):
             collection = db.get_collection(co_or_ta)
             return collection.update_one(condition, update, **kwargs)
         except Exception:
+            traceback.print_exc()
             return UpdateResult()
 
+def update_many(co_or_ta, condition=None, update=None, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
 
+    if update is None or co_or_ta is None or condition is None or db is None:
+        return UpdateResult()
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.update_many(condition, update, **kwargs)
+        except Exception:
+            traceback.print_exc()
+            return UpdateResult()
