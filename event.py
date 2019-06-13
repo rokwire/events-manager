@@ -1,4 +1,4 @@
-import json 
+import json
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session
@@ -41,7 +41,7 @@ def calendar(calendarId):
                 title = item[calendarId]
                 sourceId = key
                 sourcetitle = source[0]
-    
+
     events = get_calendar_events(sourceId, calendarId, select_status)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
@@ -97,7 +97,7 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName)
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, eventTypeMap = eventTypeMap)
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
@@ -115,4 +115,3 @@ def edit(eventId):
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
-
