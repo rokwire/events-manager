@@ -46,7 +46,7 @@
   <!-- back to all events button -->
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
-  <div class="row row-content">
+  <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
   {% else %}
@@ -66,7 +66,7 @@
           <hr class="divider"/>
           <!-- event url -->
           {% if post.titleURL%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <label class="col-12 col-sm-2 form-control-label">
                 <h5>Event URL: </h5>
               </label>
@@ -75,7 +75,7 @@
               </div>
             </div>
           {% else %}
-          <div class="form-group row row-content">
+          <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
               <h5>Event URL: </h5>
             </label>
@@ -85,17 +85,17 @@
           </div>
           {% endif %}
 
-          <!-- event type -->
+          <!-- event category -->
           <!-- update TODO -->
-          <div class="form-group row row-content">
+          <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
                 <select id = "selectlist" class="selectpicker" title="Event Type..." >
-                  {% for key in eventTypeMap %}
-                    {% if post.eventType == key %}
+                  {% for key in eventTypeValues %}
+                    {% if eventTypeMap[post.category] == key %}
                       <option id = {{key}} selected = true>{{key}}</option>
                     {% else %}
                       <option id = {{key}}>{{key}}</option>
@@ -106,9 +106,30 @@
             </div>
           </div>
 
+          <!-- subcategory -->
+          {% if post.subcategory %}
+            <div class="form-group row ">
+              <div class="col-12 col-sm-2">
+                <h5>Sub Category: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="subcategory" value={{post.subcategory}} />
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row ">
+              <div class="col-12 col-sm-2">
+                <h5>Sub Category: </h5>
+              </div>
+              <div class="col-sm-9">
+                <input class="form-control" type="text" name="subcategory"/>
+              </div>
+            </div>
+          {% endif %}
+
           <!-- startDate -->
           {% if post.startDate%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5> Start Date: </h5>
               </div>
@@ -117,7 +138,7 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5> Start Date: </h5>
               </div>
@@ -129,7 +150,7 @@
 
           <!-- endDate -->
           {% if post.endDate%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>End Date: </h5>
               </div>
@@ -138,7 +159,7 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5> End Date: </h5>
               </div>
@@ -149,22 +170,35 @@
           {% endif %}
 
           <!-- location -->
-          <!-- TODO -->
-          {% if post.location and post.location.description %}
-            <div class="form-group row row-content">
-              <div class="col-12 col-sm-2">
-                <h5>Location: </h5>
+          {% if post.location %}
+            <!-- description -->
+            {% if post.location.description %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5>Location: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value={{post.location.description}} />
+                </div>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="text" value={{post.location.description}} />
+            {% endif %}
+            <!-- address -->
+            <!-- {% if post.location.address %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5>Address: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text" value={{post.location.address}} />
+                </div>
               </div>
-            </div>
+            {% endif %} -->
           {% endif %}
 
           <!-- target audience -->
           <!-- TODO -->
           {% if post.targetAudience %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Target Audience: </h5>
               </div>
@@ -176,7 +210,7 @@
             </div>
           <!-- if there is no target audience TODO -->
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Target Audience: </h5>
               </div>
@@ -188,7 +222,7 @@
 
           <!-- cost -->
           {% if post.cost%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Cost: </h5>
               </div>
@@ -197,7 +231,7 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Cost: </h5>
               </div>
@@ -212,7 +246,7 @@
           {% if post.contacts %}
             {% for contact in post.contacts %}
               {% if contact.firstName and contact.lastName %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Person: </h5>
                   </div>
@@ -224,7 +258,7 @@
                   </div>
                 </div>
               {% elif contact.firstName %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Person: </h5>
                   </div>
@@ -236,7 +270,7 @@
                   </div>
                 </div>
               {% elif contact.lastName %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Person: </h5>
                   </div>
@@ -248,7 +282,7 @@
                   </div>
                 </div>
               {% else %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Person: </h5>
                   </div>
@@ -262,7 +296,7 @@
               {% endif %}
 
               {% if contact.email %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Email: </h5>
                   </div>
@@ -271,7 +305,7 @@
                   </div>
                 </div>
               {% else %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Email: </h5>
                   </div>
@@ -282,7 +316,7 @@
               {% endif %}
 
               {% if contact.phone %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Phone: </h5>
                   </div>
@@ -291,7 +325,7 @@
                   </div>
                 </div>
               {% else %}
-                <div class="form-group row row-content">
+                <div class="form-group row ">
                   <div class="col-12 col-sm-2">
                     <h5>Contact Phone: </h5>
                   </div>
@@ -309,7 +343,7 @@
 
           <!-- tags TODO-->
           {% if post.tags%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Tags: </h5>
               </div>
@@ -323,7 +357,7 @@
 
           <!-- sponsor -->
           {% if post.sponsor%}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Sponsor: </h5>
               </div>
@@ -332,7 +366,7 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Sponsor: </h5>
               </div>
@@ -345,7 +379,7 @@
           <!-- description -->
           <!-- TODO -->
           {% if post.description%}
-          <div class="form-group row row-content">
+          <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Description: </h5>
             </div>
@@ -354,7 +388,7 @@
             </div>
           </div>
           {% else %}
-            <div class="form-group row row-content">
+            <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Description: </h5>
               </div>
