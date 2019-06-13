@@ -44,6 +44,11 @@ def user_an_event(id):
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
+    # create dic for eventType values - new category
+    eventTypeValues = {}
+    for key in eventTypeMap:
+        value = eventTypeMap[key]
+        eventTypeValues[value] = 0
     if request.method == 'POST':
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
@@ -56,11 +61,7 @@ def user_an_event_edit(id):
 
         update_user_event(id, post_by_id)
 
-        # create dic for eventType values - new category
-        eventTypeValues = {}
-        for key in eventTypeMap:
-            value = eventTypeMap[key]
-            eventTypeValues[value] = 0
+
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
 
 @userbp.route('/event/<id>/approve')
