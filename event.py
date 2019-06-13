@@ -114,4 +114,9 @@ def edit(eventId):
 
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
+        # create dic for eventType values - new category
+        eventTypeValues = {}
+        for key in eventTypeMap:
+            value = eventTypeMap[key]
+            eventTypeValues[value] = 0
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
