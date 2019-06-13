@@ -4,12 +4,6 @@
   Edit - {{post.title}}
 {% endblock %}
 
-{% block styles %}
-  {{ super() }}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
-{% endblock %}
-
 {% block modals %}
 <!-- the save Confirmation form -->
 <div id="SaveModal" class="modal fade" role="dialog">
@@ -47,7 +41,7 @@
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
   <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To All Events</a>
   </div>
   {% else %}
   <form id = "form" action = "{{url_for('event.edit', eventId=post['_id'])}}" method="POST">
@@ -71,7 +65,7 @@
                 <h5>Event URL: </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" name="titleURL" value={{post.titleURL}} />
+                <input class="form-control" type="url" name="titleURL" value="{{post.titleURL}}" />
               </div>
             </div>
           {% else %}
@@ -113,7 +107,7 @@
                 <h5>Sub Category: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="subcategory" value={{post.subcategory}} />
+                <input class="form-control" type="text" name="subcategory" value="{{post.subcategory}}" />
               </div>
             </div>
           {% else %}
@@ -178,21 +172,10 @@
                   <h5>Location: </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value={{post.location.description}} />
+                  <input class="form-control" type="text" value= "{{post.location.description}}" />
                 </div>
               </div>
             {% endif %}
-            <!-- address -->
-            <!-- {% if post.location.address %}
-              <div class="form-group row ">
-                <div class="col-12 col-sm-2">
-                  <h5>Address: </h5>
-                </div>
-                <div class="col-sm-9">
-                  <input class="form-control" type="text" value={{post.location.address}} />
-                </div>
-              </div>
-            {% endif %} -->
           {% endif %}
 
           <!-- target audience -->
@@ -204,7 +187,7 @@
               </div>
               <div class = "col-sm-2">
               {%for audience in post.targetAudience%}
-                <input class="form-control" type="text" value={{audience}} />
+                <input class="form-control" type="text" value="{{audience}}" />
               {% endfor%}
               </div>
             </div>
@@ -227,7 +210,7 @@
                 <h5>Cost: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="cost" value={{post.cost}} />
+                <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
               </div>
             </div>
           {% else %}
@@ -251,10 +234,10 @@
                     <h5>Contact Person: </h5>
                   </div>
                   <div class="col-sm-2">
-                    <input class="form-control" type="text" value={{contact.firstName}} />
+                    <input class="form-control" type="text" value="{{contact.firstName}}" />
                   </div>
                   <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value={{contact.lastName}} />
+                    <input class="form-control" type="text" value="{{contact.lastName}}" />
                   </div>
                 </div>
               {% elif contact.firstName %}
@@ -263,7 +246,7 @@
                     <h5>Contact Person: </h5>
                   </div>
                   <div class="col-sm-2">
-                    <input class="form-control" type="text" value={{contact.firstName}} />
+                    <input class="form-control" type="text" value="{{contact.firstName}}" />
                   </div>
                   <div class="col-offset-6 col-sm-2">
                     <input class="form-control" type="text" />
@@ -278,7 +261,7 @@
                     <input class="form-control" type="text" />
                   </div>
                   <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value={{contact.lastName}} />
+                    <input class="form-control" type="text" value="{{contact.lastName}}" />
                   </div>
                 </div>
               {% else %}
@@ -330,7 +313,7 @@
                     <h5>Contact Phone: </h5>
                   </div>
                   <div class="col-sm-9">
-                    <input class="form-control" type="text" value=/>
+                    <input class="form-control" type="text"/>
                   </div>
                 </div>
               {% endif %}
@@ -349,7 +332,7 @@
               </div>
               <div class = "col-sm-2">
               {% for tag in post.tags%}
-                  <input class="form-control" type="text" value={{tag}} />
+                  <input class="form-control" type="text" value="{{tag}}" />
               {% endfor%}
               </div>
             </div>
@@ -362,7 +345,7 @@
                 <h5>Sponsor: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="sponsor" value={{post.sponsor}} />
+                <input class="form-control" type="text" name="sponsor" value="{{post.sponsor}}" />
               </div>
             </div>
           {% else %}
