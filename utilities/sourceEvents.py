@@ -98,7 +98,7 @@ def parse(content, gmaps):
 
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
-        entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
+        # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
         entry['category'] = pe['eventType'] if 'eventType' in pe else ""
         if entry['category'] not in eventTypeMap:
             print("find unknown eventType: {}".format(entry['category']))

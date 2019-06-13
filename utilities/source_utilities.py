@@ -25,19 +25,22 @@ def publish_event(id):
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
         print("event {} submit method: {}".format(id, event['submitType']))
+
         if event:
             event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
             event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
             event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
             event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
-
-            if event['submitType'] == 'post':
+            submit_type = event['submitType']
+            del event['submitType']
+            if submit_type == 'post':
                 result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                        data=json.dumps(event))
-            elif event['submitType'] == 'put':
-                result = requests.put(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+            elif submit_type == 'put':
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + event.get('eventId')
+                result = requests.put(url, headers=headers,
                                       data=json.dumps(event))
-            elif event['submitType'] == 'patch':
+            elif submit_type == 'patch':
                 result = requests.patch(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                         data=json.dumps(event))
 
