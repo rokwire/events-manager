@@ -18,6 +18,7 @@ tip4CalALoc = [
     ['Krannert Center', '', 'studio', 'Krannert Center'],
     ['Krannert Center', '', 'stage', 'Krannert Center'],
     ['General Events', 'ncsa', 'ncsa', 'NCSA'],
+    ['National Center for Supercomputing Applications master calendar', '', 'ncsa', 'NCSA']
 ]
 
 
