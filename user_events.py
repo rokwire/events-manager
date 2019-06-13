@@ -10,7 +10,7 @@ userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 @userbp.route('/', methods=['GET', 'POST'])
 def user_events():
     if request.method == 'POST':
-		#format : 'id=1234' /'type=Academic'/'id=1234&type=Academic'
+		#format : 'id=1234' /'category=Academic'/'id=1234&category=Academic'
         searchInput = request.form['searchInput']
         search_id = None
         search_type = None
@@ -18,18 +18,18 @@ def user_events():
         	input_list = searchInput.split('&')
         	if len(input_list[0]) > 3 and input_list[0][0:2]=='id':
         		search_id = input_list[0][3:]
-        	if len(input_list[1]) > 5 and input_list[1][0:4]=='type':
-        		search_type = input_list[1][5:]
+        	if len(input_list[1]) > 9 and input_list[1][0:8]=='type':
+        		search_type = input_list[1][9:]
         else:
         	if len(searchInput) > 3 and searchInput[0:2]=='id':
         		search_id = searchInput[3:]
-        	elif len(searchInput) > 5 and searchInput[0:4]=='type':
-        		search_type = searchInput[5:]
+        	elif len(searchInput) > 9 and searchInput[0:8]=='type':
+        		search_type = searchInput[9:]
         result_dic = {}
         if search_id != None:
         	result_dic['eventId'] = search_id
         if search_type != None:
-        	result_dic['eventType'] = search_type
+        	result_dic['category'] = search_type
         #print(result_dic)
         posts = get_searched_user_events(result_dic)
     else:
