@@ -67,6 +67,13 @@ def approveCalendar():
     approve_calendar_db(calendarId)
     return "success", 200
 
+@bp.route('/disapprove', methods=('GET', 'POST'))
+@login_required
+def disapproveCalendar():
+    calendarId = request.form['calendarId']
+    disapprove_calendar_db(calendarId)
+    return "success", 200
+
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)

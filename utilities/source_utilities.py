@@ -36,6 +36,16 @@ def approve_calendar_db(calendarId):
         print("Update {} fails".format(objectId))
     # TODO: update all events
 
+def disapprove_calendar_db(calendarId):
+    updateResult = update_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
+                              update={
+                                  "$set": {"status": "disapproved"}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        print("Update {} fails".format(objectId))
+    # TODO: update all events
+
+
 def get_calendar_status(calendarId):
     calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
     return calendar['status']

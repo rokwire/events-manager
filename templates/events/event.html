@@ -64,7 +64,7 @@
 {% block content %}
   <!-- filter and select operations -->
   {% if isUser %}
-  <div class="row row-content">
+  <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
   {% else %}
@@ -83,7 +83,7 @@
 
         <!-- TODO approve status display : need real format in json example -->
         {% if post.ApproveStatus%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>: </h5>
             </div>
@@ -93,7 +93,7 @@
 
         <!-- event url -->
         {% if post.titleURL%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Event URL: </h5>
             </div>
@@ -101,19 +101,29 @@
           </div>
         {% endif %}
 
-        <!-- event type -->
-        {% if post.eventType%}
-          <div class="row row-content">
+        <!-- event category -->
+        {% if post.category %}
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
             </div>
-            <p class="col-sm-9">{{ post.eventType }}</p>
+            <p class="col-sm-9">{{ eventTypeMap[post.category]}}</p>
+          </div>
+        {% endif %}
+
+        <!-- event subcategory -->
+        {% if post.subcategory %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Sub Category: </h5>
+            </div>
+            <p class="col-sm-9">{{ post.subcategory}}</p>
           </div>
         {% endif %}
 
         <!-- startDate -->
         {% if post.startDate%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Start Date: </h5>
             </div>
@@ -125,7 +135,7 @@
 
         <!-- endDate -->
         {% if post.endDate%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>End Date: </h5>
             </div>
@@ -134,18 +144,30 @@
         {% endif %}
 
         <!-- location -->
-        {% if post.location and post.location.description %}
-          <div class="row row-content">
-            <div class="col-12 col-sm-2">
-              <h5>Location: </h5>
+        {% if post.location %}
+          <!-- description -->
+          {% post.location.description %}
+            <div class="row ">
+              <div class="col-12 col-sm-2">
+                <h5>Location: </h5>
+              </div>
+              <p class="col-sm-9">{{ post.location.description}}</p>
             </div>
-            <p class="col-sm-9">{{ post.location.description}}</p>
-          </div>
+          {% endif %}
+          <!-- address -->
+          {% post.location.address %}
+            <div class="row ">
+              <div class="col-12 col-sm-2">
+                <h5>Address: </h5>
+              </div>
+              <p class="col-sm-9">{{ post.location.address}}</p>
+            </div>
+          {% endif %}
         {% endif %}
 
         <!-- target audience -->
         {% if post.targetAudience %}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Target Audience: </h5>
             </div>
@@ -159,7 +181,7 @@
 
         <!-- cost -->
         {% if post.cost%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Cost: </h5>
             </div>
@@ -171,7 +193,7 @@
         {% if post.contacts%}
           {% for contact in post.contacts %}
             {% if contact.firstName and contact.lastName%}
-              <div class="row row-content">
+              <div class="row ">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Person: </h5>
                 </div>
@@ -179,7 +201,7 @@
               </div>
             {% endif %}
             {% if contact.email %}
-              <div class="row row-content">
+              <div class="row ">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Email: </h5>
                 </div>
@@ -187,7 +209,7 @@
               </div>
             {% endif %}
             {% if contact.phone %}
-              <div class="row row-content">
+              <div class="row ">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Phone: </h5>
                 </div>
@@ -199,7 +221,7 @@
 
         <!-- tags -->
         {% if post.tags%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Tags: </h5>
             </div>
@@ -213,7 +235,7 @@
 
         <!-- sponsor -->
         {% if post.sponsor%}
-          <div class="row row-content">
+          <div class="row ">
             <div class="col-12 col-sm-2">
               <h5>Sponsor: </h5>
             </div>
@@ -223,21 +245,19 @@
 
         <!-- description -->
         {% if post.description%}
-        <div class="row row-content">
+        <div class="row ">
           <div class="col-12 col-sm-2">
             <h5>Description: </h5>
           </div>
           <div class="col-12 col-sm-9">
-            {% autoescape false %}
-            <p class = "col-sm-9">  {{post.description}} </p>
-            {% endautoescape %}
+            {% autoescape false %}{{post.description}}{% endautoescape %}
           </div>
         </div>
         {% endif %}
 
       </div class = "media-body">
     </article>
-  <div class="row row-content justify-content-center">
+  <div class="row  justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
         <!-- <a role="button" class="btn btn-block nav-link btn-outline-primary"
@@ -247,7 +267,7 @@
         {% if isUser %}
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}" role="button">Approve</a>
         {% else %}
-        <a class="btn btn-block nav-link btn-secondary" href="#" role="button">Approve</a>
+        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
