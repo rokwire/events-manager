@@ -227,7 +227,7 @@ def store(documents):
             'dataSourceEventId'
         ]})
 
-        if len(result) == 0:
+        if not result:
             document['submitType'] = 'post'
             document['eventStatus'] = 'pending'
             # change eventId to be mongdb _id
