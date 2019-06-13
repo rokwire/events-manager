@@ -27,10 +27,12 @@ def publish_event(id):
         print("event {} submit method: {}".format(id, event['submitType']))
 
         if event:
-            event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
-            event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
-            event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
-            event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('startDate'):
+                event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('endDate'):
+                event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             submit_type = event['submitType']
             del event['submitType']
             if submit_type == 'post':
@@ -41,7 +43,8 @@ def publish_event(id):
                 result = requests.put(url, headers=headers,
                                       data=json.dumps(event))
             elif submit_type == 'patch':
-                result = requests.patch(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + event.get('eventId')
+                result = requests.patch(url, headers=headers,
                                         data=json.dumps(event))
 
             if result.status_code not in (200, 201):
