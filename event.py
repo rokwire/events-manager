@@ -47,6 +47,11 @@ def calendar(calendarId):
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
                             select_status=select_status)
 
+@bp.route('/search')
+@login_required
+def search():
+   return render_template('events/search.html', sources=current_app.config['INT2SRC'])
+
 
 @bp.route('/setting')
 @login_required
@@ -121,4 +126,3 @@ def edit(eventId):
         update_event(eventId, post_by_id)
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
-

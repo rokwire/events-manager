@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+ {% block header %}
+<h1>{% block title %}{{title}}{% endblock %}</h1>
+{% endblock %}
+
+
+
+ {% block content %}
+
+
+ <h1 class="text-center">{{title}}</h1>
+<div class="jumbotron">
+
+   <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Search by</label>
+    </div>
+    <select class="custom-select" id="inputGroupSelect01">
+      <option selected>Choose...</option>
+      <option value="1"> Events</option>
+      <option value="2">Content</option>
+    </select>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Location</label>
+    </div>
+    <select class="custom-select" id="inputGroupSelect01">
+      <option selected>Choose...</option>
+      <option value="1"> 1</option>
+      <option value="2">2</option>
+    </select>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Target Audience</label>
+    </div>
+    <select class="custom-select" id="inputGroupSelect01">
+      <option selected>Choose...</option>
+      <option value="1"> 1</option>
+      <option value="2">2</option>
+    </select>
+  </div>
+
+ </div>
+<div class="container-fluid">
+  <div class="row mt-3 mb-3">
+
+   </div>
+
+   <div class="row row-content mt-3 mb-3">
+    <div class="col-12 col-sm-1 order-sm-first">
+      <a href="{{url_for('event.source', sourceId=0)}}">
+  <button type="button" class="btn btn-dark"><</button>
+</a>
+    </div>
+    <!--  checkbox group -->
+    <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline1">
+      <label class="form-check-label" for="materialInline1">Approved</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="materialInline2">
+        <label class="form-check-label" for="materialInline2">Disapproved</label>
+    </div>
+    <div class="form-check form-check-inline col-sm-3">
+        <input type="checkbox" class="form-check-input" id="materialInline3">
+        <label class="form-check-label" for="materialInline3">Published</label>
+    </div>
+    <!-- Search form -->
+    <div class="col text-center">
+      <button type="button" class="btn btn-primary text-center">Approve calendar</button>
+    </div>
+  </div>
+</div>
+
+ <div id = "accordion">
+  {% for post in posts %}
+      <div class="card">
+        <div class="card-header" role="tab" id = "head">
+        <h3 class="mb-0">
+            <a data-toggle="collapse" data-target="#{{post._id}}">
+              {{ post.title }}
+            </a>
+            <a href="/user-events/event/{{post._id}}" class="btn btn-default ml-auto float-right">
+              <h5>></h5>
+            </a>
+        </h3>
+
+         </div>
+        <div role="tabpanel" class="collapse" id="{{post._id}}">
+            <div class="card-body">
+              <p class="d-none d-sm-block">
+                {% autoescape false %}
+                {{post.description}}
+                {% endautoescape %}
+              </p>
+            </div>
+        </div>
+    </div>
+  </div >
+  </div>
+  {% endfor %}
+
+
+
+
+
+ {% endblock %}
