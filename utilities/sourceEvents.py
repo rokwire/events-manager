@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from ..db import update_one
+from ..db import update_one, find_one, insert_one
 
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 
@@ -97,12 +97,13 @@ def parse(content, gmaps):
         entry = dict()
 
         # Required Field
-        entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
-        entry['eventType'] = pe['eventType'] if 'eventType' in pe else ""
-        if entry['eventType'] not in eventTypeMap:
-            print("find unknown eventType: {}".format(entry['eventType']))
+        entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
+        # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
+        entry['category'] = pe['eventType'] if 'eventType' in pe else ""
+        if entry['category'] not in eventTypeMap:
+            print("find unknown eventType: {}".format(entry['category']))
         else:
-            entry['eventType'] = eventTypeMap[entry['eventType']]
+            entry['category'] = eventTypeMap[entry['category']]
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
@@ -222,14 +223,24 @@ def store(documents):
     update = 0
     insert = 0
     for document in documents:
-        result = update_one(current_app.config['EVENT_COLLECTION'], condition={'eventId': document['eventId']},
-                            update={'$set': document}, upsert=True)
-        if result.modified_count == 0 and result.matched_count == 0 and result.upserted_id is None:
-            print("Store {} failed".format(document['eventId']))
-        elif result.matched_count == result.modified_count:
+        result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
+            'dataSourceEventId'
+        ]})
+
+        if not result:
+            document['submitType'] = 'post'
+            document['eventStatus'] = 'pending'
+            # change eventId to be mongdb _id
+            insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
+            document['eventId'] = str(insert_result.inserted_id)
             insert += 1
         else:
+            document['submitType'] ='put'
             update += 1
+        
+        result = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
+                update={'$set': document}, upsert=True)
+        
     return (insert, update)
 
 
