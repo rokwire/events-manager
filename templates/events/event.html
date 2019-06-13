@@ -146,7 +146,7 @@
         <!-- location -->
         {% if post.location %}
           <!-- description -->
-          {% post.location.description %}
+          {% if post.location.description %}
             <div class="row ">
               <div class="col-12 col-sm-2">
                 <h5>Location: </h5>
@@ -155,7 +155,7 @@
             </div>
           {% endif %}
           <!-- address -->
-          {% post.location.address %}
+          {% if post.location.address %}
             <div class="row ">
               <div class="col-12 col-sm-2">
                 <h5>Address: </h5>
