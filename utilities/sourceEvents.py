@@ -9,6 +9,7 @@ from flask import current_app
 import xml.etree.ElementTree as ET
 import googlemaps
 import requests
+import traceback
 
 ######################################################################
 ### parsing helper functions
@@ -235,7 +236,8 @@ def store(documents):
             document['eventId'] = str(insert_result.inserted_id)
             insert += 1
         else:
-            document['submitType'] ='put'
+            if document['eventStatus'] == 'published':
+                document['submitType'] ='put'
             update += 1
         
         result = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
@@ -273,6 +275,7 @@ def start():
             update_in_total += update
             print("{} are updated, {} are inserted".format(update, insert))
         except Exception as e:
+            traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
     print("DateTime: {}, overall parsing result: {} are updated, {} are inserted".format(

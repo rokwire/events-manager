@@ -24,15 +24,16 @@ class Config(object):
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
-        {'7': 'General Events'},
+        # {'7': 'General Events'},
         # {'33': 'Krannert Center'},
         # {'47': 'Library Calendar'},
         # {'63': 'Facility Hours'},
         # {'117': 'Beckman Main Calendar'},
         # {'127': 'Lincoln Hall Theater Events'},
         # {'128': 'Foellinger Auditorium Events'},
-        {'169': 'Department of Sociology'},
-        {'772': 'NCSA Master Calendar'}
+        # {'169': 'Department of Sociology'},
+        # {'772': 'NCSA'},
+        {'2772': "College of Education Events"}
     ]
 
     # This is a mapping between different sources to different calendar mapping
@@ -42,3 +43,4 @@ class Config(object):
     }
 
     EVENT_BUILDING_BLOCK_URL='...'
+    CALENDAR_COLLECTION='calendars'
