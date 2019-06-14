@@ -107,7 +107,7 @@
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
             </div>
-            <p class="col-sm-9">{{ eventTypeMap[post.category]}}</p>
+            <p class="col-sm-9">{{post.category}}</p>
           </div>
         {% endif %}
 
@@ -146,8 +146,8 @@
         <!-- location -->
         {% if post.location %}
           <!-- description -->
-          {% post.location.description %}
-            <div class="row ">
+          {% if post.location.description %}
+            <div class="row">
               <div class="col-12 col-sm-2">
                 <h5>Location: </h5>
               </div>
@@ -155,12 +155,20 @@
             </div>
           {% endif %}
           <!-- address -->
-          {% post.location.address %}
-            <div class="row ">
+          {% if post.location.latitude %}
+            <div class="row">
               <div class="col-12 col-sm-2">
-                <h5>Address: </h5>
+                <h5>Latitude: </h5>
               </div>
-              <p class="col-sm-9">{{ post.location.address}}</p>
+              <p class="col-sm-9"> {{ post.location.latitude}}</p>
+            </div>
+          {% endif %}
+          {% if post.location.longitude %}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Longitude: </h5>
+              </div>
+              <p class="col-sm-9">{{ post.location.longitude}}</p>
             </div>
           {% endif %}
         {% endif %}

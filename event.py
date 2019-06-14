@@ -1,4 +1,4 @@
-import json 
+import json
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session
@@ -41,11 +41,16 @@ def calendar(calendarId):
                 title = item[calendarId]
                 sourceId = key
                 sourcetitle = source[0]
-    
+
     events = get_calendar_events(sourceId, calendarId, select_status)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
                             select_status=select_status)
+
+@bp.route('/search')
+@login_required
+def search():
+   return render_template('events/search.html', sources=current_app.config['INT2SRC'])
 
 
 @bp.route('/setting')
@@ -97,12 +102,17 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName)
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, eventTypeMap = eventTypeMap)
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
 def edit(eventId):
     post_by_id = get_event(eventId)
+    # create dic for eventType values - new category
+    eventTypeValues = {}
+    for key in eventTypeMap:
+        value = eventTypeMap[key]
+        eventTypeValues[value] = 0
     if request.method == 'POST':
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
@@ -114,5 +124,5 @@ def edit(eventId):
 
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=False)
 
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
