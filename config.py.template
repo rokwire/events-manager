@@ -65,3 +65,4 @@ class Config(object):
     }
 
     EVENT_BUILDING_BLOCK_URL='...'
+    CALENDAR_COLLECTION='calendars'

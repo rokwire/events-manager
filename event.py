@@ -44,14 +44,26 @@ def calendar(calendarId):
 
     events = get_calendar_events(sourceId, calendarId, select_status)
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+
+    calendarStatus = get_calendar_status(calendarId)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
-                            select_status=select_status)
+                            select_status=select_status, calendarStatus=calendarStatus)
+
+@bp.route('/search')
+@login_required
+def search():
+   return render_template('events/search.html', sources=current_app.config['INT2SRC'])
 
 
-@bp.route('/setting')
+@bp.route('/setting', methods=('GET', 'POST'))
 @login_required
 def setting():
-    return render_template('events/setting.html', sources=current_app.config['INT2SRC'])
+    if request.method == 'POST':
+        print(request.form)
+        allstatus = get_all_calendar_status()
+        update_calendars_status(request.form, allstatus)
+    allstatus = get_all_calendar_status()
+    return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
 
 
 @bp.route('/download')
@@ -75,10 +87,18 @@ def select(calendarId):
     session["select_status"] = select_status
     return "", 200
 
-@bp.route('/approve/<calendarId>')
+@bp.route('/approve', methods=('GET', 'POST'))
 @login_required
-def approveCalendar(calendarId):
+def approveCalendar():
+    calendarId = request.form['calendarId']
     approve_calendar_db(calendarId)
+    return "success", 200
+
+@bp.route('/disapprove', methods=('GET', 'POST'))
+@login_required
+def disapproveCalendar():
+    calendarId = request.form['calendarId']
+    disapprove_calendar_db(calendarId)
     return "success", 200
 
 @bp.route("/source/<id>/approve")
@@ -120,5 +140,10 @@ def edit(eventId):
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
 
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
-
+    source = current_app.config['INT2SRC'][post_by_id['sourceId']]
+    sourceName = source[0]
+    calendarName = ''
+    for dict in source[1]:
+        if post_by_id['calendarId'] in dict:
+            calendarName = dict[post_by_id['calendarId']]
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
