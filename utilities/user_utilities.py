@@ -31,7 +31,7 @@ def update_user_event(objectId, update):
                               })
 
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
+        print("Update {} fails in update_user_event".format(objectId))
 
 def delete_user_event(eventId):
     pass
