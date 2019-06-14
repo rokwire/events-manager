@@ -140,4 +140,10 @@ def edit(eventId):
         # insert update_user_event function here later
         update_event(eventId, post_by_id)
 
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False)
+    source = current_app.config['INT2SRC'][post_by_id['sourceId']]
+    sourceName = source[0]
+    calendarName = ''
+    for dict in source[1]:
+        if post_by_id['calendarId'] in dict:
+            calendarName = dict[post_by_id['calendarId']]
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
