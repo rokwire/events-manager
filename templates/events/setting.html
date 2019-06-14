@@ -42,19 +42,15 @@
             {% endfor %}
           {% endfor %}
 
-          <h2>Daily time configuration</h2>
-          <div class="form-group">
-            <span>Approved events from these calendars will be pushed to Rokwire everyday at 11:00 PM.</span>
-            <button type="button" class="btn btn-primary">Push now</button>
-          </div>
-
-          <div class="form-group">
-            <span>Calendars will be updated daily. Update immediately
-            <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download now</a>
-          </div>
-
           <button type="submit" class="btn btn-primary">Save</button>
         </form>
+
+        <h2>Daily time configuration</h2>
+        <span>Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM.</span>
+        <button type="button" class="btn btn-primary">Configure now</button>
+
+        <span>Calendars will be updated daily. Update immediately
+        <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
 
       </div>
     </div>
