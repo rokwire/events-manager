@@ -236,7 +236,7 @@ def store(documents):
             document['eventId'] = str(insert_result.inserted_id)
             insert += 1
         else:
-            if document['eventStatus'] == 'published':
+            if result['eventStatus'] == 'published':
                 document['submitType'] ='put'
             update += 1
         

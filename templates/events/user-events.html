@@ -85,3 +85,29 @@
     </ul>
   </nav> -->
 {% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    $("#materialInline1, #materialInline2, #materialInline3").on('click', function() {
+      let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
+      let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
+      let published = ( $('#materialInline3').is(':checked') ? 1: 0);
+      console.log(approved, disapproved, published);
+      $.ajax(
+        {
+          url: "{{ url_for('user_events.select') }}",
+          dataType: 'json',
+          type    : 'POST',
+          data    : {
+            approved: approved,
+            disapproved: disapproved,
+            published: published
+          },
+        }
+      ).always(function() {
+        location.reload(true);
+      });
+    })
+  </script>
+{% endblock %}
