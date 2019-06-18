@@ -17,7 +17,11 @@
 <div class="container-fluid">
   <div class="row mt-3 mb-3">
     <div class="col text-center">
-      <button type="button" class="btn btn-primary text-center">Approve calendar</button>
+      {% if calendarStatus == "approved" %}
+      <button type="button" class="btn btn-primary text-center" id="disapprovebutton">Disapprove calendar</button>
+      {% else %}
+      <button type="button" class="btn btn-primary text-center" id="approvebutton">Approve calendar</button>
+      {% endif %}
     </div>
   </div>
 
@@ -112,6 +116,30 @@
 {% block scripts%}
   {{ super() }}
   <script>
+    $("#approvebutton").click(function() {
+      $.post("{{ url_for('event.approveCalendar') }}",
+      {
+        "calendarId": {{ calendarId}}
+      },
+      function(data) {
+        if (data == "success") {
+          location.reload();
+        }
+      });
+    });
+
+    $("#disapprovebutton").click(function() {
+      $.post("{{ url_for('event.disapproveCalendar') }}",
+      {
+        "calendarId": {{ calendarId}}
+      },
+      function(data) {
+        if (data == "success") {
+          location.reload();
+        }
+      });
+    });
+
     $("#materialInline1, #materialInline2, #materialInline3").on('click', function() {
       let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
       let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
@@ -123,8 +151,8 @@
           dataType: 'json',
           type    : 'POST',
           data    : {
-            approved: approved, 
-            disapproved: disapproved, 
+            approved: approved,
+            disapproved: disapproved,
             published: published
           },
         }
