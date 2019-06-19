@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 
 from ..db import update_one, find_one, insert_one
-
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
-
+from .source_utilities import get_all_calendar_status, publish_event
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -35,10 +34,15 @@ def search_static_location(calendarName, sponsor, location):
 ######################################################################
 ### Normal parse process functions
 ######################################################################
-def geturl():
+def geturl(targets):
     urls = []
-    for eventMap in current_app.config['INT2SRC']['0'][1]:
-        urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], list(eventMap.keys())[0], current_app.config['EVENT_URL_SUFFIX']))
+    if targets is None:
+        for eventMap in current_app.config['INT2SRC']['0'][1]:
+            urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], list(eventMap.keys())[0], current_app.config['EVENT_URL_SUFFIX']))
+    else:
+        for target in targets:
+            urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], target, current_app.config['EVENT_URL_SUFFIX']))
+
     return urls
 
 def download(url):
@@ -221,8 +225,11 @@ def parse(content, gmaps):
 
 def store(documents):
 
+    calendarStatus = get_all_calendar_status()
+
     update = 0
     insert = 0
+    
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
@@ -230,10 +237,19 @@ def store(documents):
 
         if not result:
             document['submitType'] = 'post'
-            document['eventStatus'] = 'pending'
-            # change eventId to be mongdb _id
-            insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
-            document['eventId'] = str(insert_result.inserted_id)
+            calendarId = document['calendarId']
+            if calendarId in calendarStatus and calendarStatus[calendarId] == 'approved':
+                document['eventStatus'] = 'approved'
+                # change eventId to be mongdb _id
+                insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
+                document['eventId'] = str(insert_result.inserted_id)
+                publish_event(str(insert_result.inserted_id))
+            else:
+                document['eventStatus'] = 'pending'
+                insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
+                # change eventId to be mongdb _id
+                document['eventId'] = str(insert_result.inserted_id)
+
             insert += 1
         else:
             if result['eventStatus'] == 'published':
@@ -242,11 +258,12 @@ def store(documents):
         
         result = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                 update={'$set': document}, upsert=True)
-        
+
     return (insert, update)
 
 
-def start():
+
+def start(targets=None):
 
     if "GOOGLE_KEY" not in current_app.config or current_app.config["GOOGLE_KEY"] is None:
         print("Google Key does not exist. Cannot perform parsing")
@@ -261,7 +278,8 @@ def start():
 
     update_in_total = 0
     insert_in_total = 0
-    urls = geturl()
+
+    urls = geturl(targets)
     for url in urls:
         try:
             rawEvents = download(url)

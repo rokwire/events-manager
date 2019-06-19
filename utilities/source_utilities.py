@@ -35,14 +35,6 @@ def disapprove_calendar_events(calendarId):
         print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
-def approve_calendar_events(calendarId):
-    updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
-        "set": {"eventStatus": "approved"}
-    })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
-
-
 def publish_event(id):
     headers = {'Content-Type': 'application/json'}
     try:

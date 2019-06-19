@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session
@@ -10,6 +11,7 @@ from .auth import login_required
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap
+from .scheduler import schedule_downloading
 
 
 bp = Blueprint('event', __name__, url_prefix='/event')
@@ -66,11 +68,12 @@ def setting():
     return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
 
 
-@bp.route('/download')
+@bp.route('/download', methods=['POST'])
 @login_required
 def download():
-    print("downloaded")
-    start()
+    targets = request.get_json()
+    if targets:
+       schedule_downloading(datetime.datetime.now(), targets)
     return redirect(url_for('event.setting'))
 
 @bp.route('/<calendarId>/select', methods=['POST'])
