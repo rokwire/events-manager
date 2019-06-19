@@ -8,7 +8,7 @@ CalName2Location = {
     'Lincoln Hall Theater Events': (40.1066066,-88.2304212),
     'Foellinger Auditorium Events': (40.1059431,-88.2294751),
     'Department of Sociology': (40.1066528,-88.2305061),
-    'NCSA': (40.9951304,-89.0669566),
+    'NCSA': (40.1147743,-88.2252053),
 }
 
 
