@@ -73,7 +73,7 @@ def setting():
 def download():
     targets = request.get_json()
     if targets:
-       schedule_downloading(datetime.datetime.now(), targets)
+       start(targets)
     return redirect(url_for('event.setting'))
 
 @bp.route('/<calendarId>/select', methods=['POST'])
