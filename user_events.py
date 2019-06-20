@@ -1,7 +1,7 @@
 import traceback
 from .utilities import source_utilities
 
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request
+from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session
 from .utilities.user_utilities import *
 from .utilities.constants import *
 
@@ -9,6 +9,12 @@ userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
 @userbp.route('/', methods=['GET', 'POST'])
 def user_events():
+    if 'select_status' in session:
+        select_status = session['select_status']
+    else:
+        select_status = []
+        session['select_status'] = select_status
+    
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         searchInput = request.form['searchInput']
@@ -20,10 +26,10 @@ def user_events():
                 key = params[0]
                 value = params[1]
                 query_dic[key] = value
-        posts = get_searched_user_events(query_dic)
+        posts = get_searched_user_events(query_dic, select_status)
     else:
-        posts = get_all_user_events()
-    return render_template("events/user-events.html", posts=posts)
+        posts = get_all_user_events(select_status)
+    return render_template("events/user-events.html", posts=posts, select_status=select_status)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
@@ -62,3 +68,17 @@ def user_an_event_approve(id):
         traceback.print_exc()
 
     return redirect(url_for("user_events.user_an_event", id=id))
+
+
+@userbp.route('/select', methods=['POST'])
+def select():
+    select_status = []
+    if request.form.get('approved') == '1':
+        select_status.append('approved')
+    if request.form.get('disapproved') == '1':
+        select_status.append('disapproved')
+    if request.form.get('published') == '1':
+        select_status.append('published')
+
+    session["select_status"] = select_status
+    return "", 200
