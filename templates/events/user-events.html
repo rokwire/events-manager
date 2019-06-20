@@ -43,12 +43,8 @@
               <div class="card">
                 <div class="card-header" role="tab", id = "head">
                 <h3 class="mb-0">
-                    <a data-toggle="collapse" data-target="#{{post._id}}">
-                      {{ post.title }}
-                    </a>
-                    <a href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" class="btn btn-default ml-auto float-right">
-                      <!-- <span class="fa fa-home fa-lg"></span> -->
-                      <h5>></h5>
+                    <a href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" class="btn btn-default ml-auto float-left">
+                      <h4 class="mb-0">{{ post.title }}</h4>
                     </a>
                 </h3>
 
