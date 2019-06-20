@@ -34,7 +34,7 @@ def search_static_location(calendarName, sponsor, location):
 ######################################################################
 ### Normal parse process functions
 ######################################################################
-def geturl(targets):
+def geturls(targets):
     urls = []
     if targets is None:
         for eventMap in current_app.config['INT2SRC']['0'][1]:
@@ -307,7 +307,7 @@ def start(targets=None):
     update_in_total = 0
     insert_in_total = 0
 
-    urls = geturl(targets)
+    urls = geturls(targets)
     for url in urls:
         try:
             rawEvents = download(url)
