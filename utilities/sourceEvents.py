@@ -275,10 +275,18 @@ def store(documents):
         
     # upload approved or published events
     for document in documents:
-        event_status = document.get('eventStatus')
-        # if event is approved or published
-        if event_status == 'approved' or event_status == 'published':
-            publish_event(document['eventId'])
+        result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
+            'dataSourceEventId'
+        ]})
+
+        if result:
+            event_status = result.get('eventStatus')
+            # if event is approved or published
+            if event_status == 'approved' or event_status == 'published':
+                publish_event(result['eventId'])
+        else:
+            print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
+                                                                         document['calendarId']))
         
     return (insert, update)
 
