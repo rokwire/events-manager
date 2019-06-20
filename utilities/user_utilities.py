@@ -4,12 +4,18 @@ from bson.errors import InvalidId
 
 from ..db import find_all, find_one, update_one
 
-def get_all_user_events():
-    return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": {"$exists": False}})
+def get_all_user_events(select_status):
+    if not select_status:
+        select_status = ['pending']
+    return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": {"$exists": False}, 
+                                                                    "eventStatus": {"$in": select_status}})
 
 # TODO get searched posts
-def get_searched_user_events(searchDic):
+def get_searched_user_events(searchDic, select_status):
+    if not select_status:
+        select_status = ['pending']
     searchDic['sourceId'] = {"$exists": False}
+    searchDic['eventStatus'] = {"$in": select_status}
     return find_all(current_app.config['EVENT_COLLECTION'], filter=searchDic)
 
 def find_user_event(objectId):
