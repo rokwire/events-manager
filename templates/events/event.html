@@ -82,12 +82,12 @@
         <hr class="divider"/>
 
         <!-- TODO approve status display : need real format in json example -->
-        {% if post.ApproveStatus%}
+        {% if post.eventStatus%}
           <div class="row ">
             <div class="col-12 col-sm-2">
-              <h5>: </h5>
+              <h5>Event Status: </h5>
             </div>
-            <p class="col-sm-9">{{ post.ApproveStatus }}</p>
+            <p class="col-sm-9">{{ post.eventStatus }}</p>
           </div>
         {% endif %}
 
