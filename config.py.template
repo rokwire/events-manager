@@ -24,16 +24,38 @@ class Config(object):
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
-        # {'7': 'General Events'},
-        # {'33': 'Krannert Center'},
-        # {'47': 'Library Calendar'},
-        # {'63': 'Facility Hours'},
-        # {'117': 'Beckman Main Calendar'},
-        # {'127': 'Lincoln Hall Theater Events'},
-        # {'128': 'Foellinger Auditorium Events'},
-        # {'169': 'Department of Sociology'},
-        # {'772': 'NCSA'},
-        {'2772': "College of Education Events"}
+       #  --- list of Calendars ---
+       # {'25': 'Center for Advanced Study'},
+       # {'33': 'Krannert Center'},
+       # {'47': 'Library Calendar'},
+       # {'62': 'Exhibits'},
+       # {'63': 'Facility Hours'},
+       # {'117': 'Beckman Main Calendar'},
+       # {'127': 'Lincoln Hall Theater Events'},
+       # {'128': 'Foellinger Auditorium Events'},
+       # {'169': 'Department of Sociology'},
+       # {'319': 'School of Literatures, Cultures and Linguistics Calendar'},
+       # {'468': 'Cultural & International'},
+       # {'557': 'Academic Dates'},
+       # {'594': 'Advising & Placement'},
+       # {'637': 'Recreation, Health & Wellness'},
+       # {'642': 'Staff Training'},
+       # {'772': 'NCSA'},
+       # {'863': 'Center for Latin American and Caribbean Studies (CLACS)'},
+       # {'1045': 'CSL General Event Calendar'},
+       # {'1215': 'International Week'},
+       # {'1551': 'HireIllini Career Fairs'},
+       # {'2666': 'Psychology General Calendar'},
+       # {'2769': 'Asian American Cultural Center Events'},
+       {'2772': 'College of Education Events'},
+       # {'2885': 'Illinois International Events'},
+       # {'2889': 'Campus General Request Event'},
+       # {'3663': 'Department of Religion'},
+       # {'3914': 'ACES Office of International Programs Lectures'},
+       # {'4757': 'Urbana Campus Research Calendar'},
+       # {'4806': 'Illini Center Chicago Advancement Events'},
+       # {'4908': 'Alumni Events in Chicago'},
+       # {'5345': 'C.O.R.E. Event Calendar'}
     ]
 
     # This is a mapping between different sources to different calendar mapping

@@ -46,12 +46,16 @@
         </form>
 
         <h2>Daily time configuration</h2>
-        <span>Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM.</span>
-        <button type="button" class="btn btn-primary">Configure now</button>
+        <div>
+            <label for="scheduletime">Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM. Schedule to another time:</label>
+            <input type="time" id="scheduletime" name="scheduletime" value="23:00" required>
+          <button type="button" class="btn btn-primary">Schedule</button>
+        </div>
 
-        <span>Calendars will be updated daily. Update immediately
-        <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
-
+        <div>
+          <span>Calendars will be updated daily. Update immediately
+          <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
+        </div>
       </div>
     </div>
   </div>
