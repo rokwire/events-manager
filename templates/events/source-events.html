@@ -52,11 +52,12 @@
           <div class="card">
             <div class="card-header" role="tab" id = "head" href="{{url_for('event.calendar', calendarId=key)}}">
               <a href="{{url_for('event.calendar', calendarId=key)}}" class="btn btn-default ml-auto float-left">
-                <h3 class="mb-0">{{ value }}</h3>
+                <h4 class="mb-0">{{ value }}</h4>
               </a>
-              <a href="{{url_for('event.calendar', calendarId=key)}}" class="btn btn-default ml-auto float-right">
+              <!-- delete > button -->
+              <!-- <a href="{{url_for('event.calendar', calendarId=key)}}" class="btn btn-default ml-auto float-right">
                 <h3 class="mb-0">></h3>
-              </a>
+              </a> -->
             </div>
         </div class = "card">
       {% endfor %}

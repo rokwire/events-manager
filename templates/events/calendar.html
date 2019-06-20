@@ -57,12 +57,16 @@
       <div class="card">
         <div class="card-header" role="tab" id = "head">
         <h3 class="mb-0">
-            <a data-toggle="collapse" data-target="#{{post._id}}">
+            <!-- <a data-toggle="collapse" data-target="#{{post._id}}" href="{{url_for('event.detail', eventId=post._id) }}">
               {{ post.title }}
+            </a> -->
+            <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-left">
+              <h4 class="mb-0">{{ post.title }}</h4>
             </a>
-            <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-right">
+            <!-- delete > button -->
+            <!-- <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-right">
               <h5>></h5>
-            </a>
+            </a> -->
         </h3>
 
         </div>
