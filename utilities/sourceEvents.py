@@ -241,17 +241,17 @@ def store(documents):
             calendarId = document['calendarId']
             calendar_status = calendarStatus.get(calendarId)
 
-            # if calendar status is unknown
-            if calendar_status is None:
-                document['eventStatus'] = 'pending'
+            # if calendar is disapproved
+            if calendar_status == "disapproved":
+                document['eventStatus'] = 'disapproved'
             
             # if calendar is approved 
             elif calendar_status == 'approved':
                 document['eventStatus'] = 'approved'
             
-            # if calendar is disapproved
+            # if calendar status is unknown
             else:
-                document['eventStatus'] = 'disapproved'
+                document['eventStatus'] = 'pending'
             
             insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
             # insert error condition check
