@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 
 from ..db import update_one, find_one, insert_one
-
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
-
+from .source_utilities import get_all_calendar_status, publish_event
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -35,10 +34,15 @@ def search_static_location(calendarName, sponsor, location):
 ######################################################################
 ### Normal parse process functions
 ######################################################################
-def geturl():
+def geturls(targets):
     urls = []
-    for eventMap in current_app.config['INT2SRC']['0'][1]:
-        urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], list(eventMap.keys())[0], current_app.config['EVENT_URL_SUFFIX']))
+    if targets is None:
+        for eventMap in current_app.config['INT2SRC']['0'][1]:
+            urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], list(eventMap.keys())[0], current_app.config['EVENT_URL_SUFFIX']))
+    else:
+        for target in targets:
+            urls.append("{}{}{}".format(current_app.config['EVENT_URL_PREFIX'], target, current_app.config['EVENT_URL_SUFFIX']))
+
     return urls
 
 def download(url):
@@ -221,32 +225,74 @@ def parse(content, gmaps):
 
 def store(documents):
 
+    calendarStatus = get_all_calendar_status()
+
     update = 0
     insert = 0
+
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
         ]})
 
+        # if it is a new event
         if not result:
             document['submitType'] = 'post'
-            document['eventStatus'] = 'pending'
-            # change eventId to be mongdb _id
+            calendarId = document['calendarId']
+            calendar_status = calendarStatus.get(calendarId)
+
+            # if calendar is disapproved
+            if calendar_status == "disapproved":
+                document['eventStatus'] = 'disapproved'
+            
+            # if calendar is approved 
+            elif calendar_status == 'approved':
+                document['eventStatus'] = 'approved'
+            
+            # if calendar status is unknown
+            else:
+                document['eventStatus'] = 'pending'
+            
             insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
-            document['eventId'] = str(insert_result.inserted_id)
-            insert += 1
+            # insert error condition check
+            if insert_result.inserted_id is None:
+                print("Insert event {}  of calendar {} failed in start".format(document['dataSourceEventId'], calendarId))
+            else:
+                document['eventId'] = str(insert_result.inserted_id)
+                insert += 1
+        
+        # if event is not found 
         else:
-            if document['eventStatus'] == 'published':
+            if result['eventStatus'] == 'published':
                 document['submitType'] ='put'
             update += 1
         
-        result = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
+        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                 update={'$set': document}, upsert=True)
+        # insert update error check
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+        
+    # upload approved or published events
+    for document in documents:
+        result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
+            'dataSourceEventId'
+        ]})
+
+        if result:
+            event_status = result.get('eventStatus')
+            # if event is approved or published
+            if event_status == 'approved' or event_status == 'published':
+                publish_event(result['eventId'])
+        else:
+            print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
+                                                                         document['calendarId']))
         
     return (insert, update)
 
 
-def start():
+
+def start(targets=None):
 
     if "GOOGLE_KEY" not in current_app.config or current_app.config["GOOGLE_KEY"] is None:
         print("Google Key does not exist. Cannot perform parsing")
@@ -261,7 +307,8 @@ def start():
 
     update_in_total = 0
     insert_in_total = 0
-    urls = geturl()
+
+    urls = geturls(targets)
     for url in urls:
         try:
             rawEvents = download(url)
