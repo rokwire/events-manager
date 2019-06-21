@@ -47,15 +47,19 @@
         </form>
 
         <h2>Daily time configuration</h2>
-        <span>Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM.</span>
-        <button type="button" class="btn btn-primary">Configure now</button>
-
-        <span>Calendars will be updated daily. Update immediately
-        <a class="btn btn-primary" role="button" id="download">Download</a>
+        <div>
+            <label for="scheduletime">Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM. Schedule to another time:</label>
+            <input type="time" id="scheduletime" name="scheduletime" value="23:00" required>
+          <button type="button" class="btn btn-primary" id="schedulebutton">Schedule</button>
+        </div>
 
         <div>
           <span>Calendars will be updated daily. Update immediately
+<<<<<<< HEAD
           <button class="btn btn-primary" id="download">Download</button>
+=======
+          <a class="btn btn-primary" role="button" id="download">Download</a>
+>>>>>>> 68a4e2a4f11b8f23027d65442a946c11d6dc1100
         </div>
       </div>
     </div>
@@ -67,9 +71,12 @@
 {{ super() }}
     <script type="text/javascript">
         $("#schedulebutton").click(function() {
-            let time = $("#scheduletime").attr("value")
+            let time = $("#scheduletime").val()
             console.log("time:"+time)
-            $.post("{{ url_for('event.schedule', time=time) }}",
+            $.post("{{ url_for('event.schedule') }}",
+            {
+              "time": time
+            },
             function(data) {
               if (data == "success") {
                 console.log("schedule success");
