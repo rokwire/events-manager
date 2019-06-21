@@ -40,9 +40,9 @@ def publish_event(id):
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
-        print("event {} submit method: {}".format(id, event['submitType']))
 
         if event:
+            print("event {} submit method: {}".format(id, event['submitType']))
             if event.get('startDate'):
                 event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
                 event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
@@ -55,25 +55,30 @@ def publish_event(id):
                 result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                        data=json.dumps(event))
             elif submit_type == 'put':
-                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + event.get('eventId')
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('eventId')
                 result = requests.put(url, headers=headers,
                                       data=json.dumps(event))
             elif submit_type == 'patch':
-                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + event.get('eventId')
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('eventId')
                 result = requests.patch(url, headers=headers,
                                         data=json.dumps(event))
 
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
+                return False 
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
                     "$set": {"eventStatus": "published"}
                 })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
+                
+                return True
+                
 
     except Exception:
         traceback.print_exc()
+        return False
 
 
 def approve_event(id):
