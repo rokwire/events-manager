@@ -151,11 +151,15 @@ def edit(eventId):
             calendarName = dict[post_by_id['calendarId']]
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
 
-@bp.route('/schedule/<time>', methods=('GET', 'POST'))
-def schedule(time):
-    time = datetime.strptime(time, '%H:%M')
-    console.log("parsed time:" + time)
+@bp.route('/schedule', methods=('GET', 'POST'))
+def schedule():
+    time = request.form['time']
     present = datetime.now()
+    d = present.strftime('%Y-%m-%d-')
+    time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
     if time < present:
         time = present
+        print("incorrect time")
     # scheduler function
+    print(time)
+    return "success", 200
