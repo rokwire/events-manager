@@ -74,7 +74,7 @@ def download():
     targets = request.get_json()
     if targets:
        start(targets)
-    return redirect(url_for('event.setting'))
+    return json.dumps({'status': 'OK', 'data': 'complete'})
 
 @bp.route('/<calendarId>/select', methods=['POST'])
 @login_required
