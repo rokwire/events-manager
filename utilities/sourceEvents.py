@@ -178,6 +178,20 @@ def parse(content, gmaps):
         entry['outlookUrl'] = "https://calendars.illinois.edu/outlook2010/{}/{}.ics".format(pe['calendarId'],
                                                                                             pe['eventId'])
 
+        # webtool_image_url = "{}/{}/{}/{}".format(
+        #     current_app.config['WEBTOOL_IMAGE_LINK_PREFIX'],
+        #     entry['calendarId'],
+        #     entry['dataSourceEventId'],
+        #     current_app.config['WEBTOOL_IMAGE_LINK_SUFFIX']
+        # )
+
+        # image_response = requests.get(webtool_image_url)
+        # print(webtool_image_url)
+        # if image_response.status_code == 200:
+        #     with open('./{}.png'.format(entry['dataSourceEventId']), 'wb') as image:
+        #         for chunk in image_response.iter_content(chunk_size=128):
+        #             image.write(chunk)
+
         targetAudience = []
         targetAudience.extend(["faculty", "staff"]) if pe['audienceFacultyStaff'] == "true" else None
         targetAudience.append("students") if pe['audienceStudents'] == "true" else None
@@ -244,7 +258,10 @@ def store(documents):
 
     update = 0
     insert = 0
-
+    post = 0
+    put = 0
+    patch = 0
+    unknown = 0
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
@@ -298,12 +315,21 @@ def store(documents):
             event_status = result.get('eventStatus')
             # if event is approved or published
             if event_status == 'approved' or event_status == 'published':
-                publish_event(result['eventId'])
+                upload_success = publish_event(result['eventId'])
+                if upload_success:
+                    if result['submitType'] == 'post':
+                        post += 1
+                    elif result['submitType'] == 'put':
+                        put +=1 
+                    elif result['submitType'] == 'patch':
+                        patch += 1
+                    else:
+                        unknown += 1
         else:
             print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
         
-    return (insert, update)
+    return (insert, update, post, put, patch, unknown)
 
 
 
@@ -322,6 +348,10 @@ def start(targets=None):
 
     update_in_total = 0
     insert_in_total = 0
+    post_in_total = 0
+    put_in_total = 0
+    patch_in_total = 0
+    unknown_in_total = 0
 
     urls = geturls(targets)
     for url in urls:
@@ -332,14 +362,18 @@ def start(targets=None):
                 continue
             print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
-            (insert, update) = store(parsedEvents)
+            (insert, update, post, put, patch, unknown) = store(parsedEvents)
             insert_in_total += insert
             update_in_total += update
-            print("{} are updated, {} are inserted".format(update, insert))
+            post_in_total   += post 
+            put_in_total    += put 
+            patch_in_total  += patch
+            unknown_in_total += unknown
+            print("EventManager: {} are updated, {} are inserted. Event Building Block: {} are posted, {} are put, {} are patch, {} are unknown".format(update, insert, post, put, patch, unknown))
         except Exception as e:
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
-    print("DateTime: {}, overall parsing result: {} are updated, {} are inserted".format(
-        datetime.utcnow(), update_in_total, insert_in_total
+    print("DateTime: {}, overall parsing result: {} are updated, {} are inserted. Overall uploading result: {} are post, {} are put, {} are patch, {} are unknown".format(
+        datetime.utcnow(), update_in_total, insert_in_total, post_in_total, put_in_total, patch_in_total, unknown_in_total
     ))
