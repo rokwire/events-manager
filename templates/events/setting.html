@@ -21,9 +21,10 @@
   <div class="col">
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
-
         <form action="{{ url_for('event.setting') }}" method="POST">
           <h2>Calendar approval status</h2>
+          <button type="button" class="btn btn-primary" id="selectallbutton">Select all</button>
+          <button type="button" class="btn btn-primary" id="clearallbutton">Clear all</button>
           {% for sourceid, sourceval in sources.items() %}
             <h4>{{sourceval[0]}}</h4>
             {% for item in sourceval[1] %}
@@ -52,6 +53,10 @@
         <span>Calendars will be updated daily. Update immediately
         <a class="btn btn-primary" role="button" id="download">Download</a>
 
+        <div>
+          <span>Calendars will be updated daily. Update immediately
+          <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
+        </div>
       </div>
     </div>
   </div>
@@ -59,8 +64,30 @@
 {% endblock %}
 
 {% block scripts %}
-  {{ super() }}
-  <script>
+{{ super() }}
+    <script type="text/javascript">
+        $("#schedulebutton").click(function() {
+            let time = $("#scheduletime").attr("value")
+            console.log("time:"+time)
+            $.post("{{ url_for('event.schedule', time=time) }}",
+            function(data) {
+              if (data == "success") {
+                console.log("schedule success");
+              }
+            });
+        })
+        $("#selectallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', true);
+          })
+        })
+        $("#clearallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', false);
+          })
+        })
 
     $("#download").on('click', function(e) {
       e.preventDefault();
