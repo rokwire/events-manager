@@ -11,6 +11,7 @@ from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap
 
+from datetime import datetime
 
 bp = Blueprint('event', __name__, url_prefix='/event')
 
@@ -147,3 +148,12 @@ def edit(eventId):
         if post_by_id['calendarId'] in dict:
             calendarName = dict[post_by_id['calendarId']]
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
+
+@bp.route('/schedule/<time>', methods=('GET', 'POST'))
+def schedule(time):
+    time = datetime.strptime(time, '%H:%M')
+    console.log("parsed time:" + time)
+    present = datetime.now()
+    if time < present:
+        time = present
+    # scheduler function

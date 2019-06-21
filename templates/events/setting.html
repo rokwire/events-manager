@@ -21,9 +21,10 @@
   <div class="col">
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
-
         <form action="{{ url_for('event.setting') }}" method="POST">
           <h2>Calendar approval status</h2>
+          <button type="button" class="btn btn-primary" id="selectallbutton">Select all</button>
+          <button type="button" class="btn btn-primary" id="clearallbutton">Clear all</button>
           {% for sourceid, sourceval in sources.items() %}
             <h4>{{sourceval[0]}}</h4>
             {% for item in sourceval[1] %}
@@ -49,7 +50,7 @@
         <div>
             <label for="scheduletime">Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM. Schedule to another time:</label>
             <input type="time" id="scheduletime" name="scheduletime" value="23:00" required>
-          <button type="button" class="btn btn-primary">Schedule</button>
+          <button type="button" class="btn btn-primary" id="schedulebutton">Schedule</button>
         </div>
 
         <div>
@@ -60,4 +61,32 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script type="text/javascript">
+        $("#schedulebutton").click(function() {
+            let time = $("#scheduletime").attr("value")
+            console.log("time:"+time)
+            $.post("{{ url_for('event.schedule', time=time) }}",
+            function(data) {
+              if (data == "success") {
+                console.log("schedule success");
+              }
+            });
+        })
+        $("#selectallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', true);
+          })
+        })
+        $("#clearallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', false);
+          })
+        })
+    </script>
 {% endblock %}
