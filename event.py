@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session
@@ -67,11 +68,12 @@ def setting():
     return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
 
 
-@bp.route('/download')
+@bp.route('/download', methods=['POST'])
 @login_required
 def download():
-    print("downloaded")
-    start()
+    targets = request.get_json()
+    if targets:
+       start(targets)
     return redirect(url_for('event.setting'))
 
 @bp.route('/<calendarId>/select', methods=['POST'])

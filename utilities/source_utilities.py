@@ -151,3 +151,11 @@ def update_calendars_status(update, allstatus):
             approve_calendar_db(calendarId)
         else: # disapprove
             disapprove_calendar_db(calendarId)
+
+# Find the approval status for one calendar event
+def get_calendar_event_status(id):
+    pass
+
+# disapprove a calendar event
+def disapprove_event(id):
+    pass

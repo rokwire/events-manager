@@ -47,11 +47,11 @@
         </form>
 
         <h2>Daily time configuration</h2>
-        <div>
-            <label for="scheduletime">Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM. Schedule to another time:</label>
-            <input type="time" id="scheduletime" name="scheduletime" value="23:00" required>
-          <button type="button" class="btn btn-primary" id="schedulebutton">Schedule</button>
-        </div>
+        <span>Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM.</span>
+        <button type="button" class="btn btn-primary">Configure now</button>
+
+        <span>Calendars will be updated daily. Update immediately
+        <a class="btn btn-primary" role="button" id="download">Download</a>
 
         <div>
           <span>Calendars will be updated daily. Update immediately
@@ -88,5 +88,23 @@
             $(this).prop('checked', false);
           })
         })
-    </script>
+
+    $("#download").on('click', function(e) {
+      e.preventDefault();
+      let results = [];
+      let targets = $("input[type=checkbox]").each(function(index) {
+        if ($(this).prop('checked')) {
+          results.push($(this).attr('name'));
+        }
+      });
+      $.ajax({
+        url: "{{ url_for('event.download') }}",
+        dataType: "json",
+        contentType:"application/json; charset=utf-8",
+        type: "POST",
+        data: JSON.stringify(results),
+      });
+    });
+  </script>
+
 {% endblock %}

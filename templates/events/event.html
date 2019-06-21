@@ -82,12 +82,12 @@
         <hr class="divider"/>
 
         <!-- TODO approve status display : need real format in json example -->
-        {% if post.ApproveStatus%}
+        {% if post.eventStatus%}
           <div class="row ">
             <div class="col-12 col-sm-2">
-              <h5>: </h5>
+              <h5>Event Status: </h5>
             </div>
-            <p class="col-sm-9">{{ post.ApproveStatus }}</p>
+            <p class="col-sm-9">{{ post.eventStatus }}</p>
           </div>
         {% endif %}
 
@@ -273,24 +273,27 @@
           Approve
         </a> -->
         {% if isUser %}
-        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}" role="button">Approve</a>
+        <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}" role="button">Approve</a>
         {% else %}
-        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a>
+        <!-- <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a> -->
+        <button type="button" id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}">Approve</button>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
         {% else %}
-        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.edit', eventId=post['_id']) }}" role="button">Edit</a>
+        <!-- <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.edit', eventId=post['_id']) }}" role="button">Edit</a> -->
         {% endif %}
       </div>
+      {% if isUser %}
       <div class="btn-group mr-2" role="group" aria-label="Third group">
         <a role="button" class="btn btn-block nav-link btn-outline-danger"
           data-toggle="modal" data-html="true" data-target="#DeleteModal">
             Delete
         </a>
       </div>
+      {% endif %}
     </div>
   </div>
   {% endblock %}
@@ -307,7 +310,13 @@
           var date_end = new Date(end_utc+"Z");
           document.getElementById('endDate').innerHTML = date_end.toString();
         }
-
-
+        function approve_and_disapprove(){
+            var elem = document.getElementById("approveButton");
+            if (elem.innerHTML == "Approve") {
+              elem.innerHTML = "Disapprove";
+            }else{
+              elem.innerHTML = "Approve";
+            }
+        }
     </script>
   {% endblock %}
