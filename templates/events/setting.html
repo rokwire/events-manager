@@ -55,7 +55,7 @@
 
         <div>
           <span>Calendars will be updated daily. Update immediately
-          <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
+          <button class="btn btn-primary" id="download">Download</button>
         </div>
       </div>
     </div>
@@ -93,6 +93,7 @@
         })
 
     $("#download").on('click', function(e) {
+      $('#download').attr('disabled', true);
       e.preventDefault();
       let results = [];
       let targets = $("input[type=checkbox]").each(function(index) {
@@ -106,7 +107,17 @@
         contentType:"application/json; charset=utf-8",
         type: "POST",
         data: JSON.stringify(results),
-      });
+      }).done(function(msg) {
+        if (msg.status == 'OK') {
+          alert("Download Complete");
+        } else {
+          alert("Internal Error happened");
+        }
+        $('#download').attr('disabled', false);
+      }).fail(function() {
+        alert("Internal Error happened");
+        $('#download').attr('disabled', false);
+      })
     });
   </script>
 
