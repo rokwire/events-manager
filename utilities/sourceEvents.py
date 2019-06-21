@@ -145,6 +145,17 @@ def parse(content, gmaps):
             # Convert CDT to UTC (offset by 5 hours)
             entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
             entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+        
+        # when time type is None, usually happens in calendar 468
+        elif pe['timeType'] == "NONE":
+            entry['allDay'] = True
+            startDate = pe['startDate']
+            endDate = pe['endDate']
+            startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
+            endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
+            # Convert CDT to UTC (offset by 5 hours)
+            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         # Optional Field
         if 'description' in pe:
@@ -179,8 +190,12 @@ def parse(content, gmaps):
         contacts = []
         contact = {}
         if 'contactName' in pe:
+            name_list = pe['contactName'].split(' ')
             contact['firstName'] = pe['contactName'].split(' ')[0].rstrip(',')
-            contact['lastName'] = pe['contactName'].split(' ')[1]
+            if len(name_list) > 1:
+                contact['lastName'] = pe['contactName'].split(' ')[1]
+            else:
+                contact['lastName'] = ""
         if 'contactEmail' in pe:
             contact['email'] = pe['contactEmail']
         if 'contactPhone' in pe:
