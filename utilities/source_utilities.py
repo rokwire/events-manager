@@ -137,7 +137,7 @@ def get_all_calendar_status():
     for dict in current_app.config['INT2CAL']:
         for calendarId, name in dict.items():
             calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
-            print(calendar)
+            # print(calendar)
             if calendar is not None:
                 result[calendarId] = calendar["status"]
             else:

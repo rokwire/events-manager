@@ -110,6 +110,12 @@ def approveEvent(id):
     approve_event(id)
     return redirect(url_for("event.detail", eventId=id))
 
+@bp.route("/source/<id>/disapprove")
+@login_required
+def disapproveEvent(id):
+    disapprove_event(id)
+    return redirect(url_for("event.detail", eventId=id))
+
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)
