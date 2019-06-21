@@ -118,7 +118,7 @@ def disapprove_calendar_db(calendarId):
     updateResult = update_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
                               update={
                                   "$set": {"status": "disapproved"}
-                              })
+                              }, upsert=True)
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails".format(objectId))
     disapprove_calendar_events(calendarId)
@@ -134,8 +134,14 @@ def get_calendar_status(calendarId):
 def get_all_calendar_status():
     calendars = find_all(current_app.config['CALENDAR_COLLECTION'], filter={})
     result = {}
-    for calendar in calendars:
-        result[calendar["calendarId"]] = calendar["status"]
+    for dict in current_app.config['INT2CAL']:
+        for calendarId, name in dict.items():
+            calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
+            print(calendar)
+            if calendar is not None:
+                result[calendarId] = calendar["status"]
+            else:
+                result[calendarId] = "disapproved"
     return result
 
 # Update approval status for many calendars (and relevant events)
