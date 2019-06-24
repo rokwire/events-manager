@@ -63,9 +63,9 @@ def user_an_event_edit(id):
         if(post_has_changed):
             post_by_id['eventStatus'] = 'pending'
             update_user_event(id, post_by_id)
-        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
-    else:
-        return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
+            return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
+
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
 
 @userbp.route('/event/<id>/approve')
 def user_an_event_approve(id):
