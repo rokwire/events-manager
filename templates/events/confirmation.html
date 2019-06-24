@@ -1,0 +1,43 @@
+{% macro confirmation(usage, title) %}
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {% if usage == "approve" %}
+          Approve calendar
+          {% elif usage == "disapprove" %}
+          Disapprove calendar
+          {% else %}
+          Download
+          {% endif %}
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {% if usage == "approve" %}
+        Are you sure you want to approve the calendar <b>{{title}}</b> ?
+        {% elif usage == "disapprove" %}
+        Are you sure you want to disapprove the calendar <b>{{title}}</b> ?
+        {% else %}
+        Are you sure you want to start downloading the approved calendars?
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary"
+        {% if usage == "approve" %}
+        id="approvebutton"
+        {% elif usage == "disapprove" %}
+        id="disapprovebutton"
+        {% else %}
+        id="download"
+        {% endif %}
+        >OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
