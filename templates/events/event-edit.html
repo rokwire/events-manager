@@ -87,10 +87,10 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select id = "selectlist" class="selectpicker" title="Event Type..." >
+                <select name="category" id = "selectlist" class="selectpicker" title="Event Type..." >
                   {% for key in eventTypeValues %}
                     {% if post.category == key %}
-                      <option id = {{key}} selected = true>{{key}}</option>
+                      <option value = {{key}}, id = {{key}} selected = true>{{key}}</option>
                     {% else %}
                       <option id = {{key}}>{{key}}</option>
                     {% endif %}
@@ -165,7 +165,7 @@
 
           <!-- location -->
           {% if post.location %}
-            <!-- description -->
+            <!-- description TODO CHANGE -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
@@ -173,6 +173,15 @@
                 </div>
                 <div class="col-sm-9">
                   <input class="form-control" type="text" value= "{{post.location.description}}" />
+                </div>
+              </div>
+            {% else %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5>Location: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
@@ -367,7 +376,7 @@
               <h5>Description: </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea class="form-control" rows="12">{{post.description}}</textarea>
+                <textarea name = "description" id="description" class="form-control" rows="12">{{post.description}}</textarea>
             </div>
           </div>
           {% else %}
@@ -376,7 +385,7 @@
                 <h5>Description: </h5>
               </div>
               <div class="col-12 col-sm-9">
-                  <textarea id="description" class="form-control" rows="12"></textarea>
+                  <textarea name = "description" id="description" class="form-control" rows="12"></textarea>
               </div>
             </div>
           {% endif %}
