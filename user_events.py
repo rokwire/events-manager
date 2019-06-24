@@ -14,7 +14,7 @@ def user_events():
     else:
         select_status = []
         session['select_status'] = select_status
-    
+
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         searchInput = request.form['searchInput']
@@ -45,6 +45,7 @@ def user_an_event_edit(id):
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
     if request.method == 'POST':
+        post_by_id['eventStatus'] = 'pending'
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
         post_by_id['subcategory'] = request.form['subcategory']
@@ -55,9 +56,10 @@ def user_an_event_edit(id):
         # more parts editable TODO ....
 
         update_user_event(id, post_by_id)
+        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
 
-
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
+    else:
+        return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
 
 @userbp.route('/event/<id>/approve')
 def user_an_event_approve(id):
