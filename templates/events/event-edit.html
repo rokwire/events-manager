@@ -86,12 +86,70 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "selectlist" class="selectpicker" title="Event Type..." >
+                <select name="category" id = "selectlist" class="selectpicker" title="Category..." >
                   {% for key in eventTypeValues %}
-                    {% if post.category == key %}
-                      <option value = {{key}}, id = {{key}} selected = true>{{key}}</option>
+                    {% if post.category == key%}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
                     {% else %}
-                      <option id = {{key}}>{{key}}</option>
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- subcategory -->
+          {% if post['category'] == 'Athletics' %}
+            <div class="form-group row ">
+              <div class="col-12 col-sm-2">
+                <h5>Athletics Subcategory: </h5>
+              </div>
+              <div class="col-sm-9">
+                <div class="form-group">
+                  <select name="subcategory" id = "selectlist2" class="selectpicker" title="Subcategory - Athletics" >
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      {% if post.subcategory == key%}
+                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                      {% else %}
+                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="form-group row ">
+              <div class="col-12 col-sm-2">
+                <h5>Athletics Subcategory: </h5>
+              </div>
+              <div class="col-sm-9">
+                <div class="form-group">
+                  <select name="subcategory" id = "selectlist2" class="selectpicker" title="Subcategory - Athletics" >
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- category backup-->
+          <!-- <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Category: </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="category" id = "selectlist" class="selectpicker" title="Category..." >
+                  {% for key in eventTypeValues %}
+                    {% if post.category == key%}
+                      {% if post['category'] != 'Athletics'%}
+                        <option value = {{key}} id = {{key}} selected = true>{{key}}</option>
+                      {% endif %}
+                    {% else %}
+                      <option value = {{key}} id = {{key}}>{{key}}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
@@ -99,26 +157,28 @@
             </div>
           </div>
 
-          <!-- subcategory -->
-          {% if post.subcategory %}
+          {% if post['category'] == 'Athletics' %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
+                <h5>Subcategory: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" id="subcategory" name="subcategory" value="{{post.subcategory}}" />
+                <div class="form-group">
+                  <select name="subcategory" id = "selectlist2" class="selectpicker" title="Subcategory..." >
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      {% if post.subcategory == key%}
+                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                      {% else %}
+                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
-              </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="text" id="subcategory" name="subcategory"/>
-              </div>
-            </div>
-          {% endif %}
+          {% endif %} -->
+
+
 
           <!-- startDate -->
           {% if post.startDate%}
