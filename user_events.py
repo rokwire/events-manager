@@ -14,7 +14,7 @@ def user_events():
     else:
         select_status = []
         session['select_status'] = select_status
-    
+
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         searchInput = request.form['searchInput']
@@ -59,16 +59,24 @@ def user_an_event_edit(id):
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
 
-@userbp.route('/event/<id>/approve')
+@userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
-        source_utilities.publish_event(id)
+#        source_utilities.publish_event(id)
     except Exception:
         traceback.print_exc()
 
-    return redirect(url_for("user_events.user_an_event", id=id))
+    return "success", 200
 
+@userbp.route('/event/<id>/disapprove', methods=['POST'])
+def user_an_event_disapprove(id):
+    try:
+        update_user_event(id, {"eventStatus": "disapproved"})
+    except Exception:
+        traceback.print_exc()
+
+    return "success", 200
 
 @userbp.route('/select', methods=['POST'])
 def select():
