@@ -1,8 +1,9 @@
+import os
 from datetime import datetime, timedelta
 
 from ..db import update_one, find_one, insert_one
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
-from .source_utilities import get_all_calendar_status, publish_event
+from .source_utilities import get_all_calendar_status, publish_event, publish_image
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -30,6 +31,31 @@ def search_static_location(calendarName, sponsor, location):
             }
             return (True, GeoInfo)
     return (False, None)
+
+
+# this function is used for checking if event has large png image for displaying
+# it returns true when it gets the image and store it in local folder, else it will       
+# return false. There is one thing to notice is that the image name is composed of 
+# dataSourceId(since we do not know about eventId in parsing)
+def downloadImage(calendarId, dataSourceEventId, eventId):
+    webtool_image_url = "{}/{}/{}/{}".format(
+        current_app.config['WEBTOOL_IMAGE_LINK_PREFIX'],
+        calendarId,
+        dataSourceEventId,
+        current_app.config['WEBTOOL_IMAGE_LINK_SUFFIX']
+    )
+
+    try:
+        image_response = requests.get(webtool_image_url)
+        if image_response.status_code == 200:
+            with open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId), 'wb') as image:
+                for chunk in image_response.iter_content(chunk_size=128):
+                    image.write(chunk)
+            return True
+    except Exception:
+        traceback.print_exc()
+        return False
+    return False
 
 ######################################################################
 ### Normal parse process functions
@@ -160,9 +186,9 @@ def parse(content, gmaps):
         # Optional Field
         if 'description' in pe:
             if pe['description'] == '\n':
-                entry['description'] = ''
+                entry['longDescription'] = ''
             else:
-                entry['description'] = pe['description']
+                entry['longDescription'] = pe['description']
         if 'titleURL' in pe:
             entry['titleURL'] = pe['titleURL']
         if 'speaker' in pe:
@@ -177,20 +203,6 @@ def parse(content, gmaps):
         entry['icalUrl'] = "https://calendars.illinois.edu/ical/{}/{}.ics".format(pe['calendarId'], pe['eventId'])
         entry['outlookUrl'] = "https://calendars.illinois.edu/outlook2010/{}/{}.ics".format(pe['calendarId'],
                                                                                             pe['eventId'])
-
-        # webtool_image_url = "{}/{}/{}/{}".format(
-        #     current_app.config['WEBTOOL_IMAGE_LINK_PREFIX'],
-        #     entry['calendarId'],
-        #     entry['dataSourceEventId'],
-        #     current_app.config['WEBTOOL_IMAGE_LINK_SUFFIX']
-        # )
-
-        # image_response = requests.get(webtool_image_url)
-        # print(webtool_image_url)
-        # if image_response.status_code == 200:
-        #     with open('./{}.png'.format(entry['dataSourceEventId']), 'wb') as image:
-        #         for chunk in image_response.iter_content(chunk_size=128):
-        #             image.write(chunk)
 
         targetAudience = []
         targetAudience.extend(["faculty", "staff"]) if pe['audienceFacultyStaff'] == "true" else None
@@ -217,6 +229,11 @@ def parse(content, gmaps):
         contacts.append(contact) if len(contact) != 0 else None
         if len(contacts) != 0:
             entry['contacts']= contacts
+
+        # creation information
+        entry['dateCreated'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S')
+        if 'createdBy' in pe:
+            entry['createdBy'] = pe['createdBy']
 
         # find geographical location
         if 'location' in pe:
@@ -262,6 +279,10 @@ def store(documents):
     put = 0
     patch = 0
     unknown = 0
+
+    image_download = 0
+    image_upload = 0
+    
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
@@ -315,8 +336,17 @@ def store(documents):
             event_status = result.get('eventStatus')
             # if event is approved or published
             if event_status == 'approved' or event_status == 'published':
-                upload_success = publish_event(result['eventId'])
-                if upload_success:
+                # for image accessing here, we first attempt to download image and if there is indeed an 
+                # image in existence. We, then, try to upload the image. 
+                image_upload_success = False
+                if downloadImage(result['calendarId'], result['dataSourceEventId'], result['eventId']):
+                    image_download += 1
+                    image_upload_success = publish_image(result['eventId'])
+                    if image_upload_success:
+                        image_upload += 1
+
+                event_upload_success = publish_event(result['eventId'], image_upload_success)
+                if event_upload_success:
                     if result['submitType'] == 'post':
                         post += 1
                     elif result['submitType'] == 'put':
@@ -329,7 +359,7 @@ def store(documents):
             print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
         
-    return (insert, update, post, put, patch, unknown)
+    return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
 
 
@@ -346,12 +376,17 @@ def start(targets=None):
     except ValueError as e:
         print("Error in connecting Google Api: {}".format(e))
 
+    parsed_in_total = 0
     update_in_total = 0
     insert_in_total = 0
+    upload_in_total = 0
     post_in_total = 0
     put_in_total = 0
     patch_in_total = 0
     unknown_in_total = 0
+
+    image_download_total = 0
+    image_upload_total = 0
 
     urls = geturls(targets)
     for url in urls:
@@ -362,18 +397,46 @@ def start(targets=None):
                 continue
             print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
-            (insert, update, post, put, patch, unknown) = store(parsedEvents)
+            parsed_in_total += len(parsedEvents)
+            (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
+
+            upload_in_total += post + put + patch + unknown
             insert_in_total += insert
             update_in_total += update
             post_in_total   += post 
             put_in_total    += put 
             patch_in_total  += patch
             unknown_in_total += unknown
-            print("EventManager: {} are updated, {} are inserted. Event Building Block: {} are posted, {} are put, {} are patch, {} are unknown".format(update, insert, post, put, patch, unknown))
+            image_download_total += image_download
+            image_upload_total += image_upload
+            
+            print(
+                "".join([
+                    "EventManager: {} are updated, {} are inserted.\n".format(update, insert),
+                    "Event Building Block: {} are posted, {} are put, {} are patch, {} are unknown\n".format(update, insert, post, put, patch, unknown)
+                ])
+            )
+            print("Regarding to images: {} are downloaded, {} are uploaded\n".format(image_download, image_upload))
+            
         except Exception as e:
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
-    print("DateTime: {}, overall parsing result: {} are updated, {} are inserted. Overall uploading result: {} are post, {} are put, {} are patch, {} are unknown".format(
-        datetime.utcnow(), update_in_total, insert_in_total, post_in_total, put_in_total, patch_in_total, unknown_in_total
-    ))
+    print(
+        "".join([
+            "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total), 
+            "    Updated: {}\n".format(update_in_total),
+            "    Inserted: {}\n".format(insert_in_total),
+            "Overall uploading result: {} events\n".format(upload_in_total),
+            "    Post: {}\n".format(post_in_total),
+            "    Put: {}\n".format(put_in_total),
+            "    Patch: {}\n".format(patch_in_total),
+            "    Unknown: {}\n".format(unknown_in_total),
+        ])
+    )
+    print(
+        "".join([
+            "Total images downloaded are: {}\n".format(image_download_total),
+            "Total images uploaded are: {}\n".format(image_upload_total)
+        ])
+    )

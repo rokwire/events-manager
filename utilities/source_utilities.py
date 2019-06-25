@@ -35,7 +35,7 @@ def disapprove_calendar_events(calendarId):
         print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
-def publish_event(id):
+def publish_event(id, image_upload_success):
     headers = {'Content-Type': 'application/json'}
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
@@ -49,8 +49,13 @@ def publish_event(id):
             if event.get('endDate'):
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+
+            if image_upload_success:
+                event['imageURL'] = "{}/{}.png".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+            
             submit_type = event['submitType']
             del event['submitType']
+
             if submit_type == 'post':
                 result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                        data=json.dumps(event))
@@ -75,6 +80,55 @@ def publish_event(id):
                 
                 return True
                 
+
+    except Exception:
+        traceback.print_exc()
+        return False
+
+
+def publish_image(id):
+    headers = {'Content-Type': 'image/png'}
+    try:
+
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+
+        submit_type = 'post'
+        image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+
+        # if there is record shows image has been submit before then change post to put
+        if record:
+            if record.get('submitBefore'):
+                submit_type = 'put'
+
+        if submit_type == 'post':
+            response = requests.post(url, data=image.read(), headers=headers)
+        elif submit_type == 'put':
+            result = requests.put(url, data=image.read(), headers=headers)
+        
+        image.close()
+        print('work')
+        print([ f for f in os.listdir(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'])])
+
+        os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+        if result.status_code in (200, 201):
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
+                                      condition={'eventId': id}, 
+                                      update={"$set": { 'submitBefore': True}})
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+        
+            return True
+
+        else:
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
+                            condition={'eventId': id}, 
+                            update={"$set": { 'submitBefore': False}})
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+            
+            return False
 
     except Exception:
         traceback.print_exc()
