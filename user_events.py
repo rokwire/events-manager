@@ -63,7 +63,7 @@ def user_an_event_edit(id):
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
-#        source_utilities.publish_event(id)
+        source_utilities.publish_event(id)
     except Exception:
         traceback.print_exc()
 
