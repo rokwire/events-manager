@@ -32,7 +32,7 @@ def calendar(calendarId):
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
 
-    per_page = 4
+    per_page = current_app.config['PER_PAGE']
     offset = (page - 1) * per_page
 
 
