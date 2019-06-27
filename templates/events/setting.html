@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% from 'events/confirmation.html' import confirmation %}
+
 {% block title %}Setting{% endblock %}
 
 {% block content %}
@@ -8,6 +10,8 @@
     <li class="breadcrumb-item active" aria-current="page">Setting</li>
   </ol>
 </nav>
+
+{{ confirmation("download") }}
 
 <div class="row">
   <div class="col-2">
@@ -55,7 +59,9 @@
 
         <div>
           <span>Calendars will be updated daily. Update immediately
-          <button class="btn btn-primary" id="download">Download</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">
+            Download
+            </button>
         </div>
       </div>
     </div>
@@ -93,6 +99,9 @@
         })
 
     $("#download").on('click', function(e) {
+      // close modal
+      $('#confirmModal').modal('hide');
+      
       $('#download').attr('disabled', true);
       e.preventDefault();
       let results = [];
