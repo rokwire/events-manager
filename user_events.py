@@ -47,8 +47,6 @@ def user_an_event_edit(id):
     if request.method == 'POST':
         # print(request.form)
         for key in request.form:
-            if(key == 'startDate' or key=='endDate'):
-                print(request.form[key])
             post_by_id[key] = request.form[key]
             # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
             # more parts editable TODO ....
