@@ -47,12 +47,14 @@ def user_an_event_edit(id):
     if request.method == 'POST':
         # print(request.form)
         for key in request.form:
+            if(key == 'startDate' or key=='endDate'):
+                print(request.form[key])
             post_by_id[key] = request.form[key]
             # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
             # more parts editable TODO ....
         post_by_id['eventStatus'] = 'pending'
         if(post_by_id['category'] != "Athletics"):
-            if(post_by_id['subcategory']!=None):
+            if('subcategory' in post_by_id and post_by_id['subcategory']!=None):
                 post_by_id['subcategory']=None
         update_user_event(id, post_by_id)
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
