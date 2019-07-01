@@ -342,7 +342,9 @@ class Config(object):
        # {"6364":"Physics - Undergraduate Student Events"},
        # {"6369":"Moms Weekend 2019"},
        # {"6377":"Sibs Saturday 2019"},
-       # {"6398":"Doctor of Public Administration - Program Events"}
+       # {"6398":"Doctor of Public Administration - Program Events"},
+       # {"6482":"RokwireTestCalendar"}
+
     ]
 
     # This is a mapping between different sources to different calendar mapping
