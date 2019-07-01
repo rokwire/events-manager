@@ -126,7 +126,8 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, eventTypeMap = eventTypeMap)
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, 
+                            eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))

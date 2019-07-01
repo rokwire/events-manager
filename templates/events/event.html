@@ -262,7 +262,15 @@
           </div>
         </div>
         {% endif %}
+        
+        <!-- google map API -->
+        {% if post.location %}
+          {% if post.location.latitude and post.location.longitude %} 
 
+            <div id="map"></div>
+
+          {% endif %}
+        {% endif %}
       </div class = "media-body">
     </article>
   <div class="row  justify-content-center">
@@ -302,21 +310,42 @@
   {% block scripts %}
     {{super()}}
     <script>
-        window.onload = function() {
-          var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
-          var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
-          var date_start = new Date(start_utc+"Z");
-          document.getElementById('startDate').innerHTML = date_start.toString();
-          var date_end = new Date(end_utc+"Z");
-          document.getElementById('endDate').innerHTML = date_end.toString();
-        }
-        function approve_and_disapprove(){
-            var elem = document.getElementById("approveButton");
-            if (elem.innerHTML == "Approve") {
-              elem.innerHTML = "Disapprove";
-            }else{
-              elem.innerHTML = "Approve";
-            }
-        }
+      
+      {% if post.location %}
+        {% if post.location.latitude and post.location.longitude %} 
+          function initMap() {
+            let loc = { lat: {{ post.location.latitude}}, lng: {{ post.location.longitude }}};
+            let map = new google.maps.Map(
+              document.getElementById("map"),
+              { zoom: 17, center: loc, mapTypeControl: false }
+            );
+            let marker = new google.maps.Marker({position: loc, map: map});
+          }
+        {% endif %}
+      {% endif %}
+      
+      window.onload = function() {
+        var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
+        var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
+        var date_start = new Date(start_utc+"Z");
+        document.getElementById('startDate').innerHTML = date_start.toString();
+        var date_end = new Date(end_utc+"Z");
+        document.getElementById('endDate').innerHTML = date_end.toString();
+      }
+      function approve_and_disapprove(){
+          var elem = document.getElementById("approveButton");
+          if (elem.innerHTML == "Approve") {
+            elem.innerHTML = "Disapprove";
+          }else{
+            elem.innerHTML = "Approve";
+          }
+      }
     </script>
+
+    {% if post.location %}
+      {% if post.location.latitude and post.location.longitude %} 
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
+      {% endif %}
+    {% endif %}
+
   {% endblock %}

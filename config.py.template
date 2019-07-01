@@ -357,3 +357,4 @@ class Config(object):
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
     ROKWIRE_IMAGE_LINK_PREFIX=''
 
+    GOOGLE_MAP_VIEW_KEY='...'
