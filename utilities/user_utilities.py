@@ -26,7 +26,7 @@ def find_user_event(objectId):
     return find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
 
 
-def update_user_event(objectId, update):
+def update_user_event(objectId, update, delete_field=None):
     try:
         _id = ObjectId(objectId)
     except InvalidId:
@@ -35,6 +35,11 @@ def update_user_event(objectId, update):
                               update={
                                   "$set": update
                               })
+    if delete_field:
+        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
+                                  update={
+                                      "$unset": delete_field
+                                  })
 
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails in update_user_event".format(objectId))

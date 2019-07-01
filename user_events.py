@@ -51,10 +51,15 @@ def user_an_event_edit(id):
             # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
             # more parts editable TODO ....
         post_by_id['eventStatus'] = 'pending'
+        delete_subcategory = None
         if(post_by_id['category'] != "Athletics"):
-            if('subcategory' in post_by_id and post_by_id['subcategory']!=None):
-                post_by_id['subcategory']=None
-        update_user_event(id, post_by_id)
+            if('subcategory' in post_by_id):
+                del post_by_id['subcategory']
+                delete_subcategory = {'subcategory': 1}
+        else:
+            if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
+                delete_subcategory = {'subcategory': 1}
+        update_user_event(id, post_by_id, delete_subcategory)
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, isUser=True)
