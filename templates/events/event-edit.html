@@ -15,7 +15,7 @@
          <button type="button" class="close" data-dismiss="modal">&times;</button>
      </div>
      <div class="modal-body">
-       <form>
+
          <!-- table form here -->
          <div class="form-group row">
              <label class="col-12 col-form-label"><center>You are about to save your edition the following event: </center></label>
@@ -27,7 +27,7 @@
              <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
              <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
          </div>
-        </form>
+
        </div>
      </div>
    </div>
@@ -41,7 +41,7 @@
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
   <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To All Events</a>
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
   {% else %}
   <form id = "form" action = "{{url_for('event.edit', eventId=post['_id'])}}" method="POST">
@@ -56,7 +56,7 @@
   <!-- form inputs -->
      <article class="media content-section">
        <div class="media-body">
-          <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
+          <h2><a class="article-title">{{ post.title }}</a></h2>
           <hr class="divider"/>
           <!-- event url -->
           {% if post.titleURL%}
@@ -65,7 +65,7 @@
                 <h5>Event URL: </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" name="titleURL" value="{{post.titleURL}}" />
+                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" />
               </div>
             </div>
           {% else %}
@@ -74,49 +74,63 @@
               <h5>Event URL: </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
             </div>
           </div>
           {% endif %}
 
           <!-- event category -->
-          <!-- update TODO -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Category: </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select id = "selectlist" class="selectpicker" title="Event Type..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." >
                   {% for key in eventTypeValues %}
-                    {% if post.category == key %}
-                      <option id = {{key}} selected = true>{{key}}</option>
+                    {% if post.category == key%}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
                     {% else %}
-                      <option id = {{key}}>{{key}}</option>
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
               </div>
             </div>
           </div>
-
           <!-- subcategory -->
-          {% if post.subcategory %}
+          {% if post['category'] == 'Athletics' %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
+                <h5>Subcategory: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="subcategory" value="{{post.subcategory}}" />
+                <div class="form-group">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory">
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      {% if post.subcategory == key%}
+                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                      {% else %}
+                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
+                <h5>Subcategory: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="subcategory"/>
+                <div class="form-group">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
           {% endif %}
@@ -128,7 +142,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" value={{post.startDate}} />
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post.startDate}} />
               </div>
             </div>
           {% else %}
@@ -137,7 +151,7 @@
                 <h5> Start Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" />
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
               </div>
             </div>
           {% endif %}
@@ -149,7 +163,7 @@
                 <h5>End Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="endDate" value={{post.endDate}} />
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post.endDate}} />
               </div>
             </div>
           {% else %}
@@ -158,14 +172,14 @@
                 <h5> End Date: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
               </div>
             </div>
           {% endif %}
 
           <!-- location -->
           {% if post.location %}
-            <!-- description -->
+            <!-- description TODO CHANGE -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
@@ -173,6 +187,15 @@
                 </div>
                 <div class="col-sm-9">
                   <input class="form-control" type="text" value= "{{post.location.description}}" />
+                </div>
+              </div>
+            {% else %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5>Location: </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
@@ -332,7 +355,7 @@
               </div>
               <div class = "col-sm-2">
               {% for tag in post.tags%}
-                  <input class="form-control" type="text" value="{{tag}}" />
+                  <input id="input-tags" class="form-control" type="text" value="{{tag}}" />
               {% endfor%}
               </div>
             </div>
@@ -345,7 +368,7 @@
                 <h5>Sponsor: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="sponsor" value="{{post.sponsor}}" />
+                <input class="form-control" type="text" id="sponsor" name="sponsor" value="{{post.sponsor}}" />
               </div>
             </div>
           {% else %}
@@ -354,20 +377,19 @@
                 <h5>Sponsor: </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="sponsor"/>
+                <input class="form-control" type="text" id="sponsor" name="sponsor"/>
               </div>
             </div>
           {% endif %}
 
           <!-- description -->
-          <!-- TODO -->
           {% if post.description%}
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Description: </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea class="form-control" rows="12">{{post.description}}</textarea>
+                <textarea name = "description" id="description" class="form-control" rows="12">{{post.description}}</textarea>
             </div>
           </div>
           {% else %}
@@ -376,7 +398,7 @@
                 <h5>Description: </h5>
               </div>
               <div class="col-12 col-sm-9">
-                  <textarea id="description" class="form-control" rows="12"></textarea>
+                  <textarea name = "description" id="description" class="form-control" rows="12"></textarea>
               </div>
             </div>
           {% endif %}
@@ -396,7 +418,7 @@
      <div class="btn-group mr-2" role="group" aria-label="Second group">
        <!-- discard the modal use js to alarm Confirmation later -->
        <!-- <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a> -->
-       <button class="btn btn-block nav-link btn-primary" role="submit" >Save</button>
+       <button id="submit-data" class="btn btn-block nav-link btn-primary" type="submit" >Save</button>
      </div>
    </div>
   </div>
@@ -407,4 +429,64 @@
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+   <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+   <script>
+     //Set the save button disabled in default
+     $('form')
+         .each(function(){
+             $(this).data('serialized', $(this).serialize())
+         })
+         .on('change input', function(){
+             $(this)
+                 .find('input:submit, button:submit')
+                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
+             ;
+          })
+         .find('input:submit, button:submit')
+             .prop('disabled', true)
+     ;
+     //only allow subcategory to be choose when the category is Athletics
+     $('#form select[name="category"]').on("change", function(event) {
+       if(event.target.value != "Athletics"){
+         $('#subcategory').prop("disabled", true);
+         $('#subcategory').selectpicker('refresh');
+       }else{
+         $('#subcategory').prop("disabled", false);
+         $('#subcategory').selectpicker('refresh');
+       }
+     })
+
+     //change into local time
+     window.onload = function() {
+       var start_utc = document.getElementById('startDate').value.replace("T", " ");
+       console.log(start_utc);
+       if(start_utc == null){return;}
+       var stillUtc_start = moment.utc(start_utc).toDate();
+       var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+       console.log(start_local);
+       document.getElementById('startDate').value = start_local;
+
+       var end_utc = document.getElementById('endDate').value.replace("T", " ");
+       if(end_utc == null){return;}
+       var stillUtc_end = moment.utc(end_utc).toDate();
+       var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+       document.getElementById('endDate').value = end_local;
+     }
+
+     //change back to utc time on submit
+     var myform = document.getElementById('form');
+     myform.onsubmit = function(){
+       var start_local = document.getElementById('startDate').value.replace("T", " ");
+       var start_utc = new Date(start_local).toISOString();
+       document.getElementById('startDate').value = start_utc.replace("Z", "");
+
+       var end_local = document.getElementById('endDate').value.replace("T", " ");
+       var end_utc = new Date(end_local).toISOString();
+       document.getElementById('endDate').value = end_utc.replace("Z", "");
+
+       myform.submit();
+     };
+
+
+   </script>
 {% endblock %}
