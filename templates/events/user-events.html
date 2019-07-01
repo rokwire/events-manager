@@ -48,19 +48,19 @@
                     </a>
                   </div>
                   <div class = "col-12 dropdown">
-                    <a class="btn btn-default ml-auto float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="btn btn-default ml-auto float-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                       <span id="edit_{{post.eventId}}">
-                        <svg height="18" class="octicon octicon-triangle-down v-align-middle" viewBox="0 0 12 16" version="1.1" width="10" aria-hidden="true">
+                        <!-- <svg height="18" class="octicon octicon-triangle-down v-align-middle" viewBox="0 0 12 16" version="1.1" width="10" aria-hidden="true">
                           <path fill-rule="evenodd" d="M0 5l6 6 6-6H0z"></path>
-                        </svg>
+                        </svg> -->
                       </span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <a class="dropdown-item" href="#">Edit History</a>
+                    <div class="dropdown-menu dropdown-menu-right" id="myDropdown">
+                      <a class="dropdown-item disabled">Request History</a>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
                     </div>
                   </div>
                 </div>
@@ -112,9 +112,6 @@
         location.reload(true);
       });
     })
-    $('a[data-toggle="tooltip"]').tooltip({
-       container: 'body'
-    });
-    $('.editedhistory').tooltip('show')
+
   </script>
 {% endblock %}
