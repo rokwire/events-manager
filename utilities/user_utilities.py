@@ -9,8 +9,6 @@ def get_all_user_events(select_status):
         select_status = ['pending']
     return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": {"$exists": False},
                                                                     "eventStatus": {"$in": select_status}})
-
-# TODO get searched posts
 def get_searched_user_events(searchDic, select_status):
     if not select_status:
         select_status = ['pending']
@@ -43,6 +41,10 @@ def update_user_event(objectId, update, delete_field=None):
 
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails in update_user_event".format(objectId))
+
+def find_user_all_object_events(eventId):
+    print(eventId)
+    return find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
 
 def delete_user_event(eventId):
     pass
