@@ -14,7 +14,7 @@ def user_events():
     else:
         select_status = []
         session['select_status'] = select_status
-    
+
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         searchInput = request.form['searchInput']
@@ -46,21 +46,26 @@ def user_an_event_edit(id):
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
     if request.method == 'POST':
-        # change the specific event
-        post_by_id['titleURL'] = request.form['titleURL']
-        post_by_id['subcategory'] = request.form['subcategory']
-        post_by_id['startDate'] = request.form['startDate']
-        post_by_id['endDate'] = request.form['endDate']
-        post_by_id['cost'] = request.form['cost']
-        post_by_id['sponsor'] = request.form['sponsor']
-        # more parts editable TODO ....
+        # print(request.form)
+        for key in request.form:
+            post_by_id[key] = request.form[key]
+            # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
+            # more parts editable TODO ....
+        post_by_id['eventStatus'] = 'pending'
+        delete_subcategory = None
+        if(post_by_id['category'] != "Athletics"):
+            if('subcategory' in post_by_id):
+                del post_by_id['subcategory']
+                delete_subcategory = {'subcategory': 1}
+        else:
+            if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
+                delete_subcategory = {'subcategory': 1}
+        update_user_event(id, post_by_id, delete_subcategory)
+        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
 
-        update_user_event(id, post_by_id)
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, isUser=True)
 
-
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues, isUser=True)
-
-@userbp.route('/event/<id>/approve')
+@userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
@@ -68,8 +73,16 @@ def user_an_event_approve(id):
     except Exception:
         traceback.print_exc()
 
-    return redirect(url_for("user_events.user_an_event", id=id))
+    return "success", 200
 
+@userbp.route('/event/<id>/disapprove', methods=['POST'])
+def user_an_event_disapprove(id):
+    try:
+        update_user_event(id, {"eventStatus": "disapproved"})
+    except Exception:
+        traceback.print_exc()
+
+    return "success", 200
 
 @userbp.route('/select', methods=['POST'])
 def select():
