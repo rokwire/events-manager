@@ -16,6 +16,7 @@ class Config(object):
 
     # GOOGLE_KEY is used to access Google Geocoding service
     GOOGLE_KEY='...'
+    GOOGLE_MAP_VIEW_KEY='...'
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -360,8 +361,7 @@ class Config(object):
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
     ROKWIRE_IMAGE_LINK_PREFIX='http://localhost:9000/events/image'
     IMAGE_COLLECTION='images'
-    
-    GOOGLE_MAP_VIEW_KEY='...'
+    WEBTOOL_IMAGE_MOUNT_POINT='./images'
     
     #Pagination Variables
     PER_PAGE = 4
