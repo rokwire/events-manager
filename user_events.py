@@ -4,6 +4,7 @@ from .utilities import source_utilities
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
 from .utilities.user_utilities import *
 from .utilities.constants import *
+from flask_paginate import Pagination, get_page_args
 
 userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
@@ -28,8 +29,14 @@ def user_events():
                 query_dic[key] = value
         posts = get_searched_user_events(query_dic, select_status)
     else:
-        posts = get_all_user_events(select_status)
-    return render_template("events/user-events.html", posts=posts, select_status=select_status)
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        per_page = current_app.config['PER_PAGE']
+        offset = (page - 1) * per_page
+        posts = get_all_user_events_pagination(select_status, offset, per_page)
+        total = get_all_user_events_count(select_status)
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    return render_template("events/user-events.html", posts=posts, select_status=select_status, page=page, per_page=per_page, pagination=pagination)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):

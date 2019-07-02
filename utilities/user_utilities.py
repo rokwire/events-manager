@@ -25,6 +25,12 @@ def get_all_user_events(select_status):
     # return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": {"$exists": False},
     #                                                                 "eventStatus": {"$in": select_status}})
 
+def get_all_user_events_count(select_status):
+    pass
+
+def get_all_user_events_pagination(select_status, skip, limit):
+    pass
+
 # TODO get searched posts
 def get_searched_user_events(searchDic, select_status):
     if not select_status:

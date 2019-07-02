@@ -264,13 +264,11 @@
           Approve
         </a> -->
         {% if isUser %}
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#confirmModal">
           {% if post.eventStatus == "approved" %}
-          Disapprove
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approved</button>
           {% else %}
-          Approve
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Approve</button>
           {% endif %}
-        </button>
         {% else %}
         <!-- <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a> -->
         <button type="button" id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}">Approve</button>
