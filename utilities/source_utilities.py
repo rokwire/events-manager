@@ -8,7 +8,6 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from .sourceEvents import downloadImage
 from ..db import find_all, find_one, update_one, update_many, find_one_and_update
 
 # find many events in a calendar with selected status
@@ -152,7 +151,25 @@ def approve_event(id):
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
-    download_result = downloadImage(result['calendarId'], result['dataSourceEventId'], id)
+    download_result = False
+    webtool_image_url = "{}/{}/{}/{}".format(
+        current_app.config['WEBTOOL_IMAGE_LINK_PREFIX'],
+        result["calendarId"],
+        result["dataSourceEventId"],
+        current_app.config['WEBTOOL_IMAGE_LINK_SUFFIX']
+    )
+
+    try:
+        image_response = requests.get(webtool_image_url)
+        if image_response.status_code == 200:
+            with open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'wb') as image:
+                for chunk in image_response.iter_content(chunk_size=128):
+                    image.write(chunk)
+            download_result = True
+    except Exception:
+        traceback.print_exc()
+        download_result = False
+
     upload_image_result = False
     if download_result:
         upload_image_result = publish_image(id)
