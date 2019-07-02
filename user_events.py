@@ -76,6 +76,8 @@ def user_an_event_edit(id):
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
+        # So far, we do not have any information about user event image.
+        # By default, we will not upload user images and we will set user image upload to be False
         source_utilities.publish_event(id, False)
     except Exception:
         traceback.print_exc()
