@@ -358,6 +358,5 @@ class Config(object):
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
     ROKWIRE_IMAGE_LINK_PREFIX=''
 
-
-            #Pagination Variables
-        PER_PAGE = 4
+    #Pagination Variables
+    PER_PAGE = 4
