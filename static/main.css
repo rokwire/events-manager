@@ -97,3 +97,9 @@ main {
   width: 70%;
   margin: 0 auto;
 }
+
+#map {
+  height: 300px;
+  width: 300px;
+
+}

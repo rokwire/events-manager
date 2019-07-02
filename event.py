@@ -11,11 +11,11 @@ from .auth import login_required
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap
+from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime
 
 bp = Blueprint('event', __name__, url_prefix='/event')
-
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
@@ -27,7 +27,6 @@ def source(sourceId):
 
 @bp.route('/calendar/<calendarId>')
 def calendar(calendarId):
-
     if 'select_status' in session:
         select_status = session['select_status']
     else:
@@ -44,18 +43,22 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
 
-    events = get_calendar_events(sourceId, calendarId, select_status)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page = current_app.config['PER_PAGE']
+    offset = (page - 1) * per_page
+    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    total = get_calendar_events_count(sourceId, calendarId, select_status)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
-
     calendarStatus = get_calendar_status(calendarId)
-    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, total=0, calendarId=calendarId,
-                            select_status=select_status, calendarStatus=calendarStatus)
+    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
+                            select_status=select_status, calendarStatus=calendarStatus,
+                            page=page, per_page=per_page, pagination=pagination)
 
 @bp.route('/search')
 @login_required
 def search():
    return render_template('events/search.html', sources=current_app.config['INT2SRC'])
-
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @login_required
@@ -126,7 +129,8 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, eventTypeMap = eventTypeMap)
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, 
+                            eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))

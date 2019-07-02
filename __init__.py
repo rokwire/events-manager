@@ -15,6 +15,11 @@ def create_app(config_class=Config):
 
     init_db(app)
 
+    try:
+        os.mkdir(app.config['WEBTOOL_IMAGE_MOUNT_POINT'])
+    except OSError:
+        pass
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(event_bp)

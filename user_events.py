@@ -1,9 +1,10 @@
 import traceback
 from .utilities import source_utilities
 
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session
+from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
 from .utilities.user_utilities import *
 from .utilities.constants import *
+from flask_paginate import Pagination, get_page_args
 
 userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
 
@@ -28,13 +29,20 @@ def user_events():
                 query_dic[key] = value
         posts = get_searched_user_events(query_dic, select_status)
     else:
-        posts = get_all_user_events(select_status)
-    return render_template("events/user-events.html", posts=posts, select_status=select_status)
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        per_page = current_app.config['PER_PAGE']
+        offset = (page - 1) * per_page
+        posts = get_all_user_events_pagination(select_status, offset, per_page)
+        total = get_all_user_events_count(select_status)
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    return render_template("events/user-events.html", posts=posts, select_status=select_status, page=page, per_page=per_page, pagination=pagination)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
-    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap, isUser=True)
+    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap, 
+                        isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
@@ -68,7 +76,9 @@ def user_an_event_edit(id):
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
-        source_utilities.publish_event(id)
+        # So far, we do not have any information about user event image.
+        # By default, we will not upload user images and we will set user image upload to be False
+        source_utilities.publish_event(id, False)
     except Exception:
         traceback.print_exc()
 
