@@ -169,7 +169,7 @@ def approve_event(id):
     except Exception:
         traceback.print_exc()
         download_result = False
-
+    
     upload_image_result = False
     if download_result:
         upload_image_result = publish_image(id)
