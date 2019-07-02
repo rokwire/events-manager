@@ -354,12 +354,13 @@ class Config(object):
         '1': ('EMS', []),
     }
 
-    EVENT_BUILDING_BLOCK_URL='...'
+    EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
     CALENDAR_COLLECTION='calendars'
     WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
-    ROKWIRE_IMAGE_LINK_PREFIX=''
-
+    ROKWIRE_IMAGE_LINK_PREFIX='http://localhost:9000/events/image'
+    IMAGE_COLLECTION='images'
+    
     GOOGLE_MAP_VIEW_KEY='...'
     
     #Pagination Variables
