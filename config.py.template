@@ -1,3 +1,4 @@
+
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
@@ -359,3 +360,5 @@ class Config(object):
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
     ROKWIRE_IMAGE_LINK_PREFIX=''
 
+    #Pagination Variables
+    PER_PAGE = 4

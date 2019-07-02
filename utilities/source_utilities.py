@@ -18,6 +18,14 @@ def get_calendar_events(sourceId, calendarId, select_status):
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} }))
 
+# find the count of events in a calendar with selected status
+def get_calendar_events_count(sourceId, calendarId, select_status):
+    pass
+
+# find many events in a calendar with selected status with pagination
+def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
+    pass
+
 # Approve events from a calendar
 def approve_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
@@ -65,16 +73,16 @@ def publish_event(id):
 
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
-                return False 
+                return False
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
                     "$set": {"eventStatus": "published"}
                 })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
-                
+
                 return True
-                
+
 
     except Exception:
         traceback.print_exc()
