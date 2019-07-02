@@ -1,37 +1,19 @@
 {% extends 'base.html' %}
 
+{% from 'events/confirmation.html' import confirmation %}
+
 {% block title %}
   {{ post.title }}
 {% endblock %}
 
 {% block modals %}
-<!-- the approve Confirmation form -->
-<div id="ApproveModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg" role="content">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Confirmation </h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <!-- table form here -->
-          <div class="form-group row">
-            <label for="datetime" class="col-12 col-form-label"><center>You are about to approve the following event: </center></label>
-          </div>
-          <div class="form-group row">
-            <h2 class="col-12">{{post.title}}</h2>
-          </div>
-          <div class="offset-md-2 col-md-10">
-            <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+
+{% if post.eventStatus == "approved" %}
+{{ confirmation("disapproveEvent", post.title) }}
+{% else %}
+{{ confirmation("approveEvent", post.title) }}
+{% endif %}
+
 <!-- delete Confirmation form -->
 <div id="DeleteModal" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg" role="content">
@@ -62,6 +44,7 @@
 {% endblock %}
 
 {% block content %}
+
   <!-- filter and select operations -->
   {% if isUser %}
   <div class="media">
@@ -117,7 +100,7 @@
             <div class="col-12 col-sm-2">
               <h5>Sub Category: </h5>
             </div>
-            <p class="col-sm-9">{{ post.subcategory}}</p>
+            <p class="col-sm-9">{{post.subcategory}}</p>
           </div>
         {% endif %}
 
@@ -281,7 +264,13 @@
           Approve
         </a> -->
         {% if isUser %}
-        <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}" role="button">Approve</a>
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#confirmModal">
+          {% if post.eventStatus == "approved" %}
+          Disapprove
+          {% else %}
+          Approve
+          {% endif %}
+        </button>
         {% else %}
         <!-- <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a> -->
         <button type="button" id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}">Approve</button>
@@ -306,6 +295,7 @@
   </div>
   {% endblock %}
 
+
   <!-- add js for local date format -->
   {% block scripts %}
     {{super()}}
@@ -328,18 +318,26 @@
         var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
         var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
         var date_start = new Date(start_utc+"Z");
-        document.getElementById('startDate').innerHTML = date_start.toString();
+        document.getElementById('startDate').innerHTML = date_start.toLocaleString();
         var date_end = new Date(end_utc+"Z");
-        document.getElementById('endDate').innerHTML = date_end.toString();
+        document.getElementById('endDate').innerHTML = date_end.toLocaleString();
       }
-      function approve_and_disapprove(){
-          var elem = document.getElementById("approveButton");
-          if (elem.innerHTML == "Approve") {
-            elem.innerHTML = "Disapprove";
-          }else{
-            elem.innerHTML = "Approve";
+      $("#approvebutton").click(function() {
+        $.post("{{ url_for('user_events.user_an_event_approve', id=post._id) }}",
+        function(data) {
+          if (data == "success") {
+            location.reload();
           }
-      }
+        });
+      });
+      $("#disapprovebutton").click(function() {
+        $.post("{{ url_for('user_events.user_an_event_disapprove', id=post._id) }}",
+        function(data) {
+          if (data == "success") {
+            location.reload();
+          }
+        });
+      });
     </script>
 
     {% if post.location %}
