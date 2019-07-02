@@ -362,6 +362,6 @@ class Config(object):
     ROKWIRE_IMAGE_LINK_PREFIX='http://localhost:9000/events/image'
     IMAGE_COLLECTION='images'
     WEBTOOL_IMAGE_MOUNT_POINT='./images'
-
+    
     #Pagination Variables
     PER_PAGE = 4
