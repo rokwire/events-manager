@@ -140,3 +140,19 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
         except Exception:
             traceback.print_exc()
             return UpdateResult()
+
+
+def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+    
+    if key is None or co_or_ta is None:
+        return []
+    
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.distinct(key, filter=condition, **kwargs)
+        except Exception:
+            traceback.print_exc()
+            return []
