@@ -1,7 +1,7 @@
 import traceback
 from .utilities import source_utilities
 
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session
+from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
 from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
@@ -41,7 +41,8 @@ def user_events():
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
-    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap, isUser=True)
+    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap, 
+                        isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
