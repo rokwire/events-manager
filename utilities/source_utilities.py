@@ -1,3 +1,4 @@
+import os
 import json
 import datetime
 import requests
@@ -7,7 +8,8 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, update_many
+from .sourceEvents import downloadImage
+from ..db import find_all, find_one, update_one, update_many, find_one_and_update
 
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
@@ -43,7 +45,7 @@ def disapprove_calendar_events(calendarId):
         print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
-def publish_event(id):
+def publish_event(id, image_upload_success):
     headers = {'Content-Type': 'application/json'}
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
@@ -57,8 +59,13 @@ def publish_event(id):
             if event.get('endDate'):
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+
+            if image_upload_success:
+                event['imageURL'] = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+            
             submit_type = event['submitType']
             del event['submitType']
+
             if submit_type == 'post':
                 result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                        data=json.dumps(event))
@@ -73,16 +80,64 @@ def publish_event(id):
 
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
-                return False
+                return False 
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
                     "$set": {"eventStatus": "published"}
                 })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
-
+                
                 return True
+                
 
+    except Exception:
+        traceback.print_exc()
+        return False
+
+
+def publish_image(id):
+    headers = {'Content-Type': 'image/png'}
+    try:
+
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+
+        submit_type = 'post'
+        image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+
+        # if there is record shows image has been submit before then change post to put
+        if record:
+            if record.get('submitBefore'):
+                submit_type = 'put'
+
+        if submit_type == 'post':
+            response = requests.post(url, data=image.read(), headers=headers)
+        elif submit_type == 'put':
+            response = requests.put(url, data=image.read(), headers=headers)
+        
+        image.close()
+        os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+        if response.status_code in (200, 201):
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
+                                      condition={'eventId': id}, 
+                                      update={"$set": { 'submitBefore': True, 
+                                                        'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+        
+            return True
+
+        else:
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
+                            condition={'eventId': id}, 
+                            update={"$set": { 'submitBefore': False, 
+                                              'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+            
+            return False
 
     except Exception:
         traceback.print_exc()
@@ -91,13 +146,17 @@ def publish_event(id):
 
 def approve_event(id):
     print("{} is going to be approved".format(id))
-    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "approved"}
     })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+    if not result:
         print("Approve event {} fails in approve_event".format(id))
 
-    publish_event(id)
+    download_result = downloadImage(result['calendarId'], result['dataSourceEventId'], id)
+    upload_image_result = False
+    if download_result:
+        upload_image_result = publish_image(id)
+    publish_event(id, upload_image_result)
 
 
 def get_event(objectId):
