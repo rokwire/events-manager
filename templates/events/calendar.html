@@ -25,13 +25,11 @@
 <div class="container-fluid">
   <div class="row mt-3 mb-3">
     <div class="col text-center">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">
       {% if calendarStatus == "approved" %}
-        Disapprove
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approved</button>
       {% else %}
-        Approve
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Approve</button>
       {% endif %}
-      </button>
     </div>
   </div>
 
