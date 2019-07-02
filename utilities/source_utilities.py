@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
 from ..db import find_all, find_one, update_one, update_many, find_one_and_update
-
+from .downloadImage import downloadImage
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
     if not select_status:
@@ -116,7 +116,7 @@ def publish_image(id):
             response = requests.put(url, data=image.read(), headers=headers)
         
         image.close()
-        os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+        
 
         if response.status_code in (200, 201):
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
@@ -142,7 +142,12 @@ def publish_image(id):
         traceback.print_exc()
         return False
 
+    finally:
+        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
 
+    return True
+    
 def approve_event(id):
     print("{} is going to be approved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
@@ -151,27 +156,14 @@ def approve_event(id):
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
-    download_result = False
-    webtool_image_url = "{}/{}/{}/{}".format(
-        current_app.config['WEBTOOL_IMAGE_LINK_PREFIX'],
-        result["calendarId"],
-        result["dataSourceEventId"],
-        current_app.config['WEBTOOL_IMAGE_LINK_SUFFIX']
+    download_image_result = downloadImage(
+        result['calendarId'],
+        result['dataSourceEventId'],
+        id
     )
 
-    try:
-        image_response = requests.get(webtool_image_url)
-        if image_response.status_code == 200:
-            with open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'wb') as image:
-                for chunk in image_response.iter_content(chunk_size=128):
-                    image.write(chunk)
-            download_result = True
-    except Exception:
-        traceback.print_exc()
-        download_result = False
-    
     upload_image_result = False
-    if download_result:
+    if download_image_result:
         upload_image_result = publish_image(id)
     publish_event(id, upload_image_result)
 
