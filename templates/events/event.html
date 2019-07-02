@@ -245,7 +245,15 @@
           </div>
         </div>
         {% endif %}
+        
+        <!-- google map API -->
+        {% if post.location %}
+          {% if post.location.latitude and post.location.longitude %} 
 
+            <div id="map"></div>
+
+          {% endif %}
+        {% endif %}
       </div class = "media-body">
     </article>
   <div class="row  justify-content-center">
@@ -285,10 +293,25 @@
   </div>
   {% endblock %}
 
-<!-- add js for local date format -->
-{% block scripts %}
-  {{super()}}
-  <script>
+
+  <!-- add js for local date format -->
+  {% block scripts %}
+    {{super()}}
+    <script>
+      
+      {% if post.location %}
+        {% if post.location.latitude and post.location.longitude %} 
+          function initMap() {
+            let loc = { lat: {{ post.location.latitude}}, lng: {{ post.location.longitude }}};
+            let map = new google.maps.Map(
+              document.getElementById("map"),
+              { zoom: 17, center: loc, mapTypeControl: false }
+            );
+            let marker = new google.maps.Marker({position: loc, map: map});
+          }
+        {% endif %}
+      {% endif %}
+      
       window.onload = function() {
         var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
         var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
@@ -297,7 +320,6 @@
         var date_end = new Date(end_utc+"Z");
         document.getElementById('endDate').innerHTML = date_end.toLocaleString();
       }
-
       $("#approvebutton").click(function() {
         $.post("{{ url_for('user_events.user_an_event_approve', id=post._id) }}",
         function(data) {
@@ -314,6 +336,12 @@
           }
         });
       });
+    </script>
 
-  </script>
+    {% if post.location %}
+      {% if post.location.latitude and post.location.longitude %} 
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
+      {% endif %}
+    {% endif %}
+
   {% endblock %}
