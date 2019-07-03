@@ -1,3 +1,4 @@
+
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
@@ -15,6 +16,7 @@ class Config(object):
 
     # GOOGLE_KEY is used to access Google Geocoding service
     GOOGLE_KEY='...'
+    GOOGLE_MAP_VIEW_KEY='...'
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -353,9 +355,13 @@ class Config(object):
         '1': ('EMS', []),
     }
 
-    EVENT_BUILDING_BLOCK_URL='...'
+    EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
     CALENDAR_COLLECTION='calendars'
     WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
-    ROKWIRE_IMAGE_LINK_PREFIX=''
-
+    ROKWIRE_IMAGE_LINK_PREFIX='http://localhost:9000/events/image'
+    IMAGE_COLLECTION='images'
+    WEBTOOL_IMAGE_MOUNT_POINT='./images'
+    
+    #Pagination Variables
+    PER_PAGE = 4
