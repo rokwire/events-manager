@@ -69,7 +69,18 @@
             <div class="col-12 col-sm-2">
               <h5>Event Status: </h5>
             </div>
-            <p class="col-sm-9">{{ post.eventStatus }}</p>
+            <p class="col-sm-9">
+              {% if post.eventStatus == "approved" %}
+                <span class="badge badge-success">{{ post.eventStatus }} </span>
+              {% elif post.eventStatus == "disapproved"%}
+                <span class="badge badge-danger">{{ post.eventStatus }} </span>
+              {% elif post.eventStatus == "pending"%}
+                <span class="badge badge-warning">{{ post.eventStatus }} </span>
+              {% else %}
+                <span class="badge badge-dark">{{ post.eventStatus }} </span>
+              {% endif %}
+            </p>
+
           </div>
         {% endif %}
 
