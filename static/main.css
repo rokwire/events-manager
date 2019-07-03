@@ -101,5 +101,7 @@ main {
 #map {
   height: 300px;
   width: 300px;
-
+}
+.break-text{
+  word-break: break-all;
 }

@@ -64,9 +64,8 @@
         <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
         <hr class="divider"/>
 
-        <!-- TODO approve status display : need real format in json example -->
         {% if post.eventStatus%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Event Status: </h5>
             </div>
@@ -76,7 +75,7 @@
 
         <!-- event url -->
         {% if post.titleURL%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Event URL: </h5>
             </div>
@@ -106,7 +105,7 @@
 
         <!-- startDate -->
         {% if post.startDate%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Start Date: </h5>
             </div>
@@ -118,7 +117,7 @@
 
         <!-- endDate -->
         {% if post.endDate%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>End Date: </h5>
             </div>
@@ -126,39 +125,9 @@
           </div>
         {% endif %}
 
-        <!-- location -->
-        {% if post.location %}
-          <!-- description -->
-          {% if post.location.description %}
-            <div class="row">
-              <div class="col-12 col-sm-2">
-                <h5>Location: </h5>
-              </div>
-              <p class="col-sm-9">{{ post.location.description}}</p>
-            </div>
-          {% endif %}
-          <!-- address -->
-          {% if post.location.latitude %}
-            <div class="row">
-              <div class="col-12 col-sm-2">
-                <h5>Latitude: </h5>
-              </div>
-              <p class="col-sm-9"> {{ post.location.latitude}}</p>
-            </div>
-          {% endif %}
-          {% if post.location.longitude %}
-            <div class="row">
-              <div class="col-12 col-sm-2">
-                <h5>Longitude: </h5>
-              </div>
-              <p class="col-sm-9">{{ post.location.longitude}}</p>
-            </div>
-          {% endif %}
-        {% endif %}
-
         <!-- target audience -->
         {% if post.targetAudience %}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Target Audience: </h5>
             </div>
@@ -172,7 +141,7 @@
 
         <!-- cost -->
         {% if post.cost%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Cost: </h5>
             </div>
@@ -184,7 +153,7 @@
         {% if post.contacts%}
           {% for contact in post.contacts %}
             {% if contact.firstName and contact.lastName%}
-              <div class="row ">
+              <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Person: </h5>
                 </div>
@@ -192,7 +161,7 @@
               </div>
             {% endif %}
             {% if contact.email %}
-              <div class="row ">
+              <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Email: </h5>
                 </div>
@@ -200,7 +169,7 @@
               </div>
             {% endif %}
             {% if contact.phone %}
-              <div class="row ">
+              <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Contact Phone: </h5>
                 </div>
@@ -212,7 +181,7 @@
 
         <!-- tags -->
         {% if post.tags%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Tags: </h5>
             </div>
@@ -226,7 +195,7 @@
 
         <!-- sponsor -->
         {% if post.sponsor%}
-          <div class="row ">
+          <div class="row">
             <div class="col-12 col-sm-2">
               <h5>Sponsor: </h5>
             </div>
@@ -236,7 +205,7 @@
 
         <!-- description -->
         {% if post.description%}
-        <div class="row ">
+        <div class="row">
           <div class="col-12 col-sm-2">
             <h5>Description: </h5>
           </div>
@@ -245,18 +214,49 @@
           </div>
         </div>
         {% endif %}
-        
-        <!-- google map API -->
+
+        <!-- location -->
         {% if post.location %}
-          {% if post.location.latitude and post.location.longitude %} 
-
-            <div id="map"></div>
-
-          {% endif %}
-        {% endif %}
+        <div class="row">
+          <div class="col-6">
+            <!-- location.description -->
+            {% if post.location.description %}
+              <div class="row">
+                <div class="col-4">
+                  <h5>Location: </h5>
+                </div>
+                <p class="col-8">{{post.location.description}}</p>
+              </div>
+            {% endif %}
+            <!-- location.address -->
+            {% if post.location.latitude %}
+              <div class="row">
+                <div class="col-4">
+                  <h5>Latitude: </h5>
+                </div>
+                <p class="col-8"> {{ post.location.latitude}}</p>
+              </div>
+            {% endif %}
+            {% if post.location.longitude %}
+              <div class="row">
+                <div class="col-4">
+                  <h5>Longitude: </h5>
+                </div>
+                <p class="col-8">{{ post.location.longitude}}</p>
+              </div>
+            {% endif %}
+          </div>
+          <!-- google map API -->
+          <div class="col-6">
+            {% if post.location.latitude and post.location.longitude %}
+              <div id="map"></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
       </div class = "media-body">
     </article>
-  <div class="row  justify-content-center">
+  <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
         <!-- <a role="button" class="btn btn-block nav-link btn-outline-primary"
@@ -298,9 +298,8 @@
   {% block scripts %}
     {{super()}}
     <script>
-      
       {% if post.location %}
-        {% if post.location.latitude and post.location.longitude %} 
+        {% if post.location.latitude and post.location.longitude %}
           function initMap() {
             let loc = { lat: {{ post.location.latitude}}, lng: {{ post.location.longitude }}};
             let map = new google.maps.Map(
@@ -311,7 +310,7 @@
           }
         {% endif %}
       {% endif %}
-      
+
       window.onload = function() {
         var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
         var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
@@ -339,7 +338,7 @@
     </script>
 
     {% if post.location %}
-      {% if post.location.latitude and post.location.longitude %} 
+      {% if post.location.latitude and post.location.longitude %}
         <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
       {% endif %}
     {% endif %}
