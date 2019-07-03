@@ -39,35 +39,35 @@
       <div class="col-12">
         <hr class="divider"/>
         <div id = "accordion">
-          {% for post in posts%}
-              <div class="card">
-                <div class="card-header" role="tab", id = "head">
-                  <div class = "col-12">
-                    <a href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" class="btn btn-default ml-auto float-left">
-                      <h4 class="mb-0" align = "left justify">{{ post.title }}</h4>
-                    </a>
-                  </div>
-                  <div class = "col-12 dropdown">
-                    <a class="btn btn-default ml-auto float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                      <span id="edit_{{post.eventId}}">
-                        <svg height="18" class="octicon octicon-triangle-down v-align-middle" viewBox="0 0 12 16" version="1.1" width="10" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M0 5l6 6 6-6H0z"></path>
-                        </svg>
-                      </span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" id="myDropdown">
-                      <a class="dropdown-item disabled">Request History</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
-                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
-                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}">{{post.title}}</a>
-                    </div>
+          {% for eventID in posts_dic%}
+            <div class="card">
+              <div class="card-header" role="tab", id = "head">
+                <div class = "col-12">
+                  <a href="{{ url_for('user_events.user_an_event', id=posts_dic[eventID][0]['_id']) }}" class="btn btn-default ml-auto float-left">
+                    <h4 class="mb-0" align = "left justify">{{ posts_dic[eventID][0].title }}</h4>
+                  </a>
+                </div>
+                <div class = "col-12 dropdown">
+                  <a class="btn btn-default ml-auto float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                    <span id="edit_{{eventId}}">
+                      <svg height="18" class="octicon octicon-triangle-down v-align-middle" viewBox="0 0 12 16" version="1.1" width="10" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M0 5l6 6 6-6H0z"></path>
+                      </svg>
+                    </span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" id="myDropdown">
+                    <a class="dropdown-item disabled">Request History</a>
+                    <div class="dropdown-divider"></div>
+                    {% for post_version in posts_dic[eventID]%}
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post_version['_id']) }}">{{post_version.title}}</a>
+                    {% endfor%}
                   </div>
                 </div>
-            </div>
-          {% endfor%}
-        </div>
+              </div>
+          </div>
+        {% endfor%}
       </div>
+    </div>
   </div>
 
   {{ pagination.links }}
