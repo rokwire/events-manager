@@ -199,7 +199,7 @@
             <div class="col-12 col-sm-2">
               <h5>Sponsor: </h5>
             </div>
-            <p class = "col-sm-9">{{ post.sponsor}}</p>
+            <p class = "col-sm-9">{{post.sponsor}}</p>
           </div>
         {% endif %}
 
@@ -217,39 +217,37 @@
 
         <!-- location -->
         {% if post.location %}
-        <div class="row">
-          <div class="col-6">
             <!-- location.description -->
             {% if post.location.description %}
               <div class="row">
-                <div class="col-4">
+                <div class="col-12 col-sm-2">
                   <h5>Location: </h5>
                 </div>
-                <p class="col-8">{{post.location.description}}</p>
+                <p class="col-12 col-sm-9">{{post.location.description}}</p>
               </div>
             {% endif %}
             <!-- location.address -->
             {% if post.location.latitude %}
               <div class="row">
-                <div class="col-4">
+                <div class="col-12 col-sm-2">
                   <h5>Latitude: </h5>
                 </div>
-                <p class="col-8"> {{ post.location.latitude}}</p>
+                <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
               </div>
             {% endif %}
             {% if post.location.longitude %}
               <div class="row">
-                <div class="col-4">
+                <div class="col-12 col-sm-2">
                   <h5>Longitude: </h5>
                 </div>
-                <p class="col-8">{{ post.location.longitude}}</p>
+                <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
               </div>
             {% endif %}
-          </div>
           <!-- google map API -->
-          <div class="col-6">
+          <div class="row">
+            <div class="col-12 col-sm-9 offset-sm-2">
             {% if post.location.latitude and post.location.longitude %}
-              <div id="map"></div>
+              <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
             {% endif %}
           </div>
         </div>
