@@ -156,3 +156,20 @@ def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
         except Exception:
             traceback.print_exc()
             return []
+
+def get_count(co_or_ta, filter, **kwargs):
+
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None:
+        return 0
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            return collection.count_documents(filter, **kwargs)
+        except Exception:
+            traceback.print_exc()
+            return 0
+

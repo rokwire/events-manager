@@ -8,7 +8,7 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, update_many, find_one_and_update
+from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count
 from .downloadImage import downloadImage
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
@@ -21,11 +21,30 @@ def get_calendar_events(sourceId, calendarId, select_status):
 
 # find the count of events in a calendar with selected status
 def get_calendar_events_count(sourceId, calendarId, select_status):
-    pass
+    if not select_status:
+        select_status = ['pending']
+    return get_count(current_app.config['EVENT_COLLECTION'], 
+                     {"sourceId": sourceId ,
+                      "calendarId": calendarId, 
+                     "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-    pass
+    if not select_status:
+        select_status = ['pending']
+    
+    events = list(find_all(current_app.config['EVENT_COLLECTION'], 
+                          filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId, 
+                            "eventStatus": {"$in": select_status}
+                          }, skip=skip, limit=limit))
+    
+    if events is None:
+        return []
+    
+    return events
+
 
 # Approve events from a calendar
 def approve_calendar_events(calendarId):
@@ -208,7 +227,7 @@ def disapprove_calendar_db(calendarId):
 def get_calendar_status(calendarId):
     calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
     if calendar is None:
-        return "disapproved"
+        return None
     return calendar['status']
 
 # Find the approval status for many calendars
@@ -222,7 +241,7 @@ def get_all_calendar_status():
             if calendar is not None:
                 result[calendarId] = calendar["status"]
             else:
-                result[calendarId] = "disapproved"
+                result[calendarId] = None
     return result
 
 # Update approval status for many calendars (and relevant events)
