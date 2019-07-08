@@ -43,9 +43,10 @@ def get_all_user_events_pagination(select_status, skip, limit):
                                         "eventStatus": {"$in": select_status}},
                              skip=skip,
                              limit=limit)
-
+    begin = skip
+    end = min(len(eventIds), skip+limit)
     events_by_eventId = {}
-    for eventId in eventIds:
+    for eventId in eventIds[begin:end]:
         events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                filter={"eventId": eventId,
                                        "eventStatus": {"$in": select_status}}))
@@ -91,7 +92,10 @@ def update_user_event(objectId, update, delete_field=None):
 
 def find_user_all_object_events(eventId):
     print(eventId)
-    return find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
+    result_events =  find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
+    if result_events is None:
+        return []
+    return result_events
 
 def delete_user_event(eventId):
     pass
