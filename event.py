@@ -19,7 +19,11 @@ bp = Blueprint('event', __name__, url_prefix='/event')
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
-    # page = request.args.get('page', 0, type=int)
+    eventTypeValues = {}
+    for key in eventTypeMap:
+        value = eventTypeMap[key]
+        eventTypeValues[value] = 0
+    session['eventTypeValues'] = eventTypeValues
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
@@ -45,15 +49,23 @@ def calendar(calendarId):
 
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page = current_app.config['PER_PAGE']
-    offset = (page - 1) * per_page
-    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     total = get_calendar_events_count(sourceId, calendarId, select_status)
+    events = []
+    if total != 0:
+        offset = (page - 1) * per_page
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+
     calendarStatus = get_calendar_status(calendarId)
+    eventTypeValues = {}
+    for key in eventTypeMap:
+        value = eventTypeMap[key]
+        eventTypeValues[value] = 0
+    print(eventTypeValues)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
                             select_status=select_status, calendarStatus=calendarStatus,
-                            page=page, per_page=per_page, pagination=pagination)
+                            page=page, per_page=per_page, pagination=pagination, eventTypeValues=eventTypeValues)
 
 @bp.route('/search')
 @login_required
@@ -107,17 +119,17 @@ def disapproveCalendar():
     disapprove_calendar_db(calendarId)
     return "success", 200
 
-@bp.route("/source/<id>/approve")
+@bp.route("/approveEvent/<id>")
 @login_required
 def approveEvent(id):
     approve_event(id)
-    return redirect(url_for("event.detail", eventId=id))
+    return "success", 200
 
-@bp.route("/source/<id>/disapprove")
+@bp.route("/disapproveEvent/<id>")
 @login_required
 def disapproveEvent(id):
     disapprove_event(id)
-    return redirect(url_for("event.detail", eventId=id))
+    return "success", 200
 
 @bp.route('/detail/<eventId>')
 def detail(eventId):
@@ -129,7 +141,7 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, 
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
@@ -173,3 +185,13 @@ def schedule():
     # scheduler function
     print(time)
     return "success", 200
+
+@bp.route('/searchresult', methods=['GET', 'POST'])
+def searchresult():
+    eventTypeValues = {}
+    for key in eventTypeMap:
+        value = eventTypeMap[key]
+        eventTypeValues[value] = 0
+
+    events = []
+    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, posts=events)
