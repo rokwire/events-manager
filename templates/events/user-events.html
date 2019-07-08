@@ -16,16 +16,23 @@
       </div>
       <div class="form-check form-check-inline">
         <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
-        <label class="form-check-label" for="materialInline1">Approved</label>
+        <label class="form-check-label" for="materialInline1">
+          <span class="badge badge-pill badge-success">Approved </span>
+        </label>
       </div>
       <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
-          <label class="form-check-label" for="materialInline2">Disapproved</label>
+          <label class="form-check-label" for="materialInline2">
+            <span class="badge badge-pill badge-danger">Disapproved </span>
+          </label>
       </div>
       <div class="form-check form-check-inline col-sm-3">
           <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
-          <label class="form-check-label" for="materialInline3">Published</label>
+          <label class="form-check-label" for="materialInline3">
+            <span class="badge badge-pill badge-dark">Published </span>
+          </label>
       </div>
+      
       <!-- Search form -->
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
         <div class="form-group mx-sm-3 mb-2">
@@ -59,7 +66,19 @@
                     <a class="dropdown-item disabled">Request History</a>
                     <div class="dropdown-divider"></div>
                     {% for post_version in posts_dic[eventID]%}
-                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post_version['_id']) }}">{{post_version.title}}</a>
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post_version['_id']) }}">
+                        {{post_version.title}}
+                        {% if post_version.eventStatus == "approved" %}
+                          <span class="badge badge-pill badge-success">{{ post_version.eventStatus }} </span>
+                        {% elif post_version.eventStatus == "disapproved"%}
+                          <span class="badge badge-pill badge-danger">{{ post_version.eventStatus }} </span>
+                        {% elif post_version.eventStatus == "pending"%}
+                          <span class="badge badge-pill badge-warning">{{ post_version.eventStatus }} </span>
+                        {% else %}
+                          <span class="badge badge-pill badge-dark">{{ post_version.eventStatus }} </span>
+                        {% endif %}
+                      </a>
+
                     {% endfor%}
                   </div>
                 </div>
