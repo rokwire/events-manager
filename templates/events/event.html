@@ -71,13 +71,13 @@
             </div>
             <p class="col-sm-9">
               {% if post.eventStatus == "approved" %}
-                <span class="badge badge-success">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "disapproved"%}
-                <span class="badge badge-danger">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "pending"%}
-                <span class="badge badge-warning">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
               {% else %}
-                <span class="badge badge-dark">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-dark">{{ post.eventStatus }} </span>
               {% endif %}
             </p>
 
@@ -319,7 +319,6 @@
           }
         {% endif %}
       {% endif %}
-
       window.onload = function() {
         var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
         var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
@@ -351,5 +350,6 @@
         <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
       {% endif %}
     {% endif %}
+
 
   {% endblock %}
