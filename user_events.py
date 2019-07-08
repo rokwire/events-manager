@@ -13,7 +13,7 @@ def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
     else:
-        select_status = []
+        select_status = ['pending']
         session['select_status'] = select_status
 
     if request.method == 'POST':
@@ -103,6 +103,8 @@ def select():
         select_status.append('disapproved')
     if request.form.get('published') == '1':
         select_status.append('published')
+    if request.form.get('pending') == '1':
+        select_status.append('pending')
 
     session["select_status"] = select_status
     return "", 200

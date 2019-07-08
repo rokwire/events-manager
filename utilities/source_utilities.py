@@ -12,8 +12,7 @@ from ..db import find_all, find_one, update_one, update_many, find_one_and_updat
 from .downloadImage import downloadImage
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
-    if not select_status:
-        select_status = ['pending']
+
     print(select_status)
     return list(find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
@@ -21,8 +20,7 @@ def get_calendar_events(sourceId, calendarId, select_status):
 
 # find the count of events in a calendar with selected status
 def get_calendar_events_count(sourceId, calendarId, select_status):
-    if not select_status:
-        select_status = ['pending']
+
     return get_count(current_app.config['EVENT_COLLECTION'], 
                      {"sourceId": sourceId ,
                       "calendarId": calendarId, 
@@ -30,8 +28,6 @@ def get_calendar_events_count(sourceId, calendarId, select_status):
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-    if not select_status:
-        select_status = ['pending']
     
     events = list(find_all(current_app.config['EVENT_COLLECTION'], 
                           filter={
