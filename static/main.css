@@ -98,8 +98,17 @@ main {
   margin: 0 auto;
 }
 
-#map {
-  height: 300px;
-  width: 300px;
+.map-container{
+overflow:hidden;
+padding-bottom:56.25%;
+position:relative;
+height:0;
+}
 
+.break-text{
+  word-break: break-all;
+}
+
+main.container {
+  margin-bottom: 10%;
 }
