@@ -59,7 +59,7 @@ def calendar(calendarId):
     calendarStatus = get_calendar_status(calendarId)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
                             select_status=select_status, calendarStatus=calendarStatus,
-                            page=page, per_page=per_page, pagination=pagination)
+                            page=page, per_page=per_page, pagination=pagination, isUser=False)
 
 @bp.route('/search')
 @login_required

@@ -80,29 +80,6 @@
 
 {% block scripts %}
   {{ super() }}
-  <script>
-    $("#materialInline1, #materialInline2, #materialInline3, #materialInline4").on('click', function() {
-      let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
-      let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
-      let published = ( $('#materialInline3').is(':checked') ? 1: 0);
-      let pending = ( $('#materialInline4').is(':checked') ? 1: 0);
-      
-      $.ajax(
-        {
-          url: "{{ url_for('user_events.select') }}",
-          dataType: 'json',
-          type    : 'POST',
-          data    : {
-            approved: approved,
-            disapproved: disapproved,
-            published: published,
-            pending: pending
-          },
-        }
-      ).always(function() {
-        location.reload(true);
-      });
-    })
+  {% include 'events/select_status.html' %}
 
-  </script>
 {% endblock %}

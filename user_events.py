@@ -43,7 +43,10 @@ def user_events():
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-    return render_template("events/user-events.html", posts_dic = posts_dic, select_status=select_status, page=page, per_page=per_page, pagination=pagination)
+    return render_template("events/user-events.html", posts_dic = posts_dic, 
+                            select_status=select_status, page=page, 
+                            per_page=per_page, pagination=pagination, 
+                            isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
