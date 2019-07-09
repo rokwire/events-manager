@@ -14,9 +14,9 @@ from .downloadImage import downloadImage
 def get_calendar_events(sourceId, calendarId, select_status):
 
     print(select_status)
-    return list(find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
+    return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
-                                                                    "eventStatus": {"$in": select_status} }))
+                                                                    "eventStatus": {"$in": select_status} })
 
 # find the count of events in a calendar with selected status
 def get_calendar_events_count(sourceId, calendarId, select_status):
@@ -28,17 +28,13 @@ def get_calendar_events_count(sourceId, calendarId, select_status):
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-    
-    events = list(find_all(current_app.config['EVENT_COLLECTION'], 
-                          filter={
-                            "sourceId": sourceId,
-                            "calendarId": calendarId, 
-                            "eventStatus": {"$in": select_status}
-                          }, skip=skip, limit=limit))
-    
-    if events is None:
-        return []
-    
+
+    events = find_all(current_app.config['EVENT_COLLECTION'], 
+                        filter={
+                        "sourceId": sourceId,
+                        "calendarId": calendarId, 
+                        "eventStatus": {"$in": select_status}
+                        }, skip=skip, limit=limit)
     return events
 
 
@@ -222,7 +218,7 @@ def disapprove_calendar_db(calendarId):
 # Find the approval status for one calendar
 def get_calendar_status(calendarId):
     calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
-    if calendar is None:
+    if not calendar:
         return None
     return calendar['status']
 
@@ -234,7 +230,7 @@ def get_all_calendar_status():
         for calendarId, name in dict.items():
             calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
             # print(calendar)
-            if calendar is not None:
+            if calendar:
                 result[calendarId] = calendar["status"]
             else:
                 result[calendarId] = None

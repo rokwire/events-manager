@@ -29,11 +29,17 @@ def user_events():
                 query_dic[key] = value
         posts = get_searched_user_events(query_dic, select_status)
     else:
-        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        try:
+            page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        except ValueError:
+            page = 1
         per_page = current_app.config['PER_PAGE']
         offset = (page - 1) * per_page
-        posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
         total = get_all_user_events_count(select_status)
+        if page <= 0 or offset >= total:
+            offset = 0
+            page = 1
+        posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 

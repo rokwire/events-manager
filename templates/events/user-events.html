@@ -86,6 +86,7 @@
       let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
       let published = ( $('#materialInline3').is(':checked') ? 1: 0);
       let pending = ( $('#materialInline4').is(':checked') ? 1: 0);
+      
       $.ajax(
         {
           url: "{{ url_for('user_events.select') }}",
@@ -99,20 +100,7 @@
           },
         }
       ).always(function() {
-        // remove page argument to return page 0 when one of the status checkboxes is selected
-        let args = location.search.substr(1).split('&');
-        for(let i = 0; i < args.length; i++) {
-          if (args[i].includes("page")){
-            args.splice(i, 1);
-          }
-        }
-
-        if (args.length > 0 && args[0] != '') {
-          newUrl = location.origin+location.pathname+'?'+args.join('&');
-        } else {
-          newUrl = location.origin+location.pathname;
-        }
-        location.replace(newUrl);
+        location.reload(true);
       });
     })
 
