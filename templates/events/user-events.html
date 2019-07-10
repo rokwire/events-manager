@@ -26,13 +26,18 @@
             <span class="badge badge-pill badge-danger">Disapproved </span>
           </label>
       </div>
-      <div class="form-check form-check-inline col-sm-3">
+      <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline3">
             <span class="badge badge-pill badge-info">Published </span>
           </label>
       </div>
-
+      <div class="form-check form-check-inline col-sm-3">
+        <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
+        <label class="form-check-label" for="materialInline4">
+          <span class="badge badge-pill badge-warning">Pending </span>
+        </label>
+      </div>
       <!-- Search form -->
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
         <div class="form-group mx-sm-3 mb-2">
@@ -107,27 +112,6 @@
 
 {% block scripts %}
   {{ super() }}
-  <script>
-    $("#materialInline1, #materialInline2, #materialInline3").on('click', function() {
-      let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
-      let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
-      let published = ( $('#materialInline3').is(':checked') ? 1: 0);
-      console.log(approved, disapproved, published);
-      $.ajax(
-        {
-          url: "{{ url_for('user_events.select') }}",
-          dataType: 'json',
-          type    : 'POST',
-          data    : {
-            approved: approved,
-            disapproved: disapproved,
-            published: published
-          },
-        }
-      ).always(function() {
-        location.reload(true);
-      });
-    })
+  {% include 'events/select_status.html' %}
 
-  </script>
 {% endblock %}
