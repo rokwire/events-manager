@@ -60,24 +60,27 @@ def user_an_event_edit(id):
                 tags_list = tags_val.split(',')
                 post_by_id[key] = tags_list
             elif key == "targetAudience":
-                print(request.form.getlist(key))
-                print("yeah")
                 post_by_id[key] = request.form.getlist(key)
             else:
                 post_by_id[key] = request.form[key]
             # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description' 'targetAudience' 'tags'
             # more parts editable TODO ....
         post_by_id['eventStatus'] = 'pending'
-        delete_subcategory = None
-        #TODO delete audience
+        delete_dictionary = {}
+        # delete subcategory
         if(post_by_id['category'] != "Athletics"):
             if('subcategory' in post_by_id):
                 del post_by_id['subcategory']
-                delete_subcategory = {'subcategory': 1}
+                delete_dictionary['subcategory'] = 1
         else:
             if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
-                delete_subcategory = {'subcategory': 1}
-        update_user_event(id, post_by_id, delete_subcategory)
+                delete_dictionary['subcategory'] = 1
+        #delete audience
+        if ('targetAudience' in post_by_id and 'targetAudience' not in request.form):
+            del post_by_id['targetAudience']
+            delete_dictionary['targetAudience'] = 1
+
+        update_user_event(id, post_by_id, delete_dictionary)
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     tags_text = ""
