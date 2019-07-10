@@ -62,7 +62,7 @@
           {% if post.titleURL%}
             <div class="form-group row ">
               <label class="col-12 col-sm-2 form-control-label">
-                <h5>Event URL: </h5>
+                <h5>Event URL </h5>
               </label>
               <div class="col-sm-9">
                 <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" />
@@ -71,7 +71,7 @@
           {% else %}
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event URL: </h5>
+              <h5>Event URL </h5>
             </label>
             <div class="col-sm-9">
               <input class="form-control" type="url" id="titleURL" name="titleURL"/>
@@ -82,7 +82,7 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category: </h5>
+              <h5>Category </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
@@ -102,7 +102,7 @@
           {% if post['category'] == 'Athletics' %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Subcategory: </h5>
+                <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
@@ -121,7 +121,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Subcategory: </h5>
+                <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
@@ -139,7 +139,7 @@
           {% if post.startDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date: </h5>
+                <h5> Start Date </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post.startDate}} />
@@ -148,7 +148,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date: </h5>
+                <h5> Start Date </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
@@ -160,7 +160,7 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date: </h5>
+                <h5>End Date </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post.endDate}} />
@@ -169,7 +169,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date: </h5>
+                <h5> End Date </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
@@ -183,7 +183,7 @@
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location: </h5>
+                  <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
@@ -192,7 +192,7 @@
             {% else %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location: </h5>
+                  <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text"/>
@@ -204,7 +204,7 @@
           <!-- target audience -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Target Audience: </h5>
+              <h5>Target Audience </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
@@ -225,7 +225,7 @@
           {% if post.cost%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost: </h5>
+                <h5>Cost </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
@@ -234,7 +234,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost: </h5>
+                <h5>Cost </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost"/>
@@ -249,7 +249,7 @@
               {% if contact.firstName and contact.lastName %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
+                    <h5>Contact Person </h5>
                   </div>
                   <div class="col-sm-2">
                     <input class="form-control" type="text" value="{{contact.firstName}}" />
@@ -261,7 +261,7 @@
               {% elif contact.firstName %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
+                    <h5>Contact Person </h5>
                   </div>
                   <div class="col-sm-2">
                     <input class="form-control" type="text" value="{{contact.firstName}}" />
@@ -273,7 +273,7 @@
               {% elif contact.lastName %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
+                    <h5>Contact Person </h5>
                   </div>
                   <div class="col-sm-2">
                     <input class="form-control" type="text" />
@@ -285,7 +285,7 @@
               {% else %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
+                    <h5>Contact Person </h5>
                   </div>
                   <div class="col-sm-2">
                     <input class="form-control" type="text" />
@@ -299,7 +299,7 @@
               {% if contact.email %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Email: </h5>
+                    <h5>Contact Email </h5>
                   </div>
                   <div class="col-sm-9">
                     <input class="form-control" type="email" value={{contact.email}} />
@@ -308,7 +308,7 @@
               {% else %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Email: </h5>
+                    <h5>Contact Email </h5>
                   </div>
                   <div class="col-sm-9">
                     <input class="form-control" type="email"/>
@@ -319,7 +319,7 @@
               {% if contact.phone %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Phone: </h5>
+                    <h5>Contact Phone </h5>
                   </div>
                   <div class="col-sm-9">
                     <input class="form-control" type="text" value={{contact.phone}} />
@@ -328,7 +328,7 @@
               {% else %}
                 <div class="form-group row ">
                   <div class="col-12 col-sm-2">
-                    <h5>Contact Phone: </h5>
+                    <h5>Contact Phone </h5>
                   </div>
                   <div class="col-sm-9">
                     <input class="form-control" type="text"/>
@@ -345,7 +345,7 @@
           <!-- tags TODO-->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Tags: </h5>
+              <h5>Tags </h5>
             </div>
             <div class = "col-sm-9">
               <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>
@@ -356,7 +356,7 @@
           {% if post.sponsor%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sponsor: </h5>
+                <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" id="sponsor" name="sponsor" value="{{post.sponsor}}" />
@@ -365,7 +365,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sponsor: </h5>
+                <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" id="sponsor" name="sponsor"/>
@@ -377,7 +377,7 @@
           {% if post.description%}
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Description: </h5>
+              <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
                 <textarea name = "description" id="description" class="form-control" rows="12">{{post.description}}</textarea>
@@ -386,7 +386,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Description: </h5>
+                <h5>Description </h5>
               </div>
               <div class="col-12 col-sm-9">
                   <textarea name = "description" id="description" class="form-control" rows="12"></textarea>
