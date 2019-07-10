@@ -201,9 +201,13 @@
               <h5>Tags </h5>
             </div>
             <div class = "col-sm-9">
-            {% for tag in post.tags%}
-              <span>{{tag}}</span>
-            {% endfor%}
+              {%for i in range(post.tags | length)%}
+                {%if i == (post.tags | length) - 1 %}
+                  <span>{{post.tags[i]}}</span>
+                {%else %}
+                  <span>{{post.tags[i]}}, </span>
+                {% endif%}
+              {% endfor%}
             </div>
           </div>
         {% endif %}
