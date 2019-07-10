@@ -61,6 +61,8 @@ def user_an_event_edit(id):
                 post_by_id[key] = tags_list
             elif key == "targetAudience":
                 post_by_id[key] = request.form.getlist(key)
+            elif key == "location":
+                post_by_id['location']['description'] = request.form[key]
             else:
                 post_by_id[key] = request.form[key]
             # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description' 'targetAudience' 'tags'
