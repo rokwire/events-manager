@@ -70,4 +70,4 @@ subcategoriesMap = {
     ]
 }
 
-targetAudienceMap = ["faculty/staff", "students", "public", "alumni", "parents"]
+targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
