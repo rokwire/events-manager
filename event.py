@@ -10,7 +10,7 @@ from .auth import login_required
 
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
-from .utilities.constants import eventTypeMap
+from .utilities.constants import eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime
@@ -19,15 +19,10 @@ bp = Blueprint('event', __name__, url_prefix='/event')
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
-    session['eventTypeValues'] = eventTypeValues
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0)
+    return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0, eventTypeValues=eventTypeValues)
 
 @bp.route('/calendar/<calendarId>')
 def calendar(calendarId):
@@ -58,11 +53,6 @@ def calendar(calendarId):
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
-    print(eventTypeValues)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
                             select_status=select_status, calendarStatus=calendarStatus,
                             page=page, per_page=per_page, pagination=pagination, eventTypeValues=eventTypeValues)
@@ -148,11 +138,6 @@ def detail(eventId):
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
 def edit(eventId):
     post_by_id = get_event(eventId)
-    # create dic for eventType values - new category
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
     if request.method == 'POST':
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
@@ -188,10 +173,5 @@ def schedule():
 
 @bp.route('/searchresult', methods=['GET', 'POST'])
 def searchresult():
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
-
     events = []
     return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, posts=events)

@@ -48,11 +48,6 @@ def user_an_event(id):
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
-    # create dic for eventType values - new category
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
     if request.method == 'POST':
         # print(request.form)
         for key in request.form:
