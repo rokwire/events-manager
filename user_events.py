@@ -13,7 +13,7 @@ def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
     else:
-        select_status = []
+        select_status = ['pending']
         session['select_status'] = select_status
 
     if request.method == 'POST':
@@ -29,15 +29,24 @@ def user_events():
                 query_dic[key] = value
         posts = get_searched_user_events(query_dic, select_status)
     else:
-        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        try:
+            page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        except ValueError:
+            page = 1
         per_page = current_app.config['PER_PAGE']
         offset = (page - 1) * per_page
-        posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
         total = get_all_user_events_count(select_status)
+        if page <= 0 or offset >= total:
+            offset = 0
+            page = 1
+        posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-    return render_template("events/user-events.html", posts_dic = posts_dic, select_status=select_status, page=page, per_page=per_page, pagination=pagination)
+    return render_template("events/user-events.html", posts_dic = posts_dic, 
+                            select_status=select_status, page=page, 
+                            per_page=per_page, pagination=pagination, 
+                            isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
@@ -103,6 +112,8 @@ def select():
         select_status.append('disapproved')
     if request.form.get('published') == '1':
         select_status.append('published')
+    if request.form.get('pending') == '1':
+        select_status.append('pending')
 
     session["select_status"] = select_status
     return "", 200
