@@ -54,19 +54,22 @@ def user_an_event_edit(id):
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
     if request.method == 'POST':
-        # print(request.form)
         for key in request.form:
-            if key == "tags" or key == "targetAudience":
+            if key == "tags":
                 tags_val = request.form[key]
                 tags_list = tags_val.split(',')
-                print(tags_list)
                 post_by_id[key] = tags_list
+            elif key == "targetAudience":
+                print(request.form.getlist(key))
+                print("yeah")
+                post_by_id[key] = request.form.getlist(key)
             else:
                 post_by_id[key] = request.form[key]
-            # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
+            # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description' 'targetAudience' 'tags'
             # more parts editable TODO ....
         post_by_id['eventStatus'] = 'pending'
         delete_subcategory = None
+        #TODO delete audience
         if(post_by_id['category'] != "Athletics"):
             if('subcategory' in post_by_id):
                 del post_by_id['subcategory']
@@ -83,17 +86,16 @@ def user_an_event_edit(id):
             tags_text += post_by_id['tags'][i]
             if i!= len(post_by_id['tags']) - 1:
                 tags_text += ","
-
-    audience_text = ""
+    audience_dic = {}
     if 'targetAudience' in post_by_id:
-        for i in range(0,len(post_by_id['targetAudience'])):
-            audience_text += post_by_id['targetAudience'][i]
-            if i!= len(post_by_id['targetAudience']) - 1:
-                audience_text += ","
+        for audience in targetAudienceMap:
+            audience_dic[audience] = 0
+        for audience_select in post_by_id['targetAudience']:
+            audience_dic[audience_select] = 1
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap,
-     isUser=True, tags_text = tags_text, audience_text = audience_text)
+     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
+     isUser=True, tags_text = tags_text, audience_dic = audience_dic)
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):

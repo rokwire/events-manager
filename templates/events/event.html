@@ -143,8 +143,12 @@
               <h5>Target Audience: </h5>
             </div>
             <div class = "col-sm-9">
-            {%for audience in post.targetAudience%}
-              <span>{{audience}}</span>
+            {%for i in range(post.targetAudience | length)%}
+              {%if i == (post.targetAudience | length) - 1 %}
+                <span>{{post.targetAudience[i]}}</span>
+              {%else %}
+                <span>{{post.targetAudience[i]}}, </span>
+              {% endif%}
             {% endfor%}
             </div>
           </div>
@@ -198,7 +202,7 @@
             </div>
             <div class = "col-sm-9">
             {% for tag in post.tags%}
-              <span>{{tag}} |</span>
+              <span>{{tag}}</span>
             {% endfor%}
             </div>
           </div>

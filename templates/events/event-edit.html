@@ -202,13 +202,22 @@
           {% endif %}
 
           <!-- target audience -->
-          <!-- TODO -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Target Audience: </h5>
             </div>
-            <div class = "col-sm-9">
-              <input id="targetAudience" name="targetAudience" class="form-control" type="text" value="{{audience_text}}" />
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select multiple id="targetAudience" name="targetAudience" class="selectpicker" title="Audience">
+                  {% for key in targetAudienceMap %}
+                    {% if audience_dic[key] == 1 %}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                    {% else %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
             </div>
           </div>
 
