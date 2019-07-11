@@ -179,7 +179,6 @@
 
           <!-- location -->
           {% if post.location %}
-            <!-- description TODO CHANGE -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
@@ -343,22 +342,9 @@
           {% endif %}
 
           <!-- tags TODO-->
-<<<<<<< HEAD
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
-=======
-          {% if post.tags%}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Tags </h5>
-              </div>
-              <div class = "col-sm-2">
-              {% for tag in post.tags%}
-                  <input id="input-tags" class="form-control" type="text" value="{{tag}}" />
-              {% endfor%}
-              </div>
->>>>>>> b86b49809a61feecaca749edb70b20c37fa92dfc
             </div>
             <div class = "col-sm-9">
               <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>

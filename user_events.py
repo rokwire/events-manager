@@ -51,6 +51,18 @@ def user_events():
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
+        # transfer targetAudience into targetAudienceMap format
+    if ('targetAudience' in post):
+        targetAudience_origin_list = post['targetAudience']
+        targetAudience_edit_list = []
+        for item in targetAudience_origin_list:
+            if item == "faculty":
+                targetAudience_edit_list += ["Faculty/Staff"]
+            elif item == "staff":
+                pass
+            else:
+                targetAudience_edit_list += [item.capitalize()]
+        post['targetAudience'] = targetAudience_edit_list
     return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
                         isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
@@ -62,6 +74,20 @@ def user_an_event_edit(id):
     for key in eventTypeMap:
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
+
+    # transfer targetAudience into targetAudienceMap format
+    if ('targetAudience' in post_by_id):
+        targetAudience_origin_list = post_by_id['targetAudience']
+        targetAudience_edit_list = []
+        for item in targetAudience_origin_list:
+            if item == "faculty":
+                targetAudience_edit_list += ["Faculty/Staff"]
+            elif item == "staff":
+                pass
+            else:
+                targetAudience_edit_list += [item.capitalize()]
+        post_by_id['targetAudience'] = targetAudience_edit_list
+
     if request.method == 'POST':
         for key in request.form:
             if key == "tags":
@@ -69,7 +95,16 @@ def user_an_event_edit(id):
                 tags_list = tags_val.split(',')
                 post_by_id[key] = tags_list
             elif key == "targetAudience":
-                post_by_id[key] = request.form.getlist(key)
+                # edit data format into lowercase and separate faculty and staff
+                origin_list = request.form.getlist(key)
+                edit_list = []
+                for target in origin_list:
+                    if target == "Faculty/Staff":
+                        edit_list += ["faculty"]
+                        edit_list += ["staff"]
+                    else:
+                        edit_list += [target.lower()]
+                post_by_id[key] = edit_list
             elif key == "location":
                 post_by_id['location']['description'] = request.form[key]
             else:
@@ -92,6 +127,20 @@ def user_an_event_edit(id):
             delete_dictionary['targetAudience'] = 1
 
         update_user_event(id, post_by_id, delete_dictionary)
+
+        # after update in database, for display, change targetAudience format back
+        if ('targetAudience' in post_by_id):
+            targetAudience_origin_list = post_by_id['targetAudience']
+            targetAudience_edit_list = []
+            for item in targetAudience_origin_list:
+                if item == "faculty":
+                    targetAudience_edit_list += ["Faculty/Staff"]
+                elif item == "staff":
+                    pass
+                else:
+                    targetAudience_edit_list += [item.capitalize()]
+            post_by_id['targetAudience'] = targetAudience_edit_list
+
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     tags_text = ""
