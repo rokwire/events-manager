@@ -78,7 +78,8 @@ def user_an_event_edit(id):
             if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
                 delete_subcategory = {'subcategory': 1}
         update_user_event(id, post_by_id, delete_subcategory)
-        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True)
+        print(post_by_id)
+        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True,  apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, isUser=True)
 
