@@ -169,6 +169,55 @@ def edit(eventId):
             calendarName = dict[post_by_id['calendarId']]
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
 
+@bp.route('/searchresult', methods=['GET','POST'])
+def searchresult():
+    if 'select_status' in session:
+        select_status = session['select_status']
+    else:
+        select_status = ['pending']
+        session['select_status'] = select_status
+    per_page = current_app.config['PER_PAGE']
+
+    # if search condition is updated, get search 
+    # condition and store them into session
+    # also initial pagination information
+    if request.method == 'POST':
+        session['search'] = {}
+        eventId = request.form.get('form-eventId', None)
+        if eventId:
+            session['search']['eventId'] = eventId
+        category = request.form.get('category', None)
+        if category:
+            session['search']['category'] = category
+        offset = 0
+        page = 1
+
+    # if there is a an status or page change, it will 
+    # get last search condition and redo search with the changes
+    else:
+        if 'search' not in session:
+            session['search'] = {}
+        else:
+            if 'eventId' in session['search']:
+                eventId = session['search']['eventId']
+            if 'category' in session['category']:
+                category = session['search']['category']
+        try:
+            page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        except ValueError:
+            page = 1
+        offset = (page - 1) * per_page
+    
+    total = get_search_events_count(session['search'], select_status)
+    if offset >= total or page < 1:
+        page = 1
+        offset = 0 
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    events = get_search_events(session['search'], select_status, offset, per_page)
+    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, 
+                            posts=events, pagination=pagination, select_status=select_status
+    )
+
 @bp.route('/schedule', methods=('GET', 'POST'))
 def schedule():
     time = request.form['time']
