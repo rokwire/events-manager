@@ -173,10 +173,7 @@ def schedule():
 
 @bp.route('/searchresult')
 def searchresult():
-    # eventId = request.form['form-eventId']
-    # category = request.form['category']
     source = request.args.get('source')
     id = request.args.get('id')
-    print("search: {}, {}", source, id)
     events = []
     return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, posts=events, source=source, id=id)
