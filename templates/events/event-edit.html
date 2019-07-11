@@ -249,7 +249,7 @@
 
           <!-- contacts -->
           <!--  TODO -->
-          {% if post.contacts %}
+          <!-- {% if post.contacts %}
             {% for contact in post.contacts %}
               {% if contact.firstName and contact.lastName %}
                 <div class="form-group row ">
@@ -341,11 +341,59 @@
                 </div>
               {% endif %}
             {% endfor%}
-          <!-- if there is no contact currently TODO -->
           {% else %}
+          {% endif %} -->
 
 
-          {% endif %}
+          <!-- HIDDEN DYNAMIC ELEMENT TO CLONE -->
+<!-- you can replace it with any other elements -->
+<div class="form-group dynamic-element" style="display:none">
+  <div class="row">
+  <div class="col-md-2"></div>
+
+  <!-- Replace these fields -->
+  <div class="col-md-4">
+    <select id="profesor" name="profesor[]" class="form-control">
+      <option value="1">Profesor</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <select id="rol" name="rol[]" class="form-control">
+      <option>Rol</option>
+      <option value="1">Guia</option>
+      <option value="2">Co-Guia</option>
+      <option value="3">Presidente</option>
+      <option value="4">Invitado</option>
+    </select>
+  </div>
+    <!-- End of fields-->
+    <div class="col-md-1">
+      <p class="delete">x</p>
+    </div>
+  </div>
+</div>
+<!-- END OF HIDDEN ELEMENT -->
+
+
+
+  <legend class="title">Comisión</legend>
+
+  <div class="dynamic-stuff">
+    <!-- Dynamic element will be cloned here -->
+    <!-- You can call clone function once if you want it to show it a first element-->
+  </div>
+
+  <!-- Button -->
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12">
+          <p class="add-one">+ Añadir Profesor</p>
+      </div>
+    </div>
+  </div>
+
+
+
 
           <!-- tags TODO-->
           {% if post.tags%}
@@ -486,6 +534,21 @@
 
        myform.submit();
      };
+
+     //Clone the hidden element and shows it
+    $('.add-one').click(function(){
+      $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+      attach_delete();
+    });
+
+    //Attach functionality to delete buttons
+    function attach_delete(){
+      $('.delete').off();
+      $('.delete').click(function(){
+        console.log("click");
+        $(this).closest('.form-group').remove();
+      });
+    }
 
 
    </script>
