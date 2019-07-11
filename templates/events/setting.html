@@ -58,8 +58,8 @@
         </div>
 
         <div>
-          <span>Calendars will be updated daily. Update immediately
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">
+          <span>Calendars will be updated daily. Update immediately</span>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" id="defaultdownload">
             Download
             </button>
         </div>
@@ -102,7 +102,7 @@
       // close modal
       $('#confirmModal').modal('hide');
       
-      $('#download').attr('disabled', true);
+      $('#defaultdownload').attr('disabled', true);
       e.preventDefault();
       let results = [];
       let targets = $("input[type=checkbox]").each(function(index) {
@@ -122,10 +122,11 @@
         } else {
           alert("Internal Error happened");
         }
-        $('#download').attr('disabled', false);
+       
       }).fail(function() {
         alert("Internal Error happened");
-        $('#download').attr('disabled', false);
+      }).always(function() {
+        $('#defaultdownload').attr('disabled', false);
       })
     });
   </script>
