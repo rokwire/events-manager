@@ -344,60 +344,56 @@
           {% else %}
           {% endif %} -->
 
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <div class="col-sm-9">
+              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+            </div>
+          </div>
 
-          <!-- HIDDEN DYNAMIC ELEMENT TO CLONE -->
-<!-- you can replace it with any other elements -->
-<div class="form-group dynamic-element" style="display:none">
-  <div class="row">
-  <div class="col-md-2"></div>
+          <!-- HIDDEN DYNAMIC ELEMENT -->
+          <div class="contact-group dynamic-element" style="display:none">
+            <!-- contact fields : first&lastName + email + phone -->
+            <div class = "form-group row" >
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="firstName" name="firstName[]" type="text" placeholder="First Name" value="" />
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="lastName" name="lastName[]" type="text" placeholder="Last Name" value="" />
+              </div>
+            </div>
+            <div class = "form-group row" >
+              <!-- contact fields : first&lastName + email + phone -->
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email" value="" />
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" placeholder="Phone" value="" />
+              </div>
+              <!-- End of fields-->
+              <div class="col-md-1">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              </div>
+            </div>
+          </div>
+          <!-- END OF HIDDEN ELEMENT -->
 
-  <!-- Replace these fields -->
-  <div class="col-md-4">
-    <select id="profesor" name="profesor[]" class="form-control">
-      <option value="1">Profesor</option>
-    </select>
-  </div>
-  <div class="col-md-3">
-    <select id="rol" name="rol[]" class="form-control">
-      <option>Rol</option>
-      <option value="1">Guia</option>
-      <option value="2">Co-Guia</option>
-      <option value="3">Presidente</option>
-      <option value="4">Invitado</option>
-    </select>
-  </div>
-    <!-- End of fields-->
-    <div class="col-md-1">
-      <p class="delete">x</p>
-    </div>
-  </div>
-</div>
-<!-- END OF HIDDEN ELEMENT -->
+          <div class="dynamic-stuff">
+            <!-- existing stuff TODO -->
 
 
 
-  <legend class="title">Comisión</legend>
 
-  <div class="dynamic-stuff">
-    <!-- Dynamic element will be cloned here -->
-    <!-- You can call clone function once if you want it to show it a first element-->
-  </div>
 
-  <!-- Button -->
-  <div class="form-group">
-    <div class="row">
-      <div class="col-md-12">
-          <p class="add-one">+ Añadir Profesor</p>
-      </div>
-    </div>
-  </div>
-
+          </div>
 
 
 
           <!-- tags TODO-->
           {% if post.tags%}
-            <div class="form-group row ">
+            <div class="form-group row">
               <div class="col-12 col-sm-2">
                 <h5>Tags </h5>
               </div>
@@ -546,7 +542,7 @@
       $('.delete').off();
       $('.delete').click(function(){
         console.log("click");
-        $(this).closest('.form-group').remove();
+        $(this).closest('.contact-group').remove();
       });
     }
 
