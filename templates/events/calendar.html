@@ -15,7 +15,11 @@
   </ol>
 </nav>
 
-<h1 class="text-center">{{title}} <span class="badge badge-success">Approved</span></h1>
+<h1 class="text-center">{{title}}
+  {% if calendarStatus == "approved" %}
+  <span class="badge badge-success">Approved</span>
+  {% endif %}
+</h1>
 
 {% if calendarStatus == "approved" %}
 {{ confirmation("disapprove", title) }}
@@ -40,7 +44,7 @@
         <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
         <label class="form-check-label" for="materialInline1">Approved</label>
       </div>
-      <div class="col float left">
+      <div class="col float-left">
           <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline2">Disapproved</label>
       </div>
@@ -50,7 +54,7 @@
       </div>
     <!--  checkbox group -->
     <div class="col-7 float-right">
-      {{ searchbox(eventTypeValues) }}
+      {{ searchbox(eventTypeValues, "calendar", calendarId) }}
     </div>
 
   </div>

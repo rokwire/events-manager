@@ -10,7 +10,7 @@ from .auth import login_required
 
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
-from .utilities.constants import eventTypeValues
+from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime
@@ -56,11 +56,6 @@ def calendar(calendarId):
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
                             select_status=select_status, calendarStatus=calendarStatus,
                             page=page, per_page=per_page, pagination=pagination, eventTypeValues=eventTypeValues)
-
-@bp.route('/search')
-@login_required
-def search():
-   return render_template('events/search.html', sources=current_app.config['INT2SRC'])
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @login_required
@@ -109,13 +104,13 @@ def disapproveCalendar():
     disapprove_calendar_db(calendarId)
     return "success", 200
 
-@bp.route("/approveEvent/<id>")
+@bp.route("/approveEvent/<id>", methods=['GET', 'POST'])
 @login_required
 def approveEvent(id):
     approve_event(id)
     return "success", 200
 
-@bp.route("/disapproveEvent/<id>")
+@bp.route("/disapproveEvent/<id>", methods=['GET', 'POST'])
 @login_required
 def disapproveEvent(id):
     disapprove_event(id)
@@ -124,7 +119,6 @@ def disapproveEvent(id):
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)
-    # print("event: {}".format(event))
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
@@ -171,7 +165,12 @@ def schedule():
     print(time)
     return "success", 200
 
-@bp.route('/searchresult', methods=['GET', 'POST'])
+@bp.route('/searchresult')
 def searchresult():
+    # eventId = request.form['form-eventId']
+    # category = request.form['category']
+    source = request.args.get('source')
+    id = request.args.get('id')
+    print("search: {}, {}", source, id)
     events = []
-    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, posts=events)
+    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, posts=events, source=source, id=id)

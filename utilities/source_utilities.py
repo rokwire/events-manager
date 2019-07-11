@@ -23,26 +23,26 @@ def get_calendar_events(sourceId, calendarId, select_status):
 def get_calendar_events_count(sourceId, calendarId, select_status):
     if not select_status:
         select_status = ['pending']
-    return get_count(current_app.config['EVENT_COLLECTION'], 
+    return get_count(current_app.config['EVENT_COLLECTION'],
                      {"sourceId": sourceId ,
-                      "calendarId": calendarId, 
+                      "calendarId": calendarId,
                      "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
     if not select_status:
         select_status = ['pending']
-    
-    events = list(find_all(current_app.config['EVENT_COLLECTION'], 
+
+    events = list(find_all(current_app.config['EVENT_COLLECTION'],
                           filter={
                             "sourceId": sourceId,
-                            "calendarId": calendarId, 
+                            "calendarId": calendarId,
                             "eventStatus": {"$in": select_status}
                           }, skip=skip, limit=limit))
-    
+
     if events is None:
         return []
-    
+
     return events
 
 
@@ -80,7 +80,7 @@ def publish_event(id, image_upload_success):
 
             if image_upload_success:
                 event['imageURL'] = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
-            
+
             submit_type = event['submitType']
             del event['submitType']
 
@@ -98,16 +98,16 @@ def publish_event(id, image_upload_success):
 
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
-                return False 
+                return False
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
                     "$set": {"eventStatus": "published"}
                 })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
-                
+
                 return True
-                
+
 
     except Exception:
         traceback.print_exc()
@@ -133,28 +133,28 @@ def publish_image(id):
             response = requests.post(url, data=image.read(), headers=headers)
         elif submit_type == 'put':
             response = requests.put(url, data=image.read(), headers=headers)
-        
+
         image.close()
-        
+
 
         if response.status_code in (200, 201):
-            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
-                                      condition={'eventId': id}, 
-                                      update={"$set": { 'submitBefore': True, 
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": { 'submitBefore': True,
                                                         'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                 print("Update {} fails in update_user_event".format(id))
-        
+
             return True
 
         else:
-            updateResult = update_one(current_app.config['IMAGE_COLLECTION'], 
-                            condition={'eventId': id}, 
-                            update={"$set": { 'submitBefore': False, 
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                            condition={'eventId': id},
+                            update={"$set": { 'submitBefore': False,
                                               'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                 print("Update {} fails in update_user_event".format(id))
-            
+
             return False
 
     except Exception:
@@ -166,7 +166,7 @@ def publish_image(id):
             os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
 
     return True
-    
+
 def approve_event(id):
     print("{} is going to be approved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
@@ -185,6 +185,15 @@ def approve_event(id):
     if download_image_result:
         upload_image_result = publish_image(id)
     publish_event(id, upload_image_result)
+
+# disapprove a calendar event
+def disapprove_event(id):
+    print("{} is going to be disapproved".format(id))
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+        "$set": {"eventStatus":  "disapproved"}
+    })
+    if not result:
+        print("Disapprove event {} fails in disapprove_event".format(id))
 
 
 def get_event(objectId):
@@ -251,11 +260,3 @@ def update_calendars_status(update, allstatus):
             approve_calendar_db(calendarId)
         else: # disapprove
             disapprove_calendar_db(calendarId)
-
-# Find the approval status for one calendar event
-def get_calendar_event_status(id):
-    pass
-
-# disapprove a calendar event
-def disapprove_event(id):
-    pass
