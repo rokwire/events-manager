@@ -29,7 +29,7 @@ def calendar(calendarId):
     if 'select_status' in session:
         select_status = session['select_status']
     else:
-        select_status = []
+        select_status = ['pending']
         session['select_status'] = select_status
     # find source of current calendar
     sourceId = '0'
@@ -42,13 +42,17 @@ def calendar(calendarId):
                 sourceId = key
                 sourcetitle = source[0]
 
-    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    try:
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    except ValueError:
+        page = 1
     per_page = current_app.config['PER_PAGE']
+    offset = (page - 1) * per_page
     total = get_calendar_events_count(sourceId, calendarId, select_status)
-    events = []
-    if total != 0:
-        offset = (page - 1) * per_page
-        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    if offset >= total or page <= 0:
+        page = 1
+        offset = 0
+    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
@@ -86,6 +90,8 @@ def select(calendarId):
         select_status.append('disapproved')
     if request.form.get('published') == '1':
         select_status.append('published')
+    if request.form.get('pending') == '1':
+        select_status.append('pending')
 
     session["select_status"] = select_status
     return "", 200

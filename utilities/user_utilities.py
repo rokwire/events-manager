@@ -5,8 +5,6 @@ from bson.errors import InvalidId
 from ..db import find_all, find_one, update_one, find_distinct
 
 def get_all_user_events(select_status):
-    if not select_status:
-        select_status = ['pending']
 
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
@@ -26,8 +24,6 @@ def get_all_user_events(select_status):
     #                                                                 "eventStatus": {"$in": select_status}})
 
 def get_all_user_events_count(select_status):
-    if not select_status:
-        select_status = ['pending']
 
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
@@ -35,8 +31,6 @@ def get_all_user_events_count(select_status):
 
 
 def get_all_user_events_pagination(select_status, skip, limit):
-    if not select_status:
-        select_status = ['pending']
 
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
@@ -58,8 +52,7 @@ def get_all_user_events_pagination(select_status, skip, limit):
 
 # TODO get searched posts
 def get_searched_user_events(searchDic, select_status):
-    if not select_status:
-        select_status = ['pending']
+
     searchDic['sourceId'] = {"$exists": False}
     searchDic['eventStatus'] = {"$in": select_status}
     return list(find_all(current_app.config['EVENT_COLLECTION'], filter=searchDic))
