@@ -244,10 +244,34 @@ def update_calendars_status(update, allstatus):
         else: # disapprove
             disapprove_calendar_db(calendarId)
 
+# Get search events count
+def get_search_events_count(conditions, select_status):
+    if not conditions:
+        return 0
+    else:
+        conditions['eventStatus'] = {"$in": select_status}
+        return get_count(current_app.config['EVENT_COLLECTION'], 
+                         conditions) 
+
+
+# Search for events satisfying conditions
+def get_search_events(conditions, select_status, skip, limit):
+    if not conditions:
+        return []
+    else:
+        conditions['eventStatus'] = {"$in": select_status}
+        return find_all(current_app.config['EVENT_COLLECTION'], 
+                        filter=conditions)
+
 # Find the approval status for one calendar event
 def get_calendar_event_status(id):
     pass
 
 # disapprove a calendar event
 def disapprove_event(id):
-    pass
+    print("{} is going to be disapproved".format(id))
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+        "$set": {"eventStatus":  "disapproved"}
+    })
+    if not result:
+        print("Approve event {} fails in disapprove_event".format(id))
