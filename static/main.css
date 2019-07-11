@@ -98,12 +98,6 @@ main {
   margin: 0 auto;
 }
 
-
-/* #map {
-  height: 100%;
-  width: 100%;
-} */
-
 .map-container{
 overflow:hidden;
 padding-bottom:56.25%;

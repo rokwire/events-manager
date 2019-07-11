@@ -67,17 +67,17 @@
         {% if post.eventStatus%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Event Status: </h5>
+              <h5>Event Status </h5>
             </div>
             <p class="col-sm-9">
               {% if post.eventStatus == "approved" %}
-                <span class="badge badge-success">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "disapproved"%}
-                <span class="badge badge-danger">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "pending"%}
-                <span class="badge badge-warning">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
               {% else %}
-                <span class="badge badge-dark">{{ post.eventStatus }} </span>
+                <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
               {% endif %}
             </p>
 
@@ -88,7 +88,7 @@
         {% if post.titleURL%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Event URL: </h5>
+              <h5>Event URL </h5>
             </div>
             <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
           </div>
@@ -98,7 +98,7 @@
         {% if post.category %}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Category: </h5>
+              <h5>Category </h5>
             </div>
             <p class="col-sm-9">{{post.category}}</p>
           </div>
@@ -108,7 +108,7 @@
         {% if post.subcategory %}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Sub Category: </h5>
+              <h5>Sub Category </h5>
             </div>
             <p class="col-sm-9">{{post.subcategory}}</p>
           </div>
@@ -118,7 +118,7 @@
         {% if post.startDate%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Start Date: </h5>
+              <h5>Start Date </h5>
             </div>
             <p class="col-sm-9" id="startDate">
               {{post.startDate}}
@@ -130,7 +130,7 @@
         {% if post.endDate%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>End Date: </h5>
+              <h5>End Date </h5>
             </div>
             <p class="col-sm-9" id="endDate">{{ post.endDate}}</p>
           </div>
@@ -140,7 +140,7 @@
         {% if post.targetAudience %}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Target Audience: </h5>
+              <h5>Target Audience </h5>
             </div>
             <div class = "col-sm-9">
             {%for audience in post.targetAudience%}
@@ -154,7 +154,7 @@
         {% if post.cost%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Cost: </h5>
+              <h5>Cost </h5>
             </div>
             <p class="col-sm-9">{{ post.cost}}</p>
           </div>
@@ -166,7 +166,7 @@
             {% if contact.firstName and contact.lastName%}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Contact Person: </h5>
+                  <h5>Contact Person </h5>
                 </div>
                 <p class = "col-sm-9">{{contact.firstName}}&nbsp{{ contact.lastName}}</p>
               </div>
@@ -174,15 +174,15 @@
             {% if contact.email %}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Contact Email: </h5>
+                  <h5>Contact Email </h5>
                 </div>
-                <a href="mailto:{{contact.email}}" class = "col-sm-9"><span class="s1">{{contact.email}}</span></a>
+                <a href="mailto{{contact.email}}" class = "col-sm-9"><span class="s1">{{contact.email}}</span></a>
               </div>
             {% endif %}
             {% if contact.phone %}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Contact Phone: </h5>
+                  <h5>Contact Phone </h5>
                 </div>
                 <p class = "col-sm-9" >{{contact.phone}}</p>
               </div>
@@ -194,7 +194,7 @@
         {% if post.tags%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Tags: </h5>
+              <h5>Tags </h5>
             </div>
             <div class = "col-sm-9">
             {% for tag in post.tags%}
@@ -208,7 +208,7 @@
         {% if post.sponsor%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Sponsor: </h5>
+              <h5>Sponsor </h5>
             </div>
             <p class = "col-sm-9">{{post.sponsor}}</p>
           </div>
@@ -218,7 +218,7 @@
         {% if post.description%}
         <div class="row">
           <div class="col-12 col-sm-2">
-            <h5>Description: </h5>
+            <h5>Description </h5>
           </div>
           <div class="col-12 col-sm-9">
             {% autoescape false %}{{post.description}}{% endautoescape %}
@@ -232,7 +232,7 @@
             {% if post.location.description %}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Location: </h5>
+                  <h5>Location </h5>
                 </div>
                 <p class="col-12 col-sm-9">{{post.location.description}}</p>
               </div>
@@ -241,7 +241,7 @@
             {% if post.location.latitude %}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Latitude: </h5>
+                  <h5>Latitude </h5>
                 </div>
                 <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
               </div>
@@ -249,7 +249,7 @@
             {% if post.location.longitude %}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Longitude: </h5>
+                  <h5>Longitude </h5>
                 </div>
                 <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
               </div>
@@ -274,9 +274,9 @@
         </a> -->
         {% if isUser %}
           {% if post.eventStatus == "approved" %}
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approved</button>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
           {% else %}
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Approve</button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
           {% endif %}
         {% else %}
         <!-- <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a> -->
@@ -285,17 +285,17 @@
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
-        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
+        <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
         {% else %}
         <!-- <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.edit', eventId=post['_id']) }}" role="button">Edit</a> -->
         {% endif %}
       </div>
       {% if isUser %}
       <div class="btn-group mr-2" role="group" aria-label="Third group">
-        <a role="button" class="btn btn-block nav-link btn-outline-danger"
+        <span role="button" class="btn btn-block nav-link btn-dark"
           data-toggle="modal" data-html="true" data-target="#DeleteModal">
             Delete
-        </a>
+        </span>
       </div>
       {% endif %}
     </div>
@@ -319,7 +319,6 @@
           }
         {% endif %}
       {% endif %}
-
       window.onload = function() {
         var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
         var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
@@ -351,5 +350,6 @@
         <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
       {% endif %}
     {% endif %}
+
 
   {% endblock %}
