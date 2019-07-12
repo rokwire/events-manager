@@ -165,51 +165,31 @@
         {% endif %}
 
         <!-- contacts -->
-        <!-- TODO: display contacts layout changes -->
         {% if post.contacts%}
-          {% for contact in post.contacts %}
-            {% if contact.firstName and contact.lastName%}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Person </h5>
-                </div>
-                <p class = "col-sm-9">{{contact.firstName}}&nbsp{{ contact.lastName}}</p>
-              </div>
-            {% endif %}
-            {% if contact.email %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Email </h5>
-                </div>
-                <a href="mailto:{{contact.email}}" class ="col-sm-9"><span class="s1">{{contact.email}}</span></a>
-              </div>
-            {% endif %}
-            {% if contact.phone %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Phone </h5>
-                </div>
-                <p class = "col-sm-9" >{{contact.phone}}</p>
-              </div>
-            {% endif %}
-          {% endfor%}
-        {% endif %}
-
-        <!-- tags -->
-        {% if post.tags%}
           <div class="row">
             <div class="col-12 col-sm-2">
-              <h5>Tags </h5>
+              <h5>Contacts </h5>
             </div>
-            <div class = "col-sm-9">
-              {%for i in range(post.tags | length)%}
-                {%if i == (post.tags | length) - 1 %}
-                  <span>{{post.tags[i]}}</span>
-                {%else %}
-                  <span>{{post.tags[i]}}, </span>
-                {% endif%}
-              {% endfor%}
-            </div>
+            <table class="table table-hover col-sm-8">
+              <thead>
+                <tr>
+                  <th scope="col-sm-2">First</th>
+                  <th scope="col-sm-2">Last</th>
+                  <th scope="col-sm-2">Email</th>
+                  <th scope="col-sm-2">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contact in post.contacts %}
+                   <tr>
+                    <td>{{contact.firstName}}</td>
+                    <td>{{contact.lastName}}</td>
+                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
+                    <td>{{contact.phone}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         {% endif %}
 
