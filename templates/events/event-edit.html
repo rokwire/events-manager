@@ -179,14 +179,13 @@
 
           <!-- location -->
           {% if post.location %}
-            <!-- description TODO CHANGE -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
                   <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value= "{{post.location.description}}" />
+                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
                 </div>
               </div>
             {% else %}
@@ -195,36 +194,31 @@
                   <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text"/>
+                  <input id="location" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
           {% endif %}
 
           <!-- target audience -->
-          <!-- TODO -->
-          {% if post.targetAudience %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience </h5>
-              </div>
-              <div class = "col-sm-2">
-              {%for audience in post.targetAudience%}
-                <input class="form-control" type="text" value="{{audience}}" />
-              {% endfor%}
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Target Audience </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select multiple id="targetAudience" name="targetAudience" class="selectpicker" title="Audience">
+                  {% for key in targetAudienceMap %}
+                    {% if audience_dic[key] == 1 %}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                    {% else %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
               </div>
             </div>
-          <!-- if there is no target audience TODO -->
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience </h5>
-              </div>
-              <div class = "col-sm-2">
-              <input class="form-control" type="text"  />
-              </div>
-            </div>
-          {% endif %}
+          </div>
 
           <!-- cost -->
           {% if post.cost%}
@@ -392,18 +386,14 @@
 
 
           <!-- tags TODO-->
-          {% if post.tags%}
-            <div class="form-group row">
-              <div class="col-12 col-sm-2">
-                <h5>Tags </h5>
-              </div>
-              <div class = "col-sm-2">
-              {% for tag in post.tags%}
-                  <input id="input-tags" class="form-control" type="text" value="{{tag}}" />
-              {% endfor%}
-              </div>
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Tags </h5>
             </div>
-          {% endif %}
+            <div class = "col-sm-9">
+              <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>
+            </div>
+          </div>
 
           <!-- sponsor -->
           {% if post.sponsor%}
@@ -500,7 +490,7 @@
        }
      })
 
-     //change into local time
+     //change into local time && set targetAudience&tags value
      window.onload = function() {
        var start_utc = document.getElementById('startDate').value.replace("T", " ");
        console.log(start_utc);

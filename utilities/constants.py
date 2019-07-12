@@ -69,3 +69,5 @@ subcategoriesMap = {
         "Volleyball"
     ]
 }
+
+targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
