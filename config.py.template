@@ -359,9 +359,17 @@ class Config(object):
     CALENDAR_COLLECTION='calendars'
     WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
-    ROKWIRE_IMAGE_LINK_PREFIX='http://localhost:9000/events/image'
+
+    ROKWIRE_IMAGE_LINK_FORMAT='http://localhost:9000/events/{}/images/{}'
+
     IMAGE_COLLECTION='images'
     WEBTOOL_IMAGE_MOUNT_POINT='./images'
+
+    AWS_ACCESS_KEY_ID='...'
+    AWS_SECRET_ACCESS_KEY='...'
+    AWS_IMAGE_FOLDER_PREFIX="events"
+    BUCKET='rokwire-events-s3-images'
+    REGION='us-east-2'
 
     #Pagination Variables
     PER_PAGE = 4

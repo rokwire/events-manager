@@ -22,7 +22,7 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif find_one('user', condition={"username": username}) is not None:
+        elif find_one('user', condition={"username": username}):
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
@@ -42,7 +42,7 @@ def login():
         error = None
         user = find_one('user', condition={"username": username})
 
-        if user is None:
+        if not user:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password_hash'], password):
             error = 'Incorrect password.'
