@@ -43,9 +43,9 @@ def user_events():
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-    return render_template("events/user-events.html", posts_dic = posts_dic, 
-                            select_status=select_status, page=page, 
-                            per_page=per_page, pagination=pagination, 
+    return render_template("events/user-events.html", posts_dic = posts_dic,
+                            select_status=select_status, page=page,
+                            per_page=per_page, pagination=pagination,
                             isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
@@ -62,12 +62,49 @@ def user_an_event_edit(id):
     for key in eventTypeMap:
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
+    # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
+    # contacts editable TODO ....
     if request.method == 'POST':
-        # print(request.form)
+        # # delete all empty strings
+        # contact_list = list(filter(None, contact_list))
+        # first deal with contact array
+        contacts_arrays = []
         for key in request.form:
-            post_by_id[key] = request.form[key]
-            # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
-            # more parts editable TODO ....
+            if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
+                contact_list = request.form.getlist(key)
+                # remove the first empty string in array
+                if len(contact_list)!=0:
+                    contact_list = contact_list[1:]
+                    contacts_arrays += [contact_list]
+                # reasign to create contact objects
+        num_of_contacts = len(contacts_arrays[0])
+        contacts_dic = []
+        for i in range(num_of_contacts):
+            a_contact = {}
+            firstName = contacts_arrays[0][i]
+            lastName = contacts_arrays[1][i]
+            phone = contacts_arrays[2][i]
+            email = contacts_arrays[3][i]
+            if firstName!="":
+                a_contact['firstName'] = firstName
+            if lastName!="":
+                a_contact['lastName'] = lastName
+            if email!="":
+                a_contact['email'] = contacts_arrays[2][i]
+            if phone!="":
+                a_contact['phone'] = contacts_arrays[3][i]
+            if a_contact!={}:
+                contacts_dic.append(a_contact)
+        print(contacts_dic)
+
+        post_by_id['contacts'] = contacts_dic
+        print(post_by_id['contacts'])
+
+
+        for key in request.form:
+            if key != 'firstName[]' and key != 'lastName[]' and key != 'contactEmail[]' and key != 'contactPhone[]':
+                post_by_id[key] = request.form[key]
+
         post_by_id['eventStatus'] = 'pending'
         delete_subcategory = None
         if(post_by_id['category'] != "Athletics"):
@@ -78,7 +115,6 @@ def user_an_event_edit(id):
             if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
                 delete_subcategory = {'subcategory': 1}
         update_user_event(id, post_by_id, delete_subcategory)
-        print(post_by_id)
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True,  apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, isUser=True)
