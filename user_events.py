@@ -95,8 +95,8 @@ def user_an_event_edit(id):
         for key in request.form:
             if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
                 contact_list = request.form.getlist(key)
-                # remove the first empty string in array
                 if len(contact_list)!=0:
+                    # delete first group of empty string
                     contact_list = contact_list[1:]
                     contacts_arrays += [contact_list]
                 # reasign to create contact objects
@@ -106,20 +106,18 @@ def user_an_event_edit(id):
             a_contact = {}
             firstName = contacts_arrays[0][i]
             lastName = contacts_arrays[1][i]
-            phone = contacts_arrays[2][i]
-            email = contacts_arrays[3][i]
+            email = contacts_arrays[2][i]
+            phone = contacts_arrays[3][i]
             if firstName!="":
                 a_contact['firstName'] = firstName
             if lastName!="":
                 a_contact['lastName'] = lastName
             if email!="":
-                a_contact['email'] = contacts_arrays[2][i]
+                a_contact['email'] = email
             if phone!="":
-                a_contact['phone'] = contacts_arrays[3][i]
+                a_contact['phone'] = phone
             if a_contact!={}:
                 contacts_dic.append(a_contact)
-
-        print(contacts_dic)
         if contacts_dic!=[]:
             has_contacts_in_request = True
             post_by_id['contacts'] =  contacts_dic

@@ -242,102 +242,6 @@
           {% endif %}
 
           <!-- contacts -->
-          <!--  TODO -->
-          <!-- {% if post.contacts %}
-            {% for contact in post.contacts %}
-              {% if contact.firstName and contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% elif contact.firstName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% elif contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if contact.email %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email" value={{contact.email}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email"/>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if contact.phone %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value={{contact.phone}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text"/>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor%}
-          {% else %}
-          {% endif %} -->
-
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Contacts </h5>
@@ -364,7 +268,7 @@
                 <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone[]" type="tel" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -376,16 +280,51 @@
 
           <div class="dynamic-stuff">
             <!-- existing stuff TODO -->
-
-
-
-
-
+            {% if post.contacts %}
+              {% for contact in post.contacts %}
+              <div class="exist-contact contact-group">
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.firstName %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" value="{{contact.firstName}}"/>
+                    {% else %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.lastName %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name" value="{{contact.lastName}}"/>
+                    {% else %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.email %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email" value="{{contact.email}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.phone %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                    {% endif %}
+                  </div>
+                  <!-- End of fields-->
+                  <div class="col-md-1">
+                    <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
           </div>
 
-
-
-          <!-- tags TODO-->
+          <!-- tags -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
@@ -417,25 +356,15 @@
           {% endif %}
 
           <!-- description -->
-          {% if post.description%}
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea name = "description" id="description" class="form-control" rows="12">{{post.description}}</textarea>
+                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12">{% if post.longDescription %}{{post.longDescription}}{% endif %}</textarea>
             </div>
           </div>
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Description </h5>
-              </div>
-              <div class="col-12 col-sm-9">
-                  <textarea name = "description" id="description" class="form-control" rows="12"></textarea>
-              </div>
-            </div>
-          {% endif %}
+
         </div>
      </article>
 
@@ -521,21 +450,25 @@
        myform.submit();
      };
 
-     //Clone the hidden element and shows it
-    $('.add-one').click(function(){
-      $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
-      attach_delete();
-    });
+    //Clone the hidden element and shows it
+   $('.add-one').click(function(){
+     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+     attach_delete();
+   });
 
-    //Attach functionality to delete buttons
-    function attach_delete(){
-      $('.delete').off();
-      $('.delete').click(function(){
-        console.log("click");
-        $(this).closest('.contact-group').remove();
-      });
-    }
+   $('.exist-contact').ready(function(){
+     attach_delete();
+   });
 
+   //Attach functionality to delete buttons
+   function attach_delete(){
+     $('.delete').off();
+     $('.delete').click(function(){
+       console.log("click");
+       $(this).closest('.contact-group').remove();
+       $('form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
 
    </script>
 {% endblock %}

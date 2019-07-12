@@ -165,6 +165,7 @@
         {% endif %}
 
         <!-- contacts -->
+        <!-- TODO: display contacts layout changes -->
         {% if post.contacts%}
           {% for contact in post.contacts %}
             {% if contact.firstName and contact.lastName%}
@@ -222,14 +223,14 @@
           </div>
         {% endif %}
 
-        <!-- description -->
-        {% if post.description%}
+        <!-- description: longDescription -->
+        {% if post.longDescription%}
         <div class="row">
           <div class="col-12 col-sm-2">
             <h5>Description </h5>
           </div>
           <div class="col-12 col-sm-9">
-            {% autoescape false %}{{post.description}}{% endautoescape %}
+            {% autoescape false %}{{post.longDescription}}{% endautoescape %}
           </div>
         </div>
         {% endif %}
