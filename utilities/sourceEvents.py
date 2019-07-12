@@ -1,10 +1,11 @@
 import os
+import boto3
 from datetime import datetime, timedelta
 
 from ..db import update_one, find_one, insert_one
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
-from .source_utilities import get_all_calendar_status, publish_event, publish_image
+from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -307,7 +308,13 @@ def store(documents):
         # insert update error check
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
-        
+    
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=current_app.config['AWS_ACCESS_KEY_ID'],
+        aws_secret_access_key=current_app.config['AWS_SECRET_ACCESS_KEY'],
+        region_name=current_app.config['REGION']
+    )
     # upload approved or published events
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
@@ -320,14 +327,14 @@ def store(documents):
             if event_status == 'approved' or event_status == 'published':
                 # for image accessing here, we first attempt to download image and if there is indeed an 
                 # image in existence. We, then, try to upload the image. 
-                image_upload_success = False
+                imageId = None
                 if downloadImage(result['calendarId'], result['dataSourceEventId'], result['eventId']):
                     image_download += 1
-                    image_upload_success = publish_image(result['eventId'])
-                    if image_upload_success:
+                    imageId = s3_publish_image(result['eventId'], s3_client)
+                    if imageId:
                         image_upload += 1
 
-                event_upload_success = publish_event(result['eventId'], image_upload_success)
+                event_upload_success = publish_event(result['eventId'], imageId)
                 if event_upload_success:
                     if result['submitType'] == 'post':
                         post += 1
