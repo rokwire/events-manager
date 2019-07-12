@@ -269,5 +269,6 @@ def get_search_events(conditions, select_status, skip, limit):
         return []
     else:
         conditions['eventStatus'] = {"$in": select_status}
+        conditions['sourceId'] = {"$exists": True}
         return find_all(current_app.config['EVENT_COLLECTION'],
-                        filter=conditions)
+                        filter=conditions, skip=skip, limit=limit)

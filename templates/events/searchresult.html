@@ -12,20 +12,28 @@ role="button">Back</a>
 <h1 class="text-center">Search</h1>
 
 <div class="card card-body">
-  <form action="{{ url_for('event.searchresult') }}" method="post">
+  <form action="{{ url_for('event.searchresult') }}" method="get">
     <div class="form-group row">
       <label for="form-eventId" class="col-3 col-form-label">Event Id</label>
       <div class="col-3">
-        <input type="text" class="form-control" id="form-eventId" name="form-eventId">
+        <input type="text" class="form-control" id="form-eventId" name="form-eventId"
+        {% if eventId %}
+        value={{ eventId }}
+        {% endif %}
+        >
       </div>
     </div>
     <div class="form-group row ">
-      <div class="col-3">Category:</div>
+      <div class="col-3">Category</div>
       <div class="col">
         <div class="form-group">
           <select name="category" id = "category" class="selectpicker" title="Category..." >
             {% for key in eventTypeValues %}
-              <option value = "{{key}}" id = {{key}}>{{key}}</option>
+              <option value = "{{key}}" id = {{key}}
+              {% if category and category == key %}
+              selected=True
+              {% endif %}
+              >{{key}}</option>
             {% endfor %}
           </select>
         </div>
@@ -52,9 +60,13 @@ role="button">Back</a>
       <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
       <label class="form-check-label" for="materialInline2">Disapproved</label>
   </div>
-  <div class="form-check form-check-inline col-sm-3">
+  <div class="form-check form-check-inline">
       <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
       <label class="form-check-label" for="materialInline3">Published</label>
+  </div>
+  <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
+      <label class="form-check-label" for="materialInline4">Pending</label>
   </div>
 </div>
 
@@ -71,5 +83,12 @@ role="button">Back</a>
   {% endfor %}
 </div>
 
+<div class="d-flex justify-content-center">
+{{ pagination.links }}
+</div>
+{% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  {% include 'events/select_status.html' %}
 {% endblock %}

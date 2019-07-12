@@ -6,7 +6,7 @@
 </span>
 <div class="collapse" id="collapseExample">
   <div class="card card-body">
-    <form action="{{ url_for('event.searchresult') }}" method="get">
+    <form action="{{ url_for('event.searchresult') }}" method="get" id="searchform">
       <div class="form-group row">
         <label for="form-eventId" class="col-3 col-form-label">Event Id</label>
         <div class="col">
@@ -17,8 +17,7 @@
         <div class="col-3">Category</div>
         <div class="col">
           <div class="form-group">
-            <select name="category" id = "category" class="selectpicker" title="Category..." >
-              <option value="" id="emptySelect">Choose category</option>
+            <select name="category" id = "form-category" class="selectpicker" title="Category..." >
               {% for key in eventTypeValues %}
                 <option value = "{{key}}" id = {{key}}>{{key}}</option>
               {% endfor %}
@@ -34,4 +33,18 @@
     </form>
   </div>
 </div>
+
+<script>
+  window.onload = function() {
+    $('#searchform').on('submit', function(e) {
+      eventId = $('#form-eventId').val();
+      category = $('#form-category').val();
+      console.log(eventId+category);
+      if (eventId === '' && category === '') {
+        alert("At least one search field must not be empty");
+        e.preventDefault();
+      }
+    })
+  }
+</script>
 {% endmacro %}
