@@ -87,7 +87,6 @@ def user_an_event_edit(id):
                 targetAudience_edit_list += [item.capitalize()]
         post_by_id['targetAudience'] = targetAudience_edit_list
 
-    # contacts editable TODO
     if request.method == 'POST':
         # first deal with contact array -> add contacts field into request form
         contacts_arrays = []
