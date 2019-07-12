@@ -74,7 +74,6 @@ def user_an_event_edit(id):
     for key in eventTypeMap:
         value = eventTypeMap[key]
         eventTypeValues[value] = 0
-
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post_by_id):
         targetAudience_origin_list = post_by_id['targetAudience']
@@ -88,13 +87,11 @@ def user_an_event_edit(id):
                 targetAudience_edit_list += [item.capitalize()]
         post_by_id['targetAudience'] = targetAudience_edit_list
 
-    # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
-    # contacts editable TODO ....
+    # contacts editable TODO
     if request.method == 'POST':
-        # # delete all empty strings
-        # contact_list = list(filter(None, contact_list))
-        # first deal with contact array
+        # first deal with contact array -> add contacts field into request form
         contacts_arrays = []
+        has_contacts_in_request = False
         for key in request.form:
             if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
                 contact_list = request.form.getlist(key)
@@ -121,12 +118,13 @@ def user_an_event_edit(id):
                 a_contact['phone'] = contacts_arrays[3][i]
             if a_contact!={}:
                 contacts_dic.append(a_contact)
+
         print(contacts_dic)
+        if contacts_dic!=[]:
+            has_contacts_in_request = True
+            post_by_id['contacts'] =  contacts_dic
 
-        post_by_id['contacts'] = contacts_dic
-        print(post_by_id['contacts'])
-
-
+        # then edit all fields
         for key in request.form:
             if key != 'firstName[]' and key != 'lastName[]' and key != 'contactEmail[]' and key != 'contactPhone[]':
                 if key == "tags":
@@ -148,10 +146,13 @@ def user_an_event_edit(id):
                     post_by_id['location']['description'] = request.form[key]
                 else:
                     post_by_id[key] = request.form[key]
-        
+
+        #once edited the status is changed into "pending"
         post_by_id['eventStatus'] = 'pending'
+
+        #last deal with deleting fields
         delete_dictionary = {}
-        # delete subcategory
+        #delete subcategory
         if(post_by_id['category'] != "Athletics"):
             if('subcategory' in post_by_id):
                 del post_by_id['subcategory']
@@ -163,6 +164,10 @@ def user_an_event_edit(id):
         if ('targetAudience' in post_by_id and 'targetAudience' not in request.form):
             del post_by_id['targetAudience']
             delete_dictionary['targetAudience'] = 1
+        #delete contacts
+        if ('contacts' in post_by_id and (not has_contacts_in_request)):
+            del post_by_id['contacts']
+            delete_dictionary['contacts'] = 1
 
         update_user_event(id, post_by_id, delete_dictionary)
 
