@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Result{% endblock %}
+
+{% block content %}
+<a class="btn btn-primary"
+{% if source == "calendar" %}
+href="{{ url_for('event.calendar', calendarId=id) }}"
+{% elif source == "source" %}
+href="{{ url_for('event.source', sourceId=id) }}"
+{% endif %}
+role="button">Back</a>
+
+<h1 class="text-center">Search</h1>
+
+<div class="card card-body">
+  <form action="{{ url_for('event.searchresult') }}" method="get">
+    <div class="form-group row">
+      <label for="form-eventId" class="col-3 col-form-label">Event Id</label>
+      <div class="col-3">
+        <input type="text" class="form-control" id="form-eventId" name="form-eventId"
+        {% if eventId %}
+        value={{ eventId }}
+        {% endif %}
+        >
+      </div>
+    </div>
+    <div class="form-group row ">
+      <div class="col-3">Category</div>
+      <div class="col">
+        <div class="form-group">
+          <select name="category" id = "category" class="selectpicker" title="Category..." >
+            {% for key in eventTypeValues %}
+              <option value = "{{key}}" id = {{key}}
+              {% if category and category == key %}
+              selected=True
+              {% endif %}
+              >{{key}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <input type="hidden" name="source" value="{{source}}">
+      <input type="hidden" name="id" value="{{id}}">
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+
+<div class="row row-content mt-3 mb-3">
+  <div class="col-12 col-sm-1 order-sm-first">
+    <h4>Show</h4>
+  </div>
+  <!--  checkbox group -->
+  <div class="form-check form-check-inline">
+    <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
+    <label class="form-check-label" for="materialInline1">Approved</label>
+  </div>
+  <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
+      <label class="form-check-label" for="materialInline2">Disapproved</label>
+  </div>
+  <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
+      <label class="form-check-label" for="materialInline3">Published</label>
+  </div>
+  <div class="form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
+      <label class="form-check-label" for="materialInline4">Pending</label>
+  </div>
+</div>
+
+
+<div id = "accordion">
+  {% for post in posts %}
+    <div class="card">
+      <div class="card-header" role="tab" id = "head">
+        <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-left">
+          <h4 class="mb-0">{{ post.title }}</h4>
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="d-flex justify-content-center">
+{{ pagination.links }}
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% include 'events/select_status.html' %}
+{% endblock %}

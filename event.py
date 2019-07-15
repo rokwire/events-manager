@@ -10,7 +10,7 @@ from .auth import login_required
 
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
-from .utilities.constants import eventTypeMap
+from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime
@@ -19,11 +19,10 @@ bp = Blueprint('event', __name__, url_prefix='/event')
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
-    # page = request.args.get('page', 0, type=int)
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0)
+    return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0, eventTypeValues=eventTypeValues)
 
 @bp.route('/calendar/<calendarId>')
 def calendar(calendarId):
@@ -56,15 +55,11 @@ def calendar(calendarId):
     events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+
     calendarStatus = get_calendar_status(calendarId)
     return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
                             select_status=select_status, calendarStatus=calendarStatus,
-                            page=page, per_page=per_page, pagination=pagination, isUser=False)
-
-@bp.route('/search')
-@login_required
-def search():
-   return render_template('events/search.html', sources=current_app.config['INT2SRC'])
+                            pagination=pagination, eventTypeValues=eventTypeValues)
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @login_required
@@ -85,9 +80,9 @@ def download():
        start(targets)
     return json.dumps({'status': 'OK', 'data': 'complete'})
 
-@bp.route('/<calendarId>/select', methods=['POST'])
+@bp.route('/select', methods=['POST'])
 @login_required
-def select(calendarId):
+def select():
     select_status = []
     if request.form.get('approved') == '1':
         select_status.append('approved')
@@ -115,40 +110,34 @@ def disapproveCalendar():
     disapprove_calendar_db(calendarId)
     return "success", 200
 
-@bp.route("/source/<id>/approve")
+@bp.route("/approveEvent/<id>", methods=['GET', 'POST'])
 @login_required
 def approveEvent(id):
     approve_event(id)
-    return redirect(url_for("event.detail", eventId=id))
+    return "success", 200
 
-@bp.route("/source/<id>/disapprove")
+@bp.route("/disapproveEvent/<id>", methods=['GET', 'POST'])
 @login_required
 def disapproveEvent(id):
     disapprove_event(id)
-    return redirect(url_for("event.detail", eventId=id))
+    return "success", 200
 
 @bp.route('/detail/<eventId>')
 def detail(eventId):
     event = get_event(eventId)
-    # print("event: {}".format(event))
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName, 
+    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
 def edit(eventId):
     post_by_id = get_event(eventId)
-    # create dic for eventType values - new category
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
     if request.method == 'POST':
         # change the specific event
         post_by_id['titleURL'] = request.form['titleURL']
@@ -169,52 +158,40 @@ def edit(eventId):
             calendarName = dict[post_by_id['calendarId']]
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
 
-@bp.route('/searchresult', methods=['GET','POST'])
+@bp.route('/searchresult', methods=['GET'])
 def searchresult():
     if 'select_status' in session:
         select_status = session['select_status']
     else:
         select_status = ['pending']
         session['select_status'] = select_status
-    per_page = current_app.config['PER_PAGE']
 
-    # if search condition is updated, get search 
-    # condition and store them into session
-    # also initial pagination information
-    if request.method == 'POST':
-        session['search'] = {}
-        eventId = request.form.get('form-eventId', None)
-        if eventId:
-            session['search']['eventId'] = eventId
-        category = request.form.get('category', None)
-        if category:
-            session['search']['category'] = category
-        offset = 0
+    condition = {}
+    eventId = request.args.get('form-eventId', None)
+    if eventId:
+        condition['eventId'] = eventId
+    category = request.args.get('category', None)
+    if category:
+        condition['category'] = category
+
+    print(eventId, category)
+    try:
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    except ValueError:
         page = 1
+    per_page = current_app.config['PER_PAGE']
+    offset = (page - 1) * per_page
 
-    # if there is a an status or page change, it will 
-    # get last search condition and redo search with the changes
-    else:
-        if 'search' not in session:
-            session['search'] = {}
-        else:
-            if 'eventId' in session['search']:
-                eventId = session['search']['eventId']
-            if 'category' in session['category']:
-                category = session['search']['category']
-        try:
-            page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-        except ValueError:
-            page = 1
-        offset = (page - 1) * per_page
-    
-    total = get_search_events_count(session['search'], select_status)
+    total = get_search_events_count(condition, select_status)
     if offset >= total or page < 1:
         page = 1
-        offset = 0 
+        offset = 0
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    events = get_search_events(session['search'], select_status, offset, per_page)
-    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, 
+    events = get_search_events(condition, select_status, offset, per_page)
+    source = request.args.get('source')
+    id = request.args.get('id')
+    print("{},{},{}".format(page, per_page, offset))
+    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, source=source, id=id, eventId=eventId, category=category,
                             posts=events, pagination=pagination, select_status=select_status
     )
 
