@@ -6,6 +6,8 @@
 <a class="btn btn-primary"
 {% if source == "calendar" %}
 href="{{ url_for('event.calendar', calendarId=id) }}"
+{% elif source == "source" %}
+href="{{ url_for('event.source', sourceId=id) }}"
 {% endif %}
 role="button">Back</a>
 

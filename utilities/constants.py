@@ -22,7 +22,7 @@ tip4CalALoc = [
 ]
 
 
-# Mapping between webtool calendar event type to Rokwire event type
+# Mapping between webtool calendar event type to Rokwire categories
 eventTypeMap = {
     "Exhibition":               "Entertainment",
     "Festival/Celebration":     "Entertainment",
@@ -44,6 +44,7 @@ eventTypeMap = {
     "Other":                    "Other",
 }
 
+# Rokwire Categories
 eventTypeValues = [
     "Entertainment",
     "Academic",
