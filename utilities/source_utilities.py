@@ -1,14 +1,16 @@
 import os
 import json
+import boto3
 import datetime
 import requests
 import traceback
 
+from PIL import Image
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count
+from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one
 from .downloadImage import downloadImage
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
@@ -55,7 +57,7 @@ def disapprove_calendar_events(calendarId):
         print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
-def publish_event(id, image_upload_success):
+def publish_event(id, imageId):
     headers = {'Content-Type': 'application/json'}
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
@@ -70,8 +72,8 @@ def publish_event(id, image_upload_success):
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
 
-            if image_upload_success:
-                event['imageURL'] = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+            if imageId:
+                event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, imageId)
 
             submit_type = event['submitType']
             del event['submitType']
@@ -158,6 +160,52 @@ def publish_image(id):
             os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
 
     return True
+
+def s3_publish_image(id, client):
+
+    try:
+
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+        image_png_location = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+
+        # convert from png to jpg and save it
+        with Image.open(image_png_location) as im:
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+                                    quality=95)
+
+
+        # if there is no record before, insert it to get the id
+        if not record:
+            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                'eventId': id
+            })
+            if insertResult.inserted_id:
+                imageId = str(insertResult.inserted_id)
+            else:
+                return None
+        else:
+            imageId = str(record['_id'])
+
+
+        client.upload_file(
+            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+            current_app.config['BUCKET'],
+            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], id, imageId)
+        )
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image for event {} failed".format(id))
+        return None
+
+    finally:
+        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+    return imageId
 
 def approve_event(id):
     print("{} is going to be approved".format(id))
