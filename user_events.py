@@ -70,10 +70,10 @@ def user_an_event(id):
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
     # create dic for eventType values - new category
-    eventTypeValues = {}
-    for key in eventTypeMap:
-        value = eventTypeMap[key]
-        eventTypeValues[value] = 0
+    # eventTypeValues = {}
+    # for key in eventTypeMap:
+    #     value = eventTypeMap[key]
+    #     eventTypeValues[value] = 0
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post_by_id):
         targetAudience_origin_list = post_by_id['targetAudience']
