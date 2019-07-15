@@ -143,8 +143,12 @@
               <h5>Target Audience </h5>
             </div>
             <div class = "col-sm-9">
-            {%for audience in post.targetAudience%}
-              <span>{{audience}}</span>
+            {%for i in range(post.targetAudience | length)%}
+              {%if i == (post.targetAudience | length) - 1 %}
+                <span>{{post.targetAudience[i]}}</span>
+              {%else %}
+                <span>{{post.targetAudience[i]}}, </span>
+              {% endif%}
             {% endfor%}
             </div>
           </div>
@@ -162,32 +166,31 @@
 
         <!-- contacts -->
         {% if post.contacts%}
-          {% for contact in post.contacts %}
-            {% if contact.firstName and contact.lastName%}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Person </h5>
-                </div>
-                <p class = "col-sm-9">{{contact.firstName}}&nbsp{{ contact.lastName}}</p>
-              </div>
-            {% endif %}
-            {% if contact.email %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Email </h5>
-                </div>
-                <a href="mailto{{contact.email}}" class = "col-sm-9"><span class="s1">{{contact.email}}</span></a>
-              </div>
-            {% endif %}
-            {% if contact.phone %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Contact Phone </h5>
-                </div>
-                <p class = "col-sm-9" >{{contact.phone}}</p>
-              </div>
-            {% endif %}
-          {% endfor%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <table class="table table-hover col-sm-8">
+              <thead>
+                <tr>
+                  <th scope="col-sm-2">First</th>
+                  <th scope="col-sm-2">Last</th>
+                  <th scope="col-sm-2">Email</th>
+                  <th scope="col-sm-2">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contact in post.contacts %}
+                   <tr>
+                    <td>{{contact.firstName}}</td>
+                    <td>{{contact.lastName}}</td>
+                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
+                    <td>{{contact.phone}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         {% endif %}
 
         <!-- tags -->
@@ -197,9 +200,13 @@
               <h5>Tags </h5>
             </div>
             <div class = "col-sm-9">
-            {% for tag in post.tags%}
-              <p>{{tag}}</p>
-            {% endfor%}
+              {%for i in range(post.tags | length)%}
+                {%if i == (post.tags | length) - 1 %}
+                  <span>{{post.tags[i]}}</span>
+                {%else %}
+                  <span>{{post.tags[i]}}, </span>
+                {% endif%}
+              {% endfor%}
             </div>
           </div>
         {% endif %}
@@ -214,14 +221,14 @@
           </div>
         {% endif %}
 
-        <!-- description -->
-        {% if post.description%}
+        <!-- description: longDescription -->
+        {% if post.longDescription%}
         <div class="row">
           <div class="col-12 col-sm-2">
             <h5>Description </h5>
           </div>
           <div class="col-12 col-sm-9">
-            {% autoescape false %}{{post.description}}{% endautoescape %}
+            {% autoescape false %}{{post.longDescription}}{% endautoescape %}
           </div>
         </div>
         {% endif %}
