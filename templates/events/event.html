@@ -268,26 +268,15 @@
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
-        <!-- <a role="button" class="btn btn-block nav-link btn-outline-primary"
-          data-toggle="modal" data-html="true" data-target="#ApproveModal" href ="{{ url_for('user_events.user_an_event_approve', id=post['_id']) }}">
-          Approve
-        </a> -->
-        {% if isUser %}
-          {% if post.eventStatus == "approved" %}
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
-          {% else %}
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
-          {% endif %}
+        {% if post.eventStatus == "approved" %}
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
         {% else %}
-        <!-- <a id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}" role="button">Approve</a> -->
-        <button type="button" id = "approveButton" onclick="approve_and_disapprove()" class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.approveEvent', id=post['_id'] )}}">Approve</button>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
-        <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
-        {% else %}
-        <!-- <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('event.edit', eventId=post['_id']) }}" role="button">Edit</a> -->
+        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
         {% endif %}
       </div>
       {% if isUser %}
@@ -328,7 +317,12 @@
         document.getElementById('endDate').innerHTML = date_end.toLocaleString();
       }
       $("#approvebutton").click(function() {
-        $.post("{{ url_for('user_events.user_an_event_approve', id=post._id) }}",
+        {% if isUser %}
+        let url = "{{ url_for('user_events.user_an_event_approve', id=post._id) }}"
+        {% else %}
+        let url = "{{ url_for('event.approveEvent', id=post._id) }}"
+        {% endif %}
+        $.post(url,
         function(data) {
           if (data == "success") {
             location.reload();
@@ -336,7 +330,12 @@
         });
       });
       $("#disapprovebutton").click(function() {
-        $.post("{{ url_for('user_events.user_an_event_disapprove', id=post._id) }}",
+        {% if isUser %}
+        let url = "{{ url_for('user_events.user_an_event_disapprove', id=post._id) }}"
+        {% else %}
+        let url = "{{ url_for('event.disapproveEvent', id=post._id) }}"
+        {% endif %}
+        $.post(url,
         function(data) {
           if (data == "success") {
             location.reload();
