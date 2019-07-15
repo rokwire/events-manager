@@ -315,14 +315,14 @@
           }
         {% endif %}
       {% endif %}
-      window.onload = function() {
-        var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
-        var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
-        var date_start = new Date(start_utc+"Z");
-        document.getElementById('startDate').innerHTML = date_start.toLocaleString();
-        var date_end = new Date(end_utc+"Z");
-        document.getElementById('endDate').innerHTML = date_end.toLocaleString();
-      }
+
+      var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
+      var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
+      var date_start = new Date(start_utc+"Z");
+      document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+      var date_end = new Date(end_utc+"Z");
+      document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+
       $("#approvebutton").click(function() {
         {% if isUser %}
         let url = "{{ url_for('user_events.user_an_event_approve', id=post._id) }}"
