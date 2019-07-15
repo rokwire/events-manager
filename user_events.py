@@ -43,40 +43,162 @@ def user_events():
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-    return render_template("events/user-events.html", posts_dic = posts_dic, 
-                            select_status=select_status, page=page, 
-                            per_page=per_page, pagination=pagination, 
+    return render_template("events/user-events.html", posts_dic = posts_dic,
+                            select_status=select_status, page=page,
+                            per_page=per_page, pagination=pagination,
                             isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
+        # transfer targetAudience into targetAudienceMap format
+    if ('targetAudience' in post):
+        targetAudience_origin_list = post['targetAudience']
+        targetAudience_edit_list = []
+        for item in targetAudience_origin_list:
+            if item == "faculty":
+                targetAudience_edit_list += ["Faculty/Staff"]
+            elif item == "staff":
+                pass
+            else:
+                targetAudience_edit_list += [item.capitalize()]
+        post['targetAudience'] = targetAudience_edit_list
     return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
                         isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
+    # create dic for eventType values - new category
+    # eventTypeValues = {}
+    # for key in eventTypeMap:
+    #     value = eventTypeMap[key]
+    #     eventTypeValues[value] = 0
+    # transfer targetAudience into targetAudienceMap format
+    if ('targetAudience' in post_by_id):
+        targetAudience_origin_list = post_by_id['targetAudience']
+        targetAudience_edit_list = []
+        for item in targetAudience_origin_list:
+            if item == "faculty":
+                targetAudience_edit_list += ["Faculty/Staff"]
+            elif item == "staff":
+                pass
+            else:
+                targetAudience_edit_list += [item.capitalize()]
+        post_by_id['targetAudience'] = targetAudience_edit_list
+
     if request.method == 'POST':
-        # print(request.form)
+        # first deal with contact array -> add contacts field into request form
+        contacts_arrays = []
+        has_contacts_in_request = False
         for key in request.form:
-            post_by_id[key] = request.form[key]
-            # 'titleURL' 'category' 'subcategory' 'startDate' 'endDate' 'cost' 'sponsor' 'description'
-            # more parts editable TODO ....
+            if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
+                contact_list = request.form.getlist(key)
+                if len(contact_list)!=0:
+                    # delete first group of empty string
+                    contact_list = contact_list[1:]
+                    contacts_arrays += [contact_list]
+                # reasign to create contact objects
+        num_of_contacts = len(contacts_arrays[0])
+        contacts_dic = []
+        for i in range(num_of_contacts):
+            a_contact = {}
+            firstName = contacts_arrays[0][i]
+            lastName = contacts_arrays[1][i]
+            email = contacts_arrays[2][i]
+            phone = contacts_arrays[3][i]
+            if firstName!="":
+                a_contact['firstName'] = firstName
+            if lastName!="":
+                a_contact['lastName'] = lastName
+            if email!="":
+                a_contact['email'] = email
+            if phone!="":
+                a_contact['phone'] = phone
+            if a_contact!={}:
+                contacts_dic.append(a_contact)
+        if contacts_dic!=[]:
+            has_contacts_in_request = True
+            post_by_id['contacts'] =  contacts_dic
+
+        # then edit all fields
+        for key in request.form:
+            if key != 'firstName[]' and key != 'lastName[]' and key != 'contactEmail[]' and key != 'contactPhone[]':
+                if key == "tags":
+                    tags_val = request.form[key]
+                    tags_list = tags_val.split(',')
+                    post_by_id[key] = tags_list
+                elif key == "targetAudience":
+                    # edit data format into lowercase and separate faculty and staff
+                    origin_list = request.form.getlist(key)
+                    edit_list = []
+                    for target in origin_list:
+                        if target == "Faculty/Staff":
+                            edit_list += ["faculty"]
+                            edit_list += ["staff"]
+                        else:
+                            edit_list += [target.lower()]
+                    post_by_id[key] = edit_list
+                elif key == "location":
+                    post_by_id['location']['description'] = request.form[key]
+                else:
+                    post_by_id[key] = request.form[key]
+
+        #once edited the status is changed into "pending"
         post_by_id['eventStatus'] = 'pending'
-        delete_subcategory = None
+
+        #last deal with deleting fields
+        delete_dictionary = {}
+        #delete subcategory
         if(post_by_id['category'] != "Athletics"):
             if('subcategory' in post_by_id):
                 del post_by_id['subcategory']
-                delete_subcategory = {'subcategory': 1}
+                delete_dictionary['subcategory'] = 1
         else:
             if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
-                delete_subcategory = {'subcategory': 1}
-        update_user_event(id, post_by_id, delete_subcategory)
-        print(post_by_id)
-        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True,  apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+                delete_dictionary['subcategory'] = 1
+        #delete audience
+        if ('targetAudience' in post_by_id and 'targetAudience' not in request.form):
+            del post_by_id['targetAudience']
+            delete_dictionary['targetAudience'] = 1
+        #delete contacts
+        if ('contacts' in post_by_id and (not has_contacts_in_request)):
+            del post_by_id['contacts']
+            delete_dictionary['contacts'] = 1
 
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, isUser=True)
+        update_user_event(id, post_by_id, delete_dictionary)
+
+        # after update in database, for display, change targetAudience format back
+        if ('targetAudience' in post_by_id):
+            targetAudience_origin_list = post_by_id['targetAudience']
+            targetAudience_edit_list = []
+            for item in targetAudience_origin_list:
+                if item == "faculty":
+                    targetAudience_edit_list += ["Faculty/Staff"]
+                elif item == "staff":
+                    pass
+                else:
+                    targetAudience_edit_list += [item.capitalize()]
+            post_by_id['targetAudience'] = targetAudience_edit_list
+
+        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+
+    tags_text = ""
+    if 'tags' in post_by_id:
+        for i in range(0,len(post_by_id['tags'])):
+            tags_text += post_by_id['tags'][i]
+            if i!= len(post_by_id['tags']) - 1:
+                tags_text += ","
+    audience_dic = {}
+    if 'targetAudience' in post_by_id:
+        for audience in targetAudienceMap:
+            audience_dic[audience] = 0
+        for audience_select in post_by_id['targetAudience']:
+            audience_dic[audience_select] = 1
+
+    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
+     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
+     isUser=True, tags_text = tags_text, audience_dic = audience_dic)
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
