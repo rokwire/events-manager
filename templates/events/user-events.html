@@ -71,9 +71,9 @@
                     <a class="dropdown-item disabled">Request History</a>
                     <div class="dropdown-divider"></div>
                     {% for post_version in posts_dic[eventID]%}
-                      <a id="dataModified" class="dropdown-item dataModified" href="{{ url_for('user_events.user_an_event', id=post_version['_id']) }}">
-                          {{post_version.dataModified}}
-                        <!-- {% if post_version.eventStatus == "approved" %}
+                      <a class="dropdown-item" href="{{ url_for('user_events.user_an_event', id=post_version['_id']) }}">
+                        <span class="dataModified">{{post_version.dataModified}}</span>
+                        {% if post_version.eventStatus == "approved" %}
                           <span class="badge badge-pill badge-success">A</span>
                         {% elif post_version.eventStatus == "disapproved"%}
                           <span class="badge badge-pill badge-danger">D</span>
@@ -81,7 +81,7 @@
                           <span class="badge badge-pill badge-warning">P</span>
                         {% else %}
                           <span class="badge badge-pill badge-info">P</span>
-                        {% endif %} -->
+                        {% endif %}
                       </a>
 
                     {% endfor%}
@@ -103,13 +103,17 @@
   {% include 'events/select_status.html' %}
   <script>
     // var dataModified_utc = document.getElementById('dataModified').innerHTML.replace("T", " ");
-    // // var dataModified_local = new Date(dataModified_utc+"Z");
-    // document.getElementById('dataModified').innerHTML = dataModified_utc;
-    // // log.console(document.getElementById('dataModified').innerHTML);
+    // var dataModified_local = new Date(dataModified_utc+"Z");
+    // document.getElementById('dataModified').innerHTML = dataModified_local;
+    // $(".dataModified").html("Hello World");
+    $(".dataModified").ready(function(){
+      console.log("hi");
+      console.log($(".dataModified").text());
+      dataModified_utc = $(".dataModified").text().replace("T", " ");
+      console.log(dataModified_utc);
+      // dataModified_local = new Date(dataModified_utc+"Z");
+      // $(".dataModified").text(dataModified_local);
 
-
-    $('.dataModified').ready(function(){
-      console.log("click");
     });
   </script>
 
