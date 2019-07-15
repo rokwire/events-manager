@@ -179,14 +179,13 @@
 
           <!-- location -->
           {% if post.location %}
-            <!-- description TODO CHANGE -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
                   <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value= "{{post.location.description}}" />
+                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
                 </div>
               </div>
             {% else %}
@@ -195,36 +194,31 @@
                   <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text"/>
+                  <input id="location" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
           {% endif %}
 
           <!-- target audience -->
-          <!-- TODO -->
-          {% if post.targetAudience %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience </h5>
-              </div>
-              <div class = "col-sm-2">
-              {%for audience in post.targetAudience%}
-                <input class="form-control" type="text" value="{{audience}}" />
-              {% endfor%}
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Target Audience </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select multiple id="targetAudience" name="targetAudience" class="selectpicker" title="Audience">
+                  {% for key in targetAudienceMap %}
+                    {% if audience_dic[key] == 1 %}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                    {% else %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
               </div>
             </div>
-          <!-- if there is no target audience TODO -->
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience </h5>
-              </div>
-              <div class = "col-sm-2">
-              <input class="form-control" type="text"  />
-              </div>
-            </div>
-          {% endif %}
+          </div>
 
           <!-- cost -->
           {% if post.cost%}
@@ -248,118 +242,97 @@
           {% endif %}
 
           <!-- contacts -->
-          <!--  TODO -->
-          {% if post.contacts %}
-            {% for contact in post.contacts %}
-              {% if contact.firstName and contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% elif contact.firstName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% elif contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% endif %}
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <div class="col-sm-9">
+              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+            </div>
+          </div>
 
-              {% if contact.email %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email" value={{contact.email}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email"/>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if contact.phone %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value={{contact.phone}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text"/>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor%}
-          <!-- if there is no contact currently TODO -->
-          {% else %}
-
-
-          {% endif %}
-
-          <!-- tags TODO-->
-          {% if post.tags%}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Tags </h5>
+          <!-- HIDDEN DYNAMIC ELEMENT -->
+          <div class="contact-group dynamic-element" style="display:none">
+            <!-- contact fields : first&lastName + email + phone -->
+            <div class = "form-group row" >
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
-              <div class = "col-sm-2">
-              {% for tag in post.tags%}
-                  <input id="input-tags" class="form-control" type="text" value="{{tag}}" />
-              {% endfor%}
+              <div class="col-sm-3">
+                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
             </div>
-          {% endif %}
+            <div class = "form-group row" >
+              <!-- contact fields : first&lastName + email + phone -->
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+              </div>
+              <!-- End of fields-->
+              <div class="col-md-1">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              </div>
+            </div>
+          </div>
+          <!-- END OF HIDDEN ELEMENT -->
+
+          <div class="dynamic-stuff">
+            <!-- existing stuff-->
+            {% if post.contacts %}
+              {% for contact in post.contacts %}
+              <div class="exist-contact contact-group">
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.firstName %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" value="{{contact.firstName}}"/>
+                    {% else %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.lastName %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name" value="{{contact.lastName}}"/>
+                    {% else %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.email %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email" value="{{contact.email}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.phone %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                    {% endif %}
+                  </div>
+                  <!-- End of fields-->
+                  <div class="col-md-1">
+                    <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <!-- tags -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Tags </h5>
+            </div>
+            <div class = "col-sm-9">
+              <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>
+            </div>
+          </div>
 
           <!-- sponsor -->
           {% if post.sponsor%}
@@ -383,25 +356,15 @@
           {% endif %}
 
           <!-- description -->
-          {% if post.description%}
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea name = "description" id="description" class="form-control" rows="12">{{post.description}}</textarea>
+                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12">{% if post.longDescription %}{{post.longDescription}}{% endif %}</textarea>
             </div>
           </div>
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Description </h5>
-              </div>
-              <div class="col-12 col-sm-9">
-                  <textarea name = "description" id="description" class="form-control" rows="12"></textarea>
-              </div>
-            </div>
-          {% endif %}
+
         </div>
      </article>
 
@@ -431,6 +394,18 @@
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
    <script>
+      //change into local time before load
+      var start_utc = document.getElementById('startDate').value.replace("T", " ");
+      console.log(start_utc);
+      var stillUtc_start = moment.utc(start_utc).toDate();
+      var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+      console.log(start_local);
+      document.getElementById('startDate').value = start_local;
+
+      var end_utc = document.getElementById('endDate').value.replace("T", " ");
+      var stillUtc_end = moment.utc(end_utc).toDate();
+      var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      document.getElementById('endDate').value = end_local;
      //Set the save button disabled in default
      $('form')
          .each(function(){
@@ -456,23 +431,6 @@
        }
      })
 
-     //change into local time
-     window.onload = function() {
-       var start_utc = document.getElementById('startDate').value.replace("T", " ");
-       console.log(start_utc);
-       if(start_utc == null){return;}
-       var stillUtc_start = moment.utc(start_utc).toDate();
-       var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
-       console.log(start_local);
-       document.getElementById('startDate').value = start_local;
-
-       var end_utc = document.getElementById('endDate').value.replace("T", " ");
-       if(end_utc == null){return;}
-       var stillUtc_end = moment.utc(end_utc).toDate();
-       var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
-       document.getElementById('endDate').value = end_local;
-     }
-
      //change back to utc time on submit
      var myform = document.getElementById('form');
      myform.onsubmit = function(){
@@ -487,6 +445,25 @@
        myform.submit();
      };
 
+    //Clone the hidden element and shows it
+   $('.add-one').click(function(){
+     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+     attach_delete();
+   });
+
+   $('.exist-contact').ready(function(){
+     attach_delete();
+   });
+
+   //Attach functionality to delete buttons
+   function attach_delete(){
+     $('.delete').off();
+     $('.delete').click(function(){
+       console.log("click");
+       $(this).closest('.contact-group').remove();
+       $('form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
 
    </script>
 {% endblock %}
