@@ -16,6 +16,7 @@ class Config(object):
 
     # GOOGLE_KEY is used to access Google Geocoding service
     GOOGLE_KEY='...'
+    GOOGLE_MAP_VIEW_KEY='...'
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -354,13 +355,29 @@ class Config(object):
         '1': ('EMS', []),
     }
 
-    EVENT_BUILDING_BLOCK_URL='...'
+    EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
     CALENDAR_COLLECTION='calendars'
     WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
-    ROKWIRE_IMAGE_LINK_PREFIX=''
 
-    GOOGLE_MAP_VIEW_KEY='...'
-    
+    ROKWIRE_IMAGE_LINK_FORMAT='http://localhost:9000/events/{}/images/{}'
+
+    IMAGE_COLLECTION='images'
+    WEBTOOL_IMAGE_MOUNT_POINT='./images'
+
+    AWS_ACCESS_KEY_ID='...'
+    AWS_SECRET_ACCESS_KEY='...'
+    AWS_IMAGE_FOLDER_PREFIX="events"
+    BUCKET='rokwire-events-s3-images'
+    REGION='us-east-2'
+
     #Pagination Variables
     PER_PAGE = 4
+
+    LDAP_HOSTNAME=""
+    LDAP_GROUP=""
+    LDAP_BASE_DN=""
+    LDAP_USER_DN=""
+    LDAP_GROUP_DN=""
+    LDAP_OBJECTCLASS=""
+    LDAP_TRUST_ALL_CERTIFICATES=""
