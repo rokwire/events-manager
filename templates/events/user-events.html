@@ -54,9 +54,9 @@
           {% for eventID in posts_dic%}
             <div class="card">
               <div class="card-header" role="tab", id = "head">
-                <div class = "col-12">
+                <div class = "col-12 col-md-11">
                   <a href="{{ url_for('user_events.user_an_event', id=posts_dic[eventID][0]['_id']) }}" class="btn btn-default ml-auto float-left">
-                    <h4 class="mb-0" align = "left justify">{{ posts_dic[eventID][0].title }}</h4>
+                    <h4 class="mb-0" align = "left">{{ posts_dic[eventID][0].title }}</h4>
                   </a>
                 </div>
                 <div class = "col-12 dropdown">
@@ -75,22 +75,18 @@
                         {{post_version.title}}
                         {% if post_version.eventStatus == "approved" %}
                           <span class="badge badge-pill badge-success">
-                            <!-- {{ post_version.eventStatus }} -->
                             A
                           </span>
                         {% elif post_version.eventStatus == "disapproved"%}
                           <span class="badge badge-pill badge-danger">
-                            <!-- {{ post_version.eventStatus }} -->
                             D
                           </span>
                         {% elif post_version.eventStatus == "pending"%}
                           <span class="badge badge-pill badge-warning">
-                            <!-- {{ post_version.eventStatus }} -->
                             P
                           </span>
                         {% else %}
                           <span class="badge badge-pill badge-info">
-                            <!-- {{ post_version.eventStatus }} -->
                             P
                           </span>
                         {% endif %}
