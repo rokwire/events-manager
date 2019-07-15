@@ -397,14 +397,12 @@
       //change into local time before load
       var start_utc = document.getElementById('startDate').value.replace("T", " ");
       console.log(start_utc);
-      if(start_utc == null){return;}
       var stillUtc_start = moment.utc(start_utc).toDate();
       var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
       console.log(start_local);
       document.getElementById('startDate').value = start_local;
 
       var end_utc = document.getElementById('endDate').value.replace("T", " ");
-      if(end_utc == null){return;}
       var stillUtc_end = moment.utc(end_utc).toDate();
       var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
       document.getElementById('endDate').value = end_local;
