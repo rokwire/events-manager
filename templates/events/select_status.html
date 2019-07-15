@@ -8,7 +8,7 @@
             {% if isUser %}
             url: "{{ url_for('user_events.select') }}",
             {% else %}
-            url: "{{ url_for('event.select', calendarId=calendarId) }}",
+            url: "{{ url_for('event.select') }}",
             {% endif %}
             dataType: 'json',
             type    : 'POST',
