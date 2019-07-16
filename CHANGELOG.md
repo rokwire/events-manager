@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Added
+- dockerize events manager
 - source and calendar pages, `event` blueprint
 - user events page and user event subpage and `user_events` blueprint
 - user events templates
