@@ -29,3 +29,10 @@ The second one:
     - FLASK_APP=\_\_init\_\_.py
     - FLASK_ENV=development
     - FLASK_DEBUG=1
+
+## Run as Docker Container in Local
+```
+cd events-manager
+./docker.sh
+docker run --rm --name events -v $PWD/config.py:/app/events-manager/config.py -p 5000:5000 rokwire/events-manager
+```
