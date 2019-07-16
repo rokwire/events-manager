@@ -75,13 +75,20 @@
         $("#schedulebutton").click(function() {
             let time = $("#scheduletime").val()
             console.log("time:"+time)
+            let results = [];
+            let targets = $("input[type=checkbox]").each(function(index) {
+              if ($(this).prop('checked')) {
+                results.push($(this).attr('name'));
+              }
+            });
             $.post("{{ url_for('event.schedule') }}",
             {
-              "time": time
+              "time": time,
+              "targets": JSON.stringify(results)
             },
             function(data) {
               if (data == "success") {
-                console.log("schedule success");
+                alert("schedule success");
               }
             });
         })

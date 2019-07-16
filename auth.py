@@ -51,12 +51,18 @@ def login():
             session.clear()
             session['user_id'] = str(user['_id'])
             if 'source-login' in request.form:
+                session['mode'] = 'source'
                 return redirect(url_for('event.source', sourceId=0))
             if 'user-login' in request.form:
+                session['mode'] = 'user'
                 return redirect(url_for('user_events.user_events'))
 
         flash(error)
-
+    
+    if session.get('mode') == 'source':
+        return redirect(url_for('event.source', sourceId=0))
+    if session.get('mode') == 'user':
+        return redirect(url_for('user_events.user_events'))
     return render_template('auth/login.html')
 
 @bp.before_app_request
