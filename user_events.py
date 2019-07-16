@@ -198,7 +198,7 @@ def user_an_event_edit(id):
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
      eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
-     isUser=True, tags_text = tags_text, audience_dic = audience_dic)
+     isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
