@@ -4,6 +4,31 @@
   Edit - {{post.title}}
 {% endblock %}
 
+{% block styles %}
+  {{ super()}}
+  <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+{% endblock %}
+
+
 {% block modals %}
 <!-- the save Confirmation form -->
 <div id="SaveModal" class="modal fade" role="dialog">
@@ -177,8 +202,8 @@
             </div>
           {% endif %}
 
-          <!-- location -->
-          {% if post.location %}
+          <!-- location TODO-->
+          <!-- {% if post.location %}
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
@@ -198,9 +223,7 @@
                 </div>
               </div>
             {% endif %}
-          {% endif %}
-
-          <input type="text" id="autocomplete"/>
+          {% endif %} -->
 
           <!-- target audience -->
           <div class="form-group row ">
@@ -367,6 +390,20 @@
             </div>
           </div>
 
+          <!-- location map -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Location </h5>
+            </div>
+            <div class="col-12 col-sm-9">
+              <div id="floating-panel">
+                <input id="address" type="text" value="Sydney, NSW">
+                <input id="geocode" type="button" class="btn btn-dark btn-sm" value="Geocode">
+              </div>
+              <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
+            </div>
+          </div>
+
         </div>
      </article>
 
@@ -396,10 +433,7 @@
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
 
-
-   <!-- <script src="https://maps.googleapis.com/maps/api/js?key={{apiKey}}&libraries=places"></script> -->
-   <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
-   <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script>
+   <!-- <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script> -->
 
    <script>
       //change into local time before load
@@ -412,6 +446,36 @@
       var stillUtc_end = moment.utc(end_utc).toDate();
       var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
       document.getElementById('endDate').value = end_local;
+
+      //set up google map geocoding
+      function initMap() {
+         var map = new google.maps.Map(document.getElementById('map'), {
+           zoom: 8,
+           center: {lat: -34.397, lng: 150.644}
+         });
+         var geocoder = new google.maps.Geocoder();
+
+         document.getElementById('geocode').addEventListener('click', function() {
+           geocodeAddress(geocoder, map);
+         });
+       }
+
+       function geocodeAddress(geocoder, resultsMap) {
+         var address = document.getElementById('address').value;
+         geocoder.geocode({'address': address}, function(results, status) {
+           if (status === 'OK') {
+             resultsMap.setCenter(results[0].geometry.location);
+             var marker = new google.maps.Marker({
+               map: resultsMap,
+               position: results[0].geometry.location
+             });
+           } else {
+             alert('Geocode was not successful for the following reason: ' + status);
+           }
+         });
+       }
+
+
      //Set the save button disabled in default
      $('form')
          .each(function(){
@@ -470,18 +534,6 @@
        $('form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-
-   //set up google map geocoding
-   var geocoder = new google.maps.Geocoder();
-   var address = "new york";
-   // geocoder.geocode( { 'address': address}, function(results, status) {
-   //  if (status == google.maps.GeocoderStatus.OK) {
-   //    var latitude = results[0].geometry.location.lat();
-   //    var longitude = results[0].geometry.location.lng();
-   //    alert(latitude);
-   //  }
-   // });
-
-
    </script>
+   <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
