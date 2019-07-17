@@ -28,7 +28,7 @@ def login_db(username, password, error):
     flash(error)
     return False
 
-def login_ldap(username, password, error, isUser):
+def login_ldap(username, password, error):
     ldap_hostname = current_app.config['LDAP_HOSTNAME']
     ldap_client = ldap.initialize(ldap_hostname)
     ldap_client.set_option(ldap.OPT_REFERRALS, 0)
@@ -99,7 +99,12 @@ def login():
         password = request.form['password']
         error = None
 
-        if login_db(username, password, error):
+        if current_app.config['LDAP_ON']: # log in using LDAP
+            result = login_ldap(username, password, error)
+        else:
+            result = login_db(username, password, error)
+
+        if result: # log in successful
             if 'source-login' in request.form:
                 session['mode'] = 'source'
                 return redirect(url_for('event.source', sourceId=0))
