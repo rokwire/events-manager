@@ -64,11 +64,10 @@ def login_ldap(username, password, error, isUser):
         session.clear()
         session['user_id'] = user['id']
         session['admin'] = user['admin']
-        if isUser:
-            return redirect(url_for('user_events.user_events'))
-        else:
-            return redirect(url_for('event.source', sourceId=0))
+        return True
 
+    flash(error)
+    return False
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():

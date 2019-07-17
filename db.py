@@ -1,6 +1,6 @@
 import pymongo
 import traceback
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
 from flask import current_app,g
 
@@ -15,7 +15,7 @@ def get_db():
                     host=current_app.config['MONGO_HOST'],
                     port=current_app.config['MONGO_PORT'],
                 )
-            except ConnectionFailure:
+            except PyMongoError:
                 print("MongoDB connection failed.")
                 if 'dbclient' in g:
                     g.pop('dbclient', None)
@@ -48,7 +48,10 @@ def find_one(co_or_ta, condition=None, *args, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.find_one(filter=condition, *args, **kwargs)
+            result = collection.find_one(filter=condition, *args, **kwargs)
+            if not result:
+                return {}
+            return result
         except TypeError:
             print("Invalid arguments inserted using find_one")
             return {}
@@ -67,7 +70,10 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.find_one_and_update(condition, update, **kwargs)
+            result = collection.find_one_and_update(condition, update, **kwargs)
+            if not result:
+                return {}
+            return result
         except TypeError:
             print("Invalid arguments inserted using find_one_and_update")
             return {}
@@ -86,11 +92,15 @@ def find_all(co_or_ta, **kwarg):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.find(**kwarg)
+            result = collection.find(**kwarg)
+            if not result:
+                return []
+            return list(result)
         except TypeError:
             print("Invalid arguments inserted using find_all")
             return []
         except Exception:
+            print('work')
             traceback.print_exc()
             return []
 
@@ -105,7 +115,10 @@ def insert_one(co_or_ta, document=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.insert_one(document=document, **kwargs)
+            result = collection.insert_one(document=document, **kwargs)
+            if not result:
+                return InsertOneResult()
+            return result
         except Exception:
             traceback.print_exc()
             return InsertOneResult()
@@ -121,7 +134,10 @@ def update_one(co_or_ta, condition=None, update=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.update_one(condition, update, **kwargs)
+            result = collection.update_one(condition, update, **kwargs)
+            if not result:
+                return UpdateResult()
+            return result
         except Exception:
             traceback.print_exc()
             return UpdateResult()
@@ -136,7 +152,10 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.update_many(condition, update, **kwargs)
+            result = collection.update_many(condition, update, **kwargs)
+            if not result:
+                return UpdateResult()
+            return result
         except Exception:
             traceback.print_exc()
             return UpdateResult()
@@ -152,7 +171,30 @@ def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            return collection.distinct(key, filter=condition, **kwargs)
+            result = collection.distinct(key, filter=condition, **kwargs)
+            if not result:
+                return []
+            return list(result)
         except Exception:
             traceback.print_exc()
             return []
+
+def get_count(co_or_ta, filter, **kwargs):
+
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None:
+        return 0
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            result = collection.count_documents(filter, **kwargs)
+            if not result:
+                return 0
+            return result
+        except Exception:
+            traceback.print_exc()
+            return 0
+
