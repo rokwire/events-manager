@@ -8,6 +8,7 @@ from werkzeug.exceptions import abort
 
 from .auth import login_required
 
+from .scheduler import scheduler_add_job
 from .utilities.source_utilities import *
 from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap, eventTypeValues
@@ -195,15 +196,18 @@ def searchresult():
                             posts=events, pagination=pagination, select_status=select_status
     )
 
-@bp.route('/schedule', methods=('GET', 'POST'))
+@bp.route('/schedule', methods=['POST'])
 def schedule():
-    time = request.form['time']
+    time = request.form.get('time')
+    targets = json.loads(request.form.get('targets'))
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
     if time < present:
         time = present
         print("incorrect time")
+        return redirect('event.setting')
     # scheduler function
     print(time)
+    scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
