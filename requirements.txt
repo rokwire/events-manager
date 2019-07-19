@@ -4,7 +4,9 @@ Jinja2==2.10.1
 MarkupSafe==1.1.1
 pymongo==3.8.0
 Werkzeug==0.15.4
-googlemaps
+googlemaps==3.0.2
 flask_paginate
-boto3
-Pillow
+boto3==1.9.188
+Pillow==6.1.0
+gunicorn==19.9.0
+APScheduler==3.6.0
