@@ -1,4 +1,5 @@
 import traceback
+import requests
 from .utilities import source_utilities
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
@@ -87,9 +88,7 @@ def user_an_event_edit(id):
                 targetAudience_edit_list += [item.capitalize()]
         post_by_id['targetAudience'] = targetAudience_edit_list
 
-
     if request.method == 'POST':
-        print(request.form)
         # first deal with contact array -> add contacts field into request form
         contacts_arrays = []
         has_contacts_in_request = False
@@ -142,7 +141,22 @@ def user_an_event_edit(id):
                             edit_list += [target.lower()]
                     post_by_id[key] = edit_list
                 elif key == "location":
-                    post_by_id['location']['description'] = request.form[key]
+                    # post_by_id['location']['description'] = request.form[key]
+                    address = request.form[key]
+                    # geocode location address here
+                    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address={}".format(address)
+                    geocode_url = geocode_url + "&key={}".format(current_app.config['GOOGLE_KEY'])
+                    # Ping google for the reuslts:
+                    results = requests.get(geocode_url)
+                    # Results will be in JSON format - convert to dict using requests functionality
+                    results = results.json()
+                    if results!= None and len(results['results']) != 0 and results['status']=='OK':
+                        result = results['results'][0]
+                        print(result)
+                        #change description
+                        post_by_id['location']['description'] = result['formatted_address']
+                        post_by_id['location']['latitude'] = result['geometry']['location']['lat']
+                        post_by_id['location']['longitude'] = result['geometry']['location']['lng']
                 else:
                     post_by_id[key] = request.form[key]
 

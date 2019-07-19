@@ -40,7 +40,6 @@
          <button type="button" class="close" data-dismiss="modal">&times;</button>
      </div>
      <div class="modal-body">
-
          <!-- table form here -->
          <div class="form-group row">
              <label class="col-12 col-form-label"><center>You are about to save your edition the following event: </center></label>
@@ -52,7 +51,6 @@
              <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
              <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
          </div>
-
        </div>
      </div>
    </div>
@@ -202,8 +200,8 @@
             </div>
           {% endif %}
 
-          <!-- location TODO-->
-          <!-- {% if post.location %}
+          <!-- location -->
+          {% if post.location %}
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
@@ -223,7 +221,7 @@
                 </div>
               </div>
             {% endif %}
-          {% endif %} -->
+          {% endif %}
 
           <!-- target audience -->
           <div class="form-group row ">
@@ -390,19 +388,23 @@
             </div>
           </div>
 
-          <!-- location map -->
-          <div class="form-group row ">
+          <!-- location map TODO no api key allow currently -->
+          <!-- <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Location </h5>
             </div>
             <div class="col-12 col-sm-9">
               <div id="floating-panel">
-                <input id="address" type="text" value="Sydney, NSW">
+                {% if post.location and post.location.description %}
+                  <input id="address" type="text" value="{{post.location.description}}">
+                {% else %}
+                  <input id="address" type="text" value="University of Illinois at Urbana-Champaign, Champaign, IL">
+                {% endif %}
                 <input id="geocode" type="button" class="btn btn-dark btn-sm" value="Geocode">
               </div>
               <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
             </div>
-          </div>
+          </div> -->
 
         </div>
      </article>
@@ -425,6 +427,7 @@
    </div>
   </div>
 </form>
+
 {% endblock %}
 
 <!-- js script for select list in form -->
@@ -448,10 +451,15 @@
       document.getElementById('endDate').value = end_local;
 
       //set up google map geocoding
+      //set the default position as center of uiuc
       function initMap() {
          var map = new google.maps.Map(document.getElementById('map'), {
-           zoom: 8,
-           center: {lat: -34.397, lng: 150.644}
+           zoom: 17,
+           {% if post.location and post.location.latitude and post.location.longitude %}
+              center: {lat: {{post.location.latitude}}, lng: {{post.location.longitude}}}
+           {% else %}
+              center: {lat: 40.1019523, lng: -88.2293555}
+           {% endif %}
          });
          var geocoder = new google.maps.Geocoder();
 
@@ -475,9 +483,8 @@
          });
        }
 
-
      //Set the save button disabled in default
-     $('form')
+     $('#form')
          .each(function(){
              $(this).data('serialized', $(this).serialize())
          })
@@ -511,8 +518,6 @@
        var end_local = document.getElementById('endDate').value.replace("T", " ");
        var end_utc = new Date(end_local).toISOString();
        document.getElementById('endDate').value = end_utc.replace("Z", "");
-
-       myform.submit();
      };
 
     //Clone the hidden element and shows it
@@ -531,7 +536,7 @@
      $('.delete').click(function(){
        console.log("click");
        $(this).closest('.contact-group').remove();
-       $('form').find('input:submit, button:submit').prop("disabled", false);
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
    </script>
