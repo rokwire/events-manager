@@ -373,3 +373,12 @@ class Config(object):
 
     #Pagination Variables
     PER_PAGE = 4
+
+    LDAP_ON=True
+    LDAP_HOSTNAME=""
+    LDAP_GROUP=""
+    LDAP_BASE_DN=""
+    LDAP_USER_DN=""
+    LDAP_GROUP_DN=""
+    LDAP_OBJECTCLASS=""
+    LDAP_TRUST_ALL_CERTIFICATES=""
