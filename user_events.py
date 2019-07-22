@@ -1,4 +1,5 @@
 import traceback
+import requests
 from .utilities import source_utilities
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
@@ -51,7 +52,7 @@ def user_events():
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
-        # transfer targetAudience into targetAudienceMap format
+    # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post):
         targetAudience_origin_list = post['targetAudience']
         targetAudience_edit_list = []
@@ -69,11 +70,6 @@ def user_an_event(id):
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
-    # create dic for eventType values - new category
-    # eventTypeValues = {}
-    # for key in eventTypeMap:
-    #     value = eventTypeMap[key]
-    #     eventTypeValues[value] = 0
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post_by_id):
         targetAudience_origin_list = post_by_id['targetAudience']
@@ -140,7 +136,22 @@ def user_an_event_edit(id):
                             edit_list += [target.lower()]
                     post_by_id[key] = edit_list
                 elif key == "location":
-                    post_by_id['location']['description'] = request.form[key]
+                    # post_by_id['location']['description'] = request.form[key]
+                    address = request.form[key]
+                    # geocode location address here
+                    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address={}".format(address)
+                    geocode_url = geocode_url + "&key={}".format(current_app.config['GOOGLE_KEY'])
+                    # Ping google for the reuslts:
+                    results = requests.get(geocode_url)
+                    # Results will be in JSON format - convert to dict using requests functionality
+                    results = results.json()
+                    if results!= None and len(results['results']) != 0 and results['status']=='OK':
+                        result = results['results'][0]
+                        print(result)
+                        #change description
+                        post_by_id['location']['description'] = result['formatted_address']
+                        post_by_id['location']['latitude'] = result['geometry']['location']['lat']
+                        post_by_id['location']['longitude'] = result['geometry']['location']['lng']
                 else:
                     post_by_id[key] = request.form[key]
 
@@ -161,6 +172,10 @@ def user_an_event_edit(id):
         if ('targetAudience' in post_by_id and 'targetAudience' not in request.form):
             del post_by_id['targetAudience']
             delete_dictionary['targetAudience'] = 1
+        #delete tags
+        if ('tags' in post_by_id and ('tags' not in request.form or request.form['tags'] == "")):
+            del post_by_id['tags']
+            delete_dictionary['tags'] = 1
         #delete contacts
         if ('contacts' in post_by_id and (not has_contacts_in_request)):
             del post_by_id['contacts']
@@ -198,7 +213,8 @@ def user_an_event_edit(id):
 
     return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
      eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
-     isUser=True, tags_text = tags_text, audience_dic = audience_dic)
+     isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
@@ -235,3 +251,10 @@ def select():
 
     session["select_status"] = select_status
     return "", 200
+
+@userbp.route('/event/add', methods=['GET', 'POST'])
+def add_new_event():
+    new_post = {}
+
+    return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
+     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)

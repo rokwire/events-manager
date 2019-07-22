@@ -45,15 +45,12 @@ eventTypeMap = {
 }
 
 # Rokwire Categories
-eventTypeValues = [
-    "Entertainment",
-    "Academic",
-    "Community",
-    "Career Development",
-    "Recreation",
-    "Athletics",
-    "Other"
-]
+# create dic for eventType values - new category
+eventTypeValues = {}
+for key in eventTypeMap:
+    value = eventTypeMap[key]
+    eventTypeValues[value] = 0
+eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
