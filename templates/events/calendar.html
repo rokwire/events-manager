@@ -16,9 +16,9 @@
 </nav>
 
 <h1 class="text-center">{{title}}
-  {% if calendarStatus == "approved" %}
+  <!-- {% if calendarStatus == "approved" %}
   <span class="badge badge-success">Approved</span>
-  {% endif %}
+  {% endif %} -->
 </h1>
 
 {% if calendarStatus == "approved" %}
@@ -31,28 +31,28 @@
   <div class="row mt-3 mb-3">
     <div class="col text-center">
       {% if calendarStatus == "approved" %}
-      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
+      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove All Events In Calendar</button>
       {% else %}
-      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve All Events In Calendar</button>
       {% endif %}
     </div>
   </div>
 
   <div class="row row-content mt-3 mb-3">
-      <div class="col-1 float-left"><h4>Show</h4></div>
-      <div class="col float-left">
+      <div class="form-check form-check-inline"><h4>Show</h4></div>
+      <div class="form-check form-check-inline">
         <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
         <label class="form-check-label" for="materialInline1">Approved</label>
       </div>
-      <div class="col float-left">
+      <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline2">Disapproved</label>
       </div>
-      <div class="col float-left">
+      <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline3">Published</label>
       </div>
-      <div class="col float-left">
+      <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline4">Pending</label>
       </div>
@@ -71,7 +71,7 @@
         <div class="card-header" role="tab" id = "head">
         <h3 class="mb-0">
             <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-left">
-              <h4 class="mb-0">{{ post.title }}</h4>
+              <h4 class="mb-0" align = "left">{{ post.title }}</h4>
             </a>
         </h3>
 
