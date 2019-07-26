@@ -58,7 +58,10 @@ def disapprove_calendar_events(calendarId):
 
 
 def publish_event(id, imageId):
-    headers = {'Content-Type': 'application/json'}
+    headers = {
+        'Content-Type': 'application/json',
+        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+    }
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
@@ -109,7 +112,10 @@ def publish_event(id, imageId):
 
 
 def publish_image(id):
-    headers = {'Content-Type': 'image/png'}
+    headers = {
+        'Content-Type': 'image/png', 
+        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+    }
     try:
 
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
