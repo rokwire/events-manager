@@ -9,4 +9,4 @@ WORKDIR /app
 COPY . /app/events-manager/
 RUN pip install -r /app/events-manager/requirements.txt
 
-CMD ["gunicorn", "events-manager:create_app()", "--config", "/app/events-manager/gunicorn.config.py"]
+CMD ["gunicorn", "events-manager:create_app()", "--config", "/app/events-manager/gunicorn.config.py", "--timeout", "7200"]
