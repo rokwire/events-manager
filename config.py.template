@@ -1,4 +1,3 @@
-
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
@@ -15,12 +14,14 @@ class Config(object):
     SECRET_KEY='dev'
 
     # GOOGLE_KEY is used to access Google Geocoding service
+    # GOOGLE_MAP_VIEW_KEY is used to access Google Maps View service
     GOOGLE_KEY='...'
     GOOGLE_MAP_VIEW_KEY='...'
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
-
+    
+    # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
     EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
     EVENT_URL_SUFFIX='.xml'
 
@@ -355,16 +356,26 @@ class Config(object):
         '1': ('EMS', []),
     }
 
+    # EVENT_BUILDING_BLOCK_URL defines the target URL that we submit parsed events to
     EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
+
+    # CALENDAR_COLLECTION defines a collection location for storing webtool calendar metadata
     CALENDAR_COLLECTION='calendars'
+
+    # WEBTOOL_IMAGE_LINK_* are used for composing the image url that is associated with an event
     WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
 
+    # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
     ROKWIRE_IMAGE_LINK_FORMAT='http://localhost:9000/events/{}/images/{}'
 
+    # IMAGE_COLLECTION defines a collection location for storing image metadata
     IMAGE_COLLECTION='images'
+
+    # WEBTOOL_IMAGE_MOUNT_POINT defines a image location for temporarily storing downloaded image
     WEBTOOL_IMAGE_MOUNT_POINT='./images'
 
+    # Following five variables are information that is required by Amazon S3 for building connection
     AWS_ACCESS_KEY_ID='...'
     AWS_SECRET_ACCESS_KEY='...'
     AWS_IMAGE_FOLDER_PREFIX="events"
@@ -377,6 +388,7 @@ class Config(object):
     #Pagination Variables
     PER_PAGE = 4
 
+    # LDAP_* are used in NCSA or UIUC LDAP system for authentication access
     LDAP_ON=True
     LDAP_HOSTNAME=""
     LDAP_GROUP=""
@@ -386,5 +398,9 @@ class Config(object):
     LDAP_OBJECTCLASS=""
     LDAP_TRUST_ALL_CERTIFICATES=""
 
+    # ADMINS defines a list usernames that serve as administrators
+    ADMINS=[]
+
+    # SCHEDULER_* defines hours and mins for scheduler to run on daily base crawling
     SCHEDULER_HOUR=''
     SCHEDULER_MINS=''
