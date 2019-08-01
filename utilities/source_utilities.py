@@ -45,16 +45,12 @@ def approve_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
         "$set": {"eventStatus": "approved"}
     })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 # Disapprove events from a calendar
 def disapprove_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
         "$set": {"eventStatus": "disapproved"}
     })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
 def publish_event(id, imageId):
@@ -268,8 +264,6 @@ def approve_calendar_db(calendarId):
                               update={
                                   "$set": {"status": "approved"}
                               }, upsert=True)
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
     approve_calendar_events(calendarId)
 
 # Disapprove a calendar and relevant events
@@ -278,8 +272,6 @@ def disapprove_calendar_db(calendarId):
                               update={
                                   "$set": {"status": "disapproved"}
                               }, upsert=True)
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
     disapprove_calendar_events(calendarId)
 
 # Find the approval status for one calendar
