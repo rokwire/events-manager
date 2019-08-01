@@ -4,6 +4,31 @@
   Edit - {{post.title}}
 {% endblock %}
 
+{% block styles %}
+  {{ super()}}
+  <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+{% endblock %}
+
+
 {% block modals %}
 <!-- the save Confirmation form -->
 <div id="SaveModal" class="modal fade" role="dialog">
@@ -15,7 +40,6 @@
          <button type="button" class="close" data-dismiss="modal">&times;</button>
      </div>
      <div class="modal-body">
-       <form>
          <!-- table form here -->
          <div class="form-group row">
              <label class="col-12 col-form-label"><center>You are about to save your edition the following event: </center></label>
@@ -27,7 +51,6 @@
              <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
              <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
          </div>
-        </form>
        </div>
      </div>
    </div>
@@ -41,7 +64,7 @@
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
   <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To All Events</a>
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
   {% else %}
   <form id = "form" action = "{{url_for('event.edit', eventId=post['_id'])}}" method="POST">
@@ -56,67 +79,81 @@
   <!-- form inputs -->
      <article class="media content-section">
        <div class="media-body">
-          <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
+          <h2><a class="article-title">{{ post.title }}</a></h2>
           <hr class="divider"/>
           <!-- event url -->
           {% if post.titleURL%}
             <div class="form-group row ">
               <label class="col-12 col-sm-2 form-control-label">
-                <h5>Event URL: </h5>
+                <h5>Event URL </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" name="titleURL" value="{{post.titleURL}}" />
+                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" />
               </div>
             </div>
           {% else %}
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event URL: </h5>
+              <h5>Event URL </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
             </div>
           </div>
           {% endif %}
 
           <!-- event category -->
-          <!-- update TODO -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category: </h5>
+              <h5>Category </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select id = "selectlist" class="selectpicker" title="Event Type..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." >
                   {% for key in eventTypeValues %}
-                    {% if post.category == key %}
-                      <option id = {{key}} selected = true>{{key}}</option>
+                    {% if post.category == key%}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
                     {% else %}
-                      <option id = {{key}}>{{key}}</option>
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
               </div>
             </div>
           </div>
-
           <!-- subcategory -->
-          {% if post.subcategory %}
+          {% if post['category'] == 'Athletics' %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
+                <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="subcategory" value="{{post.subcategory}}" />
+                <div class="form-group">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory">
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      {% if post.subcategory == key%}
+                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                      {% else %}
+                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sub Category: </h5>
+                <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="subcategory"/>
+                <div class="form-group">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                    {% for key in subcategoriesMap['Athletics'] %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
           {% endif %}
@@ -125,19 +162,19 @@
           {% if post.startDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date: </h5>
+                <h5> Start Date </h5>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" value={{post.startDate}} />
+              <div class="col-sm-4">
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post.startDate}} />
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date: </h5>
+                <h5> Start Date </h5>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="startDate" />
+              <div class="col-sm-4">
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
               </div>
             </div>
           {% endif %}
@@ -146,68 +183,71 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date: </h5>
+                <h5>End Date </h5>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="endDate" value={{post.endDate}} />
+              <div class="col-sm-4">
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post.endDate}} />
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date: </h5>
+                <h5> End Date </h5>
               </div>
-              <div class="col-sm-9">
-                <input class="form-control" type="datetime-local" name="endDate"/>
+              <div class="col-sm-4">
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
               </div>
             </div>
           {% endif %}
 
           <!-- location -->
           {% if post.location %}
-            <!-- description -->
             {% if post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location: </h5>
+                  <h5>Location </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input class="form-control" type="text" value= "{{post.location.description}}" />
+                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
+                </div>
+              </div>
+            {% else %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5>Location </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input id="location" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
           {% endif %}
 
           <!-- target audience -->
-          <!-- TODO -->
-          {% if post.targetAudience %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience: </h5>
-              </div>
-              <div class = "col-sm-2">
-              {%for audience in post.targetAudience%}
-                <input class="form-control" type="text" value="{{audience}}" />
-              {% endfor%}
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Target Audience </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select multiple id="targetAudience" name="targetAudience" class="selectpicker" title="Audience">
+                  {% for key in targetAudienceMap %}
+                    {% if audience_dic[key] == 1 %}
+                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                    {% else %}
+                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
               </div>
             </div>
-          <!-- if there is no target audience TODO -->
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Target Audience: </h5>
-              </div>
-              <div class = "col-sm-2">
-              <input class="form-control" type="text"  />
-              </div>
-            </div>
-          {% endif %}
+          </div>
 
           <!-- cost -->
           {% if post.cost%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost: </h5>
+                <h5>Cost </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
@@ -216,7 +256,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost: </h5>
+                <h5>Cost </h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost"/>
@@ -225,161 +265,147 @@
           {% endif %}
 
           <!-- contacts -->
-          <!--  TODO -->
-          {% if post.contacts %}
-            {% for contact in post.contacts %}
-              {% if contact.firstName and contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% elif contact.firstName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.firstName}}" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% elif contact.lastName %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" value="{{contact.lastName}}" />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Person: </h5>
-                  </div>
-                  <div class="col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                  <div class="col-offset-6 col-sm-2">
-                    <input class="form-control" type="text" />
-                  </div>
-                </div>
-              {% endif %}
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <div class="col-sm-9">
+              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+            </div>
+          </div>
 
-              {% if contact.email %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email: </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email" value={{contact.email}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Email: </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="email"/>
-                  </div>
-                </div>
-              {% endif %}
-
-              {% if contact.phone %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone: </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text" value={{contact.phone}} />
-                  </div>
-                </div>
-              {% else %}
-                <div class="form-group row ">
-                  <div class="col-12 col-sm-2">
-                    <h5>Contact Phone: </h5>
-                  </div>
-                  <div class="col-sm-9">
-                    <input class="form-control" type="text"/>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor%}
-          <!-- if there is no contact currently TODO -->
-          {% else %}
-
-
-          {% endif %}
-
-          <!-- tags TODO-->
-          {% if post.tags%}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Tags: </h5>
+          <!-- HIDDEN DYNAMIC ELEMENT -->
+          <div class="contact-group dynamic-element" style="display:none">
+            <!-- contact fields : first&lastName + email + phone -->
+            <div class = "form-group row" >
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
-              <div class = "col-sm-2">
-              {% for tag in post.tags%}
-                  <input class="form-control" type="text" value="{{tag}}" />
-              {% endfor%}
+              <div class="col-sm-3">
+                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
             </div>
-          {% endif %}
+            <div class = "form-group row" >
+              <!-- contact fields : first&lastName + email + phone -->
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+              </div>
+              <!-- End of fields-->
+              <div class="col-md-1">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              </div>
+            </div>
+          </div>
+          <!-- END OF HIDDEN ELEMENT -->
+
+          <div class="dynamic-stuff">
+            <!-- existing stuff-->
+            {% if post.contacts %}
+              {% for contact in post.contacts %}
+              <div class="exist-contact contact-group">
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.firstName %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" value="{{contact.firstName}}"/>
+                    {% else %}
+                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.lastName %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name" value="{{contact.lastName}}"/>
+                    {% else %}
+                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class = "form-group row" >
+                  <div class="col-sm-3 offset-sm-2">
+                    {% if contact.email %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email" value="{{contact.email}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.phone %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                    {% else %}
+                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                    {% endif %}
+                  </div>
+                  <!-- End of fields-->
+                  <div class="col-md-1">
+                    <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <!-- tags -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Tags </h5>
+            </div>
+            <div class = "col-sm-9">
+              <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>
+            </div>
+          </div>
 
           <!-- sponsor -->
           {% if post.sponsor%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sponsor: </h5>
+                <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="sponsor" value="{{post.sponsor}}" />
+                <input class="form-control" type="text" id="sponsor" name="sponsor" value="{{post.sponsor}}" />
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Sponsor: </h5>
+                <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="sponsor"/>
+                <input class="form-control" type="text" id="sponsor" name="sponsor"/>
               </div>
             </div>
           {% endif %}
 
           <!-- description -->
-          <!-- TODO -->
-          {% if post.description%}
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Description: </h5>
+              <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea class="form-control" rows="12">{{post.description}}</textarea>
+                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12">{% if post.longDescription %}{{post.longDescription}}{% endif %}</textarea>
             </div>
           </div>
-          {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Description: </h5>
-              </div>
-              <div class="col-12 col-sm-9">
-                  <textarea id="description" class="form-control" rows="12"></textarea>
-              </div>
+
+          <!-- location map TODO no api key allow currently -->
+          <!-- <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Location </h5>
             </div>
-          {% endif %}
+            <div class="col-12 col-sm-9">
+              <div id="floating-panel">
+                {% if post.location and post.location.description %}
+                  <input id="address" type="text" value="{{post.location.description}}">
+                {% else %}
+                  <input id="address" type="text" value="University of Illinois at Urbana-Champaign, Champaign, IL">
+                {% endif %}
+                <input id="geocode" type="button" class="btn btn-dark btn-sm" value="Geocode">
+              </div>
+              <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
+            </div>
+          </div> -->
+
         </div>
      </article>
 
@@ -395,16 +421,124 @@
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
        <!-- discard the modal use js to alarm Confirmation later -->
-       <!-- <a class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</a> -->
-       <button class="btn btn-block nav-link btn-primary" role="submit" >Save</button>
+       <!-- <span class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</span> -->
+       <button id="submit-data" class="btn btn-block nav-link btn-primary" type="submit" >Save</button>
      </div>
    </div>
   </div>
 </form>
+
 {% endblock %}
 
 <!-- js script for select list in form -->
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+   <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
+   <!-- <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script> -->
+
+   <script>
+      //change into local time before load
+      var start_utc = document.getElementById('startDate').value.replace("T", " ");
+      var stillUtc_start = moment.utc(start_utc).toDate();
+      var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+      document.getElementById('startDate').value = start_local;
+
+      var end_utc = document.getElementById('endDate').value.replace("T", " ");
+      var stillUtc_end = moment.utc(end_utc).toDate();
+      var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      document.getElementById('endDate').value = end_local;
+
+      //set up google map geocoding
+      //set the default position as center of uiuc
+      function initMap() {
+         var map = new google.maps.Map(document.getElementById('map'), {
+           zoom: 17,
+           {% if post.location and post.location.latitude and post.location.longitude %}
+              center: {lat: {{post.location.latitude}}, lng: {{post.location.longitude}}}
+           {% else %}
+              center: {lat: 40.1019523, lng: -88.2293555}
+           {% endif %}
+         });
+         var geocoder = new google.maps.Geocoder();
+
+         document.getElementById('geocode').addEventListener('click', function() {
+           geocodeAddress(geocoder, map);
+         });
+       }
+
+       function geocodeAddress(geocoder, resultsMap) {
+         var address = document.getElementById('address').value;
+         geocoder.geocode({'address': address}, function(results, status) {
+           if (status === 'OK') {
+             resultsMap.setCenter(results[0].geometry.location);
+             var marker = new google.maps.Marker({
+               map: resultsMap,
+               position: results[0].geometry.location
+             });
+           } else {
+             alert('Geocode was not successful for the following reason: ' + status);
+           }
+         });
+       }
+
+     //Set the save button disabled in default
+     $('#form')
+         .each(function(){
+             $(this).data('serialized', $(this).serialize())
+         })
+         .on('change input', function(){
+             $(this)
+                 .find('input:submit, button:submit')
+                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
+             ;
+          })
+         .find('input:submit, button:submit')
+             .prop('disabled', true)
+     ;
+     //only allow subcategory to be choose when the category is Athletics
+     $('#form select[name="category"]').on("change", function(event) {
+       if(event.target.value != "Athletics"){
+         $('#subcategory').prop("disabled", true);
+         $('#subcategory').selectpicker('refresh');
+       }else{
+         $('#subcategory').prop("disabled", false);
+         $('#subcategory').selectpicker('refresh');
+       }
+     })
+
+     //change back to utc time on submit
+     var myform = document.getElementById('form');
+     myform.onsubmit = function(){
+       var start_local = document.getElementById('startDate').value.replace("T", " ");
+       var start_utc = new Date(start_local).toISOString();
+       document.getElementById('startDate').value = start_utc.replace("Z", "");
+
+       var end_local = document.getElementById('endDate').value.replace("T", " ");
+       var end_utc = new Date(end_local).toISOString();
+       document.getElementById('endDate').value = end_utc.replace("Z", "");
+     };
+
+    //Clone the hidden element and shows it
+   $('.add-one').click(function(){
+     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+     attach_delete();
+   });
+
+   $('.exist-contact').ready(function(){
+     attach_delete();
+   });
+
+   //Attach functionality to delete buttons
+   function attach_delete(){
+     $('.delete').off();
+     $('.delete').click(function(){
+       console.log("click");
+       $(this).closest('.contact-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+   </script>
+   <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}

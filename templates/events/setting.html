@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% from 'events/confirmation.html' import confirmation %}
+
 {% block title %}Setting{% endblock %}
 
 {% block content %}
@@ -8,6 +10,8 @@
     <li class="breadcrumb-item active" aria-current="page">Setting</li>
   </ol>
 </nav>
+
+{{ confirmation("download") }}
 
 <div class="row">
   <div class="col-2">
@@ -21,9 +25,10 @@
   <div class="col">
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
-
         <form action="{{ url_for('event.setting') }}" method="POST">
           <h2>Calendar approval status</h2>
+          <button type="button" class="btn btn-primary" id="selectallbutton">Select all</button>
+          <button type="button" class="btn btn-primary" id="clearallbutton">Clear all</button>
           {% for sourceid, sourceval in sources.items() %}
             <h4>{{sourceval[0]}}</h4>
             {% for item in sourceval[1] %}
@@ -46,14 +51,91 @@
         </form>
 
         <h2>Daily time configuration</h2>
-        <span>Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM.</span>
-        <button type="button" class="btn btn-primary">Configure now</button>
+        <div>
+            <label for="scheduletime">Approved events from these calendars will be crawled, parsed, and scheduled to Rokwire everyday at 11:00 PM. Schedule to another time:</label>
+            <input type="time" id="scheduletime" name="scheduletime" value="23:00" required>
+          <button type="button" class="btn btn-primary" id="schedulebutton">Schedule</button>
+        </div>
 
-        <span>Calendars will be updated daily. Update immediately
-        <a class="btn btn-primary" href="{{url_for('event.download')}}" role="button">Download</a>
-
+        <div>
+          <span>Calendars will be updated daily. Update immediately</span>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal" id="defaultdownload">
+            Download
+            </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script type="text/javascript">
+        $("#schedulebutton").click(function() {
+            let time = $("#scheduletime").val()
+            console.log("time:"+time)
+            let results = [];
+            let targets = $("input[type=checkbox]").each(function(index) {
+              if ($(this).prop('checked')) {
+                results.push($(this).attr('name'));
+              }
+            });
+            $.post("{{ url_for('event.schedule') }}",
+            {
+              "time": time,
+              "targets": JSON.stringify(results)
+            },
+            function(data) {
+              if (data == "success") {
+                alert("schedule success");
+              }
+            });
+        })
+        $("#selectallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', true);
+          })
+        })
+        $("#clearallbutton").click(function() {
+          $("input[type=checkbox]").each(function(index) {
+            console.log(index)
+            $(this).prop('checked', false);
+          })
+        })
+
+    $("#download").on('click', function(e) {
+      // close modal
+      $('#confirmModal').modal('hide');
+      
+      $('#defaultdownload').attr('disabled', true);
+      e.preventDefault();
+      let results = [];
+      let targets = $("input[type=checkbox]").each(function(index) {
+        if ($(this).prop('checked')) {
+          results.push($(this).attr('name'));
+        }
+      });
+      $.ajax({
+        url: "{{ url_for('event.download') }}",
+        dataType: "json",
+        contentType:"application/json; charset=utf-8",
+        type: "POST",
+        data: JSON.stringify(results),
+      }).done(function(msg) {
+        if (msg.status == 'OK') {
+          alert("Download Complete");
+        } else {
+          alert("Internal Error happened");
+        }
+       
+      }).fail(function() {
+        alert("Internal Error happened");
+      }).always(function() {
+        $('#defaultdownload').attr('disabled', false);
+      })
+    });
+  </script>
+
 {% endblock %}
