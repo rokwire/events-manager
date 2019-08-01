@@ -66,9 +66,13 @@ def publish_event(id, imageId):
         if event:
             print("event {} submit method: {}".format(id, event['submitType']))
             if event.get('startDate'):
+                if isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
                 event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
                 event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('endDate'):
+                if isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
 
