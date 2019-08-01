@@ -97,3 +97,28 @@ main {
   width: 70%;
   margin: 0 auto;
 }
+
+.map-container{
+overflow:hidden;
+padding-bottom:56.25%;
+position:relative;
+height:0;
+}
+
+.break-text{
+  word-break: break-all;
+}
+
+main.container {
+  margin-bottom: 10%;
+}
+
+.title{
+  text-align:center;
+  font-size:40px;
+  margin-bottom:40px;
+}
+
+.dynamic-element{
+  margin-bottom:0px;
+}

@@ -22,7 +22,7 @@ tip4CalALoc = [
 ]
 
 
-# Mapping between webtool calendar event type to Rokwire event type
+# Mapping between webtool calendar event type to Rokwire categories
 eventTypeMap = {
     "Exhibition":               "Entertainment",
     "Festival/Celebration":     "Entertainment",
@@ -44,6 +44,13 @@ eventTypeMap = {
     "Other":                    "Other",
 }
 
+# Rokwire Categories
+# create dic for eventType values - new category
+eventTypeValues = {}
+for key in eventTypeMap:
+    value = eventTypeMap[key]
+    eventTypeValues[value] = 0
+eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
@@ -69,3 +76,5 @@ subcategoriesMap = {
         "Volleyball"
     ]
 }
+
+targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
