@@ -43,8 +43,8 @@ def scheduler_add_job(current_app, scheduler, func, start_date, *args, **kwargs)
 
 def create_scheduler(app):
     today = datetime.today()
-    startDate = datetime(today.year, today.month, today.day, 23, 59, 59, 59)
-    scheduler = BackgroundScheduler(timezone="America/Chicago")
+    startDate = datetime(today.year, today.month, today.day, int(app.config['SCHEDULER_HOUR']), int(app.config['SCHEDULER_MINS']), 00, 00)
+    scheduler = BackgroundScheduler()
     scheduler.add_listener(event_exception_listener, EVENT_JOB_ERROR)
     scheduler.add_listener(event_start_listener, EVENT_SCHEDULER_STARTED)
     scheduler.add_listener(event_shutdown_listener, EVENT_SCHEDULER_SHUTDOWN)
@@ -52,8 +52,9 @@ def create_scheduler(app):
     def create_start(app):
         with app.app_context():
             start()
-
-    scheduler.add_job(create_start, trigger='interval', args=[app], days=1, start_date=startDate, timezone="America/Chicago")
+    
+    scheduler.add_job(create_start, trigger='interval', args=[app], days=1, start_date=startDate)
+    print("Schedule at {}:{}".format(app.config['SCHEDULER_HOUR'], app.config['SCHEDULER_MINS']))
     return scheduler
 
 def drop_scheduler(scheduler):

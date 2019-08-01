@@ -382,3 +382,6 @@ class Config(object):
     LDAP_GROUP_DN=""
     LDAP_OBJECTCLASS=""
     LDAP_TRUST_ALL_CERTIFICATES=""
+
+    SCHEDULER_HOUR=''
+    SCHEDULER_MINS=''
