@@ -177,6 +177,13 @@ def parse(content, gmaps):
             entry['cost'] = pe['cost']
         if 'topic' in pe:
             entry['tags'] = pe['topic']
+        if 'recurrence' in pe:
+            if pe['recurrence'] == "false":
+                entry['recurringFlag'] = False
+            else:
+                entry['recurringFlag'] = True
+        if 'recurrenceId' in pe:
+            entry['recurrenceId'] = int(pe['recurrenceId'])
 
         entry['icalUrl'] = "https://calendars.illinois.edu/ical/{}/{}.ics".format(pe['calendarId'], pe['eventId'])
         entry['outlookUrl'] = "https://calendars.illinois.edu/outlook2010/{}/{}.ics".format(pe['calendarId'],
