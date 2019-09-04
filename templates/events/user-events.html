@@ -103,7 +103,8 @@
 {% block scripts %}
   {{ super() }}
   {% include 'events/select_status.html' %}
-  <script>
+  <script src="..\static\js\user-events.js"></script>
+  <!-- <script>
     $(".dataModified").each(function(index){
       console.log("hi");
       console.log($(this).text());
@@ -112,6 +113,6 @@
       dataModified_local = new Date(dataModified_utc+"Z");
       $(this).text(dataModified_local.toLocaleString());
     });
-  </script>
+  </script> -->
 
 {% endblock %}

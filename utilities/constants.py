@@ -8,7 +8,7 @@ CalName2Location = {
     'Lincoln Hall Theater Events': (40.1066066,-88.2304212),
     'Foellinger Auditorium Events': (40.1059431,-88.2294751),
     'Department of Sociology': (40.1066528,-88.2305061),
-    'NCSA': (40.9951304,-89.0669566),
+    'NCSA': (40.1147743,-88.2252053),
 }
 
 
@@ -45,15 +45,12 @@ eventTypeMap = {
 }
 
 # Rokwire Categories
-eventTypeValues = [
-    "Entertainment",
-    "Academic",
-    "Community",
-    "Career Development",
-    "Recreation",
-    "Athletics",
-    "Other"
-]
+# create dic for eventType values - new category
+eventTypeValues = {}
+for key in eventTypeMap:
+    value = eventTypeMap[key]
+    eventTypeValues[value] = 0
+eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {

@@ -45,20 +45,19 @@ def approve_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
         "$set": {"eventStatus": "approved"}
     })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 # Disapprove events from a calendar
 def disapprove_calendar_events(calendarId):
     updateResult = update_many(current_app.config['EVENT_COLLECTION'], condition={"calendarId": calendarId}, update={
         "$set": {"eventStatus": "disapproved"}
     })
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("approve calendar {} fails in approve_calendar_events".format(calendarId))
 
 
 def publish_event(id, imageId):
-    headers = {'Content-Type': 'application/json'}
+    headers = {
+        'Content-Type': 'application/json',
+        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+    }
     try:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
@@ -66,9 +65,13 @@ def publish_event(id, imageId):
         if event:
             print("event {} submit method: {}".format(id, event['submitType']))
             if event.get('startDate'):
+                if isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
                 event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
                 event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('endDate'):
+                if isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
 
@@ -109,7 +112,10 @@ def publish_event(id, imageId):
 
 
 def publish_image(id):
-    headers = {'Content-Type': 'image/png'}
+    headers = {
+        'Content-Type': 'image/png', 
+        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+    }
     try:
 
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
@@ -258,8 +264,6 @@ def approve_calendar_db(calendarId):
                               update={
                                   "$set": {"status": "approved"}
                               }, upsert=True)
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
     approve_calendar_events(calendarId)
 
 # Disapprove a calendar and relevant events
@@ -268,8 +272,6 @@ def disapprove_calendar_db(calendarId):
                               update={
                                   "$set": {"status": "disapproved"}
                               }, upsert=True)
-    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails".format(objectId))
     disapprove_calendar_events(calendarId)
 
 # Find the approval status for one calendar
