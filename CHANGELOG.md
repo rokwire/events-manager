@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `base.html` to add spacing between items in navigation bar
 - Modify some functions in auth.py written by Phoebe to accommodate mongDB's usage
 - html files in template
-- Insert subcatogories map into constants  
+- Insert subcatogories map into constants
+- event parsing now includes recurring event fields.  
 
 ### Removed
