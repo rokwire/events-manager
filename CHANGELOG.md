@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modify some functions in auth.py written by Phoebe to accommodate mongDB's usage
 - html files in template
 - Insert subcatogories map into constants
-- event parsing now includes recurring event fields.  
+- event parsing now includes recurring event fields.
+- PUT and PATCH URLs now use Events Building Block Event ID.  
 
 ### Removed
