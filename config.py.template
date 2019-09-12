@@ -20,7 +20,7 @@ class Config(object):
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
-    
+
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
     EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
     EVENT_URL_SUFFIX='.xml'
@@ -82,6 +82,7 @@ class Config(object):
        # {"1002":"Computer Science Corporate Visits"},
        # {"1045":"CSL General Event Calendar"},
        # {"1065":"UIS Music Events"},
+       # {"1095": "Fighting Illini Home Schedule"},
        # {"1119":"UIS Theatre Events"},
        # {"1134":"Pathobiology Calendar"},
        # {"1169":"European Union Center Events"},
