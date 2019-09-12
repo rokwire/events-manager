@@ -81,6 +81,7 @@ class Config(object):
        # {"984":"Biochemistry Department Graduate Seminars"},
        # {"1002":"Computer Science Corporate Visits"},
        # {"1045":"CSL General Event Calendar"},
+       # {"1095": "Fighting Illini Home Schedule"},
        # {"1065":"UIS Music Events"},
        # {"1119":"UIS Theatre Events"},
        # {"1134":"Pathobiology Calendar"},
