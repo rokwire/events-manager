@@ -27,6 +27,9 @@ class Config(object):
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
+      ---new calendars----
+       # {"1095": "Fighting Illini Home Schedule"},
+
        #  --- list of Calendars ---
        # {"25":"Center for Advanced Study"},
        # {"33":"Krannert Center"},
@@ -82,7 +85,6 @@ class Config(object):
        # {"1002":"Computer Science Corporate Visits"},
        # {"1045":"CSL General Event Calendar"},
        # {"1065":"UIS Music Events"},
-       # {"1095": "Fighting Illini Home Schedule"},
        # {"1119":"UIS Theatre Events"},
        # {"1134":"Pathobiology Calendar"},
        # {"1169":"European Union Center Events"},
