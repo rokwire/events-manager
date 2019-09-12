@@ -20,13 +20,16 @@ class Config(object):
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
-    
+
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
     EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
     EVENT_URL_SUFFIX='.xml'
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
+      ---new calendars----
+       # {"1095": "Fighting Illini Home Schedule"},
+
        #  --- list of Calendars ---
        # {"25":"Center for Advanced Study"},
        # {"33":"Krannert Center"},
