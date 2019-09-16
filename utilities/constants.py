@@ -39,7 +39,8 @@ eventTypeMap = {
     "Conference/Workshop":      "Career Development",
     "Professional Development": "Career Development",
     "Health/Fitness":           "Recreation",
-    "Sporting Event":           "Recreation",
+    # "Sporting Event":           "Recreation",
+    "Athletics":                "Recreation",
     "Sidearm":                  "Athletics",
     "Other":                    "Other",
 }
