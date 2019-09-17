@@ -59,6 +59,7 @@ def publish_event(id, imageId):
         'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
     }
     try:
+        platform_event_id = None
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
 
@@ -84,12 +85,20 @@ def publish_event(id, imageId):
             if submit_type == 'post':
                 result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                        data=json.dumps(event))
+                # Get platform event ID and store in the Events Manager database.
+                platform_event_id = result.json()['id']
             elif submit_type == 'put':
-                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('eventId')
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
+                # Remove platform event ID from request
+                if "platformEventId" in event:
+                    del event["platformEventId"]
                 result = requests.put(url, headers=headers,
                                       data=json.dumps(event))
             elif submit_type == 'patch':
-                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('eventId')
+                url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
+                # Remove platform event ID from request
+                if "platformEventId" in event:
+                    del event["platformEventId"]
                 result = requests.patch(url, headers=headers,
                                         data=json.dumps(event))
 
@@ -97,9 +106,15 @@ def publish_event(id, imageId):
                 print("Event {} submission fails".format(id))
                 return False
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-                    "$set": {"eventStatus": "published"}
-                })
+                if submit_type == 'post':
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                        "$set": {"eventStatus": "published", 'platformEventId': platform_event_id}
+                    })
+                else:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
+                                              update={
+                                                  "$set": {"eventStatus": "published"}
+                                              })
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
 
