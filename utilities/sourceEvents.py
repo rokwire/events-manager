@@ -383,6 +383,8 @@ def start(targets=None):
 
     image_download_total = 0
     image_upload_total = 0
+    
+    new_eventId_list = find_new_event_ids('eventsmanager-events')
 
     urls = geturls(targets)
     for url in urls:
