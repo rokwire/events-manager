@@ -2,7 +2,7 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one
+from ..db import update_one, find_one, insert_one, find_all_event_ids
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
@@ -268,6 +268,7 @@ def store(documents):
     post = 0
     put = 0
     patch = 0
+    delete = 0
     unknown = 0
 
     image_download = 0
@@ -349,6 +350,8 @@ def store(documents):
                         put +=1
                     elif result['submitType'] == 'patch':
                         patch += 1
+                    elif result['submitType'] == 'delete':
+                        delete +=1
                     else:
                         unknown += 1
         else:
@@ -379,6 +382,7 @@ def start(targets=None):
     post_in_total = 0
     put_in_total = 0
     patch_in_total = 0
+    delete_in_total = 0
     unknown_in_total = 0
 
     image_download_total = 0
@@ -399,12 +403,14 @@ def start(targets=None):
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
 
-            upload_in_total += post + put + patch + unknown
+            # upload_in_total += post + put + patch + unknown
+            upload_in_total += post + put + patch + unknown - delete
             insert_in_total += insert
             update_in_total += update
             post_in_total   += post
             put_in_total    += put
             patch_in_total  += patch
+            delete_in_total += delete
             unknown_in_total += unknown
             image_download_total += image_download
             image_upload_total += image_upload
