@@ -1,8 +1,10 @@
+import os
+
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
     # MONGO_DATABASE refers to the mongoDB's database that we are about to access to
-    MONGO_HOST="localhost"
+    MONGO_HOST=os.getenv('MONGO_HOST', 'localhost')
     MONGO_PORT=27017
     MONGO_DATABASE="events"
 
@@ -20,13 +22,16 @@ class Config(object):
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
-    
+
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
     EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
     EVENT_URL_SUFFIX='.xml'
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
+      ---new calendars----
+       # {"1095": "Fighting Illini Home Schedule"},
+
        #  --- list of Calendars ---
        # {"25":"Center for Advanced Study"},
        # {"33":"Krannert Center"},
