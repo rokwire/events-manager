@@ -358,7 +358,6 @@ def store(documents):
     return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
 
-
 def start(targets=None):
 
     if "GOOGLE_KEY" not in current_app.config or current_app.config["GOOGLE_KEY"] is None:
@@ -384,7 +383,8 @@ def start(targets=None):
     image_download_total = 0
     image_upload_total = 0
     
-    new_eventId_list = find_new_event_ids('eventsmanager-events')
+    #task 1 - prerana edit - getting new event id's
+    new_eventId_list = []
 
     urls = geturls(targets)
     for url in urls:
@@ -395,6 +395,12 @@ def start(targets=None):
                 continue
             print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
+
+            #task 1 - prerana edit - getting new event id's
+            for event_current in parsedEvents:
+                new_eventId_list.append(event_current['dataSourceEventId'])
+            
+
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
 
@@ -420,6 +426,8 @@ def start(targets=None):
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
+    #print('>>>>>>>>>>>>NEW EVENTS<<<<<<<<<<<<<')
+    #print(new_eventId_list)
     print(
         "".join([
             "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total), 

@@ -198,33 +198,5 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-# find ids of events just downloaded
-def find_new_event_ids(co_or_ta, **kwarg):
-    db = get_db()
-    dbType = current_app.config['DBTYPE']
 
-    if co_or_ta is None:
-        return 0
-    
-    if dbType == "mongoDB":
-        try:
-            collection = db.get_collection(co_or_ta)
-            projection = {'_id':0, 'dataSourceEventId':1}
-            result = collection.find(projection=projection, **kwarg)
-
-            if not result:
-                return []
-            id_object_list = list(result)
-            eventId_list = []
-            for ele in id_object_list:
-                eventId_list += [ele['dataSourceEventId']]
-            return eventId_list
-
-        except TypeError:
-            print("Invalid arguments inserted using find_new_event_ids")
-            return []
-        except Exception:
-            print('work')
-            traceback.print_exc()
-            return []
 
