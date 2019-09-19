@@ -2,7 +2,7 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one
+from ..db import update_one, find_one, insert_one, find_all_event_ids
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
@@ -386,7 +386,7 @@ def start(targets=None):
 
     # get all previous event ids from db
     previous_eventId_list = find_all_event_ids('eventsmanager-events')
-    
+
     urls = geturls(targets)
     for url in urls:
         try:

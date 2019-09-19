@@ -114,15 +114,15 @@ def find_all_event_ids(co_or_ta, **kwarg):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            projection = {'_id':0,'dataSourceEventId':1}
+            projection = {'_id':1,'dataSourceEventId':1}
             result = collection.find(projection=projection, **kwarg)
             if not result:
                 return []
-            id_object_list = list(result)
-            eventId_list = []
-            for ele in id_object_list:
-                eventId_list += [ele['dataSourceEventId']]
-            return eventId_list
+
+            ids_object_list = list()
+            for data_pair in result:
+                ids_object_list.append(data_pair)
+            return ids_object_list
 
         except TypeError:
             print("Invalid arguments inserted using find_all_event_ids")
