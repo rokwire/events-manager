@@ -173,6 +173,8 @@ def parse(content, gmaps):
             entry['speaker'] = pe['speaker']
         if 'registrationURL' in pe:
             entry['registrationURL'] = pe['registrationURL']
+        if 'registrationLabel' in pe:
+            entry['registrationLabel'] = pe['registrationLabel']
         if 'cost' in pe:
             entry['cost'] = pe['cost']
         if 'topic' in pe:
