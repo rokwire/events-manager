@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - db.py that has needed functions to support DB usage in authentication function
 - \_\_init\_\_.py that creates an app instance but its config loading is different than the one in tutorial
 - python scripts in *utilities* subfolder for providing wrapper db functions and source events crawling
+- Added registrationLabel field to be parsed.
 
 ### Changed
 - `base.html` to add spacing between items in navigation bar
