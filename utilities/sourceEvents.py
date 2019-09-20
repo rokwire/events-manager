@@ -2,7 +2,7 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one
+from ..db import update_one, find_one, insert_one, find_all_event_ids
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
@@ -149,7 +149,7 @@ def parse(content, gmaps):
             # Convert CDT to UTC (offset by 5 hours)
             entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
             entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-        
+
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
             entry['allDay'] = True
@@ -173,6 +173,8 @@ def parse(content, gmaps):
             entry['speaker'] = pe['speaker']
         if 'registrationURL' in pe:
             entry['registrationURL'] = pe['registrationURL']
+        if 'registrationLabel' in pe:
+            entry['registrationLabel'] = pe['registrationLabel']
         if 'cost' in pe:
             entry['cost'] = pe['cost']
         if 'topic' in pe:
@@ -221,7 +223,7 @@ def parse(content, gmaps):
         if 'createdBy' in pe:
             entry['createdBy'] = pe['createdBy']
 
-        # edit information 
+        # edit information
         dataModifiedObj = datetime.strptime(pe['editedDate'] + ' 12:00 am', '%m/%d/%Y %I:%M %p')
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
@@ -272,7 +274,7 @@ def store(documents):
 
     image_download = 0
     image_upload = 0
-    
+
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
@@ -287,15 +289,15 @@ def store(documents):
             # if calendar is disapproved
             if calendar_status == "disapproved":
                 document['eventStatus'] = 'disapproved'
-            
-            # if calendar is approved 
+
+            # if calendar is approved
             elif calendar_status == 'approved':
                 document['eventStatus'] = 'approved'
-            
+
             # if calendar status is unknown
             else:
                 document['eventStatus'] = 'pending'
-            
+
             insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
             # insert error condition check
             if insert_result.inserted_id is None:
@@ -303,19 +305,19 @@ def store(documents):
             else:
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
-        
-        # if event is not found 
+
+        # if event is not found
         else:
             if result['eventStatus'] == 'published':
                 document['submitType'] ='put'
             update += 1
-        
+
         updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                 update={'$set': document}, upsert=True)
         # insert update error check
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
-    
+
     s3_client = boto3.client(
         's3',
         aws_access_key_id=current_app.config['AWS_ACCESS_KEY_ID'],
@@ -332,8 +334,8 @@ def store(documents):
             event_status = result.get('eventStatus')
             # if event is approved or published
             if event_status == 'approved' or event_status == 'published':
-                # for image accessing here, we first attempt to download image and if there is indeed an 
-                # image in existence. We, then, try to upload the image. 
+                # for image accessing here, we first attempt to download image and if there is indeed an
+                # image in existence. We, then, try to upload the image.
                 imageId = None
                 if downloadImage(result['calendarId'], result['dataSourceEventId'], result['eventId']):
                     image_download += 1
@@ -346,7 +348,7 @@ def store(documents):
                     if result['submitType'] == 'post':
                         post += 1
                     elif result['submitType'] == 'put':
-                        put +=1 
+                        put +=1
                     elif result['submitType'] == 'patch':
                         patch += 1
                     else:
@@ -354,7 +356,7 @@ def store(documents):
         else:
             print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
-        
+
     return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
 
@@ -384,6 +386,9 @@ def start(targets=None):
     image_download_total = 0
     image_upload_total = 0
 
+    # get all previous event ids from db
+    previous_eventId_list = find_all_event_ids('eventsmanager-events')
+
     urls = geturls(targets)
     for url in urls:
         try:
@@ -399,13 +404,13 @@ def start(targets=None):
             upload_in_total += post + put + patch + unknown
             insert_in_total += insert
             update_in_total += update
-            post_in_total   += post 
-            put_in_total    += put 
+            post_in_total   += post
+            put_in_total    += put
             patch_in_total  += patch
             unknown_in_total += unknown
             image_download_total += image_download
             image_upload_total += image_upload
-            
+
             print(
                 "".join([
                     "EventManager: {} are updated, {} are inserted.\n".format(update, insert),
@@ -413,14 +418,14 @@ def start(targets=None):
                 ])
             )
             print("Regarding to images: {} are downloaded, {} are uploaded\n".format(image_download, image_upload))
-            
+
         except Exception as e:
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
     print(
         "".join([
-            "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total), 
+            "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total),
             "    Updated: {}\n".format(update_in_total),
             "    Inserted: {}\n".format(insert_in_total),
             "Overall uploading result: {} events\n".format(upload_in_total),
