@@ -56,7 +56,7 @@ def disapprove_calendar_events(calendarId):
 def publish_event(id, imageId):
     headers = {
         'Content-Type': 'application/json',
-        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     try:
         platform_event_id = None
@@ -129,7 +129,7 @@ def publish_event(id, imageId):
 def publish_image(id):
     headers = {
         'Content-Type': 'image/png', 
-        'Event-Token': current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     try:
 
