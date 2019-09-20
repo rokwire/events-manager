@@ -10,7 +10,7 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one
+from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one, delete_events_in_list
 from .downloadImage import downloadImage
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
@@ -128,7 +128,7 @@ def publish_event(id, imageId):
 
 def publish_image(id):
     headers = {
-        'Content-Type': 'image/png', 
+        'Content-Type': 'image/png',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     try:
@@ -337,3 +337,25 @@ def get_search_events(conditions, select_status, skip, limit):
         conditions['sourceId'] = {"$exists": True}
         return find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
+
+# delete events in building block
+def delete_events_in_building_block(objectId_list_to_delete):
+    headers = {
+        'Content-Type': 'event-document',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+    delete_success_list = []
+    for _id in objectId_list_to_delete:
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition= _id)
+        url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
+        result = requests.delete(url, headers=headers)
+        if result.status_code not in (200, 201):
+            print("Event {} deletion fails".format(id))
+        else:
+            delete_success_list.append(_id)
+    return delete_success_list
+
+def delete_events(objectId_list_to_delete):
+    delete_events_remote = delete_events_in_building_block(objectId_list_to_delete)
+    delete_events_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], delete_events_remote)
+    return delete_events_local
