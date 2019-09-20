@@ -126,10 +126,8 @@ def find_all_event_ids(co_or_ta, **kwarg):
             return eventId_list
 
         except TypeError:
-            print("Invalid arguments inserted using find_all_event_ids")
             return []
         except Exception:
-            print('work')
             traceback.print_exc()
             return []
 
@@ -209,7 +207,6 @@ def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
             return []
 
 def get_count(co_or_ta, filter, **kwargs):
-
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
@@ -226,3 +223,27 @@ def get_count(co_or_ta, filter, **kwargs):
         except Exception:
             traceback.print_exc()
             return 0
+
+# example in MongoDB
+# db.getCollection('eventsmanager-events').remove({'_id':{'$in':[ObjectId("5d2e4502b4f0cda4f99e5bd9"), ObjectId("5d2e4502b4f0cda4f99e5bdf"), ObjectId("5d2e4502b4f0cda4f99e5be7")]}})
+# parameter: collection name, *objectId* list to delete
+def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None or db is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            query = {'_id':{'$in': objectId_list_to_delete}}
+            result = collection.remove(query)
+            if not result:
+                return []
+            return objectId_list_to_delete
+
+        except TypeError:
+            return []
+        except Exception:
+            return []
