@@ -44,7 +44,7 @@ def find_one(co_or_ta, condition=None, *args, **kwargs):
     dbType = current_app.config['DBTYPE']
     if co_or_ta is None or db is None:
         return {}
-    
+
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
@@ -66,7 +66,7 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
 
     if co_or_ta is None or condition is None or update is None or db is None:
         return {}
-    
+
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
@@ -88,7 +88,7 @@ def find_all(co_or_ta, **kwarg):
 
     if co_or_ta is None or db is None:
         return []
-    
+
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
@@ -98,6 +98,34 @@ def find_all(co_or_ta, **kwarg):
             return list(result)
         except TypeError:
             print("Invalid arguments inserted using find_all")
+            return []
+        except Exception:
+            print('work')
+            traceback.print_exc()
+            return []
+
+def find_all_event_ids(co_or_ta, **kwarg):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None or db is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            projection = {'_id':1,'dataSourceEventId':1}
+            result = collection.find(projection=projection, **kwarg)
+            if not result:
+                return []
+
+            ids_object_list = list()
+            for data_pair in result:
+                ids_object_list.append(data_pair)
+            return ids_object_list
+
+        except TypeError:
+            print("Invalid arguments inserted using find_all_event_ids")
             return []
         except Exception:
             print('work')
@@ -164,10 +192,10 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
 def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
-    
+
     if key is None or co_or_ta is None:
         return []
-    
+
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
@@ -197,6 +225,3 @@ def get_count(co_or_ta, filter, **kwargs):
         except Exception:
             traceback.print_exc()
             return 0
-
-
-

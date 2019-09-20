@@ -356,7 +356,6 @@ def store(documents):
         else:
             print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
-
     return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
 def get_difference_old_new(new_eventId_list, previous_eventId_list):
@@ -399,6 +398,9 @@ def start(targets=None):
     new_eventId_list = []
 
     
+
+    # get all previous event ids from db
+    previous_eventId_list = find_all_event_ids('eventsmanager-events')
 
     # get all previous event ids from db
     previous_eventId_list = find_all_event_ids('eventsmanager-events')
