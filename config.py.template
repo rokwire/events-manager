@@ -387,7 +387,7 @@ class Config(object):
     BUCKET='rokwire-events-s3-images'
     REGION='us-east-2'
 
-    # authentication key/token - Request to event building block
+    # Authentication ID Token - Request to event building block
     AUTHENTICATION_TOKEN  = '...'
 
     #Pagination Variables
