@@ -341,18 +341,24 @@ def get_search_events(conditions, select_status, skip, limit):
 # delete events in building block
 def delete_events_in_building_block(objectId_list_to_delete):
     headers = {
-        'Content-Type': 'event-document',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     delete_success_list = []
+    fail_count = 0
     for _id in objectId_list_to_delete:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition= _id)
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
         result = requests.delete(url, headers=headers)
         if result.status_code not in (200, 201):
-            print("Event {} deletion fails".format(id))
+            print("Event {} deletion fails".format(_id))
+            fail_count +=1
         else:
             delete_success_list.append(_id)
+    success_count = len(delete_success_list)
+
+    print("failed deleted in building block: " + fail_count)
+    print("successful deleted in building block: " + fail_count)
     return delete_success_list
 
 def delete_events(objectId_list_to_delete):
