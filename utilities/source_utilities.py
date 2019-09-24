@@ -358,7 +358,7 @@ def delete_events_in_building_block(objectId_list_to_delete):
     success_count = len(delete_success_list)
 
     print("failed deleted in building block: " + fail_count)
-    print("successful deleted in building block: " + fail_count)
+    print("successful deleted in building block: " + success_count)
     return delete_success_list
 
 def delete_events(objectId_list_to_delete):
