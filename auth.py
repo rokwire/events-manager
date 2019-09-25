@@ -68,6 +68,7 @@ def login_ldap(username, password, error):
 
     flash(error)
     return False
+
 '''
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
