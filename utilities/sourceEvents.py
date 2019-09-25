@@ -363,8 +363,6 @@ def get_difference_old_new(new_eventId_list, previous_eventId_list):
         return []
     difference = []
     for old_event_ids in previous_eventId_list:
-        # [0] = object _id, [1] = dataSourceEventId
-        #print(old_event_ids)
         if old_event_ids['dataSourceEventId'] not in new_eventId_list:
            difference.append(old_event_ids['_id'])
     return difference
@@ -394,13 +392,10 @@ def start(targets=None):
     image_download_total = 0
     image_upload_total = 0
     
-    #task 1 - prerana edit - getting new event id's
+    #getting new event id's
     new_eventId_list = []
 
     
-
-    # get all previous event ids from db
-    previous_eventId_list = find_all_event_ids('eventsmanager-events')
 
     # get all previous event ids from db
     previous_eventId_list = find_all_event_ids('eventsmanager-events')
@@ -415,7 +410,7 @@ def start(targets=None):
             print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
 
-            #task 1 - prerana edit - getting new event id's
+            #getting new event id's
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
             
@@ -446,7 +441,7 @@ def start(targets=None):
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
     
-    #task 3 - prerana edit - find difference
+    #compare old events in db, new downloads, find difference to delete
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
     
     
