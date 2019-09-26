@@ -252,9 +252,7 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-# example in MongoDB
-# db.getCollection('eventsmanager-events').remove({'_id':{'$in':[ObjectId("5d2e4502b4f0cda4f99e5bd9"), ObjectId("5d2e4502b4f0cda4f99e5bdf"), ObjectId("5d2e4502b4f0cda4f99e5be7")]}})
-# parameter: collection name, *objectId* list to delete
+#parameter: collection name, *objectId* list to delete
 def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
