@@ -359,10 +359,16 @@ def store(documents):
         else:
             print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
-
     return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
-
+def get_difference_old_new(new_eventId_list, previous_eventId_list):
+    if new_eventId_list is None or previous_eventId_list is None:
+        return []
+    difference = []
+    for old_event_ids in previous_eventId_list:
+        if old_event_ids['dataSourceEventId'] not in new_eventId_list:
+           difference.append(old_event_ids['_id'])
+    return difference
 
 def start(targets=None):
 
@@ -389,6 +395,11 @@ def start(targets=None):
 
     image_download_total = 0
     image_upload_total = 0
+    
+    #getting new event id's
+    new_eventId_list = []
+
+    
 
     # get all previous event ids from db
     previous_eventId_list = find_all_event_ids('eventsmanager-events')
@@ -402,6 +413,12 @@ def start(targets=None):
                 continue
             print("Begin parsing url: {}".format(url))
             parsedEvents = parse(rawEvents, gmaps)
+
+            #getting new event id's
+            for event_current in parsedEvents:
+                new_eventId_list.append(event_current['dataSourceEventId'])
+            
+
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
 
@@ -429,6 +446,11 @@ def start(targets=None):
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
+    
+    #compare old events in db, new downloads, find difference to delete
+    previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
+    
+    
     print(
         "".join([
             "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total),
