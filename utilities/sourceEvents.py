@@ -399,7 +399,6 @@ def start(targets=None):
     #getting new event id's
     new_eventId_list = []
 
-    print("before get previous_eventId_list")
     # get all previous event ids from db
     previous_eventId_list = find_all_previous_event_ids('eventsmanager-events')
     urls = geturls(targets)
@@ -444,11 +443,7 @@ def start(targets=None):
             continue
 
     #compare old events in db, new downloads, find difference to delete
-    print("new list")
-    print(new_eventId_list)
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    print("difference to delete")
-    print(previous_events_to_delete)
     deletion = delete_events(previous_events_to_delete)
 
     print(

@@ -100,14 +100,12 @@ def find_all(co_or_ta, **kwarg):
             print("Invalid arguments inserted using find_all")
             return []
         except Exception:
-            print('work')
             traceback.print_exc()
             return []
 
 def find_all_previous_event_ids(co_or_ta, **kwarg):
     db = get_db()
     dbType = current_app.config['DBTYPE']
-    print("AAAAA")
     if co_or_ta is None or db is None:
         return []
 
@@ -122,15 +120,12 @@ def find_all_previous_event_ids(co_or_ta, **kwarg):
             ids_object_list = list()
             for data_pair in result:
                 ids_object_list.append(data_pair)
-
-            print(ids_object_list)
             return ids_object_list
 
         except TypeError:
             print("Invalid arguments inserted using find_all_event_ids")
             return []
         except Exception:
-            print('work')
             traceback.print_exc()
             return []
 

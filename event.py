@@ -77,9 +77,7 @@ def setting():
 @login_required
 def download():
     targets = request.get_json()
-    print("**")
     if targets:
-        print("**target get")
         start(targets)
     return json.dumps({'status': 'OK', 'data': 'complete'})
 
