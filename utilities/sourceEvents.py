@@ -2,10 +2,10 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one, find_all_event_ids
+from ..db import update_one, find_one, insert_one, find_all_previous_event_ids
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
-from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
+from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -395,15 +395,13 @@ def start(targets=None):
 
     image_download_total = 0
     image_upload_total = 0
-    
+
     #getting new event id's
     new_eventId_list = []
 
-    
-
+    print("before get previous_eventId_list")
     # get all previous event ids from db
-    previous_eventId_list = find_all_event_ids('eventsmanager-events')
-
+    previous_eventId_list = find_all_previous_event_ids('eventsmanager-events')
     urls = geturls(targets)
     for url in urls:
         try:
@@ -417,19 +415,17 @@ def start(targets=None):
             #getting new event id's
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
-            
+
 
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
 
-            # upload_in_total += post + put + patch + unknown
-            upload_in_total += post + put + patch + unknown - delete
+            upload_in_total += post + put + patch + unknown
             insert_in_total += insert
             update_in_total += update
             post_in_total   += post
             put_in_total    += put
             patch_in_total  += patch
-            delete_in_total += delete
             unknown_in_total += unknown
             image_download_total += image_download
             image_upload_total += image_upload
@@ -446,11 +442,15 @@ def start(targets=None):
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
-    
+
     #compare old events in db, new downloads, find difference to delete
+    print("new list")
+    print(new_eventId_list)
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    
-    
+    print("difference to delete")
+    print(previous_events_to_delete)
+    deletion = delete_events(previous_events_to_delete)
+
     print(
         "".join([
             "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total),

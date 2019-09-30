@@ -77,8 +77,10 @@ def setting():
 @login_required
 def download():
     targets = request.get_json()
+    print("**")
     if targets:
-       start(targets)
+        print("**target get")
+        start(targets)
     return json.dumps({'status': 'OK', 'data': 'complete'})
 
 @bp.route('/select', methods=['POST'])
