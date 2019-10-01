@@ -28,3 +28,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 _ Authorization header for communicating with Events Building Block.  
 
 ### Removed
+- References to AWS keys and variables.
