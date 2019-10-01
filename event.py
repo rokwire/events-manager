@@ -80,7 +80,7 @@ def setting():
 def download():
     targets = request.get_json()
     if targets:
-       start(targets)
+        start(targets)
     return json.dumps({'status': 'OK', 'data': 'complete'})
 
 @bp.route('/select', methods=['POST'])
