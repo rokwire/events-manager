@@ -380,12 +380,9 @@ class Config(object):
     # WEBTOOL_IMAGE_MOUNT_POINT defines a image location for temporarily storing downloaded image
     WEBTOOL_IMAGE_MOUNT_POINT='./images'
 
-    # Following five variables are information that is required by Amazon S3 for building connection
-    AWS_ACCESS_KEY_ID='...'
-    AWS_SECRET_ACCESS_KEY='...'
-    AWS_IMAGE_FOLDER_PREFIX="events"
-    BUCKET='rokwire-events-s3-images'
-    REGION='us-east-2'
+    # Following variables are needed for mapping the Amazon S3 bucket and folder prefix
+    AWS_IMAGE_FOLDER_PREFIX = os.getenv("AWS_IMAGE_FOLDER_PREFIX", "events")
+    BUCKET = os.getenv("AWS_S3_BUCKET", "rokwire-events-s3-images")
 
     # Authentication ID Token - Request to event building block
     AUTHENTICATION_TOKEN  = '...'
