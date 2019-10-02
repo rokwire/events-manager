@@ -319,12 +319,7 @@ def store(documents):
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
 
-    s3_client = boto3.client(
-        's3',
-        aws_access_key_id=current_app.config['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=current_app.config['AWS_SECRET_ACCESS_KEY'],
-        region_name=current_app.config['REGION']
-    )
+    s3_client = boto3.client('s3')
     # upload approved or published events
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
