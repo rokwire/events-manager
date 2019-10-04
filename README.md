@@ -10,6 +10,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+The following environment variables need to be set when running on development machine. This is not required when running within AWS.
+```
+AWS_ACCESS_KEY_ID=<AWS Access Key ID>
+AWS_SECRET_ACCESS_KEY=<AWS Secret Access Key>
+```
+
 ## Run in Development Mode
 This repository should be put inside `/events-manager` and run outside the folder. There are two ways to do so:
 

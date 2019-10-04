@@ -2,10 +2,10 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one, find_all_event_ids
+from ..db import update_one, find_one, insert_one, find_all_previous_event_ids
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
-from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image
+from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
 from flask import current_app
 
 import xml.etree.ElementTree as ET
@@ -270,6 +270,7 @@ def store(documents):
     post = 0
     put = 0
     patch = 0
+    delete = 0
     unknown = 0
 
     image_download = 0
@@ -318,12 +319,7 @@ def store(documents):
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
 
-    s3_client = boto3.client(
-        's3',
-        aws_access_key_id=current_app.config['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=current_app.config['AWS_SECRET_ACCESS_KEY'],
-        region_name=current_app.config['REGION']
-    )
+    s3_client = boto3.client('s3')
     # upload approved or published events
     for document in documents:
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
@@ -351,6 +347,8 @@ def store(documents):
                         put +=1
                     elif result['submitType'] == 'patch':
                         patch += 1
+                    elif result['submitType'] == 'delete':
+                        delete +=1
                     else:
                         unknown += 1
         else:
@@ -387,19 +385,17 @@ def start(targets=None):
     post_in_total = 0
     put_in_total = 0
     patch_in_total = 0
+    delete_in_total = 0
     unknown_in_total = 0
 
     image_download_total = 0
     image_upload_total = 0
-    
+
     #getting new event id's
     new_eventId_list = []
 
-    
-
     # get all previous event ids from db
-    previous_eventId_list = find_all_event_ids('eventsmanager-events')
-
+    previous_eventId_list = find_all_previous_event_ids('eventsmanager-events')
     urls = geturls(targets)
     for url in urls:
         try:
@@ -413,7 +409,7 @@ def start(targets=None):
             #getting new event id's
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
-            
+
 
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
@@ -440,11 +436,11 @@ def start(targets=None):
             traceback.print_exc()
             print("There is exception {}, hidden in url: {}".format(e, url))
             continue
-    
+
     #compare old events in db, new downloads, find difference to delete
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    
-    
+    deletion = delete_events(previous_events_to_delete)
+
     print(
         "".join([
             "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total),
