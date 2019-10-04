@@ -9,8 +9,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from .db import find_one, insert_one
 
 from bson.objectid import ObjectId
+from .config import Config
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix=Config.URL_PREFIX+'/auth')
 
 def login_db(username, password, error):
     user = find_one('user', condition={"username": username})
@@ -75,21 +76,21 @@ def login_ldap(username, password, error):
 #         username = request.form['username']
 #         password = request.form['password']
 #         error = None
-
+#
 #         if not username:
 #             error = 'Username is required.'
 #         elif not password:
 #             error = 'Password is required.'
 #         elif find_one('user', condition={"username": username}):
 #             error = 'User {} is already registered.'.format(username)
-
+#
 #         if error is None:
 #             password_hash = generate_password_hash(password)
 #             insert_one('user', document={"username": username, "password_hash": password_hash})
 #             return redirect(url_for('auth.login'))
-
+#
 #         flash(error)
-
+#
 #     return render_template('auth/register.html')
 
 @bp.route('/login', methods=('GET', 'POST'))
@@ -138,7 +139,7 @@ def logout():
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        if g.user is None:
+        if not g.user:
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
