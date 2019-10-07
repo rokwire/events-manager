@@ -19,8 +19,8 @@ class Config(object):
 
     # GOOGLE_KEY is used to access Google Geocoding service
     # GOOGLE_MAP_VIEW_KEY is used to access Google Maps View service
-    GOOGLE_KEY='...'
-    GOOGLE_MAP_VIEW_KEY='...'
+    GOOGLE_KEY = os.getenv("GOOGLE_KEY", "...")
+    GOOGLE_MAP_VIEW_KEY = os.getenv("GOOGLE_MAP_VIEW_KEY", "...")
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -387,7 +387,7 @@ class Config(object):
     BUCKET = os.getenv("AWS_S3_BUCKET", "rokwire-events-s3-images")
 
     # Authentication ID Token - Request to event building block
-    AUTHENTICATION_TOKEN  = '...'
+    AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
 
     #Pagination Variables
     PER_PAGE = 4
