@@ -27,7 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Insert subcatogories map into constants
 - event parsing now includes recurring event fields.
 - PUT and PATCH URLs now use Events Building Block Event ID.
-_ Authorization header for communicating with Events Building Block.  
+_ Authorization header for communicating with Events Building Block.
+- Update S3 image upload ACL to bucket-owner-full-control  
 
 ### Removed
 - References to AWS keys and variables.
