@@ -78,3 +78,7 @@ subcategoriesMap = {
 }
 
 targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
+
+#Geocoding list
+predefined_locations = {
+}
