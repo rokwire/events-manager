@@ -235,7 +235,10 @@ def parse(content, gmaps):
 
             (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
             if found:
-                entry['location'] = GeoInfo
+                if location in current_app.config['GEOCODING_COLLECTION']:
+                    entry['location'] = current_app.config['GEOCODING_COLLECTION'][location]
+                else:
+                    entry['location'] = GeoInfo
             else:
                 try:
                     GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})

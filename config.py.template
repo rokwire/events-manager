@@ -356,6 +356,11 @@ class Config(object):
        # {"6482":"RokwireTestCalendar"}
 
     ]
+    
+    #Geocoding list
+    GEOCODING_COLLECTION = {
+
+    }
 
     # This is a mapping between different sources to different calendar mapping
     INT2SRC= {
