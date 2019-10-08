@@ -7,6 +7,7 @@ from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
 from flask import current_app
+from .constants import *
 
 import xml.etree.ElementTree as ET
 import googlemaps
@@ -233,29 +234,34 @@ def parse(content, gmaps):
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
 
-            (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
-            if found:
-                entry['location'] = GeoInfo
-            else:
-                try:
-                    GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
-                except googlemaps.exceptions.ApiError as e:
-                    print("API Key Error: {}".format(e))
-                    entry['location'] = {'description': pe['location']}
-                    xmltoMongoDB.append(entry)
-                    continue
 
-                if len(GeoResponse) != 0:
-                    lat = GeoResponse[0]['geometry']['location']['lat']
-                    lng = GeoResponse[0]['geometry']['location']['lng']
-                    GeoInfo = {
-                        'latitude': lat,
-                        'longitude': lng,
-                        'description': pe['location']
-                    }
+            if location in predefined_locations:
+                entry['location'] = predefined_locations[location]
+                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
+            else:
+                (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
+                if found:
                     entry['location'] = GeoInfo
                 else:
-                    entry['location'] = {'description': pe['location']}
+                    try:
+                        GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
+                    except googlemaps.exceptions.ApiError as e:
+                        print("API Key Error: {}".format(e))
+                        entry['location'] = {'description': pe['location']}
+                        xmltoMongoDB.append(entry)
+                        continue
+
+                    if len(GeoResponse) != 0:
+                        lat = GeoResponse[0]['geometry']['location']['lat']
+                        lng = GeoResponse[0]['geometry']['location']['lng']
+                        GeoInfo = {
+                            'latitude': lat,
+                            'longitude': lng,
+                            'description': pe['location']
+                        }
+                        entry['location'] = GeoInfo
+                    else:
+                        entry['location'] = {'description': pe['location']}
         xmltoMongoDB.append(entry)
     print("Get {} parsed events".format(len(xmltoMongoDB)))
     return xmltoMongoDB
