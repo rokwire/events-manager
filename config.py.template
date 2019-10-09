@@ -375,7 +375,8 @@ class Config(object):
 
     # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
     ROKWIRE_IMAGE_LINK_FORMAT=os.getenv('ROKWIRE_IMAGE_LINK_FORMAT', 'http://localhost:9000/events/{}/images/{}')
-    ROKWIRE_IMAGE_LINK_PREFIX=os.getenv('ROKWIRE_IMAGE_LINK_PREFIX','https://api.rokwire.illinois.edu/events/image')
+    ROKWIRE_IMAGE_LINK_PREFIX=os.getenv('ROKWIRE_IMAGE_LINK_PREFIX','http://localhost:9000/events/image')
+
 
     # IMAGE_COLLECTION defines a collection location for storing image metadata
     IMAGE_COLLECTION='images'
