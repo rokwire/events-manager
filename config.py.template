@@ -4,8 +4,11 @@ class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to form MONGO_URL to setup connection with target mongoDB
     # MONGO_DATABASE refers to the mongoDB's database that we are about to access to
-    MONGO_URL = os.getenv('EVENT_MONGO_URL', 'mongodb://localhost:27017')
-    MONGO_DATABASE="events"
+
+    MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+
+    MONGO_DATABASE = os.getenv("MONGO_DATABASE", "rokwire")
+    URL_PREFIX = os.getenv("URL_PREFIX", "/events-manager")
 
     # It refers to database system we use. Currently it should be "mongoDB".
     DBTYPE='mongoDB'
@@ -16,8 +19,8 @@ class Config(object):
 
     # GOOGLE_KEY is used to access Google Geocoding service
     # GOOGLE_MAP_VIEW_KEY is used to access Google Maps View service
-    GOOGLE_KEY='...'
-    GOOGLE_MAP_VIEW_KEY='...'
+    GOOGLE_KEY = os.getenv("GOOGLE_KEY", "...")
+    GOOGLE_MAP_VIEW_KEY = os.getenv("GOOGLE_MAP_VIEW_KEY", "...")
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -379,15 +382,12 @@ class Config(object):
     # WEBTOOL_IMAGE_MOUNT_POINT defines a image location for temporarily storing downloaded image
     WEBTOOL_IMAGE_MOUNT_POINT='./images'
 
-    # Following five variables are information that is required by Amazon S3 for building connection
-    AWS_ACCESS_KEY_ID='...'
-    AWS_SECRET_ACCESS_KEY='...'
-    AWS_IMAGE_FOLDER_PREFIX="events"
-    BUCKET='rokwire-events-s3-images'
-    REGION='us-east-2'
+    # Following variables are needed for mapping the Amazon S3 bucket and folder prefix
+    AWS_IMAGE_FOLDER_PREFIX = os.getenv("AWS_IMAGE_FOLDER_PREFIX", "events")
+    BUCKET = os.getenv("AWS_S3_BUCKET", "rokwire-events-s3-images")
 
     # Authentication ID Token - Request to event building block
-    AUTHENTICATION_TOKEN  = '...'
+    AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
 
     #Pagination Variables
     PER_PAGE = 4

@@ -15,8 +15,10 @@ from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime
+from .config import Config
 
-bp = Blueprint('event', __name__, url_prefix='/event')
+
+bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
@@ -78,7 +80,7 @@ def setting():
 def download():
     targets = request.get_json()
     if targets:
-       start(targets)
+        start(targets)
     return json.dumps({'status': 'OK', 'data': 'complete'})
 
 @bp.route('/select', methods=['POST'])
