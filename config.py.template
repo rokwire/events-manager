@@ -15,7 +15,7 @@ class Config(object):
 
     # SECRET_KEY aims to generate hash for user input password and join some other security
     # protect measurements.
-    SECRET_KEY='dev'
+    SECRET_KEY = os.getenv("SECRET_KEY", "SECRET_KEY")
 
     # GOOGLE_KEY is used to access Google Geocoding service
     # GOOGLE_MAP_VIEW_KEY is used to access Google Maps View service
@@ -370,11 +370,12 @@ class Config(object):
     CALENDAR_COLLECTION='calendars'
 
     # WEBTOOL_IMAGE_LINK_* are used for composing the image url that is associated with an event
-    WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
+    WEBTOOL_IMAGE_LINK_PREFIX=os.getenv('WEBTOOL_IMAGE_LINK_PREFIX', 'https://calendars.illinois.edu/eventImage')
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
 
     # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
-    ROKWIRE_IMAGE_LINK_FORMAT='http://localhost:9000/events/{}/images/{}'
+    ROKWIRE_IMAGE_LINK_FORMAT=os.getenv('ROKWIRE_IMAGE_LINK_FORMAT', 'http://localhost:9000/events/{}/images/{}')
+    ROKWIRE_IMAGE_LINK_PREFIX=os.getenv('ROKWIRE_IMAGE_LINK_PREFIX','https://api.rokwire.illinois.edu/events/image')
 
     # IMAGE_COLLECTION defines a collection location for storing image metadata
     IMAGE_COLLECTION='images'
