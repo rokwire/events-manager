@@ -2,10 +2,10 @@ import os
 
 class Config(object):
 
-    # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
+    # MONGO_HOST and MONGO_PORT are combined to form MONGO_URL to setup connection with target mongoDB
     # MONGO_DATABASE refers to the mongoDB's database that we are about to access to
-    MONGO_HOST=os.getenv('MONGO_HOST', 'localhost')
-    MONGO_PORT=27017
+
+    MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
 
     MONGO_DATABASE = os.getenv("MONGO_DATABASE", "rokwire")
     URL_PREFIX = os.getenv("URL_PREFIX", "/events-manager")
