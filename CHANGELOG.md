@@ -30,7 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PUT and PATCH URLs now use Events Building Block Event ID.
 - Authorization header for communicating with Events Building Block.
 - Set secrets in environment variables  
-- Update S3 image upload ACL to bucket-owner-full-control  
+- Update S3 image upload ACL to bucket-owner-full-control
+- Set more config.py variables as environment variables.  
 
 ### Removed
 - References to AWS keys and variables.
