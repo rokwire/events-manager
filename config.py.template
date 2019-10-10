@@ -364,7 +364,7 @@ class Config(object):
     }
 
     # EVENT_BUILDING_BLOCK_URL defines the target URL that we submit parsed events to
-    EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
+    EVENT_BUILDING_BLOCK_URL=os.getenv("EVENT_BUILDING_BLOCK_URL", "http://localhost:9000/events")
 
     # CALENDAR_COLLECTION defines a collection location for storing webtool calendar metadata
     CALENDAR_COLLECTION='calendars'
