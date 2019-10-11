@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Add a new Event
+{% endblock %}
+
+{% block modals %}
+<!-- the save Confirmation form -->
+<div id="SaveModal" class="modal fade" role="dialog">
+ <div class="modal-dialog modal-lg" role="content">
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+         <h4 class="modal-title">Confirmation </h4>
+         <button type="button" class="close" data-dismiss="modal">&times;</button>
+     </div>
+     <div class="modal-body">
+         <!-- table form here -->
+         <div class="form-group row">
+             <label class="col-12 col-form-label"><center>You are about to add this event. </center></label>
+         </div>
+         <div class="offset-md-2 col-md-10">
+             <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
+             <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+{% endblock %}
+
+{% block content %}
+ <!-- filter and select operations -->
+  <!-- back to all events button -->
+  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST">
+  <div class="media">
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+  </div>
+  <!-- form inputs -->
+     <article class="media content-section">
+       <div class="media-body">
+          <h2><a class="article-title">Add A New Event</a></h2>
+          <hr class="divider"/>
+          <!-- event title -->
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Event Title </h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" id="title" name="title"/>
+            </div>
+          </div>
+          <!-- event url -->
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Event URL </h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
+            </div>
+          </div>
+          <!-- event category -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Category </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="category" id = "category" class="selectpicker" title="Category..." >
+                  {% for key in eventTypeValues %}
+                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- subcategory -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Subcategory </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                  {% for key in subcategoriesMap['Athletics'] %}
+                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- startDate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5> Start Date </h5>
+            </div>
+            <div class="col-sm-4">
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
+            </div>
+          </div>
+          <!-- endDate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5> End Date </h5>
+            </div>
+            <div class="col-sm-4">
+              <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+            </div>
+          </div>
+          <!-- location -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Location </h5>
+            </div>
+            <div class="col-sm-9">
+              <input id="location" name="location" class="form-control" type="text"/>
+            </div>
+          </div>
+          <!-- target audience -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Target Audience </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select multiple id="targetAudience" name="targetAudience" class="selectpicker" title="Audience">
+                  {% for key in targetAudienceMap %}
+                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- cost -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Cost </h5>
+            </div>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" name="cost"/>
+            </div>
+          </div>
+          <!-- contacts -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <div class="col-sm-9">
+              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+            </div>
+          </div>
+
+          <!-- HIDDEN DYNAMIC ELEMENT -->
+          <div class="contact-group dynamic-element" style="display:none">
+            <!-- contact fields : first&lastName + email + phone -->
+            <div class = "form-group row" >
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+              </div>
+            </div>
+            <div class = "form-group row" >
+              <!-- contact fields : first&lastName + email + phone -->
+              <div class="col-sm-3 offset-sm-2">
+                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+              </div>
+              <!-- End of fields-->
+              <div class="col-md-1">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              </div>
+            </div>
+          </div>
+          <!-- END OF HIDDEN ELEMENT -->
+          <div class="dynamic-stuff">
+            <!-- existing stuff-->
+            <!-- none -->
+          </div>
+
+          <!-- tags -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Tags </h5>
+            </div>
+            <div class = "col-sm-9">
+              <input id="tags" name="tags" class="form-control" type="text"/>
+            </div>
+          </div>
+          <!-- sponsor -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Sponsor </h5>
+            </div>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" id="sponsor" name="sponsor"/>
+            </div>
+          </div>
+          <!-- description -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Description </h5>
+            </div>
+            <div class="col-12 col-sm-9">
+                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
+            </div>
+          </div>
+
+        </div>
+     </article>
+
+  <!-- cancel/submit button groups -->
+  <div class="row justify-content-center">
+   <div role="toolbar" aria-label="Toolbar with button groups">
+     <div class="btn-group mr-2" role="group" aria-label="first group">
+       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_events') }}" role="button">Cancel</a>
+     </div>
+     <div class="btn-group mr-2" role="group" aria-label="Second group">
+       <button id="submit-data" class="btn btn-block nav-link btn-primary" type="submit" >Add </button>
+     </div>
+   </div>
+  </div>
+</form>
+
+{% endblock %}
+
+<!-- js script for select list in form -->
+{% block scripts %}
+  {{super()}}
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+   <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+   <script>
+     //Set the save button disabled in default
+     $('#form')
+         .each(function(){
+             $(this).data('serialized', $(this).serialize())
+         })
+         .on('change input', function(){
+             $(this)
+                 .find('input:submit, button:submit')
+                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
+             ;
+          })
+         .find('input:submit, button:submit')
+             .prop('disabled', true)
+     ;
+     //only allow subcategory to be choose when the category is Athletics
+     $('#form select[name="category"]').on("change", function(event) {
+       if(event.target.value != "Athletics"){
+         $('#subcategory').prop("disabled", true);
+         $('#subcategory').selectpicker('refresh');
+       }else{
+         $('#subcategory').prop("disabled", false);
+         $('#subcategory').selectpicker('refresh');
+       }
+     })
+
+     //change back to utc time on submit
+     var myform = document.getElementById('form');
+     myform.onsubmit = function(){
+       var start_local = document.getElementById('startDate').value.replace("T", " ");
+       var start_utc = new Date(start_local).toISOString();
+       document.getElementById('startDate').value = start_utc.replace("Z", "");
+
+       var end_local = document.getElementById('endDate').value.replace("T", " ");
+       var end_utc = new Date(end_local).toISOString();
+       document.getElementById('endDate').value = end_utc.replace("Z", "");
+     };
+
+    //Clone the hidden element and shows it
+   $('.add-one').click(function(){
+     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+     attach_delete();
+   });
+
+   $('.exist-contact').ready(function(){
+     attach_delete();
+   });
+
+   //Attach functionality to delete buttons
+   function attach_delete(){
+     $('.delete').off();
+     $('.delete').click(function(){
+       console.log("click");
+       $(this).closest('.contact-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+   </script>
+{% endblock %}
