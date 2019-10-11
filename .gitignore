@@ -109,3 +109,5 @@ venv.bak/
 # configuration
 config.py
 .image/*
+
+.DS_Store
