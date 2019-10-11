@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - \_\_init\_\_.py that creates an app instance but its config loading is different than the one in tutorial
 - python scripts in *utilities* subfolder for providing wrapper db functions and source events crawling
 - Added registrationLabel field to be parsed.
+- Release scripts.
 
 ### Changed
 - `base.html` to add spacing between items in navigation bar
@@ -27,7 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Insert subcatogories map into constants
 - event parsing now includes recurring event fields.
 - PUT and PATCH URLs now use Events Building Block Event ID.
-_ Authorization header for communicating with Events Building Block.  
+- Authorization header for communicating with Events Building Block.
+- Set secrets in environment variables  
+- Update S3 image upload ACL to bucket-owner-full-control
+- Set more config.py variables as environment variables.  
 
 ### Removed
 - References to AWS keys and variables.

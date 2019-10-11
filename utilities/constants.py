@@ -78,3 +78,17 @@ subcategoriesMap = {
 }
 
 targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
+
+#Geocoding list
+predefined_locations = {
+    "Student Union SLC Conference room": {
+        "latitude": 39.727282,
+        "longitude": -89.617477,
+        "description": "Student Union SLC Conference room"
+    },
+    "Student Union SLC Conference Room": {
+        "latitude": 39.727282,
+        "longitude": -89.617477,
+        "description": "Student Union SLC Conference Room"
+    },
+}

@@ -2,10 +2,10 @@ import os
 
 class Config(object):
 
-    # MONGO_HOST and MONGO_PORT are combined to setup connection with target mongoDB
+    # MONGO_HOST and MONGO_PORT are combined to form MONGO_URL to setup connection with target mongoDB
     # MONGO_DATABASE refers to the mongoDB's database that we are about to access to
-    MONGO_HOST=os.getenv('MONGO_HOST', 'localhost')
-    MONGO_PORT=27017
+
+    MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
 
     MONGO_DATABASE = os.getenv("MONGO_DATABASE", "rokwire")
     URL_PREFIX = os.getenv("URL_PREFIX", "/events-manager")
@@ -15,12 +15,12 @@ class Config(object):
 
     # SECRET_KEY aims to generate hash for user input password and join some other security
     # protect measurements.
-    SECRET_KEY='dev'
+    SECRET_KEY = os.getenv("SECRET_KEY", "SECRET_KEY")
 
     # GOOGLE_KEY is used to access Google Geocoding service
     # GOOGLE_MAP_VIEW_KEY is used to access Google Maps View service
-    GOOGLE_KEY='...'
-    GOOGLE_MAP_VIEW_KEY='...'
+    GOOGLE_KEY = os.getenv("GOOGLE_KEY", "...")
+    GOOGLE_MAP_VIEW_KEY = os.getenv("GOOGLE_MAP_VIEW_KEY", "...")
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
@@ -364,17 +364,19 @@ class Config(object):
     }
 
     # EVENT_BUILDING_BLOCK_URL defines the target URL that we submit parsed events to
-    EVENT_BUILDING_BLOCK_URL="http://localhost:9000/events"
+    EVENT_BUILDING_BLOCK_URL=os.getenv("EVENT_BUILDING_BLOCK_URL", "http://localhost:9000/events")
 
     # CALENDAR_COLLECTION defines a collection location for storing webtool calendar metadata
     CALENDAR_COLLECTION='calendars'
 
     # WEBTOOL_IMAGE_LINK_* are used for composing the image url that is associated with an event
-    WEBTOOL_IMAGE_LINK_PREFIX='https://calendars.illinois.edu/eventImage'
+    WEBTOOL_IMAGE_LINK_PREFIX=os.getenv('WEBTOOL_IMAGE_LINK_PREFIX', 'https://calendars.illinois.edu/eventImage')
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
 
     # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
-    ROKWIRE_IMAGE_LINK_FORMAT='http://localhost:9000/events/{}/images/{}'
+    ROKWIRE_IMAGE_LINK_FORMAT=os.getenv('ROKWIRE_IMAGE_LINK_FORMAT', 'http://localhost:9000/events/{}/images/{}')
+    ROKWIRE_IMAGE_LINK_PREFIX=os.getenv('ROKWIRE_IMAGE_LINK_PREFIX','http://localhost:9000/events/image')
+
 
     # IMAGE_COLLECTION defines a collection location for storing image metadata
     IMAGE_COLLECTION='images'
@@ -387,7 +389,7 @@ class Config(object):
     BUCKET = os.getenv("AWS_S3_BUCKET", "rokwire-events-s3-images")
 
     # Authentication ID Token - Request to event building block
-    AUTHENTICATION_TOKEN  = '...'
+    AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
 
     #Pagination Variables
     PER_PAGE = 4
