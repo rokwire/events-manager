@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% from 'events/searchbox.html' import searchbox %}
+{% block header %}
+  <h1>{% block title %}Event Sources{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">{{title}}</li>
+  </ol>
+</nav>
+
+<h1 class="text-center">{{title}}</h1>
+
+<div class="container-fluid">
+  <div class="row m-3">
+    <div class="col"></div>
+    <div class="col-6 float-right">
+      {{ searchbox(eventTypeValues, "source", sourceId)}}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-2">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      {% for key, value in allsources.items() %}
+        {% if key == sourceId %}
+	       <a class="nav-link active" id="v-pills-school-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-school" aria-selected="true">{{value[0]}}</a>
+        {% else %}
+	       <a class="nav-link" id="v-pills-school-tab" href="{{url_for('event.source', sourceId=key)}}" role="tab" aria-selected="false">{{value[0]}}</a>
+        {% endif %}
+      {% endfor %}
+      <a class="nav-link" id="v-pills-school-tab" href="{{url_for('event.setting')}}" role="tab" aria-selected="false">Setting</a>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
+
+        <div id = "accordion">
+          {% for item in calendars %}
+            {% for key, value in item.items() %}
+                <div class="card">
+                  <div class="card-header" role="tab" id = "head" href="{{url_for('event.calendar', calendarId=key)}}">
+                    <a href="{{url_for('event.calendar', calendarId=key)}}" class="btn btn-default ml-auto float-left">
+                      <h4 class="mb-0" align = "left">{{ value }}</h4>
+                    </a>
+                  </div>
+              </div class = "card">
+            {% endfor %}
+          {% endfor %}
+        </div class = "accordion">
+
+        {% if calendars|length == 0 %}
+        <div class="text-center">There are no calendars under this source.</div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

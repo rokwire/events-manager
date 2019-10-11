@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+
+{% from 'events/confirmation.html' import confirmation %}
+
+{% block title %}
+  {{ post.title }}
+{% endblock %}
+
+{% block modals %}
+
+{% if post.eventStatus == "approved" %}
+{{ confirmation("disapproveEvent", post.title) }}
+{% else %}
+{{ confirmation("approveEvent", post.title) }}
+{% endif %}
+
+<!-- delete Confirmation form -->
+<div id="DeleteModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg" role="content">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmation </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <!-- table form here -->
+          <div class="form-group row">
+            <label for="delete" class="col-12 col-form-label"><center>You are about to delete the following event: </center></label>
+          </div>
+          <div class="form-group row">
+            <h2 class="col-12">{{post.title}}</h2>
+          </div>
+          <div class="offset-md-2 col-md-10">
+            <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+  <!-- filter and select operations -->
+  {% if isUser %}
+  <div class="media">
+    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+  </div>
+  {% else %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('event.source', sourceId=post['sourceId']) }}">{{sourceName}}</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('event.calendar', calendarId=post['calendarId']) }}">{{calendarName}}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{post['title']}}</li>
+    </ol>
+  </nav>
+  {% endif %}
+    <article class="media content-section">
+      <div class="media-body">
+        <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
+        <hr class="divider"/>
+
+        {% if post.eventStatus%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Event Status </h5>
+            </div>
+            <p class="col-sm-9">
+              {% if post.eventStatus == "approved" %}
+                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
+              {% elif post.eventStatus == "disapproved"%}
+                <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
+              {% elif post.eventStatus == "pending"%}
+                <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
+              {% else %}
+                <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
+              {% endif %}
+            </p>
+
+          </div>
+        {% endif %}
+
+        <!-- event url -->
+        {% if post.titleURL%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Event URL </h5>
+            </div>
+            <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
+          </div>
+        {% endif %}
+
+        <!-- event category -->
+        {% if post.category %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Category </h5>
+            </div>
+            <p class="col-sm-9">{{post.category}}</p>
+          </div>
+        {% endif %}
+
+        <!-- event subcategory -->
+        {% if post.subcategory %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Sub Category </h5>
+            </div>
+            <p class="col-sm-9">{{post.subcategory}}</p>
+          </div>
+        {% endif %}
+
+        <!-- startDate -->
+        {% if post.startDate%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Start Date </h5>
+            </div>
+            <p class="col-sm-9" id="startDate">
+              {{post.startDate}}
+            </p>
+          </div>
+        {% endif %}
+
+        <!-- endDate -->
+        {% if post.endDate%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>End Date </h5>
+            </div>
+            <p class="col-sm-9" id="endDate">{{ post.endDate}}</p>
+          </div>
+        {% endif %}
+
+        <!-- target audience -->
+        {% if post.targetAudience %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Target Audience </h5>
+            </div>
+            <div class = "col-sm-9">
+            {%for i in range(post.targetAudience | length)%}
+              {%if i == (post.targetAudience | length) - 1 %}
+                <span>{{post.targetAudience[i]}}</span>
+              {%else %}
+                <span>{{post.targetAudience[i]}}, </span>
+              {% endif%}
+            {% endfor%}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- cost -->
+        {% if post.cost%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Cost </h5>
+            </div>
+            <p class="col-sm-9">{{ post.cost}}</p>
+          </div>
+        {% endif %}
+
+        <!-- contacts -->
+        {% if post.contacts%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Contacts </h5>
+            </div>
+            <table class="table table-hover col-sm-8">
+              <thead>
+                <tr>
+                  <th scope="col-sm-2">First</th>
+                  <th scope="col-sm-2">Last</th>
+                  <th scope="col-sm-2">Email</th>
+                  <th scope="col-sm-2">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contact in post.contacts %}
+                   <tr>
+                    <td>{{contact.firstName}}</td>
+                    <td>{{contact.lastName}}</td>
+                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
+                    <td>{{contact.phone}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+
+        <!-- tags -->
+        {% if post.tags%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Tags </h5>
+            </div>
+            <div class = "col-sm-9">
+              {%for i in range(post.tags | length)%}
+                {%if i == (post.tags | length) - 1 %}
+                  <span>{{post.tags[i]}}</span>
+                {%else %}
+                  <span>{{post.tags[i]}}, </span>
+                {% endif%}
+              {% endfor%}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- sponsor -->
+        {% if post.sponsor%}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Sponsor </h5>
+            </div>
+            <p class = "col-sm-9">{{post.sponsor}}</p>
+          </div>
+        {% endif %}
+
+        <!-- description: longDescription -->
+        {% if post.longDescription%}
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <h5>Description </h5>
+          </div>
+          <div class="col-12 col-sm-9">
+            {% autoescape false %}{{post.longDescription}}{% endautoescape %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- location -->
+        {% if post.location %}
+            <!-- location.description -->
+            {% if post.location.description %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Location </h5>
+                </div>
+                <p class="col-12 col-sm-9">{{post.location.description}}</p>
+              </div>
+            {% endif %}
+            <!-- location.address -->
+            {% if post.location.latitude %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Latitude </h5>
+                </div>
+                <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
+              </div>
+            {% endif %}
+            {% if post.location.longitude %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Longitude </h5>
+                </div>
+                <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
+              </div>
+            {% endif %}
+          <!-- google map API -->
+          <div class="row">
+            <div class="col-12 col-sm-9 offset-sm-2">
+            {% if post.location.latitude and post.location.longitude %}
+              <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      </div class = "media-body">
+    </article>
+  <div class="row justify-content-center">
+    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+        {% if post.eventStatus == "approved" %}
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
+        {% else %}
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
+        {% endif %}
+      </div>
+      <div class="btn-group mr-2" role="group" aria-label="Second group">
+        {% if isUser %}
+        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
+        {% endif %}
+      </div>
+      {% if isUser %}
+      <div class="btn-group mr-2" role="group" aria-label="Third group">
+        <span role="button" class="btn btn-block nav-link btn-dark"
+          data-toggle="modal" data-html="true" data-target="#DeleteModal">
+            Delete
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endblock %}
+
+
+  <!-- add js for local date format -->
+  {% block scripts %}
+    {{super()}}
+    <script>
+      {% if post.location %}
+        {% if post.location.latitude and post.location.longitude %}
+          function initMap() {
+            let loc = { lat: {{ post.location.latitude}}, lng: {{ post.location.longitude }}};
+            let map = new google.maps.Map(
+              document.getElementById("map"),
+              { zoom: 17, center: loc, mapTypeControl: false }
+            );
+            let marker = new google.maps.Marker({position: loc, map: map});
+          }
+        {% endif %}
+      {% endif %}
+
+      var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
+      var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
+      var date_start = new Date(start_utc+"Z");
+      document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+      var date_end = new Date(end_utc+"Z");
+      document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+
+      $("#approvebutton").click(function() {
+        {% if isUser %}
+        let url = "{{ url_for('user_events.user_an_event_approve', id=post._id) }}"
+        {% else %}
+        let url = "{{ url_for('event.approveEvent', id=post._id) }}"
+        {% endif %}
+        $.post(url,
+        function(data) {
+          if (data == "success") {
+            location.reload();
+          }
+        });
+      });
+      $("#disapprovebutton").click(function() {
+        {% if isUser %}
+        let url = "{{ url_for('user_events.user_an_event_disapprove', id=post._id) }}"
+        {% else %}
+        let url = "{{ url_for('event.disapproveEvent', id=post._id) }}"
+        {% endif %}
+        $.post(url,
+        function(data) {
+          if (data == "success") {
+            location.reload();
+          }
+        });
+      });
+    </script>
+
+    {% if post.location %}
+      {% if post.location.latitude and post.location.longitude %}
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
+      {% endif %}
+    {% endif %}
+
+
+  {% endblock %}
