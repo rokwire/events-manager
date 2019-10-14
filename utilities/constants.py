@@ -108,9 +108,14 @@ predefined_locations = {
         'description': 'Champaign County Fairgrounds'
     },
     "Student Union SLC Conference room": {
-        'latitude': 39.727282,
-        'longitude': -89.617477,
-        'description': 'Student Union SLC Conference room'
+        "latitude": 39.727282,
+        "longitude": -89.617477,
+        "description": "Student Union SLC Conference room"
+    },
+    "Student Union SLC Conference Room": {
+        "latitude": 39.727282,
+        "longitude": -89.617477,
+        "description": "Student Union SLC Conference Room"
     },
     "Armory, room 172 (the Innovation Studio)":{
         'latitude': 40.104749,
