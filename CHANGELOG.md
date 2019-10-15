@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - get collection name from config.py
 
-## 1.0.0 2019-10-11
 
 ## [1.0.1] - 2019-10-14
 ### Added
