@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2019-10-15
+### Fixed
+- get collection name from config.py
+
+
+## [1.0.1] - 2019-10-14
+### Added
+- add SLC predefined geolocation.
+
+### Fixed
+- Incorrect geolocations outside Champaign-Urbana area.
+
+## [1.0.0] - 2019-10-11
 ### Fixed
 -- setting requires user's login.
 

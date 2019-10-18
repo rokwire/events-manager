@@ -401,7 +401,7 @@ def start(targets=None):
     new_eventId_list = []
 
     # get all previous event ids from db
-    previous_eventId_list = find_all_previous_event_ids('eventsmanager-events')
+    previous_eventId_list = find_all_previous_event_ids(current_app.config['EVENT_COLLECTION'])
     urls = geturls(targets)
     for url in urls:
         try:
