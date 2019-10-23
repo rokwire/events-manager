@@ -103,7 +103,9 @@ def parse(content, gmaps):
     xmltoMongoDB = []
 
     for pe in XML2JSON:
-
+        #don't add events without location
+        if 'location' not in pe:
+            continue
         entry = dict()
 
         # Required Field
@@ -236,6 +238,7 @@ def parse(content, gmaps):
 
 
             if location in predefined_locations:
+    
                 entry['location'] = predefined_locations[location]
                 print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
             else:
@@ -262,7 +265,9 @@ def parse(content, gmaps):
                         entry['location'] = GeoInfo
                     else:
                         entry['location'] = {'description': pe['location']}
+        
         xmltoMongoDB.append(entry)
+
     print("Get {} parsed events".format(len(xmltoMongoDB)))
     return xmltoMongoDB
 
@@ -286,6 +291,7 @@ def store(documents):
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
         ]})
+        should_update = False
 
         # if it is a new event
         if not result:
@@ -313,17 +319,23 @@ def store(documents):
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
 
-        # if event is not found
+        # if event is not found # ASK
         else:
-            if result['eventStatus'] == 'published':
-                document['submitType'] ='put'
-            update += 1
+            #document = new entry in download
+            #result = old entry in db
+            data_modified_new = document['dataModified']
+            data_modified_old = result['dataModified']
+            should_update = data_modified_new > data_modified_old
 
-        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
-                update={'$set': document}, upsert=True)
-        # insert update error check
-        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+            if result['eventStatus'] == 'published' and should_update:
+                document['submitType'] ='put'
+                update += 1
+        if (should_update):
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
+                    update={'$set': document}, upsert=True)
+            # insert update error check
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
 
     s3_client = boto3.client('s3')
     # upload approved or published events
@@ -416,6 +428,7 @@ def start(targets=None):
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
 
+            
 
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
