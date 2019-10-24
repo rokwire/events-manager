@@ -26,6 +26,40 @@
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
         <form action="{{ url_for('event.setting') }}" method="POST">
+          <h2>Add New Calendars</h2>
+          <div class = "form-group row" >
+            <div class="col-sm-3">
+              <span role="button" class="add-one btn btn-outline-primary">+ Add A Calendar</span>
+            </div>
+          </div>
+            
+
+          <!-- HIDDEN DYNAMIC ELEMENT -->
+          <div class="contact-group dynamic-element" style="display:none">
+
+          <!-- calendar id and name fields -->
+            <div class = "form-group row" >
+              <div class="col-sm-3">
+                <input class="form-control" id="calendarID" name="calendarID[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar ID" />
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="calendarName" name="calendarName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar Name"/>
+              </div>
+              <!-- End of fields-->
+              <div class="col-sm-1">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- END OF HIDDEN ELEMENT -->
+
+
+        <div class="dynamic-stuff">
+          <!-- existing stuff-->
+        </div>
+
           <h2>Calendar approval status</h2>
           <button type="button" class="btn btn-primary" id="selectallbutton">Select all</button>
           <button type="button" class="btn btn-primary" id="clearallbutton">Clear all</button>
@@ -46,6 +80,7 @@
               {% endfor %}
             {% endfor %}
           {% endfor %}
+  
 
           <button type="submit" class="btn btn-primary">Save</button>
         </form>
@@ -136,6 +171,29 @@
         $('#defaultdownload').attr('disabled', false);
       })
     });
+
+    //Clone the hidden element and shows it
+   $('.add-one').click(function(){
+     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+     attach_delete();
+   });
+
+   $('.exist-contact').ready(function(){
+     attach_delete();
+   });
+
+   //Attach functionality to delete buttons
+   function attach_delete(){
+     $('.delete').off();
+     $('.delete').click(function(){
+       console.log("click");
+       $(this).closest('.contact-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+
+
+
   </script>
 
 {% endblock %}
