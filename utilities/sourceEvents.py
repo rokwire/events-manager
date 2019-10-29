@@ -303,7 +303,6 @@ def store(documents):
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
         ]})
-        should_update = False
 
         # if it is a new event
         if not result:
@@ -331,7 +330,7 @@ def store(documents):
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
 
-        # if event is not found # ASK
+        # if event is not found 
         else:
             if result['eventStatus'] == 'published':
                 document['submitType'] ='put'
@@ -434,7 +433,6 @@ def start(targets=None):
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
 
-            
 
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
