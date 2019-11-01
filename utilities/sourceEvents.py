@@ -145,19 +145,19 @@ def parse(content, gmaps):
             startTime = pe['startTime']
             endDate = pe['endDate']
             endTime = pe['endTime']
-            startDateObj = event_time_conversion.utctime(startDateObj)
-            endDateObj = event_time_conversion.utctime(endDateObj)
+            startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
+            endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['startDate'] = event_time_conversion.utctime(startDateObj)
+            entry['endDate'] = event_time_conversion.utctime(endDateObj)
 
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
             entry['allDay'] = True
             startDate = pe['startDate']
             endDate = pe['endDate']
-            startDateObj = event_time_conversion.utctime(startDateObj)
-            endDateObj = event_time_conversion.utctime(endDateObj)
+            startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
+            endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
             entry['startDate'] = event_time_conversion.utctime(startDateObj)
             entry['endDate'] = event_time_conversion.utctime(endDateObj)
