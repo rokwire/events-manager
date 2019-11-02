@@ -12,7 +12,13 @@ from .user_events import userbp as user_bp
 from .scheduler import create_scheduler, drop_scheduler
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    if Config is not None and Config.URL_PREFIX is not None:
+        prefix = Config.URL_PREFIX
+        staticpath = prefix+'/static'
+    else:
+        prefix = None
+        staticpath = '/static'
+    app = Flask(__name__, static_url_path=staticpath)
     app.config.from_object(Config)
 
     init_db(app)
