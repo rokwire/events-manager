@@ -8,7 +8,7 @@ from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
 from flask import current_app
 from .constants import *
-
+from . import event_time_conversion
 import xml.etree.ElementTree as ET
 import googlemaps
 import requests
@@ -126,9 +126,9 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' ' + startTime + '', '%m/%d/%Y %I:%M %p')
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj)
+            entry['endDate'] = event_time_conversion.utctime(endDateObj)
 
         if pe['timeType'] == "ALL_DAY":
             entry['allDay'] = True
@@ -136,9 +136,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj)
+            entry['endDate'] = event_time_conversion.utctime(endDateObj)
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -147,9 +147,9 @@ def parse(content, gmaps):
             endTime = pe['endTime']
             startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj)
+            entry['endDate'] = event_time_conversion.utctime(endDateObj)
 
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
@@ -158,9 +158,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj)
+            entry['endDate'] = event_time_conversion.utctime(endDateObj)
 
         # Optional Field
         if 'description' in pe:
