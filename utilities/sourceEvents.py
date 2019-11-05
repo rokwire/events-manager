@@ -136,7 +136,7 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            entry['startDate'] =  (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
             entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         elif pe['timeType'] == "START_AND_END_TIME":
@@ -224,6 +224,23 @@ def parse(content, gmaps):
         # edit information 
         dataModifiedObj = datetime.strptime(pe['editedDate'] + ' 12:00 am', '%m/%d/%Y %I:%M %p')
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+
+        #find matching event in db
+        event_in_db = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': entry[
+            'dataSourceEventId'
+        ]})
+        if event_in_db is not None:
+            data_modified_new = entry['dataModified']
+            data_modified_old = event_in_db['dataModified']
+            
+            # update event only if greater than one in database (don't call google service)
+            if data_modified_new < data_modified_old:
+                continue
+            
+            #if same date, may have been updated on same day
+            #don't update if all fields are the same
+            if data_modified_new == data_modified_old:
+                placeholder_val = 0
 
         # find geographical location
         if 'location' in pe:
