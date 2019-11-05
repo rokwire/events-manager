@@ -69,8 +69,44 @@ def calendar(calendarId):
 def setting():
     if request.method == 'POST':
         print(request.form)
+        # new calendars
+        # checkboxStatus_list = request.form.getlist('calendarStatus')
+        calendarID_list = request.form.getlist('calendarID[]')
+        calendarName_list = request.form.getlist('calendarName[]')
+        new_calendar_number = len(calendarID_list)
+        # insertion must have name and ids
+        # delete invalid inserions
+        # to_delete_status = []
+        to_delete_cal_ids = []
+        to_delete_names = []
+        for i in range(0, new_calendar_number):
+            if calendarID_list[i] == '' or calendarName_list[i] == '':
+                # to_delete_status.append(checkboxStatus_list[i])
+                to_delete_cal_ids.append(calendarID_list[i])
+                to_delete_names.append(calendarName_list[i])
+
+        to_delete = len(to_delete_cal_ids)
+        for i in range(0,to_delete):
+            # checkboxStatus_list.remove(to_delete_status[i])
+            calendarID_list.remove(to_delete_cal_ids[i])
+            calendarName_list.remove(to_delete_names[i])
+        new_calendar_number = len(calendarID_list)
+        insert = 0
+        for i in range(0, new_calendar_number):
+            calendar_document = {"calendarId" : calendarID_list[i], "calendarName": calendarName_list[i]}  #,"status" :checkboxStatus_list[i] }
+            insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+            # insert error condition check
+            if insert_result.inserted_id is None:
+                print("Insert calendar {} failed", calendarID_list[i])
+            else:
+                insert += 1
+        print("successfully inserted {} calendars", insert)
+        print("insert a calendar end")
+
+        #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
+
     allstatus = get_all_calendar_status()
     return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
 
