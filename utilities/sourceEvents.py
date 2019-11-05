@@ -103,6 +103,9 @@ def parse(content, gmaps):
     xmltoMongoDB = []
 
     for pe in XML2JSON:
+        #don't add events without location
+        if 'location' not in pe:
+            continue
 
         entry = dict()
 
