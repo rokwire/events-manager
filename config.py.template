@@ -24,7 +24,7 @@ class Config(object):
     EVENT_COLLECTION='eventsmanager-events'
 
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
-    EVENT_URL_PREFIX='https://calendars.illinois.edu/eventXML11/'
+    EVENT_URL_PREFIX='https://xml.calendars.illinois.edu/eventXML11/'
     EVENT_URL_SUFFIX='.xml'
 
     # This a mapping between webtools calendars id to name
