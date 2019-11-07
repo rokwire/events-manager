@@ -95,11 +95,13 @@ def setting():
         for i in range(0, new_calendar_number):
             calendar_document = {"calendarId" : calendarID_list[i], "calendarName": calendarName_list[i]}  #,"status" :checkboxStatus_list[i] }
             insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+            print(calendar_document)
             # insert error condition check
             if insert_result.inserted_id is None:
                 print("Insert calendar {} failed", calendarID_list[i])
             else:
                 insert += 1
+        print(current_app.config['INT2CAL'])
         print("successfully inserted {} calendars", insert)
         print("insert a calendar end")
 
