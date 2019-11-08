@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- skip events if there is no location or empty location.
+
 ## [1.0.3] - 2019-11-02
 ### Fixed
 - css bug incompatible with url perfix
