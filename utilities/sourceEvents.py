@@ -231,8 +231,20 @@ def parse(content, gmaps):
         dataModifiedObj = datetime.strptime(pe['editedDate'] + ' 12:00 am', '%m/%d/%Y %I:%M %p')
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
+        skip_google_geoservice = False
+        # compare with the existing location
+        existing_event = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': entry[
+            'dataSourceEventId'
+        ]})
+        existing_location = existing_event.get('location')
+        if existing_location:
+            existing_description = existing_location.get('description')
+            if existing_description == pe.get('location'):
+                if existing_location.get('latitude') and existing_location.get('longitude'):
+                    skip_google_geoservice = True
+
         # find geographical location
-        if 'location' in pe:
+        if not skip_google_geoservice:
             location = pe['location']
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
