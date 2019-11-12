@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - skip events if there is no location or empty location.
+- optimize the google geolocation service usage
 
 ## [1.0.3] - 2019-11-02
 ### Fixed
