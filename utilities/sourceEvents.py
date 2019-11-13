@@ -123,6 +123,61 @@ def parse(content, gmaps):
         entry['sourceId'] = '0'
         entry['allDay'] = False
 
+        # find geographical location
+        skip_google_geoservice = False
+        # compare with the existing location
+        existing_event = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': entry[
+            'dataSourceEventId'
+        ]})
+        existing_location = existing_event.get('location')
+        if existing_location:
+            existing_description = existing_location.get('description')
+            if existing_description == pe.get('location'):
+                if existing_location.get('latitude') and existing_location.get('longitude'):
+                    skip_google_geoservice = True
+                    lat = existing_location.get('latitude')
+                    lng = existing_location.get('longitude')
+                    GeoInfo = {
+                        'latitude': lat,
+                        'longitude': lng,
+                        'description': pe['location']
+                    }
+                    entry['location'] = GeoInfo
+
+        if not skip_google_geoservice:
+            location = pe['location']
+            calendarName = pe['calendarName']
+            sponsor = pe['sponsor']
+
+            if location in predefined_locations:
+                entry['location'] = predefined_locations[location]
+                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
+            else:
+                (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
+                if found:
+                    entry['location'] = GeoInfo
+                else:
+                    try:
+                        GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
+                    except googlemaps.exceptions.ApiError as e:
+                        print("API Key Error: {}".format(e))
+                        entry['location'] = {'description': pe['location']}
+                        xmltoMongoDB.append(entry)
+                        continue
+
+                    if len(GeoResponse) != 0:
+                        lat = GeoResponse[0]['geometry']['location']['lat']
+                        lng = GeoResponse[0]['geometry']['location']['lng']
+                        GeoInfo = {
+                            'latitude': lat,
+                            'longitude': lng,
+                            'description': pe['location']
+                        }
+                        entry['location'] = GeoInfo
+                    else:
+                        entry['location'] = {'description': pe['location']}
+
+
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
             startTime = pe['startTime']
@@ -231,40 +286,6 @@ def parse(content, gmaps):
         dataModifiedObj = datetime.strptime(pe['editedDate'] + ' 12:00 am', '%m/%d/%Y %I:%M %p')
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
-        # find geographical location
-        if 'location' in pe:
-            location = pe['location']
-            calendarName = pe['calendarName']
-            sponsor = pe['sponsor']
-
-
-            if location in predefined_locations:
-                entry['location'] = predefined_locations[location]
-                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
-            else:
-                (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
-                if found:
-                    entry['location'] = GeoInfo
-                else:
-                    try:
-                        GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
-                    except googlemaps.exceptions.ApiError as e:
-                        print("API Key Error: {}".format(e))
-                        entry['location'] = {'description': pe['location']}
-                        xmltoMongoDB.append(entry)
-                        continue
-
-                    if len(GeoResponse) != 0:
-                        lat = GeoResponse[0]['geometry']['location']['lat']
-                        lng = GeoResponse[0]['geometry']['location']['lng']
-                        GeoInfo = {
-                            'latitude': lat,
-                            'longitude': lng,
-                            'description': pe['location']
-                        }
-                        entry['location'] = GeoInfo
-                    else:
-                        entry['location'] = {'description': pe['location']}
         xmltoMongoDB.append(entry)
     print("Get {} parsed events".format(len(xmltoMongoDB)))
     return xmltoMongoDB
