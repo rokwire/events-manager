@@ -38,10 +38,6 @@
 
           <!-- calendar id and name fields -->
             <div class = "form-group row" >
-              <!-- <div class="col-sm-1">
-                <input class="form-check-input" id="calendarStatus" name="calendarStatus" type="checkbox">
-                <label class="form-check-label" for="check">Approve</label>
-              </div> -->
               <div class="col-sm-3">
                 <input class="form-control" id="calendarID" name="calendarID[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar ID" />
               </div>
@@ -49,18 +45,20 @@
                 <input class="form-control" id="calendarName" name="calendarName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar Name"/>
               </div>
               <!-- End of fields-->
-              <div class="col-sm-1">
-                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Delete</span>
+              <div class="col-sm-3">
+                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Remove Change</span>
               </div>
             </div>
-
-
           </div>
           <!-- END OF HIDDEN ELEMENT -->
 
-
         <div class="dynamic-stuff">
           <!-- existing stuff-->
+        </div>
+        <div class = "form-group row" >
+          <div class="col-sm-3">
+            <span role="button" id="save-calendar" class="save-calendar btn btn-outline-primary">Save</span>
+          </div>
         </div>
 
           <h2>Calendar approval status</h2>
@@ -194,6 +192,38 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+
+   $('#save-calendar').click(function(){
+     console.log("click save");
+     let id_results = [];
+     let name_results = [];
+     $("input[type=text]").each(function(index){
+       if(index!=0 && index%2 == 0){
+         id_results.push($(this).val());
+       }else if(index != 1 && index%2 == 1) {
+         name_results.push($(this).val());
+       }
+     });
+      console.log(id_results);
+      console.log(name_results);
+     $.post("{{ url_for('event.add_new_calendar') }}",
+     {
+       dataType: "json",
+       contentType:"application/json; charset=utf-8",
+       type: "POST",
+       data:{
+         "calendarID_list": JSON.stringify(id_results),
+         "calendarName": JSON.stringify(name_results)
+       }
+     }
+     ,
+     function(data) {
+       if (data == "success") {
+         alert("new calendars success");
+       }
+     }
+     );
+   });
 
 
 

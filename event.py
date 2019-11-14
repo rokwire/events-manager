@@ -69,41 +69,7 @@ def calendar(calendarId):
 def setting():
     if request.method == 'POST':
         print(request.form)
-        # new calendars
-        # checkboxStatus_list = request.form.getlist('calendarStatus')
-        calendarID_list = request.form.getlist('calendarID[]')
-        calendarName_list = request.form.getlist('calendarName[]')
-        new_calendar_number = len(calendarID_list)
-        # insertion must have name and ids
-        # delete invalid inserions
-        # to_delete_status = []
-        to_delete_cal_ids = []
-        to_delete_names = []
-        for i in range(0, new_calendar_number):
-            if calendarID_list[i] == '' or calendarName_list[i] == '':
-                # to_delete_status.append(checkboxStatus_list[i])
-                to_delete_cal_ids.append(calendarID_list[i])
-                to_delete_names.append(calendarName_list[i])
 
-        to_delete = len(to_delete_cal_ids)
-        for i in range(0,to_delete):
-            # checkboxStatus_list.remove(to_delete_status[i])
-            calendarID_list.remove(to_delete_cal_ids[i])
-            calendarName_list.remove(to_delete_names[i])
-        new_calendar_number = len(calendarID_list)
-        insert = 0
-        for i in range(0, new_calendar_number):
-            calendar_document = {"calendarId" : calendarID_list[i], "calendarName": calendarName_list[i]}  #,"status" :checkboxStatus_list[i] }
-            insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
-            print(calendar_document)
-            # insert error condition check
-            if insert_result.inserted_id is None:
-                print("Insert calendar {} failed", calendarID_list[i])
-            else:
-                insert += 1
-        print(current_app.config['INT2CAL'])
-        print("successfully inserted {} calendars", insert)
-        print("insert a calendar end")
 
         #add update calendars
         allstatus = get_all_calendar_status()
@@ -250,4 +216,43 @@ def schedule():
     # scheduler function
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
+    return "success", 200
+
+
+@bp.route('/add-new-calendar', methods=['POST'])
+def add_new_calendar():
+    print(request.form)
+    # new calendars
+    # calendarID_list = request.form.getlist('calendarID[]')
+    # calendarName_list = request.form.getlist('calendarName[]')
+    calendarID_list = request.form.get('data[calendarID_list]')
+    calendarName_list = request.form.get('data[calendarName_list]')
+    new_calendar_number = len(calendarID_list)
+    # insertion must have name and ids
+    # delete invalid inserions
+    to_delete_cal_ids = []
+    to_delete_names = []
+    for i in range(0, new_calendar_number):
+        if calendarID_list[i] == '' or calendarName_list[i] == '':
+            to_delete_cal_ids.append(calendarID_list[i])
+            to_delete_names.append(calendarName_list[i])
+    to_delete = len(to_delete_cal_ids)
+    for i in range(0,to_delete):
+        calendarID_list.remove(to_delete_cal_ids[i])
+        calendarName_list.remove(to_delete_names[i])
+    new_calendar_number = len(calendarID_list)
+    insert = 0
+    for i in range(0, new_calendar_number):
+        calendar_document = {"calendarId" : calendarID_list[i], "calendarName": calendarName_list[i]}  #,"status" :checkboxStatus_list[i] }
+        insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+        print(calendar_document)
+        # insert error condition check
+        if insert_result.inserted_id is None:
+            print("Insert calendar {} failed", calendarID_list[i])
+        else:
+            insert += 1
+    print(current_app.config['INT2CAL'])
+    print("successfully inserted {} calendars", insert)
+    print("insert a calendar end")
+
     return "success", 200
