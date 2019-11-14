@@ -26,38 +26,18 @@
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
         <form action="{{ url_for('event.setting') }}" method="POST">
-          <h2>Add New Calendars</h2>
+        <h2>Add New Calendars</h2>
+        <div class="contact-group dynamic-element">
           <div class = "form-group row" >
             <div class="col-sm-3">
-              <span role="button" class="add-one btn btn-outline-primary">+ Add Calendar</span>
+              <input class="form-control" id="calendarID" name="calendarID[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar ID" />
             </div>
-          </div>
-
-          <!-- HIDDEN DYNAMIC ELEMENT -->
-          <div class="contact-group dynamic-element" style="display:none">
-
-          <!-- calendar id and name fields -->
-            <div class = "form-group row" >
-              <div class="col-sm-3">
-                <input class="form-control" id="calendarID" name="calendarID[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar ID" />
-              </div>
-              <div class="col-sm-3">
-                <input class="form-control" id="calendarName" name="calendarName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar Name"/>
-              </div>
-              <!-- End of fields-->
-              <div class="col-sm-3">
-                <span role="button" class="delete btn btn-outline-dark btn-sm-1">Remove Change</span>
-              </div>
+            <div class="col-sm-3">
+              <input class="form-control" id="calendarName" name="calendarName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar Name"/>
             </div>
-          </div>
-          <!-- END OF HIDDEN ELEMENT -->
-
-        <div class="dynamic-stuff">
-          <!-- existing stuff-->
-        </div>
-        <div class = "form-group row" >
-          <div class="col-sm-3">
-            <span role="button" id="save-calendar" class="save-calendar btn btn-outline-primary">Save</span>
+            <div class="col-sm-3">
+              <span role="button" id="save-calendar" class="save-calendar btn btn-outline-primary">Save New Calendar</span>
+            </div>
           </div>
         </div>
 
@@ -173,54 +153,57 @@
       })
     });
 
-    //Clone the hidden element and shows it
-   $('.add-one').click(function(){
-     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
-     attach_delete();
-   });
-
-   $('.exist-contact').ready(function(){
-     attach_delete();
-   });
-
-   //Attach functionality to delete buttons
-   function attach_delete(){
-     $('.delete').off();
-     $('.delete').click(function(){
-       console.log("click");
-       $(this).closest('.contact-group').remove();
-       $('#form').find('input:submit, button:submit').prop("disabled", false);
-     });
-   }
+   //  //Clone the hidden element and shows it
+   // $('.add-one').click(function(){
+   //   $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+   //   attach_delete();
+   // });
+   //
+   // $('.exist-contact').ready(function(){
+   //   attach_delete();
+   // });
+   //
+   // //Attach functionality to delete buttons
+   // function attach_delete(){
+   //   $('.delete').off();
+   //   $('.delete').click(function(){
+   //     console.log("click");
+   //     $(this).closest('.contact-group').remove();
+   //     $('#form').find('input:submit, button:submit').prop("disabled", false);
+   //   });
+   // }
 
    $('#save-calendar').click(function(){
      console.log("click save");
-     let id_results = [];
-     let name_results = [];
      $("input[type=text]").each(function(index){
-       if(index!=0 && index%2 == 0){
-         id_results.push($(this).val());
-       }else if(index != 1 && index%2 == 1) {
-         name_results.push($(this).val());
+       if(index%2 == 0){
+         id_result = $(this).val();
+       }else{
+         name_result = $(this).val();
        }
      });
-      console.log(id_results);
-      console.log(name_results);
+      console.log(id_result);
+      console.log(name_result);
      $.post("{{ url_for('event.add_new_calendar') }}",
      {
        dataType: "json",
        contentType:"application/json; charset=utf-8",
        type: "POST",
        data:{
-         "calendarID_list": JSON.stringify(id_results),
-         "calendarName": JSON.stringify(name_results)
+         "calendarID": id_result,
+         "calendarName": name_result
        }
      }
      ,
      function(data) {
        if (data == "success") {
-         alert("new calendars success");
+         alert("New calendar adding succeed!");
+       }else if(data == "fail"){
+          alert("New calendar adding failed!");
+       }else{
+          alert("New calendar should have both ID and Name!");
        }
+
      }
      );
    });

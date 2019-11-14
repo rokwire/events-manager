@@ -223,36 +223,21 @@ def schedule():
 def add_new_calendar():
     print(request.form)
     # new calendars
-    # calendarID_list = request.form.getlist('calendarID[]')
-    # calendarName_list = request.form.getlist('calendarName[]')
-    calendarID_list = request.form.get('data[calendarID_list]')
-    calendarName_list = request.form.get('data[calendarName_list]')
-    new_calendar_number = len(calendarID_list)
-    # insertion must have name and ids
-    # delete invalid inserions
-    to_delete_cal_ids = []
-    to_delete_names = []
-    for i in range(0, new_calendar_number):
-        if calendarID_list[i] == '' or calendarName_list[i] == '':
-            to_delete_cal_ids.append(calendarID_list[i])
-            to_delete_names.append(calendarName_list[i])
-    to_delete = len(to_delete_cal_ids)
-    for i in range(0,to_delete):
-        calendarID_list.remove(to_delete_cal_ids[i])
-        calendarName_list.remove(to_delete_names[i])
-    new_calendar_number = len(calendarID_list)
-    insert = 0
-    for i in range(0, new_calendar_number):
-        calendar_document = {"calendarId" : calendarID_list[i], "calendarName": calendarName_list[i]}  #,"status" :checkboxStatus_list[i] }
-        insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
-        print(calendar_document)
-        # insert error condition check
-        if insert_result.inserted_id is None:
-            print("Insert calendar {} failed", calendarID_list[i])
-        else:
-            insert += 1
-    print(current_app.config['INT2CAL'])
-    print("successfully inserted {} calendars", insert)
-    print("insert a calendar end")
-
-    return "success", 200
+    calendarID = request.form.get('data[calendarID]')
+    calendarName = request.form.get('data[calendarName]')
+    print(calendarID)
+    print(calendarName)
+    if calendarID == '' or calendarName == '':
+        print("should have both ID and Name!")
+        return "invalid", 200
+    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName}
+    insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+    # insert error condition check
+    if insert_result.inserted_id is None:
+        print("Insert calendar " + calendarID +" failed")
+        return redirect('event.setting')
+        return "fail", 400
+    else:
+        print(current_app.config['INT2CAL'])
+        print("successfully inserted calendar "+ calendarID)
+        return "success", 200
