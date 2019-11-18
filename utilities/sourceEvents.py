@@ -176,8 +176,10 @@ def parse(content, gmaps):
                         entry['location'] = GeoInfo
                     else:
                         entry['location'] = {'description': pe['location']}
+                        print("calendarId: %s, dataSourceEventId: %s,  location: %s geolocation not found" %
+                              (entry.get('calendarId'), entry.get('dataSourceEventId'), entry.get('location')))
 
-
+        entry_location = entry['location']
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
             startTime = pe['startTime']
@@ -185,8 +187,8 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj)
-            entry['endDate'] = event_time_conversion.utctime(endDateObj)
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         if pe['timeType'] == "ALL_DAY":
             entry['allDay'] = True
@@ -195,8 +197,8 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj)
-            entry['endDate'] = event_time_conversion.utctime(endDateObj)
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -206,8 +208,8 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj)
-            entry['endDate'] = event_time_conversion.utctime(endDateObj)
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
@@ -217,8 +219,8 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj)
-            entry['endDate'] = event_time_conversion.utctime(endDateObj)
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         # Optional Field
         if 'description' in pe:
