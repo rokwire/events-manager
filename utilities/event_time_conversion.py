@@ -12,7 +12,6 @@ def utctime(datetime_without_tz, latitude, longitude):
     if latitude is None or longitude is None:
         # FIXME: if geolocation not provided, then use "US/Central" timezone.
         local_tz = pytz.timezone("US/Central")
-    # FIXME: temporarily use US/Central for webtool events
     else:
         tz_name = get_timezone_by_geolocation(latitude, longitude)
         if not tz_name:
