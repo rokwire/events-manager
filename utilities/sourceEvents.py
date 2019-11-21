@@ -471,7 +471,7 @@ def start(targets=None):
 
     #compare old events in db, new downloads, find difference to delete
     print("# new_eventId_list: " + str(len(new_eventId_list)))
-    print("# previous_eventId_list: " + str(len(previous_eventId_list)))    
+    print("# previous_eventId_list: " + str(len(previous_eventId_list)))
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
     print("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
     print(previous_events_to_delete)
