@@ -29,7 +29,7 @@ def create_app(config_class=Config):
         pass
 
     app.register_blueprint(auth_bp)
-    # app.register_blueprint(user_bp)
+    app.register_blueprint(user_bp)
     app.register_blueprint(event_bp)
 
     app.scheduler = create_scheduler(app)
