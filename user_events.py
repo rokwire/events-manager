@@ -6,8 +6,9 @@ from flask import Flask,render_template,url_for,flash, redirect, Blueprint, requ
 from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
+from .config import Config
 
-userbp = Blueprint('user_events', __name__, url_prefix='/user-events')
+userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
 @userbp.route('/', methods=['GET', 'POST'])
 def user_events():
