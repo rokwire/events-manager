@@ -311,14 +311,14 @@ def get_all_calendar_status():
 
 def load_calendar_into_db():
     for calendar in current_app.config['INT2CAL']:
-        for calendarId, name in calendar.items():
+        for calendarId, calendarName in calendar.items():
             doc = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
             if not doc:
-                insert_one(current_app.config['CALENDAR_COLLECTION'], document={"calendarId": calendarId, "name": name,
+                insert_one(current_app.config['CALENDAR_COLLECTION'], document={"calendarId": calendarId, "calendarName": calendarName,
                                                                                 "status": "disapproved"})
-            elif not doc.get('name'):
+            elif not doc.get('calendarName'):
                 find_one_and_update(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
-                                    update={"$set": {"name": name}})
+                                    update={"$set": {"calendarName": calendarName}})
 
     print("load calendar into db")
 

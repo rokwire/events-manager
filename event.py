@@ -77,7 +77,7 @@ def setting():
     calendar_source = list()
     calendar_status = dict()
     for calendar_id in calendar_ids:
-        calendar_source.append({calendar_id: calendar_in_db.get(calendar_id).get('name')})
+        calendar_source.append({calendar_id: calendar_in_db.get(calendar_id).get('calendarName')})
         calendar_status[calendar_id] = calendar_in_db.get(calendar_id).get('status')
     INT2SRC = {
         '0': ('WebTools', calendar_source),
@@ -236,7 +236,8 @@ def add_new_calendar():
     if calendarID == '' or calendarName == '':
         print("should have both ID and Name!")
         return "invalid", 200
-    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName}
+    # all newly added calendar will be default to "disapproved"
+    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName, "status": "disapproved"}
     insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
     # insert error condition check
     if insert_result.inserted_id is None:
