@@ -69,6 +69,7 @@ def calendar(calendarId):
 def setting():
     if request.method == 'POST':
         print(request.form)
+        #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
     calendar_in_db = get_all_calendar_status()
@@ -83,7 +84,6 @@ def setting():
         '1': ('EMS', []),
     }
     return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status)
-
 
 @bp.route('/download', methods=['POST'])
 @login_required
@@ -223,3 +223,27 @@ def schedule():
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
+
+
+@bp.route('/add-new-calendar', methods=['POST'])
+def add_new_calendar():
+    print(request.form)
+    # new calendars
+    calendarID = request.form.get('data[calendarID]')
+    calendarName = request.form.get('data[calendarName]')
+    print(calendarID)
+    print(calendarName)
+    if calendarID == '' or calendarName == '':
+        print("should have both ID and Name!")
+        return "invalid", 200
+    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName}
+    insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+    # insert error condition check
+    if insert_result.inserted_id is None:
+        print("Insert calendar " + calendarID +" failed")
+        return redirect('event.setting')
+        return "fail", 400
+    else:
+        print(current_app.config['INT2CAL'])
+        print("successfully inserted calendar "+ calendarID)
+        return "success", 200
