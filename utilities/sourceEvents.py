@@ -8,7 +8,7 @@ from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
 from flask import current_app
 from .constants import *
-
+from . import event_time_conversion
 import xml.etree.ElementTree as ET
 import googlemaps
 import requests
@@ -103,6 +103,9 @@ def parse(content, gmaps):
     xmltoMongoDB = []
 
     for pe in XML2JSON:
+        # skip if location not exist or empty.
+        if not pe.get('location'):
+            continue
 
         entry = dict()
 
@@ -120,15 +123,72 @@ def parse(content, gmaps):
         entry['sourceId'] = '0'
         entry['allDay'] = False
 
+        # find geographical location
+        skip_google_geoservice = False
+        # compare with the existing location
+        existing_event = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': entry[
+            'dataSourceEventId'
+        ]})
+        existing_location = existing_event.get('location')
+        if existing_location:
+            existing_description = existing_location.get('description')
+            if existing_description == pe.get('location'):
+                if existing_location.get('latitude') and existing_location.get('longitude'):
+                    skip_google_geoservice = True
+                    lat = existing_location.get('latitude')
+                    lng = existing_location.get('longitude')
+                    GeoInfo = {
+                        'latitude': lat,
+                        'longitude': lng,
+                        'description': pe['location']
+                    }
+                    entry['location'] = GeoInfo
+
+        if not skip_google_geoservice:
+            location = pe['location']
+            calendarName = pe['calendarName']
+            sponsor = pe['sponsor']
+
+            if location in predefined_locations:
+                entry['location'] = predefined_locations[location]
+                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
+            else:
+                (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
+                if found:
+                    entry['location'] = GeoInfo
+                else:
+                    try:
+                        GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
+                    except googlemaps.exceptions.ApiError as e:
+                        print("API Key Error: {}".format(e))
+                        entry['location'] = {'description': pe['location']}
+                        xmltoMongoDB.append(entry)
+                        continue
+
+                    if len(GeoResponse) != 0:
+                        lat = GeoResponse[0]['geometry']['location']['lat']
+                        lng = GeoResponse[0]['geometry']['location']['lng']
+                        GeoInfo = {
+                            'latitude': lat,
+                            'longitude': lng,
+                            'description': pe['location']
+                        }
+                        entry['location'] = GeoInfo
+                    else:
+                        entry['location'] = {'description': pe['location']}
+                        print("calendarId: %s, dataSourceEventId: %s,  location: %s geolocation not found" %
+                              (entry.get('calendarId'), entry.get('dataSourceEventId'), entry.get('location')))
+
+        entry_location = entry['location']
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
             startTime = pe['startTime']
             startDateObj = datetime.strptime(startDate + ' ' + startTime + '', '%m/%d/%Y %I:%M %p')
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         if pe['timeType'] == "ALL_DAY":
             entry['allDay'] = True
@@ -136,9 +196,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -147,9 +207,9 @@ def parse(content, gmaps):
             endTime = pe['endTime']
             startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
@@ -158,9 +218,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # Convert CDT to UTC (offset by 5 hours)
-            entry['startDate'] = (startDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
-            entry['endDate'] = (endDateObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
+            # normalize event datetime to UTC
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
 
         # Optional Field
         if 'description' in pe:
@@ -228,40 +288,6 @@ def parse(content, gmaps):
         dataModifiedObj = datetime.strptime(pe['editedDate'] + ' 12:00 am', '%m/%d/%Y %I:%M %p')
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
-        # find geographical location
-        if 'location' in pe:
-            location = pe['location']
-            calendarName = pe['calendarName']
-            sponsor = pe['sponsor']
-
-
-            if location in predefined_locations:
-                entry['location'] = predefined_locations[location]
-                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
-            else:
-                (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
-                if found:
-                    entry['location'] = GeoInfo
-                else:
-                    try:
-                        GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
-                    except googlemaps.exceptions.ApiError as e:
-                        print("API Key Error: {}".format(e))
-                        entry['location'] = {'description': pe['location']}
-                        xmltoMongoDB.append(entry)
-                        continue
-
-                    if len(GeoResponse) != 0:
-                        lat = GeoResponse[0]['geometry']['location']['lat']
-                        lng = GeoResponse[0]['geometry']['location']['lng']
-                        GeoInfo = {
-                            'latitude': lat,
-                            'longitude': lng,
-                            'description': pe['location']
-                        }
-                        entry['location'] = GeoInfo
-                    else:
-                        entry['location'] = {'description': pe['location']}
         xmltoMongoDB.append(entry)
     print("Get {} parsed events".format(len(xmltoMongoDB)))
     return xmltoMongoDB

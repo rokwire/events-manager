@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - css bug incompatible with url perfix
 
 
+### Fixed
+- skip events if there is no location or empty location.
+- optimize the google geolocation service usage
+- fix UTC time converion outside of central timezone.
+
+## [1.0.3] - 2019-11-02
+### Fixed
+- css bug incompatible with url perfix
+- fix event time to UTC conversion.
+
 ## [1.0.2] - 2019-10-15
 ### Fixed
 - get collection name from config.py

@@ -11,3 +11,5 @@ Pillow==6.1.0
 gunicorn==19.9.0
 APScheduler==3.6.0
 python-ldap==3.2.0
+pytz==2019.2
+timezonefinder==4.1.0
