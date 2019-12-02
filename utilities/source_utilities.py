@@ -299,19 +299,29 @@ def get_calendar_status(calendarId):
         return None
     return calendar['status']
 
+
 # Find the approval status for many calendars
 def get_all_calendar_status():
     calendars = find_all(current_app.config['CALENDAR_COLLECTION'], filter={})
     result = {}
-    for dict in current_app.config['INT2CAL']:
-        for calendarId, name in dict.items():
-            calendar = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
-            # print(calendar)
-            if calendar:
-                result[calendarId] = calendar["status"]
-            else:
-                result[calendarId] = None
+    for calendar in calendars:
+        result[calendar.get('calendarId')] = calendar
     return result
+
+
+def load_calendar_into_db():
+    for calendar in current_app.config['INT2CAL']:
+        for calendarId, calendarName in calendar.items():
+            doc = find_one(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId})
+            if not doc:
+                insert_one(current_app.config['CALENDAR_COLLECTION'], document={"calendarId": calendarId, "calendarName": calendarName,
+                                                                                "status": "disapproved"})
+            elif not doc.get('calendarName'):
+                find_one_and_update(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
+                                    update={"$set": {"calendarName": calendarName}})
+
+    print("load calendar into db")
+
 
 # Update approval status for many calendars (and relevant events)
 def update_calendars_status(update, allstatus):

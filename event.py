@@ -69,15 +69,21 @@ def calendar(calendarId):
 def setting():
     if request.method == 'POST':
         print(request.form)
-
-
         #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
-
-    allstatus = get_all_calendar_status()
-    return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
-
+    calendar_in_db = get_all_calendar_status()
+    calendar_ids = calendar_in_db.keys()
+    calendar_source = list()
+    calendar_status = dict()
+    for calendar_id in calendar_ids:
+        calendar_source.append({calendar_id: calendar_in_db.get(calendar_id).get('calendarName')})
+        calendar_status[calendar_id] = calendar_in_db.get(calendar_id).get('status')
+    INT2SRC = {
+        '0': ('WebTools', calendar_source),
+        '1': ('EMS', []),
+    }
+    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status)
 
 @bp.route('/download', methods=['POST'])
 @login_required
@@ -230,7 +236,8 @@ def add_new_calendar():
     if calendarID == '' or calendarName == '':
         print("should have both ID and Name!")
         return "invalid", 200
-    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName}
+    # all newly added calendar will be default to "disapproved"
+    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName, "status": "disapproved"}
     insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
     # insert error condition check
     if insert_result.inserted_id is None:
