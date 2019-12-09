@@ -32,6 +32,7 @@ class Config(object):
     # This a mapping between webtools calendars id to name
     INT2CAL = [
       ---new calendars----
+       # {"7": "General Events"},
        # {"1095": "Fighting Illini Home Schedule"},
 
        #  --- list of Calendars ---
