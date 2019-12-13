@@ -2,7 +2,7 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, find_distinct
+from ..db import find_all, find_one, update_one, find_distinct, insert_one
 
 def get_all_user_events(select_status):
 
@@ -90,6 +90,23 @@ def find_user_all_object_events(eventId):
         return []
     return result_events
 
+
+def create_new_user_event(new_user_event):
+    update_result = None
+    result = insert_one(current_app.config['EVENT_COLLECTION'], new_user_event)
+    if result.inserted_id:
+        update = dict()
+        update['eventStatus'] = 'pending'
+        update['eventId'] = result.inserted_id
+        update_result = update_one(current_app.config['EVENT_COLLECTION'],
+                                   condition={"_id": ObjectId(result.inserted_id)},
+                                   update={
+                                      "$set": update
+                                  })
+    if update_result is None or update_result.modified_count == 0 and update_result.matched_count == 0 and update_result.upserted_id is None:
+        print("create_new_user_event {} failed")
+    return result.inserted_id
+
 def delete_user_event(eventId):
     pass
 
@@ -102,3 +119,10 @@ def approve_user_event(objectId):
 
 def disapprove_user_event(objectId):
     pass
+
+
+def populate_event_from_form(post_form):
+    new_event = dict()
+    for item in post_form:
+        new_event[item] = post_form.get(item)
+    return new_event

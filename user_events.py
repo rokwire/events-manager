@@ -238,6 +238,7 @@ def user_an_event_disapprove(id):
 
     return "success", 200
 
+
 @userbp.route('/select', methods=['POST'])
 def select():
     select_status = []
@@ -253,9 +254,15 @@ def select():
     session["select_status"] = select_status
     return "", 200
 
+
 @userbp.route('/event/add', methods=['GET', 'POST'])
 def add_new_event():
-    new_post = {}
-
-    return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+    if request.method == 'POST':
+        new_event = populate_event_from_form(request.form)
+        new_event_id = create_new_user_event(new_event)
+        return user_an_event(new_event_id)
+    else:
+        return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
+                               eventTypeValues = eventTypeValues,
+                               subcategoriesMap = subcategoriesMap,
+                               targetAudienceMap = targetAudienceMap)

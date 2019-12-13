@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- save the created user event into db and redirect to the event detail page.
 ### Fixed
 - load calendar from db. 
 - skip events if there is no location or empty location.
