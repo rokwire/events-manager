@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- specify the python version 3.7.4 to build docker image.
+
 ### Added
 - add new webtool calendar url.
 
