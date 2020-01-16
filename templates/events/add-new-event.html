@@ -218,12 +218,12 @@
             </div>
           </div>
           <!-- super event description-->
-          <div class="form-group row">
-              <div class="col-12 col-sm-2"  id="super-des-title" style="display:none">
-                  <h5>Super Event Description </h5>
+          <div class="form-group row" id="super-des" style="display:none" >
+              <div class="col-12 col-sm-2"  id="super-des-title"  >
+                  <h5 class="super-des">Super Event Description </h5>
               </div>
-              <div class="col-12 col-sm-9" id="super-des-text" style="display:none">
-                <textarea name = "superDescription" class="form-control" rows="12"></textarea>
+              <div class="col-sm-9 form-group" id="super-des-text">
+                <textarea name = "superDescription" class="form-control" rows="12" style="display:inline"></textarea>
               </div>
           </div>
 
@@ -311,13 +311,13 @@
    //Super event checkbox and description
    function display_super_event_description(){
      var check = document.getElementById("super-event");
-     var title = document.getElementById("super-des-title");
-     var text = document.getElementById("super-des-text");
+     //var title = document.getElementById("super-des-title");
+     var text = document.getElementById("super-des");
      if (check.checked == true){
-        title.style.display = "block";
-        text.style.display = "inline";
+        //title.style.display = "block";
+        text.style.display = "block";
      } else {
-        title.style.display = "none";
+        //title.style.display = "none";
         text.style.display = "none";
      }
    }

@@ -255,7 +255,7 @@ def select():
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
 def add_new_event():
-    new_post = {}
+    #new_post = {}
 
     return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
      eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
