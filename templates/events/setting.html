@@ -55,7 +55,9 @@
                   <input class="form-check-input" type="checkbox" value="" id="check{{calid}}" name="{{calid}}">
                   {% endif %}
                   <label class="form-check-label" for="check{{calid}}">
-                    {{calval}}
+                    <a href="{{url_for('event.calendar', calendarId=calid)}}">
+                       {{calval}}
+                    </a>
                   </label>
                 </div>
               {% endfor %}
