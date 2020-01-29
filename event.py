@@ -22,7 +22,7 @@ bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
 @bp.route('/source/<sourceId>')
 def source(sourceId):
-    allsources = current_app.config['lSRC']
+    allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
     return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0, eventTypeValues=eventTypeValues)
@@ -83,8 +83,8 @@ def setting():
         '0': ('WebTools', calendar_source),
         '1': ('EMS', []),
     }
-    WEBTOOL_CALENDAR_LINK_PREFIX="https://calendars.illinois.edu/list/"
-    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status, url_prefix=WEBTOOL_CALENDAR_LINK_PREFIX)
+    calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
+    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status, url_prefix=calendar_prefix)
 
 @bp.route('/download', methods=['POST'])
 @login_required
