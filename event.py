@@ -83,7 +83,8 @@ def setting():
         '0': ('WebTools', calendar_source),
         '1': ('EMS', []),
     }
-    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status)
+    calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
+    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status, url_prefix=calendar_prefix)
 
 @bp.route('/download', methods=['POST'])
 @login_required
