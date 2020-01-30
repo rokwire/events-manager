@@ -378,7 +378,6 @@ class Config(object):
 
     # WEBTOOL_CALENDAR_LINK_PREFIX are used for linking the webtools catagories to their respective illinois calendar page
     WEBTOOL_CALENDAR_LINK_PREFIX=os.getenv('WEBTOOL_CALENDAR_LINK_PREFIX', 'https://calendars.illinois.edu/list/')
-    #WEBTOOL_CALENDAR_LINK_PREFIX='https://calendars.illinois.edu/list/'
 
     # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
     ROKWIRE_IMAGE_LINK_FORMAT=os.getenv('ROKWIRE_IMAGE_LINK_FORMAT', 'http://localhost:9000/events/{}/images/{}')
