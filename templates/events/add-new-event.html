@@ -221,10 +221,10 @@
           <div id="super-des"  style="display:none" >
           <div class="form-group row">
               <div class="col-12 col-sm-2"  id="super-des-title"  >
-                  <h5>Add sub-event </h5>
+                  <h5>Add Sub-Event </h5>
               </div>
               <div class="col-sm-9">
-              <span role="button" class="add-sub btn btn-outline-primary">+ Add a sub-event</span>
+              <span role="button" class="add-sub btn btn-outline-primary">+ Add a Sub-Event</span>
               </div>
           </div>
 
@@ -236,42 +236,24 @@
                     <input class="form-control" id="sub-id" name="sub-id[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
 
               </div>
-<!--              <div class="col-sm-3" >-->
 
-<!--                <input class="form-control" id="is-feature" name="is-feature[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="change this to a drop down"/>-->
-
-
-<!--              </div>-->
-              <div class="dropdown show">
-<!--                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                         Is This a Featured Sub-Event?-->
-<!--                    </a>-->
-
-<!--                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">-->
-<!--                    <a class="dropdown-item" href="#">Yes</a>-->
-<!--                    <a class="dropdown-item" href="#">No</a>-->
-<!--                  </div>-->
-                  <div class="form-group">
-                    <select class="form-control" id="exampleFormControlSelect1">
-                      <option>Set as Featured Event</option>
+              <div class="col-sm-3" >
+                     <input class="form-control" id="track" name="track[]" type="text" placeholder="Track"/>
+              </div>
+                <div class="dropdown show">
+                <div class="form-group">
+                    <select class="form-control offset-sm-2" id="exampleFormControlSelect1">
+                      <option>Featured </option>
                       <option>Yes</option>
                       <option>No</option>
                     </select>
-                  </div>
-              </div>
-            </div>
-
-            <div class = "form-group row" >
-               <div class="col-sm-3 offset-sm-2" >
-
-                       <input class="form-control" id="tract" name="tract[]" type="text" placeholder="Tract"/>
-
-
-              </div>
+                </div>
+                </div>
               <!-- End of fields-->
-              <div class="col-md-1">
-                <span role="button" class="delete-sub btn btn-outline-dark btn-sm-1">Delete</span>
+              <div class="offset-sm-1">
+                <span role="button" class="delete-sub btn btn-dark  btn-sm-1">Delete</span>
               </div>
+
             </div>
             </div>
                <div class="dynamic-stuff-sub">
