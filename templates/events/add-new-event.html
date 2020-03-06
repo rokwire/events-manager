@@ -146,13 +146,15 @@
               <h5>Contacts </h5>
             </div>
             <div class="col-sm-9">
-              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+              <span role="button" name="add_contact" class="add-one btn btn-outline-primary">+ Add A Contact</span>
             </div>
           </div>
 
+
           <!-- HIDDEN DYNAMIC ELEMENT -->
-          <div class="contact-group dynamic-element" style="display:none">
+          <div id="contextList" class="contact-group dynamic-element" style="display:none">
             <!-- contact fields : first&lastName + email + phone -->
+
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
                 <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
@@ -208,19 +210,20 @@
                 <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
             </div>
           </div>
+
           <!-- super event check box-->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
                <h5>Super Event</h5>
             </div>
             <div class="col-12 col-sm-2">
-                <input type="checkbox" id="super-event"> Yes
+                <input class="form_control" name="is_superEvent" type="checkbox" id="super-event"> Yes
             </div>
           </div>
           <!-- add sub-event-->
-          <div id="super-des"  style="display:none" >
+          <div id="super-des" class = "form-group" style="display:none" >
           <div class="form-group row">
-              <div class="col-12 col-sm-2"  id="super-des-title"  >
+              <div class="form-group col-12 col-sm-2"  id="super-des-title"  >
                   <h5>Add Sub-Event </h5>
               </div>
               <div class="col-sm-9">
@@ -228,30 +231,29 @@
               </div>
           </div>
 
-           <div class="sub-group dynamic-element-sub" style="display:none">
+           <div class="form-group sub-group dynamic-element-sub" style="display:none">
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
 
-              <div class="col-sm-3 offset-sm-2">
+              <div class="form-group col-sm-3 offset-sm-2">
                     <input class="form-control" id="sub-id" name="sub-id[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
 
               </div>
 
-              <div class="col-sm-3" >
+              <div class="col-sm-3 form-group" >
                      <input class="form-control" id="track" name="track[]" type="text" placeholder="Track"/>
               </div>
-                <div class="dropdown show">
-                <div class="form-group">
-                    <select class="form-control offset-sm-2" id="exampleFormControlSelect1">
-                      <option>Featured </option>
-                      <option>Yes</option>
-                      <option>No</option>
-                    </select>
-                </div>
+                <div class="form-group dropdown show">
+                    <div class="form-group">
+                        <select class="form-control offset-sm-2" id="exampleFormControlSelect1" name = "isFeatured[]">
+                          <option>Featured</option>
+                          <option>Not Featured</option>
+                        </select>
+                    </div>
                 </div>
               <!-- End of fields-->
               <div class="offset-sm-1">
-                <span role="button" class="delete-sub btn btn-dark  btn-sm-1">Delete</span>
+                <span role="button" class="delete-sub btn btn-dark form-control btn-sm-1">Delete</span>
               </div>
 
             </div>

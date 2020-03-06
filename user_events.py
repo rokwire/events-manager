@@ -53,6 +53,10 @@ def user_events():
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
+    post['contacts'] = get_contact_list (request.form)
+
+    post['subevent'] = get_subevent_list (request.form)
+
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post):
         targetAudience_origin_list = post['targetAudience']
@@ -85,38 +89,9 @@ def user_an_event_edit(id):
         post_by_id['targetAudience'] = targetAudience_edit_list
 
     if request.method == 'POST':
+
         # first deal with contact array -> add contacts field into request form
-        contacts_arrays = []
-        has_contacts_in_request = False
-        for key in request.form:
-            if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
-                contact_list = request.form.getlist(key)
-                if len(contact_list)!=0:
-                    # delete first group of empty string
-                    contact_list = contact_list[1:]
-                    contacts_arrays += [contact_list]
-                # reasign to create contact objects
-        num_of_contacts = len(contacts_arrays[0])
-        contacts_dic = []
-        for i in range(num_of_contacts):
-            a_contact = {}
-            firstName = contacts_arrays[0][i]
-            lastName = contacts_arrays[1][i]
-            email = contacts_arrays[2][i]
-            phone = contacts_arrays[3][i]
-            if firstName!="":
-                a_contact['firstName'] = firstName
-            if lastName!="":
-                a_contact['lastName'] = lastName
-            if email!="":
-                a_contact['email'] = email
-            if phone!="":
-                a_contact['phone'] = phone
-            if a_contact!={}:
-                contacts_dic.append(a_contact)
-        if contacts_dic!=[]:
-            has_contacts_in_request = True
-            post_by_id['contacts'] =  contacts_dic
+        post_by_id['contacts'] = get_contact_list(request.form)
 
         # then edit all fields
         for key in request.form:
@@ -255,7 +230,13 @@ def select():
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
 def add_new_event():
-    #new_post = {}
+    if request.method == 'POST':
+        new_event = populate_event_from_form(request.form)
+        new_event_id = create_new_user_event(new_event)
 
-    return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+        return user_an_event(new_event_id)
+    else:
+        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+                               eventTypeValues=eventTypeValues,
+                               subcategoriesMap=subcategoriesMap,
+                               targetAudienceMap=targetAudienceMap)

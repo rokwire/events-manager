@@ -80,6 +80,9 @@ subcategoriesMap = {
 targetAudienceMap = ["Faculty/Staff", "Students", "Public", "Alumni", "Parents"]
 
 
+
+
+
 #Geocoding list
 predefined_locations = {
     "2700 Campus Way 45221":{
