@@ -202,26 +202,3 @@ def get_subevent_list(post_form):
                 subevent_dict.append(a_subevent)
         if subevent_dict != []:
             return subevent_dict
-        # return ""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
