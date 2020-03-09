@@ -36,7 +36,8 @@ class Config(object):
        # {"891": "Business - All Events"},
        # {"1095": "Fighting Illini Home Schedule"},
        # {"6430": "Gies Graduate Programs Admission Events"},
-       
+       # {"4661": "Counseling Center"},
+
        #  --- list of Calendars ---
        # {"25":"Center for Advanced Study"},
        # {"33":"Krannert Center"},
