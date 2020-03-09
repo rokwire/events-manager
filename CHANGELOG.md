@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ###Added
-- added 'Counseling Center' Calendarß
+- added 'Counseling Center' Calendar
 
 ### Fixed
 - load calendar from db.
