@@ -122,7 +122,6 @@ def disapprove_user_event(objectId):
 
 def populate_event_from_form(post_form):
     new_event = dict()
-
     for item in post_form:
         new_event[item] = post_form.get(item)
         if item == 'is_superEvent':
@@ -130,19 +129,15 @@ def populate_event_from_form(post_form):
                 new_event['is_superEvent'] = True
             else:
                 new_event['is_superEvent'] = False
-    new_event['contacts'] = get_contact_list (post_form)
-
-    new_event['subevent'] = get_subevent_list (post_form)
-
-
+    new_event['contacts'] = get_contact_list(post_form)
+    new_event['subevent'] = get_subevent_list(post_form)
 
     return new_event
 
 
 
 #helper function to get contacts
-def get_contact_list (post_form):
-
+def get_contact_list(post_form):
     contacts_arrays = []
     has_contacts_in_request = False
     for item in post_form:
@@ -153,8 +148,6 @@ def get_contact_list (post_form):
                 # delete first group of empty string
                 contact_list = contact_list[1:]
                 contacts_arrays += [contact_list]
-
-        # new_event[item] = post_form.get(item)
 
     if contacts_arrays:
         num_of_contacts = len(contacts_arrays[0])
@@ -178,14 +171,12 @@ def get_contact_list (post_form):
         if contacts_dic != []:
             has_contacts_in_request = True
             return contacts_dic
-        # return ""
-
 
 #helper function to get subevent
-def get_subevent_list (post_form):
+def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'sub-id[]' or item == 'track[]' or item == 'isFeatured[]':
+        if item == 'id' or item == 'track' or item == 'isFeatured':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -207,7 +198,6 @@ def get_subevent_list (post_form):
                     a_subevent['subEventFeatured'] = True
                 else:
                     a_subevent['subEventFeatured'] = False
-
             if a_subevent != {}:
                 subevent_dict.append(a_subevent)
         if subevent_dict != []:

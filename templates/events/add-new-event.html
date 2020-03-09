@@ -217,7 +217,7 @@
                <h5>Super Event</h5>
             </div>
             <div class="col-12 col-sm-2">
-                <input class="form_control" name="is_superEvent" type="checkbox" id="super-event"> Yes
+                <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
             </div>
           </div>
           <!-- add sub-event-->
@@ -234,18 +234,15 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
-
               <div class="form-group col-sm-3 offset-sm-2">
-                    <input class="form-control" id="sub-id" name="sub-id[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
-
+                    <input class="form-control" id="sub-id" name="id" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
               </div>
-
               <div class="col-sm-3 form-group" >
-                     <input class="form-control" id="track" name="track[]" type="text" placeholder="Track"/>
+                     <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
               </div>
                 <div class="form-group dropdown show">
                     <div class="form-group">
-                        <select class="form-control offset-sm-2" id="exampleFormControlSelect1" name = "isFeatured[]">
+                        <select class="form-control offset-sm-2" id="exampleFormControlSelect1" name = "isFeatured">
                           <option>Featured</option>
                           <option>Not Featured</option>
                         </select>

@@ -53,10 +53,8 @@ def user_events():
 @userbp.route('/event/<id>',  methods=['GET'])
 def user_an_event(id):
     post = find_user_event(id)
-    post['contacts'] = get_contact_list (request.form)
-
-    post['subevent'] = get_subevent_list (request.form)
-
+    post['contacts'] = get_contact_list(request.form)
+    post['subevent'] = get_subevent_list(request.form)
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post):
         targetAudience_origin_list = post['targetAudience']
@@ -87,12 +85,9 @@ def user_an_event_edit(id):
             else:
                 targetAudience_edit_list += [item.capitalize()]
         post_by_id['targetAudience'] = targetAudience_edit_list
-
     if request.method == 'POST':
-
         # first deal with contact array -> add contacts field into request form
         post_by_id['contacts'] = get_contact_list(request.form)
-
         # then edit all fields
         for key in request.form:
             if key != 'firstName[]' and key != 'lastName[]' and key != 'contactEmail[]' and key != 'contactPhone[]':
