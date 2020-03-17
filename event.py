@@ -69,11 +69,22 @@ def calendar(calendarId):
 def setting():
     if request.method == 'POST':
         print(request.form)
+        #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
-    allstatus = get_all_calendar_status()
-    return render_template('events/setting.html', sources=current_app.config['INT2SRC'], allstatus=allstatus)
-
+    calendar_in_db = get_all_calendar_status()
+    calendar_ids = calendar_in_db.keys()
+    calendar_source = list()
+    calendar_status = dict()
+    for calendar_id in calendar_ids:
+        calendar_source.append({calendar_id: calendar_in_db.get(calendar_id).get('calendarName')})
+        calendar_status[calendar_id] = calendar_in_db.get(calendar_id).get('status')
+    INT2SRC = {
+        '0': ('WebTools', calendar_source),
+        '1': ('EMS', []),
+    }
+    calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
+    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status, url_prefix=calendar_prefix)
 
 @bp.route('/download', methods=['POST'])
 @login_required
@@ -213,3 +224,28 @@ def schedule():
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
+
+
+@bp.route('/add-new-calendar', methods=['POST'])
+def add_new_calendar():
+    print(request.form)
+    # new calendars
+    calendarID = request.form.get('data[calendarID]')
+    calendarName = request.form.get('data[calendarName]')
+    print(calendarID)
+    print(calendarName)
+    if calendarID == '' or calendarName == '':
+        print("should have both ID and Name!")
+        return "invalid", 200
+    # all newly added calendar will be default to "disapproved"
+    calendar_document = {"calendarId" : calendarID, "calendarName": calendarName, "status": "disapproved"}
+    insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
+    # insert error condition check
+    if insert_result.inserted_id is None:
+        print("Insert calendar " + calendarID +" failed")
+        return redirect('event.setting')
+        return "fail", 400
+    else:
+        print(current_app.config['INT2CAL'])
+        print("successfully inserted calendar "+ calendarID)
+        return "success", 200

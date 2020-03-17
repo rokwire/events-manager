@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- added 'Counseling Center' Calendar
+
+### Fixed
+- load calendar from db.
+- skip events if there is no location or empty location.
+- optimize the google geolocation service usage
+- fix UTC time conversion outside of central timezone.
 
 ## [1.0.6] - 2020-03-17
 ### Added
