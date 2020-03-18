@@ -54,7 +54,8 @@ def user_events():
 def user_an_event(id):
     post = find_user_event(id)
     post['contacts'] = get_contact_list(request.form)
-    post['subevent'] = get_subevent_list(request.form)
+    post['subEvent'] = get_subevent_list(request.form)
+    post['id'] = id
     # transfer targetAudience into targetAudienceMap format
     if ('targetAudience' in post):
         targetAudience_origin_list = post['targetAudience']
