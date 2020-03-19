@@ -96,7 +96,9 @@ def create_new_user_event(new_user_event):
     if result.inserted_id:
         update = dict()
         update['eventStatus'] = 'pending'
-        update['eventId'] = result.inserted_id
+        print("id is:")
+        print(result.inserted_id)
+        update['eventId'] = str(result.inserted_id)
         # for key in update:
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
@@ -123,14 +125,17 @@ def disapprove_user_event(objectId):
 def populate_event_from_form(post_form):
     new_event = dict()
     for item in post_form:
-        new_event[item] = post_form.get(item)
-        if item == 'is_superEvent':
+        if item == 'firstName[]' or item == 'lastName[]' or item == 'contactEmail[]' or item == 'contactPhone[]' or item == 'id' or item == 'track' or item == 'isFeatured':
+            pass
+        else:
+            new_event[item] = post_form.get(item)
+        if item == 'isSuperEvent':
             if post_form.get(item) == 'on':
-                new_event['is_superEvent'] = True
+                new_event['isSuperEvent'] = True
             else:
-                new_event['is_superEvent'] = False
+                new_event['isSuperEvent'] = False
     new_event['contacts'] = get_contact_list(post_form)
-    new_event['subevent'] = get_subevent_list(post_form)
+    new_event['subEvent'] = get_subevent_list(post_form)
 
     return new_event
 

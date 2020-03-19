@@ -84,6 +84,16 @@
           </div>
         {% endif %}
 
+        <!-- event ID -->
+        {% if post.id%}
+        <div class="row">
+           <div class="col-12 col-sm-2">
+             <h5>Event ID </h5>
+           </div>
+          <a href="{{ post.id}}" class="col-sm-9"><span class="s1">{{ post.id}}</span></a>
+        </div>
+        {% endif %}
+
         <!-- event url -->
         {% if post.titleURL%}
           <div class="row">
@@ -147,7 +157,7 @@
               {%if i == (post.targetAudience | length) - 1 %}
                 <span>{{post.targetAudience[i]}}</span>
               {%else %}
-                <span>{{post.targetAudience[i]}}, </span>
+                <span>{{post.targetAudience[i]}} </span>
               {% endif%}
             {% endfor%}
             </div>
@@ -204,7 +214,7 @@
                 {%if i == (post.tags | length) - 1 %}
                   <span>{{post.tags[i]}}</span>
                 {%else %}
-                  <span>{{post.tags[i]}}, </span>
+                  <span>{{post.tags[i]}}</span>
                 {% endif%}
               {% endfor%}
             </div>
