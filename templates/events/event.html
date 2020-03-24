@@ -157,7 +157,7 @@
               {%if i == (post.targetAudience | length) - 1 %}
                 <span>{{post.targetAudience[i]}}</span>
               {%else %}
-                <span>{{post.targetAudience[i]}} </span>
+                <span>{{post.targetAudience[i]}}, </span>
               {% endif%}
             {% endfor%}
             </div>
@@ -209,15 +209,20 @@
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-            <div class = "col-sm-9">
-              {%for i in range(post.tags | length)%}
-                {%if i == (post.tags | length) - 1 %}
-                  <span>{{post.tags[i]}}</span>
-                {%else %}
-                  <span>{{post.tags[i]}}</span>
-                {% endif%}
-              {% endfor%}
-            </div>
+            <table class="table table-hove col-sm-8">
+              <thead>
+                <tr>
+                  <th scope="col-sm-2">Tags</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for tag in post.tags %}
+                   <tr>
+                    <td>{{tag}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         {% endif %}
 

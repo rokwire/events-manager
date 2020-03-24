@@ -188,10 +188,27 @@
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-            <div class = "col-sm-9">
-              <input id="tags" name="tags" class="form-control" type="text"/>
+            <div class="col-sm-9">
+              <span role="button" name="add_tag" class="add-tag btn btn-outline-primary">+ Add A Tag</span>
             </div>
           </div>
+
+           <div id="tagList" class="tag-group dynamic-element-tags" style="display:none">
+            <div class = "form-group row">
+                <div class="col-sm-3 offset-sm-2">
+                    <input id="tags" name="tags" class="form-control" placeholder="Tag Name" type="text"/>
+                </div>
+                <div class="col-md-1">
+                    <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
+                </div>
+            </div>
+           </div>
+
+           <div class="dynamic-stuff-tags">
+              <!-- existing tags-->
+              <!-- none -->
+           </div>
+
           <!-- sponsor -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -232,7 +249,7 @@
           </div>
 
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
-            <!-- contact fields : first&lastName + email + phone -->
+
             <div class = "form-group row" >
               <div class="form-group col-sm-3 offset-sm-2">
                     <input class="form-control" id="sub-id" name="id" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
@@ -356,7 +373,6 @@
      }
    }
 
-
     //Clone the hidden element and shows it for sub-event
    $('.add-sub').click(function(){
      $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
@@ -373,6 +389,26 @@
      $('.delete-sub').click(function(){
        console.log("click");
        $(this).closest('.sub-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+
+    //Clone the hidden element and shows it for tags
+   $('.add-tag').click(function(){
+     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
+     attach_delete_tags();
+   });
+
+   $('.exist-tags').ready(function(){
+     attach_delete_tags();
+   });
+
+   //Attach functionality to delete buttons for sub-event
+   function attach_delete_tags(){
+     $('.delete-tag').off();
+     $('.delete-tag').click(function(){
+       console.log("click");
+       $(this).closest('.tag-group').remove();
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
