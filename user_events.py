@@ -259,3 +259,14 @@ def add_new_event():
 
     return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
      eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+
+@userbp.route('/event/<id>/notification', methods=['POST'])
+def notification_event(id):
+    title = request.form.get('title')
+    message = request.form.get('message')
+    tokens = request.form.get('tokens')
+    print("notification id: %s , title: %s, message body: %s" % (id, title, message))
+    print("device token list: %s" % tokens)
+    # send notification
+    return "", 200
+

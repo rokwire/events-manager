@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% from 'events/confirmation.html' import confirmation %}
+{% from 'events/notification.html' import notification %}
 
 {% block title %}
   {{ post.title }}
@@ -12,6 +13,10 @@
 {{ confirmation("disapproveEvent", post.title) }}
 {% else %}
 {{ confirmation("approveEvent", post.title) }}
+{% endif %}
+
+{% if post.eventStatus == "approved" %}
+{{ notification("notification", post.eventId) }}
 {% endif %}
 
 <!-- delete Confirmation form -->
@@ -287,12 +292,17 @@
         {% endif %}
       </div>
       {% if isUser %}
-      <div class="btn-group mr-2" role="group" aria-label="Third group">
-        <span role="button" class="btn btn-block nav-link btn-dark"
-          data-toggle="modal" data-html="true" data-target="#DeleteModal">
-            Delete
-        </span>
-      </div>
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <span role="button" class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </span>
+          </div>
+          {% if post.eventStatus == "approved" %}
+              <div class="btn-group mr-2" role="group" aria-label="Notification group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
+              </div>
+          {% endif %}
       {% endif %}
     </div>
   </div>
@@ -322,6 +332,37 @@
       document.getElementById('startDate').innerHTML = date_start.toLocaleString();
       var date_end = new Date(end_utc+"Z");
       document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+
+      $(document).on("click", "#notificationbutton", function () {
+        <!-- get devices information from profile -->
+        var ndevices = 3;
+        var deviceTokens = ["device1", "device2", "device3"];
+        $(".modal-body #ndevices").val(ndevices);
+        $(".modal-body #devicetokens").val(deviceTokens);
+        document.getElementById("devicetokens").style.visibility = "none";
+      });
+
+      $("#notificationsend").click(function(e) {
+        e.preventDefault();
+        {% if isUser %}
+        let url = "{{ url_for('user_events.notification_event', id=post._id) }}"
+        {% else %}
+        let url = "{{ url_for('event.notification_event', id=post._id) }}"
+        {% endif %}
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                title: document.getElementById('title-name').value,
+                message: document.getElementById('message-text').value,
+                tokens: document.getElementById('devicetokens').value
+            },
+            success: function(data){
+                alert('successfully submitted')
+                location.reload();
+            }
+        });
+      });
 
       $("#approvebutton").click(function() {
         {% if isUser %}
