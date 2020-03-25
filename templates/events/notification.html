@@ -12,11 +12,11 @@
         <form>
           <div class="form-group">
             <label for="title-name" class="col-form-label">Title:</label>
-            <input type="text" class="form-control" id="title-name">
+            <input type="text" class="form-control" id="title-name" onkeyup="success()" placeholder="Enter your Title...">
           </div>
           <div class="form-group">
             <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <textarea class="form-control" id="message-text" onkeyup="success()" placeholder="Enter your Message..."></textarea>
           </div>
           <div class="form-group">
             <label for="eventid-text" class="col-form-label">Event ID:</label>
@@ -33,9 +33,21 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="notificationsend">Send message</button>
+        <button type="button" class="btn btn-primary" id="notificationsend" disabled>Send message</button>
       </div>
     </div>
   </div>
 </div>
+
+  {% block scripts %}
+    <script>
+    function success() {
+	 if(document.getElementById("title-name").value==="" || document.getElementById("message-text").value==="") {
+            document.getElementById('notificationsend').disabled = true;
+        } else {
+            document.getElementById('notificationsend').disabled = false;
+        }
+    }
+    </script>
+  {% endblock %}
 {% endmacro %}
