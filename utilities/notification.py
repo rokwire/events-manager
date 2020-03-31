@@ -2,7 +2,7 @@ import requests
 from config import Config
 from pyfcm import FCMNotification
 
-push_service = FCMNotification(api_key="<api-key>")
+push_service = FCMNotification(api_key=Config.NOTIFICATION_API_KEY)
 
 
 def get_favorite_eventid_information(eventid):
