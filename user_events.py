@@ -1,8 +1,9 @@
 import traceback
 import requests
-from .utilities import source_utilities
+from .utilities import source_utilities, notification
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+from flask import jsonify
 from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
@@ -268,5 +269,11 @@ def notification_event(id):
     print("notification id: %s , title: %s, message body: %s" % (id, title, message))
     print("device token list: %s" % tokens)
     # send notification
+
+    notification.send_notification(title, message, tokens)
     return "", 200
 
+@userbp.route('/event/<id>/devicetokens', methods=['GET'])
+def get_devicetokens(id):
+    devicetokens = notification.get_favorite_eventid_information(id)
+    return jsonify(devicetokens), 200
