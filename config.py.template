@@ -26,7 +26,7 @@ class Config(object):
     EVENT_COLLECTION='eventsmanager-events'
 
     # url prefix to get the information of a specific event id.
-    FAVORITE_EVENTID_ENDPOINT_PREFIX=os.getenv("FAVORITE_EVENTID_ENDPOINT_PREFIX", 'http://localhost:5000/profiles?favorites.eventId=')
+    FAVORITE_EVENTID_ENDPOINT_PREFIX=os.getenv("FAVORITE_EVENTID_ENDPOINT_PREFIX", 'http://localhost:9001/profiles/device-data?favorites.eventId=')
     # url of notification
     NOTIFICATION_URL = os.getenv("NOTIFICATION_URL", '...')
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
