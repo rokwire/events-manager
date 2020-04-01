@@ -1,4 +1,5 @@
 import requests
+import traceback
 from config import Config
 from pyfcm import FCMNotification
 
@@ -18,6 +19,9 @@ def get_favorite_eventid_information(eventid):
 
 
 def send_notification(title, body, tokens):
-    result = push_service.notify_multiple_devices(registration_ids=tokens, message_title=title, message_body=body)
-    print(result)
+    try:
+        result = push_service.notify_multiple_devices(registration_ids=tokens, message_title=title, message_body=body)
+        print(result)
+    except Exception as ex:
+        traceback.print_exc()
 
