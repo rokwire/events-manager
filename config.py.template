@@ -404,7 +404,7 @@ class Config(object):
     # ROKWIRE API KEY
     ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     # Notification Auth Token
-    NOTIFICATION_API_KEY = os.getenv("NOTIFICATION_API_KEY", "...")
+    FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")
     #Pagination Variables
     PER_PAGE = 4
 
