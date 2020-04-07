@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add event notification
 
 ### Fixed
+- fix config for event notificaiton.
 - load calendar from db.
 - skip events if there is no location or empty location.
 - optimize the google geolocation service usage
