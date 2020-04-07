@@ -267,7 +267,6 @@ def notification_event(id):
     message = request.form.get('message')
     tokens = request.form.get('tokens').split(",")
     print("notification id: %s , title: %s, message body: %s" % (id, title, message))
-    print("device token list: %s" % tokens)
     # send notification
     notification.send_notification(title, message, tokens)
     return "", 200
