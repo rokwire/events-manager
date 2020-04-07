@@ -1,8 +1,9 @@
 import traceback
 import requests
-from .utilities import source_utilities
+from .utilities import source_utilities, notification
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+from flask import jsonify
 from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
@@ -259,3 +260,18 @@ def add_new_event():
 
     return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
      eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+
+@userbp.route('/event/<id>/notification', methods=['POST'])
+def notification_event(id):
+    title = request.form.get('title')
+    message = request.form.get('message')
+    tokens = request.form.get('tokens').split(",")
+    print("notification id: %s , title: %s, message body: %s" % (id, title, message))
+    # send notification
+    notification.send_notification(title, message, tokens)
+    return "", 200
+
+@userbp.route('/event/<id>/devicetokens', methods=['GET'])
+def get_devicetokens(id):
+    devicetokens = notification.get_favorite_eventid_information(id)
+    return jsonify(devicetokens), 200
