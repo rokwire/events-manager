@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% from 'events/confirmation.html' import confirmation %}
+{% from 'events/notification.html' import notification %}
 
 {% block title %}
   {{ post.title }}
@@ -12,6 +13,10 @@
 {{ confirmation("disapproveEvent", post.title) }}
 {% else %}
 {{ confirmation("approveEvent", post.title) }}
+{% endif %}
+
+{% if post.eventStatus == "approved" %}
+{{ notification("notification", post.eventId, post.title) }}
 {% endif %}
 
 <!-- delete Confirmation form -->
@@ -302,12 +307,17 @@
         {% endif %}
       </div>
       {% if isUser %}
-      <div class="btn-group mr-2" role="group" aria-label="Third group">
-        <span role="button" class="btn btn-block nav-link btn-dark"
-          data-toggle="modal" data-html="true" data-target="#DeleteModal">
-            Delete
-        </span>
-      </div>
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <span role="button" class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </span>
+          </div>
+          {% if post.eventStatus == "approved" %}
+              <div class="btn-group mr-2" role="group" aria-label="Notification group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
+              </div>
+          {% endif %}
       {% endif %}
     </div>
   </div>
@@ -337,6 +347,64 @@
       document.getElementById('startDate').innerHTML = date_start.toLocaleString();
       var date_end = new Date(end_utc+"Z");
       document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+
+      $(document).on("click", "#notificationbutton", function () {
+        let url = "{{ url_for('user_events.get_devicetokens', id=post['_id']) }}";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            async: false,
+            cache: false,
+            timeout: 30000,
+            error: function(){
+            return true;
+            },
+            success: function(data){
+                var ndevices = data.ndevices;
+                var deviceTokens = data.tokens;
+                $(".modal-body #ndevices").val(ndevices);
+                $(".modal-body #devicetokens").val(deviceTokens);
+                document.getElementById("devicetokens").style.visibility = "none";
+            }
+        });
+      });
+
+      let notificationConfirm = function(callback) {
+        $("#notificationConfirmModal").modal('show');
+        $("#notification-modal-btn-yes").on("click", function () {
+            callback(true);
+            $("#notificationConfirmModal").modal('hide');
+        });
+        $("#notification-modal-btn-no").on("click", function(){
+            callback(false);
+            $("#notificationConfirmModal").modal('hide');
+        });
+      };
+
+      $("#notificationsend").click(function(e) {
+        e.preventDefault();
+        notificationConfirm(function(confirm){
+          if(confirm){
+            {% if isUser %}
+            let url = "{{ url_for('user_events.notification_event', id=post._id) }}"
+            {% else %}
+            let url = "{{ url_for('event.notification_event', id=post._id) }}"
+            {% endif %}
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    title: document.getElementById('title-name').value,
+                    message: document.getElementById('message-text').value,
+                    tokens: document.getElementById('devicetokens').value
+                },
+                success: function(data){
+                    location.reload();
+                }
+            });
+          }
+        });
+      });
 
       $("#approvebutton").click(function() {
         {% if isUser %}

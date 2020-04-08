@@ -1,8 +1,9 @@
 import traceback
 import requests
-from .utilities import source_utilities
+from .utilities import source_utilities, notification
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+from flask import jsonify
 from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
@@ -227,3 +228,4 @@ def add_new_event():
                                eventTypeValues=eventTypeValues,
                                subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap)
+
