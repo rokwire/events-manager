@@ -1,6 +1,6 @@
 import requests
 import traceback
-from config import Config
+from ..config import Config
 from pyfcm import FCMNotification
 
 
