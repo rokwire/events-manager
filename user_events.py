@@ -8,10 +8,12 @@ from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
 from .config import Config
+from .auth import login_required
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
 @userbp.route('/', methods=['GET', 'POST'])
+@login_required
 def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
@@ -52,6 +54,7 @@ def user_events():
                             isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
+@login_required
 def user_an_event(id):
     post = find_user_event(id)
     post['contacts'] = get_contact_list(request.form)
@@ -64,6 +67,7 @@ def user_an_event(id):
                         isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
+@login_required
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
     # transfer targetAudience into targetAudienceMap format
@@ -181,6 +185,7 @@ def user_an_event_edit(id):
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
+@login_required
 def user_an_event_approve(id):
     try:
         update_user_event(id, {"eventStatus": "approved"})
@@ -193,6 +198,7 @@ def user_an_event_approve(id):
     return "success", 200
 
 @userbp.route('/event/<id>/disapprove', methods=['POST'])
+@login_required
 def user_an_event_disapprove(id):
     try:
         update_user_event(id, {"eventStatus": "disapproved"})
@@ -202,6 +208,7 @@ def user_an_event_disapprove(id):
     return "success", 200
 
 @userbp.route('/select', methods=['POST'])
+@login_required
 def select():
     select_status = []
     if request.form.get('approved') == '1':
@@ -217,6 +224,7 @@ def select():
     return "", 200
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
+@login_required
 def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form)
@@ -230,6 +238,7 @@ def add_new_event():
                                targetAudienceMap=targetAudienceMap)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
+@login_required
 def notification_event(id):
     title = request.form.get('title')
     message = request.form.get('message')
@@ -240,6 +249,7 @@ def notification_event(id):
     return "", 200
 
 @userbp.route('/event/<id>/devicetokens', methods=['GET'])
+@login_required
 def get_devicetokens(id):
     devicetokens = notification.get_favorite_eventid_information(id)
     return jsonify(devicetokens), 200
