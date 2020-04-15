@@ -321,7 +321,6 @@
    function attach_delete_tags(){
      $('.delete-tag').off();
      $('.delete-tag').click(function(){
-       console.log("click");
        $(this).closest('.tag-group').remove();
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
