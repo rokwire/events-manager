@@ -363,7 +363,6 @@
      });
    }
 
-<<<<<<< HEAD
     //Super event checkbox
    function display_super_event_description(){
      var check = document.getElementById("super-event");
@@ -394,8 +393,17 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+     
+    //Clone the hidden element and shows it for tags
+   $('.add-tag').click(function(){
+     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
+     attach_delete_tags();
+   });
 
-=======
+   $('.exist-tags').ready(function(){
+     attach_delete_tags();
+   });
+
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
@@ -414,6 +422,6 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
->>>>>>> 624d63126720ab3d6a8a7bf0e7afb7641327e4e6
+
    </script>
 {% endblock %}
