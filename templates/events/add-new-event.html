@@ -216,6 +216,7 @@
               <input class="form-control" type="text" id="sponsor" name="sponsor"/>
             </div>
           </div>
+
           <!-- description -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -225,6 +226,61 @@
                 <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
             </div>
           </div>
+
+          <!-- super event check box -->
+          <div class="form-group row" id="super-check" onclick="display_super_event_description()">
+            <div class="col-12 col-sm-2">
+               <h5>Super Event</h5>
+            </div>
+            <div class="col-12 col-sm-2">
+                <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
+            </div>
+          </div>
+
+          <!-- add sub-event-->
+          <div id="super-des" class="form-group" style="display:none" >
+            <div class="form-group row">
+              <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
+                  <h5>Add Sub-Event </h5>
+              </div>
+
+              <div class="col-sm-9">
+                <span role="button" class="add-sub btn btn-outline-primary">+ Add a Sub-Event</span>
+              </div>
+            </div>
+          </div>
+
+
+           <div class="form-group sub-group dynamic-element-sub" style="display:none">
+                <div class = "form-group row" >
+
+                      <div class="form-group col-sm-3 offset-sm-2">
+                            <input class="form-control" id="sub-id" name="id" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Sub-Event ID" />
+                      </div>
+
+                      <div class="col-sm-3 form-group" >
+                        <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
+                      </div>
+
+                      <div class="form-group dropdown show">
+                          <div class="form-group">
+                            <select class="form-control offset-sm-2" id="isFeatured" name = "isFeatured">
+                              <option>Featured</option>
+                              <option>Not Featured</option>
+                            </select>
+                          </div>
+                      </div>
+                    <div class="form-group offset-sm-1">
+                        <span role="button" class="delete-sub btn btn-dark form-control btn-sm-1">Delete</span>
+                    </div>
+                </div>
+            </div>
+
+           <div class="dynamic-stuff-sub">
+                <!-- existing sub-events-->
+                <!-- none -->
+           </div>
+
 
         </div>
      </article>
@@ -307,6 +363,47 @@
      });
    }
 
+    //Super event checkbox
+   function display_super_event_description(){
+     var check = document.getElementById("super-event");
+     var sub = document.getElementById("super-des");
+     if (check.checked == true){
+        sub.style.display = "block";
+     } else {
+        sub.style.display = "none";
+     }
+   }
+
+   //Clone the hidden element and shows it for sub-event
+   $('.add-sub').click(function(){
+     $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
+     attach_delete_sub();
+   });
+
+   $('.exist-sub').ready(function(){
+     attach_delete_sub();
+   });
+
+   //Attach functionality to delete buttons for sub-event
+   function attach_delete_sub(){
+     $('.delete-sub').off();
+     $('.delete-sub').click(function(){
+       console.log("click");
+       $(this).closest('.sub-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+     
+    //Clone the hidden element and shows it for tags
+   $('.add-tag').click(function(){
+     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
+     attach_delete_tags();
+   });
+
+   $('.exist-tags').ready(function(){
+     attach_delete_tags();
+   });
+
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
@@ -325,5 +422,6 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+
    </script>
 {% endblock %}
