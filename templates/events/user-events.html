@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+<!--{% from 'events/searchbox.html' import searchboxUser %}-->
 {% block title %}
   User Events
 {% endblock %}
@@ -39,11 +39,16 @@
         </label>
       </div>
       <!-- Search form -->
+      <div>
+        <a class="btn btn-secondary mr-2" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
+      </div>
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
-        <div class="form-group mx-sm-3 mb-2">
+        <div>
+          <button type="submit" class="btn btn-outline-primary mb-2">Search</button>
+        </div>
+        <div class="form-group mx-sm-2 mb-2">
           <input type="text" class="form-control" name = "searchInput" placeholder="Search Events..." aria-label="Search">
         </div>
-        <button type="submit" class="btn btn-outline-primary mb-2">Search</button>
       </form>
     </div>
 
