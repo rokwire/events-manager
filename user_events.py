@@ -265,10 +265,11 @@ def add_new_event():
 def notification_event(id):
     title = request.form.get('title')
     message = request.form.get('message')
+    data = {"type": "event_detail", "event_id": id}
     tokens = request.form.get('tokens').split(",")
-    print("notification id: %s , title: %s, message body: %s" % (id, title, message))
+    print("notification: event id: %s , title: %s, message body: %s" % (id, title, message))
     # send notification
-    notification.send_notification(title, message, tokens)
+    notification.send_notification(title, message, data, tokens)
     return "", 200
 
 @userbp.route('/event/<id>/devicetokens', methods=['GET'])
