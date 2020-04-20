@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - added 'Counseling Center' Calendar
 - add event notification
+- send data message with event notificaiton.
 
 ### Fixed
 - fix config for event notificaiton.

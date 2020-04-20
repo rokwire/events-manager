@@ -19,9 +19,10 @@ def get_favorite_eventid_information(eventid):
     return data
 
 
-def send_notification(title, body, tokens):
+def send_notification(title, body, data, tokens):
     try:
-        result = push_service.notify_multiple_devices(registration_ids=tokens, message_title=title, message_body=body)
+        result = push_service.notify_multiple_devices(registration_ids=tokens, message_title=title, message_body=body,
+                                                      data_message=data)
         print(result)
     except Exception as ex:
         traceback.print_exc()
