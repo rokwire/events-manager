@@ -44,7 +44,7 @@
           <!-- event title -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event Title </h5>
+              <h5>Event Title<span class="required" style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
               <input class="form-control" type="text" id="title" name="title"/>
@@ -53,7 +53,7 @@
           <!-- event url -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event URL </h5>
+              <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
               <input class="form-control" type="url" id="titleURL" name="titleURL"/>
@@ -62,7 +62,7 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category </h5>
+              <h5>Category<span class="required" style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
@@ -92,7 +92,7 @@
           <!-- startDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5> Start Date </h5>
+              <h5>Start Date<span class="required" style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
               <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
@@ -155,19 +155,22 @@
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+                <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+              </div>
+               <div class="col-sm-3">
+                <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
               </div>
             </div>
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
-              <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+               <div class="col-sm-3">
+                <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -250,10 +253,8 @@
             </div>
           </div>
 
-
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
-
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
                       </div>
@@ -270,8 +271,8 @@
                             </select>
                           </div>
                       </div>
-                    <div class="form-group offset-sm-1">
-                        <span role="button" class="delete-sub btn btn-dark form-control btn-sm-1">Delete</span>
+                    <div class="offset-sm-1">
+                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
                     </div>
                 </div>
             </div>
@@ -280,8 +281,6 @@
                 <!-- existing sub-events-->
                 <!-- none -->
            </div>
-
-
         </div>
      </article>
 
@@ -394,16 +393,6 @@
      });
    }
      
-    //Clone the hidden element and shows it for tags
-   $('.add-tag').click(function(){
-     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
-     attach_delete_tags();
-   });
-
-   $('.exist-tags').ready(function(){
-     attach_delete_tags();
-   });
-
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
