@@ -391,7 +391,6 @@
       });
 
       $("#approvebutton").click(function() {
-          debugger
         {% if isUser %}
         let url = "{{ url_for('user_events.user_an_event_approve', id=post._id) }}"
         {% else %}
