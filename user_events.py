@@ -256,10 +256,16 @@ def select():
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
 def add_new_event():
-    new_post = {}
+    if request.method == 'POST':
+        new_event = populate_event_from_form(request.form)
+        new_event_id = create_new_user_event(new_event)
 
-    return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+        return user_an_event(new_event_id)
+    else:
+        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+                                eventTypeValues=eventTypeValues,
+                                subcategoriesMap=subcategoriesMap,
+                                targetAudienceMap=targetAudienceMap)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 def notification_event(id):
