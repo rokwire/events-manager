@@ -36,6 +36,7 @@ flask run
 ```
 
 The second one:
+
 - create a file called .flaskenv
 - fill in file with:
     - FLASK_APP=\_\_init\_\_.py
@@ -43,6 +44,29 @@ The second one:
     - FLASK_DEBUG=1
 
 ## Setup Environment
+
+```
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+The following environment variables need to be set when running on development machine. This is not required when running within AWS.
+```
+AWS_ACCESS_KEY_ID=<AWS Access Key ID>
+AWS_SECRET_ACCESS_KEY=<AWS Secret Access Key>
+```
+
+
+## Run as Docker Container in Local
+```
+cd events-manager
+./docker.sh
+docker run --rm --name events -v $PWD/config.py:/app/events-manager/config.py -p 5000:5000 rokwire/events-manager
+```
+
+##MongoDB Setup
+
 MongoDB needs to be installed for the flask app to run and interface with a database
 
 - For MacOS, prerequisites are having XCode and Homebrew
@@ -70,23 +94,3 @@ sudo apt-get install -y mongodb-org
 ```
 
 The template setup configuration exists in config.py.template, to run locally a new file config.py needs to be created accounting for changes based on your local environment setup.  
-
-```
-virtualenv -p python3 venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-The following environment variables need to be set when running on development machine. This is not required when running within AWS.
-```
-AWS_ACCESS_KEY_ID=<AWS Access Key ID>
-AWS_SECRET_ACCESS_KEY=<AWS Secret Access Key>
-```
-
-
-## Run as Docker Container in Local
-```
-cd events-manager
-./docker.sh
-docker run --rm --name events -v $PWD/config.py:/app/events-manager/config.py -p 5000:5000 rokwire/events-manager
-```
