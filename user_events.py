@@ -221,9 +221,9 @@ def user_an_event_edit(id):
 @userbp.route('/event/<id>/approve', methods=['POST'])
 def user_an_event_approve(id):
     try:
-        update_user_event(id, {"eventStatus": "approved"})
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
+        approve_user_event(id)
         source_utilities.publish_event(id, False)
     except Exception:
         traceback.print_exc()
@@ -233,7 +233,7 @@ def user_an_event_approve(id):
 @userbp.route('/event/<id>/disapprove', methods=['POST'])
 def user_an_event_disapprove(id):
     try:
-        update_user_event(id, {"eventStatus": "disapproved"})
+        disapprove_user_event(id)
     except Exception:
         traceback.print_exc()
 

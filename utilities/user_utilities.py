@@ -2,7 +2,8 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, find_distinct, insert_one
+
+from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
 
 def get_all_user_events(select_status):
 
@@ -91,14 +92,25 @@ def find_user_all_object_events(eventId):
     return result_events
 
 def delete_user_event(eventId):
-    pass
+    id = ObjectId(eventId)
+    delete_list = []
+    delete_list.append(id)
+    successfull_delete_list = delete_events_in_list(current_app.config['EVENT_COLLECTION'], delete_list)
+    return id
+
 
 # Find the approval status for one event
 def get_user_event_status(objectId):
     pass
 
 def approve_user_event(objectId):
-    pass
+    print("{} is going to be approved".format(id))
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
+        "$set": {"eventStatus":  "approved"}
+    })
+    if not result:
+        print("Approve event {} fails in approve_event".format(id))
+
 
 def disapprove_user_event(objectId):
     pass
