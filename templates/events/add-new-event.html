@@ -44,10 +44,10 @@
           <!-- event title -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event Title<span class="required" style="color: red">*</span> </h5>
+              <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="title" name="title"/>
+              <input class="form-control" type="text" id="title" name="title" required/>
             </div>
           </div>
           <!-- event url -->
@@ -62,11 +62,11 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category<span class="required" style="color: red">*</span></h5>
+              <h5>Category<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -92,10 +92,10 @@
           <!-- startDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Start Date<span class="required" style="color: red">*</span></h5>
+              <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
             </div>
           </div>
           <!-- endDate -->
