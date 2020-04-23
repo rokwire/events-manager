@@ -113,7 +113,12 @@ def approve_user_event(objectId):
 
 
 def disapprove_user_event(objectId):
-    pass
+    print("{} is going to be disapproved".format(id))
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+        "$set": {"eventStatus":  "disapproved"}
+    })
+    if not result:
+        print("Disapprove event {} fails in disapprove_event".format(id))
 
 def create_new_user_event(new_user_event):
     update_result = None
