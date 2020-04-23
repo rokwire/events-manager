@@ -282,3 +282,9 @@ def notification_event(id):
 def get_devicetokens(id):
     devicetokens = notification.get_favorite_eventid_information(id)
     return jsonify(devicetokens), 200
+
+@userbp.route('/event/<id>/delete', methods=['DELETE'])
+def userevent_delete(id):
+    print("delete user event id: %s" % id)
+    delete_user_event(id)
+    return "", 200

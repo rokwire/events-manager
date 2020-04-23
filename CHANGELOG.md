@@ -5,12 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+###Changed
+- change the style of deletion modal the same as the approval moddal on user events.
+
 ### Added
+- add user events deletion endpoint and GUI to click delet button to delete user event.
 - added 'Counseling Center' Calendar
 - add event notification
 - send data message with event notificaiton.
 
 ### Fixed
+- check the existence of startdate and enddate for user event html.
 - fix config for event notificaiton.
 - load calendar from db.
 - skip events if there is no location or empty location.
