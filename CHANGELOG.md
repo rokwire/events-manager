@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-###Changed
+### Changed
 - change the style of deletion modal the same as the approval moddal on user events.
 
 ### Added
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - send data message with event notificaiton.
 
 ### Fixed
+- fix the redirection when user clicks the add button to create a new event.
 - check the existence of startdate and enddate for user event html.
 - fix config for event notificaiton.
 - load calendar from db.

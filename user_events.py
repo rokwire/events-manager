@@ -259,8 +259,7 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form)
         new_event_id = create_new_user_event(new_event)
-
-        return user_an_event(new_event_id)
+        return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
