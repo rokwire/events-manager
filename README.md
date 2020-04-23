@@ -65,7 +65,7 @@ cd events-manager
 docker run --rm --name events -v $PWD/config.py:/app/events-manager/config.py -p 5000:5000 rokwire/events-manager
 ```
 
-##MongoDB Setup
+## MongoDB Setup
 
 MongoDB needs to be installed for the flask app to run and interface with a database
 
