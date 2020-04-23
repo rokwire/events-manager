@@ -178,10 +178,11 @@
             <table class="table table-hover col-sm-8">
               <thead>
                 <tr>
-                  <th scope="col-sm-2">First</th>
-                  <th scope="col-sm-2">Last</th>
+                  <th scope="col-sm-2">First Name</th>
+                  <th scope="col-sm-2">Last Name</th>
                   <th scope="col-sm-2">Email</th>
                   <th scope="col-sm-2">Phone</th>
+                  <th scope="col-sm-2">Organization</th>
                 </tr>
               </thead>
               <tbody>
@@ -191,6 +192,7 @@
                     <td>{{contact.lastName}}</td>
                     <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
                     <td>{{contact.phone}}</td>
+                     <td>{{contact.organization}}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -207,7 +209,7 @@
             <div class = "col-sm-9">
               {%for i in range(post.tags | length)%}
                 {%if i == (post.tags | length) - 1 %}
-                  <span>{{post.tags[i]}}</span>
+                  <span>{{post.tags[i]}} </span>
                 {%else %}
                   <span>{{post.tags[i]}}, </span>
                 {% endif%}
@@ -275,6 +277,56 @@
           </div>
         </div>
       {% endif %}
+
+      <!-- is super event? -->
+      {% if post.isSuperEvent %}
+           <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Is Super Event</h5>
+            </div>
+                <p class = "col-sm-9">Yes</p>
+          </div>
+      {% else %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Is Super Event</h5>
+            </div>
+                <p class = "col-sm-9">No</p>
+          </div>
+      {% endif %}
+
+
+      <!-- sub event -->
+      {% if post.subevent%}
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <h5>Sub-Events</h5>
+          </div>
+          <table class="table table-hover col-sm-8">
+            <thead>
+              <tr>
+                <th scope="col-sm-2">Sub-event ID</th>
+                <th scope="col-sm-2">Track</th>
+                <th scope="col-sm-2">Featured Event</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for subevent in post.subevent %}
+              <tr>
+                <td>{{subevent.id}}</td>
+                <td>{{subevent.track}}</td>
+                {% if subevent.isFeatured%}
+                   <td>Yes</td>
+                {% else %}
+                   <td>No</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
       </div class = "media-body">
     </article>
   <div class="row justify-content-center">
