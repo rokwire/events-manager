@@ -92,6 +92,15 @@
           <!-- startDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form-control" type="checkbox" id="allDay" name="allDay" required/>
+            </div>
+          </div>
+          <!-- startDate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
@@ -411,6 +420,22 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+
+   // Handle all-day event
+    $("#allDay").change(function () {
+
+      if (this.checked) {
+        console.log("Checked");
+        $("#startDate").attr("type", "date");
+        $("#endDate").attr("type", "date");
+      }
+      else {
+        console.log("Unchecked");
+        $("#startDate").attr("type", "datetime-local");
+        $("#endDate").attr("type", "datetime-local");
+      }
+
+    });
 
    </script>
 {% endblock %}
