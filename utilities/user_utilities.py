@@ -95,7 +95,7 @@ def delete_user_event(eventId):
     delete_list = []
     delete_list.append(id)
     successfull_delete_list = delete_events_in_list(current_app.config['EVENT_COLLECTION'], delete_list)
-    return successfull_delete_list
+    return id
 
 
 # Find the approval status for one event
@@ -105,7 +105,7 @@ def get_user_event_status(objectId):
 def approve_user_event(objectId):
     print("{} is going to be approved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
-        "$set": {"eventStatus":  "published"}
+        "$set": {"eventStatus":  "approved"}
     })
     if not result:
         print("Approve event {} fails in approve_event".format(id))
@@ -114,7 +114,7 @@ def approve_user_event(objectId):
 def disapprove_user_event(objectId):
     print("{} is going to be disapproved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
-        "$set": {"eventStatus":  "disapproved"}
+        "$set": {"eventStatus":  "pending"}
     })
     if not result:
         print("Disapprove event {} fails in disapprove_event".format(id))
