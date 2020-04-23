@@ -55,17 +55,17 @@ def user_events():
 def user_an_event(id):
     post = find_user_event(id)
     # transfer targetAudience into targetAudienceMap format
-    if ('targetAudience' in post):
-        targetAudience_origin_list = post['targetAudience']
-        targetAudience_edit_list = []
-        for item in targetAudience_origin_list:
-            if item == "faculty":
-                targetAudience_edit_list += ["Faculty/Staff"]
-            elif item == "staff":
-                pass
-            else:
-                targetAudience_edit_list += [item.capitalize()]
-        post['targetAudience'] = targetAudience_edit_list
+    # if ('targetAudience' in post):
+    #     targetAudience_origin_list = post['targetAudience']
+    #     targetAudience_edit_list = []
+    #     for item in targetAudience_origin_list:
+    #         if item == "faculty":
+    #             targetAudience_edit_list += ["Faculty/Staff"]
+    #         elif item == "staff":
+    #             pass
+    #         else:
+    #             targetAudience_edit_list += [item.capitalize()]
+    #     post['targetAudience'] = targetAudience_edit_list
     return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
                         isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
@@ -256,19 +256,26 @@ def select():
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
 def add_new_event():
-    new_post = {}
+    if request.method == 'POST':
+        new_event = populate_event_from_form(request.form)
+        new_event_id = create_new_user_event(new_event)
 
-    return render_template("events/add-new-event.html", eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap)
+        return user_an_event(new_event_id)
+    else:
+        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+                                eventTypeValues=eventTypeValues,
+                                subcategoriesMap=subcategoriesMap,
+                                targetAudienceMap=targetAudienceMap)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 def notification_event(id):
     title = request.form.get('title')
     message = request.form.get('message')
+    data = {"type": "event_detail", "event_id": id}
     tokens = request.form.get('tokens').split(",")
-    print("notification id: %s , title: %s, message body: %s" % (id, title, message))
+    print("notification: event id: %s , title: %s, message body: %s" % (id, title, message))
     # send notification
-    notification.send_notification(title, message, tokens)
+    notification.send_notification(title, message, data, tokens)
     return "", 200
 
 @userbp.route('/event/<id>/devicetokens', methods=['GET'])
