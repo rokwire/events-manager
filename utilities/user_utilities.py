@@ -124,10 +124,8 @@ def populate_event_from_form(post_form):
     new_event = dict()
     super_event = False
     for item in post_form:
-        if item !='firstName' and item != 'lastName' and item != 'email' and item != 'phone' and item != 'organization' and item != "id" and item != 'track' and item != 'isFeatured':
+        if (item_not_list(item)) == True:
             new_event[item] = post_form.get(item)
-            print("item:", item)
-            print("new event item:", new_event[item])
         if item == 'isSuperEvent':
             if post_form.get(item) == 'on':
                 new_event['isSuperEvent'] = True
@@ -138,6 +136,10 @@ def populate_event_from_form(post_form):
     new_event['contacts'] = get_contact_list (post_form)
 
     new_event['subevent'] = get_subevent_list (post_form)
+
+    new_event['tags'] = get_tags(post_form)
+
+    new_event['targetAudience'] = get_target_audience(post_form)
 
     return new_event
 
@@ -214,3 +216,46 @@ def get_subevent_list (post_form):
                 subevent_dict.append(a_subevent)
         if subevent_dict != []:
             return subevent_dict
+
+def get_tags (post_form):
+    tag_arrays = []
+    for item in post_form:
+        if item == 'tags':
+            tag_arrays = post_form.getlist(item)
+    if tag_arrays:
+        num_of_tag = len(tag_arrays)
+        tag_dict = []
+        for i in range(num_of_tag):
+            a_tag = {}
+            tag_name = tag_arrays[i]
+            if tag_name != "":
+                a_tag = tag_name
+            if a_tag != {}:
+                tag_dict.append(a_tag)
+        if tag_dict != []:
+            return tag_dict
+
+def get_target_audience(post_form):
+    target_audience_arrays = []
+    for item in post_form:
+        if item == 'targetAudience':
+            target_audience_arrays = post_form.getlist(item)
+    if target_audience_arrays:
+        num_of_target_audience = len(target_audience_arrays)
+        target_audience_dict = []
+        for i in range(num_of_target_audience):
+            a_target_audience = {}
+            target_audience_group = target_audience_arrays[i]
+            if target_audience_group != "":
+                a_target_audience = target_audience_group
+            if a_target_audience != {}:
+                target_audience_dict.append(a_target_audience)
+        if target_audience_dict != []:
+            return target_audience_dict
+
+
+def item_not_list(item):
+    if item !='firstName' and item != 'lastName' and item != 'email' and item != 'phone' and item != 'organization' and item != "id" and item != 'track' and item != 'isFeatured' and item != 'tags' and item != 'targetAudience':
+        return True
+    else:
+        return False
