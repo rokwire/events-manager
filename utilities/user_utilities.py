@@ -115,7 +115,7 @@ def approve_user_event(objectId):
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
-def publish_user_event(objectId):
+def publish_user_event(eventId):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
@@ -123,14 +123,13 @@ def publish_user_event(objectId):
 
     try:
         platform_event_id = None
-        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
-        "$set": {"eventStatus": "published"}
-        })
-        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+
+        # Put event in object, but exclude ID and status
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
+
         if event:
-            print("event {} submit method: {}".format(id, event['submitType']))
+            # Formatting Date and time for json dump (Because done for source events?)
             if event.get('startDate'):
-                # Formatting Date and time for json dump
                 if isinstance(event.get('startDate'), datetime.date):
                     event['startDate'] = event['startDate'].isoformat()
                 event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
@@ -142,24 +141,19 @@ def publish_user_event(objectId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
 
             # Setting up post request
-            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, date = json.dumps(event))
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, date=json.dumps(event))
             platform_event_id = result.json()['id']
 
-            # if event submission fails, print that out and change status
-            # back to pending
-            if result.status_code not in (200, 201):
+            # if event submission fails, print that out and change status back to pending
+            if result.status_code not in (201):
                 print("Event {} submission fails".format(id))
-                # If posting to building block fails, event goes back to being
-                # approved but not published
-                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
-                                             condition={"_id": ObjectId(objectId)}, update={
-                        "$set": {"eventStatus": "approved"}
-                    })
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                        "$set": {"eventStatus": "pending"}})
                 return False
-
+            # if successful, change status of event to published
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-                                "$set": {"eventStatus": "published", 'platformEventId': platform_event_id}})
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                                "$set": {"eventStatus": "published", "platformEventId": platform_event_id}})
                 return True
 
     except Exception:
