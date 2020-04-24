@@ -1,3 +1,7 @@
+import json
+import datetime
+import requests
+import traceback
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -122,11 +126,41 @@ def publish_user_event(objectId):
         result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus": "published"}
         })
-        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
-                         projection={'_id': 0, 'eventStatus': 0})
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
         if event:
+            print("event {} submit method: {}".format(id, event['submitType']))
+            if event.get('startDate'):
+                # Formatting Date and time for json dump
+                if isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
+                event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('endDate'):
+                if isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
+                event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
 
+            # Setting up post request
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, date = json.dumps(event))
+            platform_event_id = result.json()['id']
 
+            # if event submission fails, print that out and change status
+            # back to pending
+            if result.status_code not in (200, 201):
+                print("Event {} submission fails".format(id))
+                # If posting to building block fails, event goes back to being
+                # approved but not published
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
+                                             condition={"_id": ObjectId(objectId)}, update={
+                        "$set": {"eventStatus": "approved"}
+                    })
+                return False
+
+            else:
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                                "$set": {"eventStatus": "published", 'platformEventId': platform_event_id}})
+                return True
 
     except Exception:
         traceback.print_exc()
