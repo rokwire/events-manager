@@ -104,16 +104,36 @@ def get_user_event_status(objectId):
     pass
 
 def approve_user_event(objectId):
-    print("{} is going to be approved".format(id))
+    print("{} is going to be approved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus":  "approved"}
     })
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
+def publish_user_event(objectId):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+
+    try:
+        platform_event_id = None
+        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
+        "$set": {"eventStatus": "published"}
+        })
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)},
+                         projection={'_id': 0, 'eventStatus': 0})
+        if event:
+
+
+
+    except Exception:
+        traceback.print_exc()
+        return False
 
 def disapprove_user_event(objectId):
-    print("{} is going to be disapproved".format(id))
+    print("{} is going to be disapproved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "disapproved"}
     })
