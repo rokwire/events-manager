@@ -91,11 +91,34 @@ def find_user_all_object_events(eventId):
         return []
     return result_events
 
+def delete_user_event_in_building_block(objectId_list):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+    delete_success_list = []
+    fail_count = 0
+    for _id in objectId_list
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition=_id)
+        url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
+        result = requests.delete(url, headers=headers)
+        if result.status_code != 202:
+            print("Event {} deletion fails".format(_id))
+            fail_count += 1
+        else:
+            delete_success_list.append(_id)
+    success_count = len(delete_success_list)
+
+    print("failed deleted in building block: " + str(fail_count))
+    print("successful deleted in building block: " + str(success_count))
+    return delete_success_list
+
 def delete_user_event(eventId):
     id = ObjectId(eventId)
     delete_list = []
     delete_list.append(id)
-    successfull_delete_list = delete_events_in_list(current_app.config['EVENT_COLLECTION'], delete_list)
+    successfull_delete_list = delete_user_event_in_building_block(delete_list)
+    delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
     return id
 
 
