@@ -1,4 +1,6 @@
 import requests
+import json
+
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -99,7 +101,7 @@ def delete_user_event_in_building_block(objectId_list):
     }
     delete_success_list = []
     fail_count = 0
-    for _id in objectId_list
+    for _id in objectId_list:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition=_id)
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
         result = requests.delete(url, headers=headers)
@@ -120,7 +122,7 @@ def delete_user_event(eventId):
     delete_list.append(id)
     successfull_delete_list = delete_user_event_in_building_block(delete_list)
     delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
-    return id
+    return delete_event_local[0]
 
 
 # Find the approval status for one event
