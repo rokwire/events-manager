@@ -103,6 +103,8 @@ def delete_user_event_in_building_block(objectId_list):
     fail_count = 0
     for _id in objectId_list:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition=_id)
+        # EVENT_BUILDING_BLOCK_URL is specified as http://localhost:9000/events
+        # shouldn't it be http://localhost:9000/eventsmanager_events?
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
         result = requests.delete(url, headers=headers)
         if result.status_code != 202:
@@ -121,8 +123,15 @@ def delete_user_event(eventId):
     delete_list = []
     delete_list.append(id)
     successfull_delete_list = delete_user_event_in_building_block(delete_list)
-    delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
-    return delete_event_local[0]
+    delete_count = len(successfull_delete_list)
+    # Since we're only dealing with deleting a singular item at a time
+    # if delete_count < 1, the item wasn't successfully deleted off of the events building block
+    if delete_count < 1:
+        print("Event deletion failed")
+        return
+    else:
+        delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
+        return delete_event_local[0]
 
 
 # Find the approval status for one event
