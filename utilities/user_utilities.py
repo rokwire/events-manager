@@ -1,3 +1,4 @@
+import requests
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -110,7 +111,7 @@ def delete_user_event_in_building_block(objectId_list):
     success_count = len(delete_success_list)
 
     print("failed deleted in building block: " + str(fail_count))
-    print("successful deleted in building block: " + str(success_count))
+    print("successfully deleted in building block: " + str(success_count))
     return delete_success_list
 
 def delete_user_event(eventId):
