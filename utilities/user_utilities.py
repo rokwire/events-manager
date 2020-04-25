@@ -276,7 +276,8 @@ def get_target_audience(post_form):
 
 
 def item_not_list(item):
-    if item !='firstName' and item != 'lastName' and item != 'email' and item != 'phone' and item != 'organization' and item != "id" and item != 'track' and item != 'isFeatured' and item != 'tags' and item != 'targetAudience':
+    if item not in ['firstName', 'lastName', 'email', 'phone', 'organization', "id", 'track', 'isFeatured', 'tags',
+                    'targetAudience']:
         return True
     else:
         return False
