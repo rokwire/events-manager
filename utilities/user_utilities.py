@@ -139,16 +139,20 @@ def create_new_user_event(new_user_event):
 
 def populate_event_from_form(post_form):
     new_event = dict()
-    super_event = False
     for item in post_form:
-        if (item_not_list(item)) == True:
-            new_event[item] = post_form.get(item)
-        if item == 'isSuperEvent':
-            if post_form.get(item) == 'on':
-                new_event['isSuperEvent'] = True
-                super_event = True
-    if super_event == False:
-        new_event['isSuperEvent'] = False
+        if item_not_list(item):
+            if item == 'isSuperEvent':
+                if post_form.get(item) == 'on':
+                    new_event['isSuperEvent'] = True
+                else:
+                    new_event['isSuperEvent'] = True
+            elif item == 'allDay':
+                if post_form.get(item) == 'on':
+                    new_event['allDay'] = True
+                else:
+                    new_event['allDay'] = False
+            else:
+                new_event[item] = post_form.get(item)
 
     new_event['contacts'] = get_contact_list (post_form)
 
