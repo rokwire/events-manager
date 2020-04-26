@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - change the style of deletion modal the same as the approval modal on user events.
+- moved event date-time conversion code to python 
 
 ### Added
 - add user events deletion endpoint and GUI to click delete button to delete user event.
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - skip events if there is no location or empty location.
 - optimize the google geolocation service usage
 - fix UTC time conversion outside of central timezone.
+- required fields bug in the add event page.
 
 ## [1.0.6] - 2020-03-17
 ### Added
