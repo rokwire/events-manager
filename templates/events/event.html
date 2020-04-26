@@ -393,12 +393,20 @@
       if(typeof(document.getElementById('startDate')) != 'undefined' && document.getElementById('startDate') != null) {
           var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
           var date_start = new Date(start_utc+"Z");
-          document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+          {% if post.allDay %}
+            document.getElementById('startDate').innerHTML = date_start.toLocaleDateString();
+          {% else %}
+            document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+          {% endif %}
       }
       if(typeof(document.getElementById('endDate')) != 'undefined' && document.getElementById('endDate') != null) {
           var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
           var date_end = new Date(end_utc + "Z");
-          document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+          {% if post.allDay %}
+            document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
+          {% else %}
+            document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+          {% endif %}
       }
 
       $(document).on("click", "#notificationbutton", function () {
