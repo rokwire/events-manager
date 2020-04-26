@@ -7,18 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- change the style of deletion modal the same as the approval moddal on user events.
+- change the style of deletion modal the same as the approval modal on user events.
 
 ### Added
-- add user events deletion endpoint and GUI to click delet button to delete user event.
+- add user events deletion endpoint and GUI to click delete button to delete user event.
 - added 'Counseling Center' Calendar
 - add event notification
-- send data message with event notificaiton.
+- send data message with event notification.
+- support for creating all day events.
 
 ### Fixed
 - fix the redirection when user clicks the add button to create a new event.
 - check the existence of startdate and enddate for user event html.
-- fix config for event notificaiton.
+- fix config for event notification.
 - load calendar from db.
 - skip events if there is no location or empty location.
 - optimize the google geolocation service usage
