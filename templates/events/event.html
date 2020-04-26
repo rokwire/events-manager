@@ -114,6 +114,23 @@
           </div>
         {% endif %}
 
+        <!-- All Day Event -->
+        {% if post.allDay %}
+           <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+                <p class = "col-sm-9">Yes</p>
+          </div>
+        {% else %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+                <p class = "col-sm-9">No</p>
+          </div>
+        {% endif %}
+
         <!-- startDate -->
         {% if post.startDate%}
           <div class="row">
