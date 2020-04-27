@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 import requests
 import json
 import pytz
-
+import json
+import datetime
+import requests
+import traceback
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -139,16 +143,60 @@ def get_user_event_status(objectId):
     pass
 
 def approve_user_event(objectId):
-    print("{} is going to be approved".format(id))
+    print("{} is going to be approved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus":  "approved"}
     })
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
+def publish_user_event(eventId):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
 
-def disapprove_user_event(id):
-    print("{} is going to be disapproved".format(id))
+    try:
+        platform_event_id = None
+
+        # Put event in object, but exclude ID and status
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
+
+        if event:
+            # Formatting Date and time for json dump (Because done for source events?)
+            if event.get('startDate'):
+                if isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
+                event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('endDate'):
+                if isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
+                event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+
+            # Setting up post request
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, date=json.dumps(event))
+            platform_event_id = result.json()['id']
+
+            # if event submission fails, print that out and change status back to pending
+            if result.status_code not in (201):
+                print("Event {} submission fails".format(id))
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                        "$set": {"eventStatus": "pending"}})
+                return False
+            # if successful, change status of event to published
+            else:
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                                "$set": {"eventStatus": "published", "platformEventId": platform_event_id}})
+                return True
+
+    except Exception:
+        traceback.print_exc()
+        return False
+
+def disapprove_user_event(objectId):
+    print("{} is going to be disapproved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "pending"}
     })
