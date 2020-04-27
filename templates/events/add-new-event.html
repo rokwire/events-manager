@@ -44,10 +44,10 @@
           <!-- event title -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
-              <h5>Event Title<span class="required" style="color: red">*</span> </h5>
+              <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="title" name="title"/>
+              <input class="form-control" type="text" id="title" name="title" required/>
             </div>
           </div>
           <!-- event url -->
@@ -62,11 +62,11 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category<span class="required" style="color: red">*</span></h5>
+              <h5>Category<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -92,10 +92,19 @@
           <!-- startDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Start Date<span class="required" style="color: red">*</span></h5>
+              <h5>All Day Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form-control" type="checkbox" id="allDay" name="allDay"/>
+            </div>
+          </div>
+          <!-- startDate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -331,16 +340,17 @@
      })
 
      //change back to utc time on submit
-     var myform = document.getElementById('form');
-     myform.onsubmit = function(){
-       var start_local = document.getElementById('startDate').value.replace("T", " ");
-       var start_utc = new Date(start_local).toISOString();
-       document.getElementById('startDate').value = start_utc.replace("Z", "");
-
-       var end_local = document.getElementById('endDate').value.replace("T", " ");
-       var end_utc = new Date(end_local).toISOString();
-       document.getElementById('endDate').value = end_utc.replace("Z", "");
-     };
+     // Commenting out below code. Doing conversion in Python code.
+     {#var myform = document.getElementById('form');#}
+     {#myform.onsubmit = function(){#}
+     {#  var start_local = document.getElementById('startDate').value.replace("T", " ");#}
+     {#  var start_utc = new Date(start_local).toISOString();#}
+     {#  document.getElementById('startDate').value = start_utc.replace("Z", "").replace(".000", "");#}
+     {##}
+     {#  var end_local = document.getElementById('endDate').value.replace("T", " ");#}
+     {#  var end_utc = new Date(end_local).toISOString();#}
+     {#  document.getElementById('endDate').value = end_utc.replace("Z", "").replace(".000", "");#}
+     {#;#}
 
     //Clone the hidden element and shows it
    $('.add-one').click(function(){
@@ -411,6 +421,20 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+
+   // Handle all-day event
+    $("#allDay").change(function () {
+
+      if (this.checked) {
+        $("#startDate").attr("type", "date");
+        $("#endDate").attr("type", "date");
+      }
+      else {
+        $("#startDate").attr("type", "datetime-local");
+        $("#endDate").attr("type", "datetime-local");
+      }
+
+    });
 
    </script>
 {% endblock %}
