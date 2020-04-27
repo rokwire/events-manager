@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- hide search bar, part of status selection and history requests on user events GUI.
 - change the style of deletion modal the same as the approval moddal on user events.
 
 ### Added
