@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import requests
-import json
 import pytz
 import json
 import datetime
