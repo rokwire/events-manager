@@ -1,9 +1,11 @@
 import requests
 import json
+import pytz
 
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from datetime import datetime
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -173,15 +175,21 @@ def create_new_user_event(new_user_event):
 def populate_event_from_form(post_form):
     new_event = dict()
     super_event = False
+    all_day_event = False
     for item in post_form:
-        if (item_not_list(item)) == True:
-            new_event[item] = post_form.get(item)
-        if item == 'isSuperEvent':
-            if post_form.get(item) == 'on':
+        if item_not_list(item):
+            if item == 'isSuperEvent' and post_form.get(item) == 'on':
                 new_event['isSuperEvent'] = True
                 super_event = True
-    if super_event == False:
+            elif item == 'allDay' and post_form.get(item) == 'on':
+                new_event['allDay'] = True
+                all_day_event = True
+            else:
+                new_event[item] = post_form.get(item)
+    if not super_event:
         new_event['isSuperEvent'] = False
+    if not all_day_event:
+        new_event['allDay'] = False
 
     new_event['contacts'] = get_contact_list (post_form)
 
@@ -191,7 +199,32 @@ def populate_event_from_form(post_form):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
+    new_event['startDate'] = get_datetime_in_utc(post_form, 'startDate', new_event['allDay'])
+    new_event['endDate'] = get_datetime_in_utc(post_form, 'endDate', new_event['allDay'])
+
     return new_event
+
+
+def get_datetime_in_utc(post_form, date_field, is_all_day_event):
+
+    # TODO: This assumes events taking place in local time zone of the user.
+    #  Need to immediately fix this using location information.
+
+    str_local_date = post_form.get(date_field)
+
+    if is_all_day_event:
+        datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
+        # Set time to match the
+        if date_field == "startDate":
+            datetime_obj = datetime_obj.replace(hour=00, minute=00)
+        elif date_field == "endDate":
+            datetime_obj = datetime_obj.replace(hour=23, minute=59)
+    else:
+        datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+
+    datetime_obj = datetime_obj.astimezone(pytz.UTC)
+    return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
+
 
 def get_contact_list (post_form):
 
@@ -305,7 +338,8 @@ def get_target_audience(post_form):
 
 
 def item_not_list(item):
-    if item !='firstName' and item != 'lastName' and item != 'email' and item != 'phone' and item != 'organization' and item != "id" and item != 'track' and item != 'isFeatured' and item != 'tags' and item != 'targetAudience':
+    if item not in ['firstName', 'lastName', 'email', 'phone', 'organization', "id", 'track', 'isFeatured', 'tags',
+                    'targetAudience', 'startDate', 'endDate']:
         return True
     else:
         return False

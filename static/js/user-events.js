@@ -1,5 +1,4 @@
 $(".dataModified").each(function(index){
-  console.log("hi");
   console.log($(this).text());
   dataModified_utc = $(this).text().replace("T", " ");
   console.log(dataModified_utc);
