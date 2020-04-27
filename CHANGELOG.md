@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - hide search bar, part of status selection and history requests on user events GUI.
 - change the style of deletion modal the same as the approval modal on user events.
-- moved event date-time conversion code to python 
+- moved event date-time conversion code to python
+- made end date required
 
 ### Added
 - add user events deletion endpoint and GUI to click delete button to delete user event.
