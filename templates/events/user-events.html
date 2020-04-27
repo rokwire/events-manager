@@ -20,6 +20,7 @@
           <span class="badge badge-pill badge-success">Approved </span>
         </label>
       </div>
+      <!-- comment out disapproved
       <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline2">
@@ -32,6 +33,7 @@
             <span class="badge badge-pill badge-info">Published </span>
           </label>
       </div>
+       -->
       <div class="form-check form-check-inline col-sm-3">
         <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
         <label class="form-check-label" for="materialInline4">
@@ -42,6 +44,7 @@
       <div>
         <a class="btn btn-secondary mr-2" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
       </div>
+    <!-- comment out search GUI
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
         <div>
           <button type="submit" class="btn btn-outline-primary mb-2">Search</button>
@@ -50,7 +53,9 @@
           <input type="text" class="form-control" name = "searchInput" placeholder="Search Events..." aria-label="Search">
         </div>
       </form>
+      -->
     </div>
+
 
     <div class="row row-content">
       <div class="col-12">
@@ -64,6 +69,7 @@
                     <h4 class="mb-0" align = "left">{{ posts_dic[eventID][0].title }}</h4>
                   </a>
                 </div>
+                <!-- comment out dropdown history
                 <div class = "col-12 dropdown">
                   <a class="btn btn-default ml-auto float-right data" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                     <span id="edit_{{eventId}}">
@@ -72,6 +78,7 @@
                       </svg>
                     </span>
                   </a>
+
                   <div class="dropdown-menu dropdown-menu-right" id="myDropdown">
                     <a class="dropdown-item disabled">Request History</a>
                     <div class="dropdown-divider"></div>
@@ -88,10 +95,10 @@
                           <span class="badge badge-pill badge-info">P</span>
                         {% endif %}
                       </a>
-
                     {% endfor%}
                   </div>
                 </div>
+                -->
               </div>
           </div>
         {% endfor%}
