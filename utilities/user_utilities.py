@@ -178,7 +178,7 @@ def publish_user_event(eventId):
 
             event = {k: v for k, v in event.items() if v}
             # Setting up post request
-            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL']+"/events", headers=headers, data=json.dumps(event))
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, data=json.dumps(event))
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
