@@ -245,12 +245,16 @@ def populate_event_from_form(post_form):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
+    start_date = post_form.get('startDate')
+    new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
+
+    end_date = post_form.get('endDate')
+    if end_date != '':
+        new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+
     location = post_form.get('location')
     if location != '':
         new_event['location'] = get_location_details(location)
-
-    new_event['startDate'] = get_datetime_in_utc(post_form, 'startDate', new_event['allDay'])
-    new_event['endDate'] = get_datetime_in_utc(post_form, 'endDate', new_event['allDay'])
 
     return new_event
 
@@ -282,12 +286,10 @@ def get_location_details(location_description):
     return location_obj
 
 
-def get_datetime_in_utc(post_form, date_field, is_all_day_event):
+def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
-
-    str_local_date = post_form.get(date_field)
 
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
