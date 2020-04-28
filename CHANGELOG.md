@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - send data message with event notification.
 - support for creating all day events.
 - geocoding of location description/address when creating a new event.
+- support for authenticating using Shibboleth + OIDC.
+- basic home page.
 
 ### Fixed
 - fix userevent approval.

@@ -424,3 +424,21 @@ class Config(object):
     # SCHEDULER_* defines hours and mins for scheduler to run on daily base crawling
     SCHEDULER_HOUR=''
     SCHEDULER_MINS=''
+
+    #OIDC CONFIG FOR LOGIN
+    ISSUER_URL = os.getenv("ISSUER_URL", "https://shibboleth-test.techservices.illinois.edu")  #test instance
+    SCOPES = os.getenv("SCOPES", ["openid", "profile", "email", "offline_access"])  # Other OIDC scopes can be added as needed.
+    REDIRECT_URIS = os.getenv("REDIRECT_URIS", "")
+    CLIENT_ID = os.getenv("CLIENT_ID", "")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET", "")
+
+    # LOGIN_MODE SELECTED
+    LOGIN_MODE = os.getenv("LOGIN_MODE", "shibboleth") # TODO: Add an option "local" for local login.
+
+    # ROLE OF USERS
+    ROLE = {
+       "both": (2, URL_PREFIX + "/auth/select-events"),
+       "source": (1, URL_PREFIX + "/event/source/0"),
+       "user": (1, URL_PREFIX + "/user-events"),
+       "either": (0, None)
+    }

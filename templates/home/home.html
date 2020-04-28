@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Events Manager {% endblock %}
+{% block content %}
+    <h1>Introduction</h1>
+    <p>
+        Events Manager is the administrative interface to events in the Rokwire Platform. Through this web application,
+        users can manage existing events coming from calendars and or create and manage user events.
+    </p>
+    <hr/>
+    <p>
+        Main features of Events Manager are as follows:
+    </p>
+    <h3>User Events</h3>
+    <ul>
+        <li>View User Events (Approved and Pending)</li>
+        <li>Manage User Events (Create, View, Edit, Delete, Approve, Disapprove, etc.)</li>
+        <li>Send Notifications</li>
+    </ul>
+    <h3>Calendar Events</h3>
+    <ul>
+        <li>View Event Sources</li>
+        <li>Manage Individual Calendars (Add, Approve, etc.)</li>
+        <li>Schedule Daily Downloads</li>
+        <li>Manage Individual Events (Approve, Disapprove, etc.)</li>
+    </ul>
+{% endblock %}
+</html>
