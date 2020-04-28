@@ -3,6 +3,9 @@ import requests
 from .utilities import source_utilities, notification
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+
+from .auth import role_required
+
 from flask import jsonify
 from .utilities.user_utilities import *
 from .utilities.constants import *
@@ -12,6 +15,7 @@ from .config import Config
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
 @userbp.route('/', methods=['GET', 'POST'])
+@role_required("user")
 def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
@@ -52,6 +56,7 @@ def user_events():
                             isUser=True)
 
 @userbp.route('/event/<id>',  methods=['GET'])
+@role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
     # transfer targetAudience into targetAudienceMap format
@@ -70,6 +75,7 @@ def user_an_event(id):
                         isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
+@role_required("user")
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
     # transfer targetAudience into targetAudienceMap format
@@ -219,6 +225,7 @@ def user_an_event_edit(id):
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
+@role_required("user")
 def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
@@ -231,6 +238,7 @@ def user_an_event_approve(id):
     return "success", 200
 
 @userbp.route('/event/<id>/disapprove', methods=['POST'])
+@role_required("user")
 def user_an_event_disapprove(id):
     try:
         disapprove_user_event(id)
@@ -240,6 +248,7 @@ def user_an_event_disapprove(id):
     return "success", 200
 
 @userbp.route('/select', methods=['POST'])
+@role_required("user")
 def select():
     select_status = []
     if request.form.get('approved') == '1':
@@ -255,6 +264,7 @@ def select():
     return "", 200
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
+@role_required("user")
 def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form)
@@ -267,6 +277,7 @@ def add_new_event():
                                 targetAudienceMap=targetAudienceMap)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
+@role_required("user")
 def notification_event(id):
     title = request.form.get('title')
     message = request.form.get('message')
@@ -278,11 +289,13 @@ def notification_event(id):
     return "", 200
 
 @userbp.route('/event/<id>/devicetokens', methods=['GET'])
+@role_required("user")
 def get_devicetokens(id):
     devicetokens = notification.get_favorite_eventid_information(id)
     return jsonify(devicetokens), 200
 
 @userbp.route('/event/<id>/delete', methods=['DELETE'])
+@role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
