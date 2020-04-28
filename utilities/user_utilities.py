@@ -3,6 +3,7 @@ import json
 import datetime
 import requests
 import traceback
+import googlemaps
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -244,10 +245,41 @@ def populate_event_from_form(post_form):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
+    location = post_form.get('location')
+    if location != '':
+        new_event['location'] = get_location_details(location)
+
     new_event['startDate'] = get_datetime_in_utc(post_form, 'startDate', new_event['allDay'])
     new_event['endDate'] = get_datetime_in_utc(post_form, 'endDate', new_event['allDay'])
 
     return new_event
+
+
+def get_location_details(location_description):
+    location_obj = dict()
+    google_geocoding_api_key = current_app.config['GOOGLE_KEY']
+    try:
+        google_maps_client = googlemaps.Client(key=google_geocoding_api_key)
+        geocoding_response = google_maps_client.geocode(address=location_description + ',Urbana',
+                                                        components={'administrative_area': 'Urbana', 'country': "US"})
+        if len(geocoding_response) > 0:
+            lat = geocoding_response[0]['geometry']['location']['lat']
+            lng = geocoding_response[0]['geometry']['location']['lng']
+            location_obj = {
+                'latitude': lat,
+                'longitude': lng,
+                'description': location_description
+            }
+        else:
+            location_obj['location'] = {'description': location_description}
+    except ValueError as e:
+        print("Error in connecting to Google Geocoding API: {}".format(e))
+        location_obj['location'] = {'description': location_description}
+    except googlemaps.exceptions.ApiError as e:
+        print("API Key Error: {}".format(e))
+        location_obj['location'] = {'description': location_description}
+
+    return location_obj
 
 
 def get_datetime_in_utc(post_form, date_field, is_all_day_event):
@@ -384,7 +416,7 @@ def get_target_audience(post_form):
 
 def item_not_list(item):
     if item not in ['firstName', 'lastName', 'email', 'phone', 'organization', "id", 'track', 'isFeatured', 'tags',
-                    'targetAudience', 'startDate', 'endDate']:
+                    'targetAudience', 'startDate', 'endDate', 'location']:
         return True
     else:
         return False
