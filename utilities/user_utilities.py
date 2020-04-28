@@ -182,7 +182,7 @@ def publish_user_event(eventId):
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
-                print("Event {} submission fails".format(id))
+                print("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}})
                 return False
