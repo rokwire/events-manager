@@ -203,7 +203,7 @@ def disapprove_user_event(objectId):
         "$set": {"eventStatus":  "pending"}
     })
     if not result:
-        print("Disapprove event {} fails in disapprove_event".format(id))
+        print("Disapprove event {} fails in disapprove_event".format(objectId))
 
 def create_new_user_event(new_user_event):
     update_result = None
