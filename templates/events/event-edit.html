@@ -79,8 +79,20 @@
   <!-- form inputs -->
      <article class="media content-section">
        <div class="media-body">
-          <h2><a class="article-title">{{ post.title }}</a></h2>
+          <h2><a class="article-title">Edit Event</a></h2>
           <hr class="divider"/>
+
+           <!-- event title -->
+           <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Event Title<span style="color: red">*</span> </h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" id="title" name="title" required value="{{post.title}}" required/>
+            </div>
+          </div>
+
+
           <!-- event url -->
           {% if post.titleURL%}
             <div class="form-group row ">
@@ -105,11 +117,11 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category </h5>
+              <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -157,24 +169,40 @@
               </div>
             </div>
           {% endif %}
-
+          <!-- allDay -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.allDay == True %}
+                <input class="form-control" type="checkbox" id="allDay" name="allDay" checked/>
+               {% else %}
+                <input class="form-control" type="checkbox" id="allDay" name="allDay"/>
+               {% endif %}
+            </div>
+          </div>
           <!-- startDate -->
           {% if post.startDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date </h5>
+                <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post.startDate}} />
+                  {% if post.allDay == True %}
+                  <input class="form-control" type="date" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  {% else %}
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date </h5>
+                <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
               </div>
             </div>
           {% endif %}
@@ -183,19 +211,23 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date </h5>
+                <h5>End Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post.endDate}} />
+                  {% if post.allDay == True %}
+                  <input class="form-control" type="date" id="endDate" name="endDate" value={{post['endDate']}} required/>
+                  {% else %}
+                  <input class="form-control" type="datetime-local" id="endDate" name="startDate" value={{post['endDate']}} required/>
+                  {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date </h5>
+                <h5> End Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" required/>
               </div>
             </div>
           {% endif %}
@@ -279,19 +311,22 @@
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+                <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
             </div>
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+              </div>
+              <div class="col-sm-3">
+                <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -309,32 +344,39 @@
                 <div class = "form-group row" >
                   <div class="col-sm-3 offset-sm-2">
                     {% if contact.firstName %}
-                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" value="{{contact.firstName}}"/>
+                      <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" value="{{contact.firstName}}"/>
                     {% else %}
-                      <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name"/>
+                      <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name"/>
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
                     {% if contact.lastName %}
-                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name" value="{{contact.lastName}}"/>
+                      <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name" value="{{contact.lastName}}"/>
                     {% else %}
-                      <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                      <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
                     {% endif %}
                   </div>
                 </div>
                 <div class = "form-group row" >
                   <div class="col-sm-3 offset-sm-2">
                     {% if contact.email %}
-                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email" value="{{contact.email}}"/>
+                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email" value="{{contact.email}}"/>
                     {% else %}
-                      <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
                     {% if contact.phone %}
-                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
                     {% else %}
-                      <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                    {% endif %}
+                  </div>
+                  <div class="col-sm-3">
+                    {% if contact.organization %}
+                      <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization" value="{{contact.organization}}"/>
+                    {% else %}
+                      <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization" />
                     {% endif %}
                   </div>
                   <!-- End of fields-->
@@ -352,10 +394,41 @@
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-            <div class = "col-sm-9">
-              <input id="tags" name="tags" class="form-control" type="text" value="{{tags_text}}"/>
+            <div class="col-sm-9">
+              <span role="button" name="add_tag" class="add-tag btn btn-outline-primary">+ Add A Tag</span>
             </div>
           </div>
+
+           <div id="tagList" class="tag-group dynamic-element-tags" style="display:none">
+            <div class = "form-group row">
+                <div class="col-sm-3 offset-sm-2">
+                    <input id="tags" name="tags" class="form-control" placeholder="Tag Name" type="text"/>
+                </div>
+                <div class="col-md-1">
+                    <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
+                </div>
+            </div>
+           </div>
+
+           <div class="dynamic-stuff-tags">
+              <!-- existing tags-->
+               {% if post.tags %}
+                {% for tag in post.tags %}
+                    <div id="tagList-exist" class="tag-group dynamic-element-tags">
+                        <div class = "form-group row">
+                            <div class="col-sm-3 offset-sm-2">
+                                <input id="tags-exist" name="tags" class="form-control" placeholder="Tag Name" type="text" value ="{{tag}}"/>
+                            </div>
+                            <div class="col-md-1">
+                                <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+               {% endif %}
+              <!-- none -->
+           </div>
+
 
           <!-- sponsor -->
           {% if post.sponsor%}
@@ -406,6 +479,107 @@
             </div>
           </div> -->
 
+
+          <!-- super event check box -->
+          <div class="form-group row" id="super-check" onclick="display_super_event_description()">
+            <div class="col-12 col-sm-2">
+               <h5>Super Event</h5>
+            </div>
+                <div class="col-12 col-sm-2">
+                    {% if post.isSuperEvent == true %}
+                    <input class="form_control name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                    {% else %}
+                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
+                    {% endif %}
+                </div>
+          </div>
+
+          <!-- add sub-event-->
+         {% if post.isSuperEvent == true %}
+          <div id="super-des" class="form-group">
+         {% else %}
+          <div id="super-des" class="form-group" style="display:none" >
+         {% endif %}
+            <div class="form-group row">
+              <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
+                  <h5>Add Sub-Event </h5>
+              </div>
+
+              <div class="col-sm-9">
+                <span role="button" class="add-sub btn btn-outline-primary">+ Add a Sub-Event</span>
+              </div>
+            </div>
+          </div>
+
+           <div class="form-group sub-group dynamic-element-sub" style="display:none">
+                <div class = "form-group row" >
+                      <div class="form-group col-sm-3 offset-sm-2">
+                            <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                      </div>
+
+                      <div class="col-sm-3 form-group" >
+                        <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
+                      </div>
+
+                      <div class="form-group dropdown show">
+                          <div class="form-group">
+                            <select class="form-control offset-sm-2" id="isFeatured" name = "isFeatured">
+                              <option>Featured</option>
+                              <option>Not Featured</option>
+                            </select>
+                          </div>
+                      </div>
+                    <div class="offset-sm-1">
+                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
+                    </div>
+                </div>
+            </div>
+
+           <div class="dynamic-stuff-sub">
+              <!-- existing sub-events-->
+               {% if post.subevent %}
+                    {% for sub in post.subevent %}
+                        <div class="form-group sub-group dynamic-element-sub">
+                            <div class = "form-group row" >
+                                  <div class="form-group col-sm-3 offset-sm-2">
+                                        {% if sub.id %}
+                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
+                                        {% else %}
+                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                                        {% endif %}
+                                  </div>
+
+                                  <div class="col-sm-3 form-group" >
+                                    {% if sub.track %}
+                                    <input class="form-control" id="track" name="track" type="text" placeholder="Track" value="{{sub.track}}"/>
+                                    {% else %}
+                                    <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
+                                    {% endif %}
+                                  </div>
+
+                                  <div class="form-group dropdown show">
+                                      <div class="form-group">
+                                        <select class="form-control offset-sm-2" id="isFeatured" name = "isFeatured">
+                                          {% if sub.isFeatured == True %}
+                                          <option>Featured</option>
+                                          <option>Not Featured</option>
+                                          {% else %}
+                                          <option>Not Featured</option>
+                                          <option>Featured</option>
+                                          {% endif %}
+                                        </select>
+                                      </div>
+                                  </div>
+                                <div class="offset-sm-1">
+                                    <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor%}
+               {% endif %}
+              <!-- none -->
+           </div>
+
         </div>
      </article>
 
@@ -440,14 +614,23 @@
 
    <script>
       //change into local time before load
-      var start_utc = document.getElementById('startDate').value.replace("T", " ");
-      var stillUtc_start = moment.utc(start_utc).toDate();
-      var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
-      document.getElementById('startDate').value = start_local;
 
+
+      var start_utc = document.getElementById('startDate').value.replace("T", " ");
       var end_utc = document.getElementById('endDate').value.replace("T", " ");
-      var stillUtc_end = moment.utc(end_utc).toDate();
-      var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      var allDay = document.getElementById('allDay');
+      if (allDay.checked == true) {
+        var stillUtc_start = moment(start_utc).toDate();
+        var stillUtc_end = moment(end_utc).toDate();
+        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
+        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
+      } else {
+         var stillUtc_start = moment.utc(start_utc).toDate();
+        var stillUtc_end = moment.utc(end_utc).toDate();
+        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      }
+      document.getElementById('startDate').value = start_local;
       document.getElementById('endDate').value = end_local;
 
       //set up google map geocoding
@@ -539,6 +722,73 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
+
+   //Clone the hidden element and shows it for tags
+   $('.add-tag').click(function(){
+     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
+     attach_delete_tags();
+   });
+
+   $('.exist-tags').ready(function(){
+     attach_delete_tags();
+   });
+
+   //Attach functionality to delete buttons for tags
+   function attach_delete_tags(){
+     $('.delete-tag').off();
+     $('.delete-tag').click(function(){
+       $(this).closest('.tag-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+
+       //Super event checkbox
+   function display_super_event_description(){
+     var check = document.getElementById("super-event");
+     var sub = document.getElementById("super-des");
+     if (check.checked == true){
+        sub.style.display = "block";
+     } else {
+        sub.style.display = "none";
+     }
+   }
+
+   //Clone the hidden element and shows it for sub-event
+   $('.add-sub').click(function(){
+     $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
+     attach_delete_sub();
+   });
+
+   $('.exist-sub').ready(function(){
+     attach_delete_sub();
+   });
+
+   //Attach functionality to delete buttons for sub-event
+   function attach_delete_sub(){
+     $('.delete-sub').off();
+     $('.delete-sub').click(function(){
+       console.log("click");
+       $(this).closest('.sub-group').remove();
+       $('#form').find('input:submit, button:submit').prop("disabled", false);
+     });
+   }
+
+   // Handle all-day event
+    $("#allDay").change(function () {
+
+      if (this.checked) {
+        $("#startDate").attr("type", "date");
+        $("#endDate").attr("type", "date");
+      }
+      else {
+        $("#startDate").attr("type", "datetime-local");
+        $("#endDate").attr("type", "datetime-local");
+      }
+
+    });
+
+
+
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
