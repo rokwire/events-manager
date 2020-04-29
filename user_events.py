@@ -231,15 +231,19 @@ def user_an_event_edit(id):
 @userbp.route('/event/<id>/approve', methods=['POST'])
 @role_required("user")
 def user_an_event_approve(id):
+    success = False
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
-        approve_user_event(id)
-        publish_user_event(id)
+        success = publish_user_event(id)
+        if success:
+            approve_user_event(id)
     except Exception:
         traceback.print_exc()
-
-    return "success", 200
+    if success:
+        return "success", 200
+    else:
+        return "failed", 200
 
 @userbp.route('/event/<id>/disapprove', methods=['POST'])
 @role_required("user")
