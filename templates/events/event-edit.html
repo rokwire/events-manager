@@ -79,8 +79,20 @@
   <!-- form inputs -->
      <article class="media content-section">
        <div class="media-body">
-          <h2><a class="article-title">{{ post.title }}</a></h2>
+          <h2><a class="article-title">Edit Event</a></h2>
           <hr class="divider"/>
+
+           <!-- event title -->
+           <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Event Title<span style="color: red">*</span> </h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="text" id="title" name="title" required value="{{post.title}}" required/>
+            </div>
+          </div>
+
+
           <!-- event url -->
           {% if post.titleURL%}
             <div class="form-group row ">
@@ -105,11 +117,11 @@
           <!-- event category -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Category </h5>
+              <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." >
+                <select name="category" id = "category" class="selectpicker" title="Category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -174,19 +186,23 @@
           {% if post.startDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date </h5>
+                <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post.startDate}} />
+                  {% if post.allDay == True %}
+                  <input class="form-control" type="date" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  {% else %}
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> Start Date </h5>
+                <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" />
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
               </div>
             </div>
           {% endif %}
@@ -195,19 +211,23 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date </h5>
+                <h5>End Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post.endDate}} />
+                  {% if post.allDay == True %}
+                  <input class="form-control" type="date" id="endDate" name="endDate" value={{post['endDate']}} required/>
+                  {% else %}
+                  <input class="form-control" type="datetime-local" id="endDate" name="startDate" value={{post['endDate']}} required/>
+                  {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date </h5>
+                <h5> End Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" required/>
               </div>
             </div>
           {% endif %}
@@ -291,19 +311,19 @@
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="firstName" name="firstName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+                <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="lastName" name="lastName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
             </div>
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactEmail" name="contactEmail[]" type="email" placeholder="Email"/>
+                <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone[]" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
               <div class="col-sm-3">
                 <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
@@ -594,14 +614,23 @@
 
    <script>
       //change into local time before load
-      var start_utc = document.getElementById('startDate').value.replace("T", " ");
-      var stillUtc_start = moment.utc(start_utc).toDate();
-      var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
-      document.getElementById('startDate').value = start_local;
 
+
+      var start_utc = document.getElementById('startDate').value.replace("T", " ");
       var end_utc = document.getElementById('endDate').value.replace("T", " ");
-      var stillUtc_end = moment.utc(end_utc).toDate();
-      var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      var allDay = document.getElementById('allDay');
+      if (allDay.checked == true) {
+        var stillUtc_start = moment(start_utc).toDate();
+        var stillUtc_end = moment(end_utc).toDate();
+        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
+        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
+      } else {
+         var stillUtc_start = moment.utc(start_utc).toDate();
+        var stillUtc_end = moment.utc(end_utc).toDate();
+        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+      }
+      document.getElementById('startDate').value = start_local;
       document.getElementById('endDate').value = end_local;
 
       //set up google map geocoding

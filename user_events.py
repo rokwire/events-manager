@@ -84,11 +84,11 @@ def user_an_event_edit(id):
     #         else:
     #             targetAudience_edit_list += [item.capitalize()]
     #     post_by_id['targetAudience'] = targetAudience_edit_list
-    # if (post_by_id['allDay'] == True):
-    #     post_by_id['startDate'] = (datetime.strptime((post_by_id['startDate']), "%Y-%m-%dT%H:%M:%S")).date()
-    #     post_by_id['endDate'] =(datetime.strptime((post_by_id['endDate']), "%Y-%m-%dT%H:%M:%S")).date()
-    #     print("start date", post_by_id['startDate'])
-    #     print("end date", post_by_id['endDate'])
+    if (post_by_id['allDay'] == True):
+        post_by_id['startDate'] = (datetime.strptime((post_by_id['startDate']), "%Y-%m-%dT%H:%M:%S")).date()
+        post_by_id['startDate'] =post_by_id['startDate'].strftime("%Y-%m-%d")
+        post_by_id['endDate'] =(datetime.strptime((post_by_id['endDate']), "%Y-%m-%dT%H:%M:%S")).date()
+        post_by_id['endDate'] = post_by_id['endDate'].strftime("%Y-%m-%d")
     if request.method == 'POST':
         # first deal with contact array -> add contacts field into request form
         contacts_arrays = []
@@ -205,13 +205,13 @@ def user_an_event_edit(id):
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     tags_text = ""
-    if post_by_id['tags'] != None:
+    if 'tags' in post_by_id and post_by_id['tags'] != None:
         for i in range(0,len(post_by_id['tags'])):
             tags_text += post_by_id['tags'][i]
             if i!= len(post_by_id['tags']) - 1:
                 tags_text += ","
     audience_dic = {}
-    if post_by_id['targetAudience'] != None:
+    if 'targetAudience' in post_by_id and post_by_id['targetAudience'] != None:
         for audience in targetAudienceMap:
             audience_dic[audience] = 0
         for audience_select in post_by_id['targetAudience']:

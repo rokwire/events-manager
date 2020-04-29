@@ -259,13 +259,11 @@ def get_datetime_in_utc(post_form, date_field, is_all_day_event):
 
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
-        print("datetime_obj",date_field,datetime_obj)
         # Set time to match the
         if date_field == "startDate":
             datetime_obj = datetime_obj.replace(hour=00, minute=00)
         elif date_field == "endDate":
             datetime_obj = datetime_obj.replace(hour=23, minute=59)
-        print("datetime_obj after",date_field, datetime_obj)
     else:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
 
