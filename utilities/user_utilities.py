@@ -289,10 +289,8 @@ def get_contact_list (post_form):
 
     if contacts_arrays:
         num_of_contacts = len(contacts_arrays[0])
-        print('num_of_contacts', num_of_contacts)
         contacts_dic = []
         for i in range(num_of_contacts):
-            print("contacts_arrays:", contacts_arrays)
             a_contact = {}
             firstName = contacts_arrays[0][i]
             lastName = contacts_arrays[1][i]

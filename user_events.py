@@ -90,11 +90,11 @@ def user_an_event_edit(id):
         post_by_id['endDate'] =(datetime.strptime((post_by_id['endDate']), "%Y-%m-%dT%H:%M:%S")).date()
         post_by_id['endDate'] = post_by_id['endDate'].strftime("%Y-%m-%d")
     if request.method == 'POST':
+        super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
         for item in request.form:
-            print("current or updated", item, "is", request.form[item])
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
             if item == 'titleURL':
@@ -108,13 +108,12 @@ def user_an_event_edit(id):
             if item == 'longDescription':
                 post_by_id['longDescription'] = request.form[item]
             if item == 'isSuperEvent':
-                print("is super event?", request.form.get(item))
                 if request.form[item] == 'on':
+                    super_event_checked = True
                     post_by_id['isSuperEvent'] = True
                 else:
                     post_by_id['isSuperEvent'] = False
             if item == 'allDay':
-                print("is all day?", request.form.get(item))
                 if request.form.get(item) == 'on':
                     post_by_id['allDay'] = True
                 else:
@@ -129,7 +128,10 @@ def user_an_event_edit(id):
             post_by_id['subcategory'] = request.form['subcategory']
         else:
             post_by_id['subcategory'] = None
-            
+
+        print("post_by_id['isSuperEvent']",  post_by_id['isSuperEvent'] )
+        if super_event_checked == False:
+            post_by_id['isSuperEvent'] = False
         if post_by_id['isSuperEvent'] == True :
             post_by_id['subevent'] = get_subevent_list(request.form)
         else:
