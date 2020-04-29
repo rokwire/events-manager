@@ -287,7 +287,7 @@
                 </div>
             </div>
 
-           <div class="dynamic-stuff-sub">
+           <div id="sub-current" class="dynamic-stuff-sub">
                 <!-- existing sub-events-->
                 <!-- none -->
            </div>
@@ -377,10 +377,13 @@
    function display_super_event_description(){
      var check = document.getElementById("super-event");
      var sub = document.getElementById("super-des");
+     var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
         sub.style.display = "block";
+        subCurrent.style.display = "block";
      } else {
         sub.style.display = "none";
+        subCurrent.style.display = "none";
      }
    }
 

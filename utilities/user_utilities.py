@@ -238,7 +238,10 @@ def populate_event_from_form(post_form):
 
     new_event['contacts'] = get_contact_list (post_form)
 
-    new_event['subevent'] = get_subevent_list (post_form)
+    if new_event['isSuperEvent'] == True:
+        new_event['subevent'] = get_subevent_list (post_form)
+    else:
+        new_event['subevent'] = None
 
     new_event['tags'] = get_tags(post_form)
 
@@ -256,7 +259,6 @@ def get_datetime_in_utc(post_form, date_field, is_all_day_event):
     #  Need to immediately fix this using location information.
 
     str_local_date = post_form.get(date_field)
-
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
         # Set time to match the
@@ -287,8 +289,10 @@ def get_contact_list (post_form):
 
     if contacts_arrays:
         num_of_contacts = len(contacts_arrays[0])
+        print('num_of_contacts', num_of_contacts)
         contacts_dic = []
         for i in range(num_of_contacts):
+            print("contacts_arrays:", contacts_arrays)
             a_contact = {}
             firstName = contacts_arrays[0][i]
             lastName = contacts_arrays[1][i]

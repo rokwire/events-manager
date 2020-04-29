@@ -90,119 +90,54 @@ def user_an_event_edit(id):
         post_by_id['endDate'] =(datetime.strptime((post_by_id['endDate']), "%Y-%m-%dT%H:%M:%S")).date()
         post_by_id['endDate'] = post_by_id['endDate'].strftime("%Y-%m-%d")
     if request.method == 'POST':
-        # first deal with contact array -> add contacts field into request form
-        contacts_arrays = []
-        has_contacts_in_request = False
-        for key in request.form:
-            if key == 'firstName[]' or key == 'lastName[]' or key == 'contactEmail[]' or key == 'contactPhone[]':
-                contact_list = request.form.getlist(key)
-                if len(contact_list)!=0:
-                    # delete first group of empty string
-                    contact_list = contact_list[1:]
-                    contacts_arrays += [contact_list]
-                # reasign to create contact objects
-        num_of_contacts = len(contacts_arrays[0])
-        contacts_dic = []
-        for i in range(num_of_contacts):
-            a_contact = {}
-            firstName = contacts_arrays[0][i]
-            lastName = contacts_arrays[1][i]
-            email = contacts_arrays[2][i]
-            phone = contacts_arrays[3][i]
-            if firstName!="":
-                a_contact['firstName'] = firstName
-            if lastName!="":
-                a_contact['lastName'] = lastName
-            if email!="":
-                a_contact['email'] = email
-            if phone!="":
-                a_contact['phone'] = phone
-            if a_contact!={}:
-                contacts_dic.append(a_contact)
-        if contacts_dic!=[]:
-            has_contacts_in_request = True
-            post_by_id['contacts'] =  contacts_dic
-
-        # then edit all fields
-        for key in request.form:
-            if key != 'firstName[]' and key != 'lastName[]' and key != 'contactEmail[]' and key != 'contactPhone[]':
-                if key == "tags":
-                    tags_val = request.form[key]
-                    tags_list = tags_val.split(',')
-                    post_by_id[key] = tags_list
-                elif key == "targetAudience":
-                    # edit data format into lowercase and separate faculty and staff
-                    origin_list = request.form.getlist(key)
-                    edit_list = []
-                    for target in origin_list:
-                        if target == "Faculty/Staff":
-                            edit_list += ["faculty"]
-                            edit_list += ["staff"]
-                        else:
-                            edit_list += [target.lower()]
-                    post_by_id[key] = edit_list
-                elif key == "location":
-                    # post_by_id['location']['description'] = request.form[key]
-                    address = request.form[key]
-                    # geocode location address here
-                    geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?address={}".format(address)
-                    geocode_url = geocode_url + "&key={}".format(current_app.config['GOOGLE_KEY'])
-                    # Ping google for the reuslts:
-                    results = requests.get(geocode_url)
-                    # Results will be in JSON format - convert to dict using requests functionality
-                    results = results.json()
-                    if results!= None and len(results['results']) != 0 and results['status']=='OK':
-                        result = results['results'][0]
-                        print(result)
-                        #change description
-                        post_by_id['location']['description'] = result['formatted_address']
-                        post_by_id['location']['latitude'] = result['geometry']['location']['lat']
-                        post_by_id['location']['longitude'] = result['geometry']['location']['lng']
+        post_by_id['contacts'] = get_contact_list(request.form)
+        post_by_id['tags'] = get_tags(request.form)
+        post_by_id['targetAudience'] = get_target_audience(request.form)
+        for item in request.form:
+            print("current or updated", item, "is", request.form[item])
+            if item == 'title'and item != None:
+                post_by_id['title'] = request.form[item]
+            if item == 'titleURL':
+                post_by_id['titleURL'] = request.form[item]
+            if item == 'category':
+                post_by_id['category'] = request.form[item]
+            if item == 'cost':
+                post_by_id['cost'] = request.form[item]
+            if item == 'sponsor':
+                post_by_id['sponsor'] = request.form[item]
+            if item == 'longDescription':
+                post_by_id['longDescription'] = request.form[item]
+            if item == 'isSuperEvent':
+                print("is super event?", request.form.get(item))
+                if request.form[item] == 'on':
+                    post_by_id['isSuperEvent'] = True
                 else:
-                    post_by_id[key] = request.form[key]
+                    post_by_id['isSuperEvent'] = False
+            if item == 'allDay':
+                print("is all day?", request.form.get(item))
+                if request.form.get(item) == 'on':
+                    post_by_id['allDay'] = True
+                else:
+                    post_by_id['allDay'] = False
+            # if item == 'startDate':
+            #     print("all day?", post_by_id['allDay'])
+            #     post_by_id['startDate'] = get_datetime_in_utc(request.form, 'startDate', post_by_id['allDay'])
 
-        #once edited the status is changed into "pending"
-        post_by_id['eventStatus'] = 'pending'
-
-        #last deal with deleting fields
-        delete_dictionary = {}
-        #delete subcategory
-        if(post_by_id['category'] != "Athletics"):
-            if('subcategory' in post_by_id):
-                del post_by_id['subcategory']
-                delete_dictionary['subcategory'] = 1
+            # if item == 'endDate':
+            #     post_by_id['endDate'] = get_datetime_in_utc(request.form, 'endDate', post_by_id['allDay'])
+        if post_by_id['category'] == "Athletic" :
+            post_by_id['subcategory'] = request.form['subcategory']
         else:
-            if('subcategory' in post_by_id and (post_by_id['subcategory']==None or post_by_id['subcategory'] == "")):
-                delete_dictionary['subcategory'] = 1
-        #delete audience
-        if ('targetAudience' in post_by_id and 'targetAudience' not in request.form):
-            del post_by_id['targetAudience']
-            delete_dictionary['targetAudience'] = 1
-        #delete tags
-        if ('tags' in post_by_id and ('tags' not in request.form or request.form['tags'] == "")):
-            del post_by_id['tags']
-            delete_dictionary['tags'] = 1
-        #delete contacts
-        if ('contacts' in post_by_id and (not has_contacts_in_request)):
-            del post_by_id['contacts']
-            delete_dictionary['contacts'] = 1
+            post_by_id['subcategory'] = None
+            
+        if post_by_id['isSuperEvent'] == True :
+            post_by_id['subevent'] = get_subevent_list(request.form)
+        else:
+            post_by_id['subevent'] = None
 
-        update_user_event(id, post_by_id, delete_dictionary)
-
-        # after update in database, for display, change targetAudience format back
-        if ('targetAudience' in post_by_id):
-            targetAudience_origin_list = post_by_id['targetAudience']
-            targetAudience_edit_list = []
-            for item in targetAudience_origin_list:
-                if item == "faculty":
-                    targetAudience_edit_list += ["Faculty/Staff"]
-                elif item == "staff":
-                    pass
-                else:
-                    targetAudience_edit_list += [item.capitalize()]
-            post_by_id['targetAudience'] = targetAudience_edit_list
-
+        update_user_event(id, post_by_id, None)
         return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+
 
     tags_text = ""
     if 'tags' in post_by_id and post_by_id['tags'] != None:

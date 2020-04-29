@@ -88,7 +88,7 @@
               <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="title" name="title" required value="{{post.title}}" required/>
+              <input class="form-control" type="text" id="title" name="title" value="{{post.title}}" required/>
             </div>
           </div>
 
@@ -320,10 +320,10 @@
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
+                <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
               <div class="col-sm-3">
                 <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
@@ -360,16 +360,16 @@
                 <div class = "form-group row" >
                   <div class="col-sm-3 offset-sm-2">
                     {% if contact.email %}
-                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email" value="{{contact.email}}"/>
+                      <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email" value="{{contact.email}}"/>
                     {% else %}
-                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
+                      <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
                     {% if contact.phone %}
-                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                      <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
                     {% else %}
-                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                      <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
@@ -535,7 +535,7 @@
                 </div>
             </div>
 
-           <div class="dynamic-stuff-sub">
+           <div id="sub-current" class="dynamic-stuff-sub">
               <!-- existing sub-events-->
                {% if post.subevent %}
                     {% for sub in post.subevent %}
@@ -746,10 +746,13 @@
    function display_super_event_description(){
      var check = document.getElementById("super-event");
      var sub = document.getElementById("super-des");
+     var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
         sub.style.display = "block";
+        subCurrent.style.display = "block";
      } else {
         sub.style.display = "none";
+        subCurrent.style.display = "none";
      }
    }
 
