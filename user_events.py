@@ -275,7 +275,7 @@ def select():
 @role_required("user")
 def add_new_event():
     if request.method == 'POST':
-        new_event = populate_event_from_form(request.form)
+        new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
