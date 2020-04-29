@@ -486,9 +486,10 @@
         {% endif %}
         $.post(url,
         function(data) {
-          if (data == "success") {
-            location.reload();
+          if (data == "failed") {
+            alert("failed on events approval")
           }
+          location.reload();
         });
       });
       $("#disapprovebutton").click(function() {

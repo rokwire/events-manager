@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - basic home page.
 
 ### Fixed
+- fix userevent approval failure status change.
 - fix userevent approval.
 - fix the redirection when user clicks the add button to create a new event.
 - check the existence of startdate and enddate for user event html.
