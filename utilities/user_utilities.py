@@ -130,7 +130,13 @@ def delete_user_event(eventId):
         local_delete_list = []
         local_delete_list.append(local_del_id)
         local_delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], local_delete_list)
-        return eventId
+        local_delete_count = len(local_delete_event_local)
+        if delete_count < 1:
+            print("Local event {} deletion failed".format(id))
+            return
+        else:
+            print("Local event {} deletion successful".format(id))
+            return local_delete_event_local[1]
 
     # Deleting 'published' events off of the building block and then the local db
     elif event_status == 'published':
@@ -142,10 +148,11 @@ def delete_user_event(eventId):
         # Since we're only dealing with deleting a singular item at a time
         # if delete_count < 1, the item wasn't successfully deleted off of the events building block
         if delete_count < 1:
-            print("Event {} deletion failed".format(id))
+            print("Local and remote event {} deletion failed".format(id))
             return
         else:
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
+            print("Local and remote event {} deletion successful".format(id))
             return delete_event_local[0]
 
 
