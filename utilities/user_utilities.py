@@ -121,24 +121,39 @@ def delete_user_event_in_building_block(objectId_list):
     return delete_success_list
 
 def delete_user_event(eventId):
-    id = ObjectId(eventId)
-    delete_list = []
-    delete_list.append(id)
-    successfull_delete_list = delete_user_event_in_building_block(delete_list)
-    delete_count = len(successfull_delete_list)
-    # Since we're only dealing with deleting a singular item at a time
-    # if delete_count < 1, the item wasn't successfully deleted off of the events building block
-    if delete_count < 1:
-        print("Event {} deletion failed".format(id))
-        return
-    else:
-        delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
-        return delete_event_local[0]
+    # Fetching event status
+    event_status = get_user_event_status(eventId)
+
+    # Deleting 'pending' events off of the local db
+    if event_status == 'pending':
+        local_del_id = ObjectId(eventId)
+        local_delete_list = []
+        local_delete_list.append(local_del_id)
+        local_delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], local_delete_list)
+        return eventId
+
+    # Deleting 'published' events off of the building block and then the local db
+    else if event_status = 'published'
+        id = ObjectId(eventId)
+        delete_list = []
+        delete_list.append(id)
+        successfull_delete_list = delete_user_event_in_building_block(delete_list)
+        delete_count = len(successfull_delete_list)
+        # Since we're only dealing with deleting a singular item at a time
+        # if delete_count < 1, the item wasn't successfully deleted off of the events building block
+        if delete_count < 1:
+            print("Event {} deletion failed".format(id))
+            return
+        else:
+            delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
+            return delete_event_local[0]
 
 
 # Find the approval status for one event
 def get_user_event_status(objectId):
-    pass
+    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    event_status = event['eventStatus']
+    return event_status
 
 def approve_user_event(objectId):
     print("{} is going to be approved".format(objectId))
