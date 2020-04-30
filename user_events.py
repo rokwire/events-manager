@@ -152,7 +152,8 @@ def user_an_event_edit(id):
             post_by_id['subevent'] = None
 
         update_user_event(id, post_by_id, None)
-        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True,
+                               apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     # GET method
     elif request.method == 'GET':
@@ -178,9 +179,10 @@ def user_an_event_edit(id):
             for audience_select in post_by_id['targetAudience']:
                 audience_dic[audience_select] = 1
 
-        return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
-         eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
-         isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
+                               eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
+                               targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
+                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
