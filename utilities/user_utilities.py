@@ -139,7 +139,7 @@ def delete_user_event(eventId):
             return local_delete_event_local[0]
 
     # Deleting 'published' events off of the building block and then the local db
-    elif event_status == 'published':
+    elif event_status == 'approved':
         id = ObjectId(eventId)
         delete_list = []
         delete_list.append(id)
