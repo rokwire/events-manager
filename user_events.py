@@ -91,8 +91,7 @@ def user_an_event_edit(id):
     #             targetAudience_edit_list += [item.capitalize()]
     #     post_by_id['targetAudience'] = targetAudience_edit_list
 
-    post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], post_by_id['allDay'])
-    post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], post_by_id['allDay'])
+    # POST Method
     if request.method == 'POST':
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
@@ -141,23 +140,27 @@ def user_an_event_edit(id):
         update_user_event(id, post_by_id, None)
         return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
+    # GET method
+    elif request.method == 'GET':
+        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], post_by_id['allDay'])
+        post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], post_by_id['allDay'])
 
-    tags_text = ""
-    if 'tags' in post_by_id and post_by_id['tags'] != None:
-        for i in range(0,len(post_by_id['tags'])):
-            tags_text += post_by_id['tags'][i]
-            if i!= len(post_by_id['tags']) - 1:
-                tags_text += ","
-    audience_dic = {}
-    if 'targetAudience' in post_by_id and post_by_id['targetAudience'] != None:
-        for audience in targetAudienceMap:
-            audience_dic[audience] = 0
-        for audience_select in post_by_id['targetAudience']:
-            audience_dic[audience_select] = 1
+        tags_text = ""
+        if 'tags' in post_by_id and post_by_id['tags'] != None:
+            for i in range(0,len(post_by_id['tags'])):
+                tags_text += post_by_id['tags'][i]
+                if i!= len(post_by_id['tags']) - 1:
+                    tags_text += ","
+        audience_dic = {}
+        if 'targetAudience' in post_by_id and post_by_id['targetAudience'] != None:
+            for audience in targetAudienceMap:
+                audience_dic[audience] = 0
+            for audience_select in post_by_id['targetAudience']:
+                audience_dic[audience_select] = 1
 
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
-     eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
-     isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
+         eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
+         isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
