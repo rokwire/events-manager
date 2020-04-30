@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
                   {% endif %}
               </div>
             </div>
@@ -215,9 +215,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value={{post['endDate']}}/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value={{post['endDate']}}/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
                   {% endif %}
               </div>
             </div>
