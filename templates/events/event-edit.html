@@ -608,7 +608,7 @@
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-   <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
 
    <!-- <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script> -->
 
@@ -616,22 +616,24 @@
       //change into local time before load
 
 
-      var start_utc = document.getElementById('startDate').value.replace("T", " ");
-      var end_utc = document.getElementById('endDate').value.replace("T", " ");
-      var allDay = document.getElementById('allDay');
-      if (allDay.checked == true) {
-        var stillUtc_start = moment(start_utc).toDate();
-        var stillUtc_end = moment(end_utc).toDate();
-        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
-        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
-      } else {
-         var stillUtc_start = moment.utc(start_utc).toDate();
-        var stillUtc_end = moment.utc(end_utc).toDate();
-        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
-        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
-      }
-      document.getElementById('startDate').value = start_local;
-      document.getElementById('endDate').value = end_local;
+      /*
+          var start_utc = document.getElementById('startDate').value.replace("T", " ");
+          var end_utc = document.getElementById('endDate').value.replace("T", " ");
+          var allDay = document.getElementById('allDay');
+          if (allDay.checked == true) {
+            var stillUtc_start = moment(start_utc).toDate();
+            var stillUtc_end = moment(end_utc).toDate();
+            var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
+            var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
+          } else {
+             var stillUtc_start = moment.utc(start_utc).toDate();
+            var stillUtc_end = moment.utc(end_utc).toDate();
+            var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+            var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+          }
+          document.getElementById('startDate').value = start_local;
+          document.getElementById('endDate').value = end_local;
+       */
 
       //set up google map geocoding
       //set the default position as center of uiuc
@@ -692,16 +694,18 @@
      })
 
      //change back to utc time on submit
-     var myform = document.getElementById('form');
-     myform.onsubmit = function(){
-       var start_local = document.getElementById('startDate').value.replace("T", " ");
-       var start_utc = new Date(start_local).toISOString();
-       document.getElementById('startDate').value = start_utc.replace("Z", "");
+      /*
+         var myform = document.getElementById('form');
+         myform.onsubmit = function(){
+           var start_local = document.getElementById('startDate').value.replace("T", " ");
+           var start_utc = new Date(start_local).toISOString();
+           document.getElementById('startDate').value = start_utc.replace("Z", "");
 
-       var end_local = document.getElementById('endDate').value.replace("T", " ");
-       var end_utc = new Date(end_local).toISOString();
-       document.getElementById('endDate').value = end_utc.replace("Z", "");
-     };
+           var end_local = document.getElementById('endDate').value.replace("T", " ");
+           var end_utc = new Date(end_local).toISOString();
+           document.getElementById('endDate').value = end_utc.replace("Z", "");
+         };
+       */
 
     //Clone the hidden element and shows it
    $('.add-one').click(function(){
@@ -779,13 +783,25 @@
    // Handle all-day event
     $("#allDay").change(function () {
 
-      if (this.checked) {
-        $("#startDate").attr("type", "date");
-        $("#endDate").attr("type", "date");
+        let $startDate = $("#startDate");
+        let $endDate = $("#endDate");
+
+        let startDate = moment($startDate.val());
+        let endDate = moment($endDate.val());
+
+        if (this.checked) {
+          $endDate.attr("type", "date");
+          $startDate.attr("type", "date");
+
+          $startDate.val(startDate.format("YYYY-MM-DD"));
+          $endDate.val(endDate.format("YYYY-MM-DD"));
       }
       else {
-        $("#startDate").attr("type", "datetime-local");
-        $("#endDate").attr("type", "datetime-local");
+          $startDate.attr("type", "datetime-local");
+          $endDate.attr("type", "datetime-local");
+
+          $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
+          $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
       }
 
     });

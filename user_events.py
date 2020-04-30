@@ -90,11 +90,9 @@ def user_an_event_edit(id):
     #         else:
     #             targetAudience_edit_list += [item.capitalize()]
     #     post_by_id['targetAudience'] = targetAudience_edit_list
-    if (post_by_id['allDay'] == True):
-        post_by_id['startDate'] = (datetime.strptime((post_by_id['startDate']), "%Y-%m-%dT%H:%M:%S")).date()
-        post_by_id['startDate'] =post_by_id['startDate'].strftime("%Y-%m-%d")
-        post_by_id['endDate'] =(datetime.strptime((post_by_id['endDate']), "%Y-%m-%dT%H:%M:%S")).date()
-        post_by_id['endDate'] = post_by_id['endDate'].strftime("%Y-%m-%d")
+
+    post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], post_by_id['allDay'])
+    post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], post_by_id['allDay'])
     if request.method == 'POST':
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
@@ -124,18 +122,15 @@ def user_an_event_edit(id):
                     post_by_id['allDay'] = True
                 else:
                     post_by_id['allDay'] = False
-            # if item == 'startDate':
-            #     print("all day?", post_by_id['allDay'])
-            #     post_by_id['startDate'] = get_datetime_in_utc(request.form, 'startDate', post_by_id['allDay'])
-
-            # if item == 'endDate':
-            #     post_by_id['endDate'] = get_datetime_in_utc(request.form, 'endDate', post_by_id['allDay'])
+            if item == 'startDate':
+                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', post_by_id['allDay'])
+            if item == 'endDate':
+                post_by_id['endDate'] = get_datetime_in_utc(request.form.get('endDate'), 'endDate', post_by_id['allDay'])
         if post_by_id['category'] == "Athletic" :
             post_by_id['subcategory'] = request.form['subcategory']
         else:
             post_by_id['subcategory'] = None
 
-        print("post_by_id['isSuperEvent']",  post_by_id['isSuperEvent'] )
         if super_event_checked == False:
             post_by_id['isSuperEvent'] = False
         if post_by_id['isSuperEvent'] == True :
@@ -144,7 +139,7 @@ def user_an_event_edit(id):
             post_by_id['subevent'] = None
 
         update_user_event(id, post_by_id, None)
-        return render_template("events/event.html", post = post_by_id, eventTypeMap = eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
     tags_text = ""
