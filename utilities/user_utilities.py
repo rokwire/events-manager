@@ -3,6 +3,7 @@ import json
 import datetime
 import requests
 import traceback
+import googlemaps
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -154,38 +155,43 @@ def publish_user_event(eventId):
     }
 
     try:
-        platform_event_id = None
-
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
 
         if event:
-            # Formatting Date and time for json dump (Because done for source events?)
+            # Formatting Date and time for json dump
             if event.get('startDate'):
-                if isinstance(event.get('startDate'), datetime.date):
+                if isinstance(event.get('startDate'), str):
+                    event['startDate'] = datetime.strptime(event.get('startDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('startDate'), datetime.date):
                     event['startDate'] = event['startDate'].isoformat()
-                event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                    event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
                 event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('endDate'):
-                if isinstance(event.get('endDate'), datetime.date):
+                if isinstance(event.get('endDate'), str):
+                    event['endDate'] = datetime.strptime(event.get('endDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('endDate'), datetime.date):
                     event['endDate'] = event['endDate'].isoformat()
-                event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                    event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('eventId'):
+                del event['eventId']
 
+            event = {k: v for k, v in event.items() if v}
             # Setting up post request
-            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, date=json.dumps(event))
-            platform_event_id = result.json()['id']
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, data=json.dumps(event))
 
             # if event submission fails, print that out and change status back to pending
-            if result.status_code not in (201):
-                print("Event {} submission fails".format(id))
+            if result.status_code != 201:
+                print("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}})
                 return False
-            # if successful, change status of event to published
+            # if successful, change status of event to approved.
             else:
+                platform_event_id = result.json()['id']
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                                "$set": {"eventStatus": "published", "platformEventId": platform_event_id}})
+                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}})
                 return True
 
     except Exception:
@@ -194,11 +200,11 @@ def publish_user_event(eventId):
 
 def disapprove_user_event(objectId):
     print("{} is going to be disapproved".format(objectId))
-    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+    result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus":  "pending"}
     })
     if not result:
-        print("Disapprove event {} fails in disapprove_event".format(id))
+        print("Disapprove event {} fails in disapprove_event".format(objectId))
 
 def create_new_user_event(new_user_event):
     update_result = None
@@ -247,18 +253,52 @@ def populate_event_from_form(post_form):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
-    new_event['startDate'] = get_datetime_in_utc(post_form, 'startDate', new_event['allDay'])
-    new_event['endDate'] = get_datetime_in_utc(post_form, 'endDate', new_event['allDay'])
+    start_date = post_form.get('startDate')
+    new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
+
+    end_date = post_form.get('endDate')
+    if end_date != '':
+        new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+
+    location = post_form.get('location')
+    if location != '':
+        new_event['location'] = get_location_details(location)
 
     return new_event
 
 
-def get_datetime_in_utc(post_form, date_field, is_all_day_event):
+def get_location_details(location_description):
+    location_obj = dict()
+    google_geocoding_api_key = current_app.config['GOOGLE_KEY']
+    try:
+        google_maps_client = googlemaps.Client(key=google_geocoding_api_key)
+        geocoding_response = google_maps_client.geocode(address=location_description + ',Urbana',
+                                                        components={'administrative_area': 'Urbana', 'country': "US"})
+        if len(geocoding_response) > 0:
+            lat = geocoding_response[0]['geometry']['location']['lat']
+            lng = geocoding_response[0]['geometry']['location']['lng']
+            location_obj = {
+                'latitude': lat,
+                'longitude': lng,
+                'description': location_description
+            }
+        else:
+            location_obj['location'] = {'description': location_description}
+    except ValueError as e:
+        print("Error in connecting to Google Geocoding API: {}".format(e))
+        location_obj['location'] = {'description': location_description}
+    except googlemaps.exceptions.ApiError as e:
+        print("API Key Error: {}".format(e))
+        location_obj['location'] = {'description': location_description}
+
+    return location_obj
+
+
+def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
 
-    str_local_date = post_form.get(date_field)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
         # Set time to match the
@@ -386,7 +426,7 @@ def get_target_audience(post_form):
 
 def item_not_list(item):
     if item not in ['firstName', 'lastName', 'email', 'phone', 'organization', "id", 'track', 'isFeatured', 'tags',
-                    'targetAudience', 'startDate', 'endDate']:
+                    'targetAudience', 'startDate', 'endDate', 'location']:
         return True
     else:
         return False

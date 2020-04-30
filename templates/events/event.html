@@ -94,6 +94,16 @@
           </div>
         {% endif %}
 
+        <!-- event building block id -->
+        {% if post.platformEventId %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Event ID </h5>
+            </div>
+            <p class="col-sm-9">{{post.platformEventId}}</p>
+          </div>
+        {% endif %}
+
         <!-- event category -->
         {% if post.category %}
           <div class="row">
@@ -103,6 +113,7 @@
             <p class="col-sm-9">{{post.category}}</p>
           </div>
         {% endif %}
+
 
         <!-- event subcategory -->
         {% if post.subcategory %}
@@ -475,9 +486,10 @@
         {% endif %}
         $.post(url,
         function(data) {
-          if (data == "success") {
-            location.reload();
+          if (data == "failed") {
+            alert("failed on events approval")
           }
+          location.reload();
         });
       });
       $("#disapprovebutton").click(function() {
