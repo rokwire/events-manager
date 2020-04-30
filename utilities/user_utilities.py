@@ -133,7 +133,7 @@ def delete_user_event(eventId):
         return eventId
 
     # Deleting 'published' events off of the building block and then the local db
-    else if event_status = 'published'
+    elif event_status == 'published':
         id = ObjectId(eventId)
         delete_list = []
         delete_list.append(id)
