@@ -122,24 +122,46 @@ def delete_user_event_in_building_block(objectId_list):
     return delete_success_list
 
 def delete_user_event(eventId):
-    id = ObjectId(eventId)
-    delete_list = []
-    delete_list.append(id)
-    successfull_delete_list = delete_user_event_in_building_block(delete_list)
-    delete_count = len(successfull_delete_list)
-    # Since we're only dealing with deleting a singular item at a time
-    # if delete_count < 1, the item wasn't successfully deleted off of the events building block
-    if delete_count < 1:
-        print("Event {} deletion failed".format(id))
-        return
-    else:
-        delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
-        return delete_event_local[0]
+    # Fetching event status
+    event_status = get_user_event_status(eventId)
+
+    # Deleting 'pending' events off of the local db
+    if event_status == 'pending':
+        local_del_id = ObjectId(eventId)
+        local_delete_list = []
+        local_delete_list.append(local_del_id)
+        local_delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], local_delete_list)
+        local_delete_count = len(local_delete_event_local)
+        if local_delete_count < 1:
+            print("Local event {} deletion failed".format(eventId))
+            return
+        else:
+            print("Local event {} deletion successful".format(eventId))
+            return local_delete_event_local[0]
+
+    # Deleting 'published' events off of the building block and then the local db
+    elif event_status == 'approved':
+        id = ObjectId(eventId)
+        delete_list = []
+        delete_list.append(id)
+        successfull_delete_list = delete_user_event_in_building_block(delete_list)
+        delete_count = len(successfull_delete_list)
+        # Since we're only dealing with deleting a singular item at a time
+        # if delete_count < 1, the item wasn't successfully deleted off of the events building block
+        if delete_count < 1:
+            print("Local and remote event {} deletion failed".format(eventId))
+            return
+        else:
+            delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
+            print("Local and remote event {} deletion successful".format(eventId))
+            return delete_event_local[0]
 
 
 # Find the approval status for one event
 def get_user_event_status(objectId):
-    pass
+    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    event_status = event['eventStatus']
+    return event_status
 
 def approve_user_event(objectId):
     print("{} is going to be approved".format(objectId))
@@ -186,13 +208,74 @@ def publish_user_event(eventId):
             if result.status_code != 201:
                 print("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                        "$set": {"eventStatus": "pending"}})
+                        "$set": {"eventStatus": "pending"}
+                })
                 return False
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}})
+                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                })
+                return True
+
+    except Exception:
+        traceback.print_exc()
+        return False
+
+def put_user_event(eventId):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+    try:
+        # Put event in object, but exclude ID and status
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                         projection={'_id': 0, 'eventStatus': 0})
+        if event:
+            # Formatting Date and time for json dump
+            if event.get('startDate'):
+                if isinstance(event.get('startDate'), str):
+                    event['startDate'] = datetime.strptime(event.get('startDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
+                    event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('endDate'):
+                if isinstance(event.get('endDate'), str):
+                    event['endDate'] = datetime.strptime(event.get('endDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
+                    event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('eventId'):
+                del event['eventId']
+
+            # Getting rid of all the empty fields for PUT request
+            event = {k: v for k, v in event.items() if v}
+
+            # Generation of URL via platformEventId
+            url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
+            # Getting rid of platformEventId from PUT request
+            if "platformEventId" in event:
+                del event["platformEventId"]
+
+            # PUT request
+            result = requests.put(url, headers=headers, data=json.dumps(event))
+
+            # If PUT request fails, print that out and change status back to pending
+            if result.status_code != 200:
+                print("Event {} submission fails".format(eventId))
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                        "$set": {"eventStatus": "pending"}
+                })
+                return False
+
+            # If PUT request successful, change status to approved
+            else:
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                    "$set": {"eventStatus": "approved"}
+                })
                 return True
 
     except Exception:
