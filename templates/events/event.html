@@ -320,7 +320,7 @@
 
 
       <!-- sub event -->
-      {% if post.subevent%}
+      {% if post.subEvents %}
         <div class="row">
           <div class="col-12 col-sm-2">
             <h5>Sub-Events</h5>
@@ -334,7 +334,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for subevent in post.subevent %}
+              {% for subevent in post.subEvents %}
               <tr>
                 <td>{{subevent.id}}</td>
                 <td>{{subevent.track}}</td>
