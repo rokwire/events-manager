@@ -137,7 +137,7 @@ def user_an_event_edit(id):
                 if location != '':
                     post_by_id['location'] = get_location_details(location)
                 else:
-                    del post_by_id['location']
+                    post_by_id['location'] = None
 
         if post_by_id['category'] == "Athletics":
             post_by_id['subcategory'] = request.form['subcategory']
