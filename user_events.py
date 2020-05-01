@@ -93,7 +93,6 @@ def user_an_event_edit(id):
 
     # POST Method
     if request.method == 'POST':
-        post_by_id['eventStatus'] = 'pending'
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
