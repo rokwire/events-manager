@@ -185,13 +185,75 @@ def publish_user_event(eventId):
             if result.status_code != 201:
                 print("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                        "$set": {"eventStatus": "pending"}})
+                        "$set": {"eventStatus": "pending"}
+                })
                 return False
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}})
+                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                })
+                return True
+
+    except Exception:
+        traceback.print_exc()
+        return False
+
+def put_user_event(eventId):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+    try:
+        # Put event in object, but exclude ID and status
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                         projection={'_id': 0, 'eventStatus': 0})
+        if event:
+            # Formatting Date and time for json dump
+            if event.get('startDate'):
+                if isinstance(event.get('startDate'), str):
+                    event['startDate'] = datetime.strptime(event.get('startDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('startDate'), datetime.date):
+                    event['startDate'] = event['startDate'].isoformat()
+                    event['startDate'] = datetime.datetime.strptime(event['startDate'], "%Y-%m-%dT%H:%M:%S")
+                event['startDate'] = event['startDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('endDate'):
+                if isinstance(event.get('endDate'), str):
+                    event['endDate'] = datetime.strptime(event.get('endDate'), '%Y-%m-%dT%H:%M:%S')
+                elif isinstance(event.get('endDate'), datetime.date):
+                    event['endDate'] = event['endDate'].isoformat()
+                    event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
+                event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
+            if event.get('eventId'):
+                del event['eventId']
+
+            # Getting rid of all the empty fields for PUT request
+            event = {k: v for k, v in event.items() if v}
+
+            # Generation of URL via platformEventId
+            url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
+            # Getting rid of platformEventId from PUT request
+            if "platformEventId" in event:
+                del event["platformEventId"]
+
+            # PUT request
+            result = requests.put(url, headers=headers, data=json.dumps(event))
+
+            # If PUT request fails, print that out and change status back to pending
+            if result.status_code != 200:
+                print("Event {} submission fails".format(eventId))
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                        "$set": {"eventStatus": "pending"}
+                })
+                return False
+
+            # If PUT request successful, change status to approved
+            else:
+                platform_event_id = result.json()['id']
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                    "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                })
                 return True
 
     except Exception:
