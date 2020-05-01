@@ -250,9 +250,8 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                platform_event_id = result.json()['id']
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                    "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                    "$set": {"eventStatus": "approved"}
                 })
                 return True
 
