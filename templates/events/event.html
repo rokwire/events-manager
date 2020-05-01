@@ -421,7 +421,8 @@
       }
 
       $(document).on("click", "#notificationbutton", function () {
-        let url = "{{ url_for('user_events.get_devicetokens', id=post['_id']) }}";
+          debugger
+        let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
         $.ajax({
             url: url,
             type: 'GET',
