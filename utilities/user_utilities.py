@@ -224,7 +224,7 @@ def create_new_user_event(new_user_event):
         print("create_new_user_event {} failed")
     return result.inserted_id
 
-def populate_event_from_form(post_form):
+def populate_event_from_form(post_form, email):
     new_event = dict()
     super_event = False
     all_day_event = False
@@ -264,6 +264,8 @@ def populate_event_from_form(post_form):
     location = post_form.get('location')
     if location != '':
         new_event['location'] = get_location_details(location)
+
+    new_event['createdBy'] = email
 
     return new_event
 

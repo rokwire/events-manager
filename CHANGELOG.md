@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - geocoding of location description/address when creating a new event.
 - support for authenticating using Shibboleth + OIDC.
 - basic home page.
+- email of user in `createdBy` field when creating a new event.
+- session timeout
 
 ### Fixed
 - fix userevent approval failure status change.

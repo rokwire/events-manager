@@ -211,6 +211,7 @@ def callback():
     else:
         # fill in user information
         session["name"] = user_info.to_dict()["name"]
+        session["email"] = user_info.to_dict()["email"]
         # check for corresponding privilege
         isUserAdmin = False 
         isSourceAdmin = False
@@ -222,12 +223,15 @@ def callback():
         # TODO: we are storing cookie by our own but not by code, may change it later
         if isUserAdmin and isSourceAdmin:
             session["access"] = "both"
+            session.permanent = True
             return redirect(url_for("auth.select_events"))
         elif isUserAdmin:
             session["access"] = "user"
+            session.permanent = True
             return redirect(url_for("user_events.user_events"))
         elif isSourceAdmin:
             session["access"] = "source"
+            session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
             # TODO: add a warning bar
@@ -262,7 +266,6 @@ def load_logged_in_user_info():
         g.user = {}
         g.user["access"] = session["access"]
         g.user["username"] = session["name"]
-
 
     # user_id = ObjectId(session.get('user_id'))
 

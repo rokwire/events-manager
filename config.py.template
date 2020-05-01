@@ -1,5 +1,5 @@
 import os
-
+from datetime import timedelta
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to form MONGO_URL to setup connection with target mongoDB
@@ -442,3 +442,6 @@ class Config(object):
        "user": (1, URL_PREFIX + "/user-events"),
        "either": (0, None)
     }
+
+    # SESSION EXPIRATION TIME
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=os.getenv("SESSION_LIFETIME_IN_HOURS", 1))
