@@ -152,8 +152,7 @@ def user_an_event_edit(id):
             post_by_id['subEvents'] = None
 
         update_user_event(id, post_by_id, None)
-        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True,
-                               apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return redirect(url_for('user_events.user_an_event', id=id))
 
     # GET method
     elif request.method == 'GET':

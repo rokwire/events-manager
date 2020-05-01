@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - session timeout
 
 ### Fixed
+- fix the browser redirection url after editing the user event.
 - fix userevent approval failure status change.
 - fix userevent approval.
 - fix the redirection when user clicks the add button to create a new event.
