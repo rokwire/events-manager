@@ -147,9 +147,9 @@ def user_an_event_edit(id):
         if super_event_checked == False:
             post_by_id['isSuperEvent'] = False
         if post_by_id['isSuperEvent'] == True :
-            post_by_id['subEvent'] = get_subevent_list(request.form)
+            post_by_id['subEvents'] = get_subevent_list(request.form)
         else:
-            post_by_id['subEvent'] = None
+            post_by_id['subEvents'] = None
 
         update_user_event(id, post_by_id, None)
         return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True,
