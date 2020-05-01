@@ -246,9 +246,9 @@ def populate_event_from_form(post_form):
     new_event['contacts'] = get_contact_list (post_form)
 
     if new_event['isSuperEvent'] == True:
-        new_event['subevent'] = get_subevent_list (post_form)
+        new_event['subEvent'] = get_subevent_list (post_form)
     else:
-        new_event['subevent'] = None
+        new_event['subEvent'] = None
 
     new_event['tags'] = get_tags(post_form)
 
