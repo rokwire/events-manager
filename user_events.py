@@ -97,35 +97,49 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
+
+        all_day_event = False
+        if 'allDay' in request.form and request.form.get('allDay') == 'on':
+            post_by_id['allDay'] = True
+            all_day_event = True
+        else:
+            post_by_id['allDay'] = False
+
         for item in request.form:
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
-            if item == 'titleURL':
+            elif item == 'titleURL':
                 post_by_id['titleURL'] = request.form[item]
-            if item == 'category':
+            elif item == 'category':
                 post_by_id['category'] = request.form[item]
-            if item == 'cost':
+            elif item == 'cost':
                 post_by_id['cost'] = request.form[item]
-            if item == 'sponsor':
+            elif item == 'sponsor':
                 post_by_id['sponsor'] = request.form[item]
-            if item == 'longDescription':
+            elif item == 'longDescription':
                 post_by_id['longDescription'] = request.form[item]
-            if item == 'isSuperEvent':
+            elif item == 'isSuperEvent':
                 if request.form[item] == 'on':
                     super_event_checked = True
                     post_by_id['isSuperEvent'] = True
                 else:
                     post_by_id['isSuperEvent'] = False
-            if item == 'allDay':
-                if request.form.get(item) == 'on':
-                    post_by_id['allDay'] = True
+            elif item == 'startDate':
+                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', all_day_event)
+            elif item == 'endDate':
+                end_date = request.form.get('endDate')
+                if end_date != '':
+                    post_by_id['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
                 else:
-                    post_by_id['allDay'] = False
-            if item == 'startDate':
-                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', post_by_id['allDay'])
-            if item == 'endDate':
-                post_by_id['endDate'] = get_datetime_in_utc(request.form.get('endDate'), 'endDate', post_by_id['allDay'])
-        if post_by_id['category'] == "Athletic" :
+                    del post_by_id['endDate']
+            elif item == 'location':
+                location = request.form.get('location')
+                if location != '':
+                    post_by_id['location'] = get_location_details(location)
+                else:
+                    del post_by_id['location']
+
+        if post_by_id['category'] == "Athletic":
             post_by_id['subcategory'] = request.form['subcategory']
         else:
             post_by_id['subcategory'] = None
@@ -138,12 +152,19 @@ def user_an_event_edit(id):
             post_by_id['subEvent'] = None
 
         update_user_event(id, post_by_id, None)
-        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event.html", post=post_by_id, eventTypeMap=eventTypeMap, isUser=True,
+                               apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
     # GET method
     elif request.method == 'GET':
-        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], post_by_id['allDay'])
-        post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], post_by_id['allDay'])
+
+        all_day_event = False
+        if 'allDay' in post_by_id and post_by_id['allDay'] is True:
+            all_day_event = True
+
+        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], all_day_event)
+        if 'endDate' in post_by_id:
+            post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], all_day_event)
 
         tags_text = ""
         if 'tags' in post_by_id and post_by_id['tags'] != None:
@@ -158,9 +179,10 @@ def user_an_event_edit(id):
             for audience_select in post_by_id['targetAudience']:
                 audience_dic[audience_select] = 1
 
-        return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap,
-         eventTypeValues = eventTypeValues,subcategoriesMap = subcategoriesMap, targetAudienceMap = targetAudienceMap,
-         isUser=True, tags_text = tags_text, audience_dic = audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+        return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
+                               eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
+                               targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
+                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
