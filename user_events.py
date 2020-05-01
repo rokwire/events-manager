@@ -139,7 +139,7 @@ def user_an_event_edit(id):
                 else:
                     del post_by_id['location']
 
-        if post_by_id['category'] == "Athletic":
+        if post_by_id['category'] == "Athletics":
             post_by_id['subcategory'] = request.form['subcategory']
         else:
             post_by_id['subcategory'] = None
