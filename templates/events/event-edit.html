@@ -88,7 +88,7 @@
               <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="title" name="title" required value="{{post.title}}" required/>
+              <input class="form-control" type="text" id="title" name="title" value="{{post.title}}" required/>
             </div>
           </div>
 
@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value={{post['startDate']}} required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
                   {% endif %}
               </div>
             </div>
@@ -211,23 +211,23 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date<span style="color: red">*</span> </h5>
+                <h5>End Date</h5>
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value={{post['endDate']}} required/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="startDate" value={{post['endDate']}} required/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
                   {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date<span style="color: red">*</span> </h5>
+                <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate" required/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
               </div>
             </div>
           {% endif %}
@@ -320,10 +320,10 @@
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
+                <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
               <div class="col-sm-3">
                 <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
@@ -360,16 +360,16 @@
                 <div class = "form-group row" >
                   <div class="col-sm-3 offset-sm-2">
                     {% if contact.email %}
-                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email" value="{{contact.email}}"/>
+                      <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email" value="{{contact.email}}"/>
                     {% else %}
-                      <input class="form-control" id="contactEmail" name="contactEmail" type="email" placeholder="Email"/>
+                      <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
                     {% if contact.phone %}
-                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
+                      <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" value="{{contact.phone}}"/>
                     {% else %}
-                      <input class="form-control" id="contactPhone" name="contactPhone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
+                      <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)" />
                     {% endif %}
                   </div>
                   <div class="col-sm-3">
@@ -487,7 +487,7 @@
             </div>
                 <div class="col-12 col-sm-2">
                     {% if post.isSuperEvent == true %}
-                    <input class="form_control name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
                     {% else %}
                     <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
                     {% endif %}
@@ -535,10 +535,10 @@
                 </div>
             </div>
 
-           <div class="dynamic-stuff-sub">
+           <div id="sub-current" class="dynamic-stuff-sub">
               <!-- existing sub-events-->
-               {% if post.subevent %}
-                    {% for sub in post.subevent %}
+               {% if post.subEvents %}
+                    {% for sub in post.subEvents %}
                         <div class="form-group sub-group dynamic-element-sub">
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
@@ -608,7 +608,7 @@
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-   <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
 
    <!-- <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script> -->
 
@@ -616,22 +616,24 @@
       //change into local time before load
 
 
-      var start_utc = document.getElementById('startDate').value.replace("T", " ");
-      var end_utc = document.getElementById('endDate').value.replace("T", " ");
-      var allDay = document.getElementById('allDay');
-      if (allDay.checked == true) {
-        var stillUtc_start = moment(start_utc).toDate();
-        var stillUtc_end = moment(end_utc).toDate();
-        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
-        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
-      } else {
-         var stillUtc_start = moment.utc(start_utc).toDate();
-        var stillUtc_end = moment.utc(end_utc).toDate();
-        var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
-        var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
-      }
-      document.getElementById('startDate').value = start_local;
-      document.getElementById('endDate').value = end_local;
+      /*
+          var start_utc = document.getElementById('startDate').value.replace("T", " ");
+          var end_utc = document.getElementById('endDate').value.replace("T", " ");
+          var allDay = document.getElementById('allDay');
+          if (allDay.checked == true) {
+            var stillUtc_start = moment(start_utc).toDate();
+            var stillUtc_end = moment(end_utc).toDate();
+            var start_local = moment(stillUtc_start).local().format('YYYY-MM-DD');
+            var end_local = moment(stillUtc_end).local().format('YYYY-MM-DD');
+          } else {
+             var stillUtc_start = moment.utc(start_utc).toDate();
+            var stillUtc_end = moment.utc(end_utc).toDate();
+            var start_local = moment(stillUtc_start).local().format('YYYY-MM-DDTHH:mm:ss');
+            var end_local = moment(stillUtc_end).local().format('YYYY-MM-DDTHH:mm:ss');
+          }
+          document.getElementById('startDate').value = start_local;
+          document.getElementById('endDate').value = end_local;
+       */
 
       //set up google map geocoding
       //set the default position as center of uiuc
@@ -692,16 +694,18 @@
      })
 
      //change back to utc time on submit
-     var myform = document.getElementById('form');
-     myform.onsubmit = function(){
-       var start_local = document.getElementById('startDate').value.replace("T", " ");
-       var start_utc = new Date(start_local).toISOString();
-       document.getElementById('startDate').value = start_utc.replace("Z", "");
+      /*
+         var myform = document.getElementById('form');
+         myform.onsubmit = function(){
+           var start_local = document.getElementById('startDate').value.replace("T", " ");
+           var start_utc = new Date(start_local).toISOString();
+           document.getElementById('startDate').value = start_utc.replace("Z", "");
 
-       var end_local = document.getElementById('endDate').value.replace("T", " ");
-       var end_utc = new Date(end_local).toISOString();
-       document.getElementById('endDate').value = end_utc.replace("Z", "");
-     };
+           var end_local = document.getElementById('endDate').value.replace("T", " ");
+           var end_utc = new Date(end_local).toISOString();
+           document.getElementById('endDate').value = end_utc.replace("Z", "");
+         };
+       */
 
     //Clone the hidden element and shows it
    $('.add-one').click(function(){
@@ -746,10 +750,13 @@
    function display_super_event_description(){
      var check = document.getElementById("super-event");
      var sub = document.getElementById("super-des");
+     var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
         sub.style.display = "block";
+        subCurrent.style.display = "block";
      } else {
         sub.style.display = "none";
+        subCurrent.style.display = "none";
      }
    }
 
@@ -776,13 +783,25 @@
    // Handle all-day event
     $("#allDay").change(function () {
 
-      if (this.checked) {
-        $("#startDate").attr("type", "date");
-        $("#endDate").attr("type", "date");
+        let $startDate = $("#startDate");
+        let $endDate = $("#endDate");
+
+        let startDate = moment($startDate.val());
+        let endDate = moment($endDate.val());
+
+        if (this.checked) {
+          $endDate.attr("type", "date");
+          $startDate.attr("type", "date");
+
+          $startDate.val(startDate.format("YYYY-MM-DD"));
+          $endDate.val(endDate.format("YYYY-MM-DD"));
       }
       else {
-        $("#startDate").attr("type", "datetime-local");
-        $("#endDate").attr("type", "datetime-local");
+          $startDate.attr("type", "datetime-local");
+          $endDate.attr("type", "datetime-local");
+
+          $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
+          $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
       }
 
     });

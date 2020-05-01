@@ -8,6 +8,7 @@ from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
+from dateutil import tz
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -305,7 +306,10 @@ def populate_event_from_form(post_form):
 
     new_event['contacts'] = get_contact_list (post_form)
 
-    new_event['subevent'] = get_subevent_list (post_form)
+    if new_event['isSuperEvent'] == True:
+        new_event['subEvents'] = get_subevent_list (post_form)
+    else:
+        new_event['subEvents'] = None
 
     new_event['tags'] = get_tags(post_form)
 
@@ -369,6 +373,19 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def get_datetime_in_local(str_utc_date, is_all_day_event):
+
+    # TODO: This assumes events taking place in local time zone of the user.
+    #  Need to immediately fix this using location information.
+
+    datetime_obj = datetime.strptime(str_utc_date, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(tz.tzlocal())
+
+    if is_all_day_event:
+        return datetime_obj.strftime("%Y-%m-%d")
+    else:
+        return datetime_obj.strftime("%Y-%m-%dT%H:%M")
 
 
 def get_contact_list (post_form):
