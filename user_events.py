@@ -130,13 +130,13 @@ def user_an_event_edit(id):
                 end_date = request.form.get('endDate')
                 if end_date != '':
                     post_by_id['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
-                else:
+                elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
                     post_by_id['location'] = get_location_details(location)
-                else:
+                elif 'location' in post_by_id:
                     del post_by_id['location']
 
         if post_by_id['category'] == "Athletics":
