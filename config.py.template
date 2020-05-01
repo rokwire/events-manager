@@ -444,4 +444,4 @@ class Config(object):
     }
 
     # SESSION EXPIRATION TIME
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=1)
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=os.getenv("SESSION_LIFETIME_IN_HOURS", 1))
