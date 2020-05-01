@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - required fields bug in the add event page.
 - validation for optional end date field. 
 - fixed a few issues related to editing an event.
+- check before deleting field.
 
 ## [1.0.6] - 2020-03-17
 ### Added
