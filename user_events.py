@@ -152,6 +152,14 @@ def user_an_event_edit(id):
             post_by_id['subEvents'] = None
 
         update_user_event(id, post_by_id, None)
+
+        # Check for event status
+        event_status = get_user_event_status(id)
+        if event_status == "approved":
+            success = put_user_event(id)
+            if not success:
+                return "fail", 200
+        
         return redirect(url_for('user_events.user_an_event', id=id))
 
     # GET method
