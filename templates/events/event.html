@@ -71,7 +71,8 @@
             </div>
             <p class="col-sm-9">
               {% if post.eventStatus == "approved" %}
-                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
+                  <!-- temporily change to published -->
+                <span class="badge badge-pill badge-success"> published </span>
               {% elif post.eventStatus == "disapproved"%}
                 <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "pending"%}
@@ -355,9 +356,13 @@
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
+
         {% if post.eventStatus == "approved" %}
+        <!-- temporarily hide Disapprove button
         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
+        -->
         {% else %}
+        <!-- temporarily change Approve to Publish-->
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
         {% endif %}
       </div>
