@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - session timeout
 
 ### Fixed
+- fix editing event location
 - fix the event id in data message on notification.
 - fix the event id on sending notification.
 - fix the browser redirection url after editing the user event.
