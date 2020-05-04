@@ -255,7 +255,7 @@ def notification_event(id):
     message = request.form.get('message')
     data = {"type": "event_detail", "event_id": id}
     tokens = request.form.get('tokens').split(",")
-    print("notification: event id: %s , title: %s, message body: %s" % (id, title, message))
+    print("notification: event platform id: %s , title: %s, message body: %s" % (id, title, message))
     # send notification
     notification.send_notification(title, message, data, tokens)
     return "", 200
