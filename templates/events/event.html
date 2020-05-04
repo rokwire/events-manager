@@ -463,9 +463,9 @@
         notificationConfirm(function(confirm){
           if(confirm){
             {% if isUser %}
-            let url = "{{ url_for('user_events.notification_event', id=post._id) }}"
+            let url = "{{ url_for('user_events.notification_event', id=post.platformEventId) }}"
             {% else %}
-            let url = "{{ url_for('event.notification_event', id=post._id) }}"
+            let url = "{{ url_for('event.notification_event', id=post.platformEventId) }}"
             {% endif %}
             $.ajax({
                 url: url,
