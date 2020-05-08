@@ -166,22 +166,22 @@
         {% endif %}
 
         <!-- target audience -->
-        {% if post.targetAudience %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Target Audience </h5>
-            </div>
-            <div class = "col-sm-9">
-            {%for i in range(post.targetAudience | length)%}
-              {%if i == (post.targetAudience | length) - 1 %}
-                <span>{{post.targetAudience[i]}}</span>
-              {%else %}
-                <span>{{post.targetAudience[i]}}, </span>
-              {% endif%}
-            {% endfor%}
-            </div>
-          </div>
-        {% endif %}
+<!--        {% if post.targetAudience %}-->
+<!--          <div class="row">-->
+<!--            <div class="col-12 col-sm-2">-->
+<!--              <h5>Target Audience </h5>-->
+<!--            </div>-->
+<!--            <div class = "col-sm-9">-->
+<!--            {%for i in range(post.targetAudience | length)%}-->
+<!--              {%if i == (post.targetAudience | length) - 1 %}-->
+<!--                <span>{{post.targetAudience[i]}}</span>-->
+<!--              {%else %}-->
+<!--                <span>{{post.targetAudience[i]}}, </span>-->
+<!--              {% endif%}-->
+<!--            {% endfor%}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        {% endif %}-->
 
         <!-- cost -->
         {% if post.cost%}
