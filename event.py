@@ -275,6 +275,7 @@ def add_new_calendar():
 @bp.route('/search', methods=['GET', 'POST'])
 @role_required('source')
 def search():
+    # TODO: waiting to fulfill backend functionality
     if request.method == "GET":
         return jsonify(["test1", "test2", "test3", "test4", "test5"])
     return jsonify([]), 200
