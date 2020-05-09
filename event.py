@@ -26,7 +26,10 @@ def source(sourceId):
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', allsources=allsources, sourceId=sourceId, title=title, calendars=calendars, total=0, eventTypeValues=eventTypeValues)
+    return render_template('events/source-events.html', 
+                            allsources=allsources, sourceId=sourceId, 
+                            title=title, calendars=calendars, total=0, 
+                            eventTypeValues=eventTypeValues, isUser=False)
 
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
@@ -62,7 +65,9 @@ def calendar(calendarId):
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
-    return render_template('events/calendar.html', title=title, source=(sourceId, sourcetitle), posts=events, calendarId=calendarId,
+    return render_template('events/calendar.html', 
+                            title=title, source=(sourceId, sourcetitle), 
+                            posts=events, calendarId=calendarId,isUser=False,
                             select_status=select_status, calendarStatus=calendarStatus,
                             pagination=pagination, eventTypeValues=eventTypeValues)
 
@@ -86,7 +91,11 @@ def setting():
         '1': ('EMS', []),
     }
     calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
-    return render_template('events/setting.html', sources=INT2SRC, allstatus=calendar_status, url_prefix=calendar_prefix)
+    return render_template('events/setting.html', 
+                            isUser=False,
+                            sources=INT2SRC, 
+                            allstatus=calendar_status, 
+                            url_prefix=calendar_prefix)
 
 @bp.route('/download', methods=['POST'])
 @role_required("source")
@@ -148,7 +157,8 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
+    return render_template("events/event.html", 
+                            post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
 
@@ -174,7 +184,10 @@ def edit(eventId):
     for dict in source[1]:
         if post_by_id['calendarId'] in dict:
             calendarName = dict[post_by_id['calendarId']]
-    return render_template("events/event-edit.html", post = post_by_id, eventTypeMap = eventTypeMap, eventTypeValues=eventTypeValues, isUser=False, sourceName=sourceName, calendarName=calendarName)
+    return render_template("events/event-edit.html", 
+                            post = post_by_id, eventTypeMap = eventTypeMap, 
+                            eventTypeValues=eventTypeValues, isUser=False, 
+                            sourceName=sourceName, calendarName=calendarName)
 
 @bp.route('/searchresult', methods=['GET'])
 @role_required("source")
@@ -210,7 +223,9 @@ def searchresult():
     source = request.args.get('source')
     id = request.args.get('id')
     print("{},{},{}".format(page, per_page, offset))
-    return render_template("events/searchresult.html", eventTypeValues=eventTypeValues, source=source, id=id, eventId=eventId, category=category,
+    return render_template("events/searchresult.html", 
+                            eventTypeValues=eventTypeValues, source=source, id=id, 
+                            eventId=eventId, category=category, isUser=False,
                             posts=events, pagination=pagination, select_status=select_status
     )
 
@@ -257,9 +272,9 @@ def add_new_calendar():
         print("successfully inserted calendar "+ calendarID)
         return "success", 200
 
-@bp.route('/searchtip', methods=["POST"]) 
-@role_required("source")
-def searchtip():
-    data = Request.get_json()
-    print(data)
-    return jsonify([{ "title": "test1"}, { "title": "test2"}, { "title": "test3"}])
+@bp.route('/search', methods=['GET', 'POST'])
+@role_required('source')
+def search():
+    if request.method == "GET":
+        return jsonify(["test1", "test2", "test3", "test4", "test5"])
+    return jsonify([]), 200
