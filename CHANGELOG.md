@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
 - hide search bar, part of status selection and history requests on user events GUI.
 - change the style of deletion modal the same as the approval modal on user events.
 - moved event date-time conversion code to python
@@ -26,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - session timeout
 
 ### Fixed
+- fix editing event location
+- fix the event id in data message on notification.
+- fix the event id on sending notification.
 - fix the browser redirection url after editing the user event.
 - fix userevent approval failure status change.
 - fix userevent approval.

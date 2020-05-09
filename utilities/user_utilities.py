@@ -347,6 +347,8 @@ def populate_event_from_form(post_form, email):
     location = post_form.get('location')
     if location != '':
         new_event['location'] = get_location_details(location)
+    else:
+        new_event['location'] = None
 
     new_event['createdBy'] = email
 
@@ -369,13 +371,13 @@ def get_location_details(location_description):
                 'description': location_description
             }
         else:
-            location_obj['location'] = {'description': location_description}
+            location_obj['description'] = location_description
     except ValueError as e:
         print("Error in connecting to Google Geocoding API: {}".format(e))
-        location_obj['location'] = {'description': location_description}
+        location_obj['description'] = location_description
     except googlemaps.exceptions.ApiError as e:
         print("API Key Error: {}".format(e))
-        location_obj['location'] = {'description': location_description}
+        location_obj['description'] = location_description
 
     return location_obj
 

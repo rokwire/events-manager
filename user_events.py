@@ -136,8 +136,8 @@ def user_an_event_edit(id):
                 location = request.form.get('location')
                 if location != '':
                     post_by_id['location'] = get_location_details(location)
-                elif 'location' in post_by_id:
-                    del post_by_id['location']
+                else:
+                    post_by_id['location'] = None
 
         if post_by_id['category'] == "Athletics":
             post_by_id['subcategory'] = request.form['subcategory']
@@ -257,7 +257,7 @@ def notification_event(id):
     message = request.form.get('message')
     data = {"type": "event_detail", "event_id": id}
     tokens = request.form.get('tokens').split(",")
-    print("notification: event id: %s , title: %s, message body: %s" % (id, title, message))
+    print("notification: event platform id: %s , title: %s, message body: %s" % (id, title, message))
     # send notification
     notification.send_notification(title, message, data, tokens)
     return "", 200
@@ -270,6 +270,8 @@ def get_devicetokens(id):
 
 @userbp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("user")
+
+
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)

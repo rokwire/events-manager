@@ -71,7 +71,8 @@
             </div>
             <p class="col-sm-9">
               {% if post.eventStatus == "approved" %}
-                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
+                  <!-- temporily change to published -->
+                <span class="badge badge-pill badge-success"> published </span>
               {% elif post.eventStatus == "disapproved"%}
                 <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "pending"%}
@@ -165,22 +166,22 @@
         {% endif %}
 
         <!-- target audience -->
-        {% if post.targetAudience %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Target Audience </h5>
-            </div>
-            <div class = "col-sm-9">
-            {%for i in range(post.targetAudience | length)%}
-              {%if i == (post.targetAudience | length) - 1 %}
-                <span>{{post.targetAudience[i]}}</span>
-              {%else %}
-                <span>{{post.targetAudience[i]}}, </span>
-              {% endif%}
-            {% endfor%}
-            </div>
-          </div>
-        {% endif %}
+<!--        {% if post.targetAudience %}-->
+<!--          <div class="row">-->
+<!--            <div class="col-12 col-sm-2">-->
+<!--              <h5>Target Audience </h5>-->
+<!--            </div>-->
+<!--            <div class = "col-sm-9">-->
+<!--            {%for i in range(post.targetAudience | length)%}-->
+<!--              {%if i == (post.targetAudience | length) - 1 %}-->
+<!--                <span>{{post.targetAudience[i]}}</span>-->
+<!--              {%else %}-->
+<!--                <span>{{post.targetAudience[i]}}, </span>-->
+<!--              {% endif%}-->
+<!--            {% endfor%}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        {% endif %}-->
 
         <!-- cost -->
         {% if post.cost%}
@@ -355,10 +356,14 @@
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
+
         {% if post.eventStatus == "approved" %}
+        <!-- temporarily hide Disapprove button
         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
+        -->
         {% else %}
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
+        <!-- temporarily change Approve to Publish-->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Publish</button>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
@@ -421,7 +426,7 @@
       }
 
       $(document).on("click", "#notificationbutton", function () {
-        let url = "{{ url_for('user_events.get_devicetokens', id=post['_id']) }}";
+        let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
         $.ajax({
             url: url,
             type: 'GET',
@@ -458,9 +463,9 @@
         notificationConfirm(function(confirm){
           if(confirm){
             {% if isUser %}
-            let url = "{{ url_for('user_events.notification_event', id=post._id) }}"
+            let url = "{{ url_for('user_events.notification_event', id=post.platformEventId) }}"
             {% else %}
-            let url = "{{ url_for('event.notification_event', id=post._id) }}"
+            let url = "{{ url_for('event.notification_event', id=post.platformEventId) }}"
             {% endif %}
             $.ajax({
                 url: url,
