@@ -26,6 +26,21 @@
     <div class="tab-content" id="v-pills-tabContent">
       <div class="tab-pane fade show active" id="v-pills-school" role="tabpanel" aria-labelledby="v-pills-school-tab">
         <form action="{{ url_for('event.setting') }}" method="POST">
+        <h2>Add New Calendars</h2>
+        <div class="contact-group dynamic-element">
+          <div class = "form-group row" >
+            <div class="col-sm-3">
+              <input class="form-control" id="calendarID" name="calendarID[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar ID" />
+            </div>
+            <div class="col-sm-3">
+              <input class="form-control" id="calendarName" name="calendarName[]" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Calendar Name"/>
+            </div>
+            <div class="col-sm-3">
+              <span role="button" id="save-calendar" class="save-calendar btn btn-outline-primary">Save New Calendar</span>
+            </div>
+          </div>
+        </div>
+
           <h2>Calendar approval status</h2>
           <button type="button" class="btn btn-primary" id="selectallbutton">Select all</button>
           <button type="button" class="btn btn-primary" id="clearallbutton">Clear all</button>
@@ -40,12 +55,17 @@
                   <input class="form-check-input" type="checkbox" value="" id="check{{calid}}" name="{{calid}}">
                   {% endif %}
                   <label class="form-check-label" for="check{{calid}}">
-                    {{calval}}
-                  </label>
+<!--                 <a href="{{url_for('event.calendar', calendarId=calid)}}">
+                       {{calval}}
+                    </a>-->
+                     <a href="{{ url_prefix }}{{ calid }}">
+                       {{calval}}
+                    </a>
                 </div>
               {% endfor %}
             {% endfor %}
           {% endfor %}
+
 
           <button type="submit" class="btn btn-primary">Save</button>
         </form>
@@ -108,7 +128,7 @@
     $("#download").on('click', function(e) {
       // close modal
       $('#confirmModal').modal('hide');
-      
+
       $('#defaultdownload').attr('disabled', true);
       e.preventDefault();
       let results = [];
@@ -129,13 +149,51 @@
         } else {
           alert("Internal Error happened");
         }
-       
+
       }).fail(function() {
         alert("Internal Error happened");
       }).always(function() {
         $('#defaultdownload').attr('disabled', false);
       })
     });
+
+   $('#save-calendar').click(function(){
+     console.log("click save");
+     $("input[type=text]").each(function(index){
+       if(index%2 == 0){
+         id_result = $(this).val();
+       }else{
+         name_result = $(this).val();
+       }
+     });
+      console.log(id_result);
+      console.log(name_result);
+     $.post("{{ url_for('event.add_new_calendar') }}",
+     {
+       dataType: "json",
+       contentType:"application/json; charset=utf-8",
+       type: "POST",
+       data:{
+         "calendarID": id_result,
+         "calendarName": name_result
+       }
+     }
+     ,
+     function(data) {
+       if (data == "success") {
+         alert("New calendar adding succeed!");
+       }else if(data == "fail"){
+          alert("New calendar adding failed!");
+       }else{
+          alert("New calendar should have both ID and Name!");
+       }
+
+     }
+     );
+   });
+
+
+
   </script>
 
 {% endblock %}

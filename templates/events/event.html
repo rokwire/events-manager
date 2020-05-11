@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% from 'events/confirmation.html' import confirmation %}
+{% from 'events/notification.html' import notification %}
 
 {% block title %}
   {{ post.title }}
@@ -14,29 +15,28 @@
 {{ confirmation("approveEvent", post.title) }}
 {% endif %}
 
+{% if post.eventStatus == "approved" %}
+{{ notification("notification", post.platformEventId, post.title) }}
+{% endif %}
+
 <!-- delete Confirmation form -->
-<div id="DeleteModal" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg" role="content">
-    <!-- Modal content-->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Confirmation </h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5 class="modal-title" id="exampleModalLabel">
+          Delete event
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <form>
-          <!-- table form here -->
-          <div class="form-group row">
-            <label for="delete" class="col-12 col-form-label"><center>You are about to delete the following event: </center></label>
-          </div>
-          <div class="form-group row">
-            <h2 class="col-12">{{post.title}}</h2>
-          </div>
-          <div class="offset-md-2 col-md-10">
-            <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
-          </div>
-        </form>
+        You are about to delete the following event <b>{{post.title}}</b>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="deletion-modal-btn-yes">Confirm</button>
       </div>
     </div>
   </div>
@@ -71,7 +71,8 @@
             </div>
             <p class="col-sm-9">
               {% if post.eventStatus == "approved" %}
-                <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
+                  <!-- temporily change to published -->
+                <span class="badge badge-pill badge-success"> published </span>
               {% elif post.eventStatus == "disapproved"%}
                 <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
               {% elif post.eventStatus == "pending"%}
@@ -94,6 +95,16 @@
           </div>
         {% endif %}
 
+        <!-- event building block id -->
+        {% if post.platformEventId %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Event ID </h5>
+            </div>
+            <p class="col-sm-9">{{post.platformEventId}}</p>
+          </div>
+        {% endif %}
+
         <!-- event category -->
         {% if post.category %}
           <div class="row">
@@ -104,6 +115,7 @@
           </div>
         {% endif %}
 
+
         <!-- event subcategory -->
         {% if post.subcategory %}
           <div class="row">
@@ -111,6 +123,23 @@
               <h5>Sub Category </h5>
             </div>
             <p class="col-sm-9">{{post.subcategory}}</p>
+          </div>
+        {% endif %}
+
+        <!-- All Day Event -->
+        {% if post.allDay %}
+           <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+                <p class = "col-sm-9">Yes</p>
+          </div>
+        {% else %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>All Day Event</h5>
+            </div>
+                <p class = "col-sm-9">No</p>
           </div>
         {% endif %}
 
@@ -137,22 +166,22 @@
         {% endif %}
 
         <!-- target audience -->
-        {% if post.targetAudience %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Target Audience </h5>
-            </div>
-            <div class = "col-sm-9">
-            {%for i in range(post.targetAudience | length)%}
-              {%if i == (post.targetAudience | length) - 1 %}
-                <span>{{post.targetAudience[i]}}</span>
-              {%else %}
-                <span>{{post.targetAudience[i]}}, </span>
-              {% endif%}
-            {% endfor%}
-            </div>
-          </div>
-        {% endif %}
+<!--        {% if post.targetAudience %}-->
+<!--          <div class="row">-->
+<!--            <div class="col-12 col-sm-2">-->
+<!--              <h5>Target Audience </h5>-->
+<!--            </div>-->
+<!--            <div class = "col-sm-9">-->
+<!--            {%for i in range(post.targetAudience | length)%}-->
+<!--              {%if i == (post.targetAudience | length) - 1 %}-->
+<!--                <span>{{post.targetAudience[i]}}</span>-->
+<!--              {%else %}-->
+<!--                <span>{{post.targetAudience[i]}}, </span>-->
+<!--              {% endif%}-->
+<!--            {% endfor%}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        {% endif %}-->
 
         <!-- cost -->
         {% if post.cost%}
@@ -173,10 +202,11 @@
             <table class="table table-hover col-sm-8">
               <thead>
                 <tr>
-                  <th scope="col-sm-2">First</th>
-                  <th scope="col-sm-2">Last</th>
+                  <th scope="col-sm-2">First Name</th>
+                  <th scope="col-sm-2">Last Name</th>
                   <th scope="col-sm-2">Email</th>
                   <th scope="col-sm-2">Phone</th>
+                  <th scope="col-sm-2">Organization</th>
                 </tr>
               </thead>
               <tbody>
@@ -186,6 +216,7 @@
                     <td>{{contact.lastName}}</td>
                     <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
                     <td>{{contact.phone}}</td>
+                     <td>{{contact.organization}}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -202,7 +233,7 @@
             <div class = "col-sm-9">
               {%for i in range(post.tags | length)%}
                 {%if i == (post.tags | length) - 1 %}
-                  <span>{{post.tags[i]}}</span>
+                  <span>{{post.tags[i]}} </span>
                 {%else %}
                   <span>{{post.tags[i]}}, </span>
                 {% endif%}
@@ -270,15 +301,69 @@
           </div>
         </div>
       {% endif %}
+
+      <!-- is super event? -->
+      {% if post.isSuperEvent %}
+           <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Is Super Event</h5>
+            </div>
+                <p class = "col-sm-9">Yes</p>
+          </div>
+      {% else %}
+          <div class="row">
+            <div class="col-12 col-sm-2">
+              <h5>Is Super Event</h5>
+            </div>
+                <p class = "col-sm-9">No</p>
+          </div>
+      {% endif %}
+
+
+      <!-- sub event -->
+      {% if post.subEvents %}
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <h5>Sub-Events</h5>
+          </div>
+          <table class="table table-hover col-sm-8">
+            <thead>
+              <tr>
+                <th scope="col-sm-2">Sub-event ID</th>
+                <th scope="col-sm-2">Track</th>
+                <th scope="col-sm-2">Featured Event</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for subevent in post.subEvents %}
+              <tr>
+                <td>{{subevent.id}}</td>
+                <td>{{subevent.track}}</td>
+                {% if subevent.isFeatured%}
+                   <td>Yes</td>
+                {% else %}
+                   <td>No</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
       </div class = "media-body">
     </article>
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
       <div class="btn-group mr-2" role="group" aria-label="First group">
+
         {% if post.eventStatus == "approved" %}
+        <!-- temporarily hide Disapprove button
         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove</button>
+        -->
         {% else %}
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve</button>
+        <!-- temporarily change Approve to Publish-->
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Publish</button>
         {% endif %}
       </div>
       <div class="btn-group mr-2" role="group" aria-label="Second group">
@@ -287,12 +372,17 @@
         {% endif %}
       </div>
       {% if isUser %}
-      <div class="btn-group mr-2" role="group" aria-label="Third group">
-        <span role="button" class="btn btn-block nav-link btn-dark"
-          data-toggle="modal" data-html="true" data-target="#DeleteModal">
-            Delete
-        </span>
-      </div>
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <span role="button" class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </span>
+          </div>
+          {% if post.eventStatus == "approved" %}
+              <div class="btn-group mr-2" role="group" aria-label="Notification group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
+              </div>
+          {% endif %}
       {% endif %}
     </div>
   </div>
@@ -316,12 +406,82 @@
         {% endif %}
       {% endif %}
 
-      var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
-      var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
-      var date_start = new Date(start_utc+"Z");
-      document.getElementById('startDate').innerHTML = date_start.toLocaleString();
-      var date_end = new Date(end_utc+"Z");
-      document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+      if(typeof(document.getElementById('startDate')) != 'undefined' && document.getElementById('startDate') != null) {
+          var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
+          var date_start = new Date(start_utc+"Z");
+          {% if post.allDay %}
+            document.getElementById('startDate').innerHTML = date_start.toLocaleDateString();
+          {% else %}
+            document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+          {% endif %}
+      }
+      if(typeof(document.getElementById('endDate')) != 'undefined' && document.getElementById('endDate') != null) {
+          var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
+          var date_end = new Date(end_utc + "Z");
+          {% if post.allDay %}
+            document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
+          {% else %}
+            document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+          {% endif %}
+      }
+
+      $(document).on("click", "#notificationbutton", function () {
+        let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            async: false,
+            cache: false,
+            timeout: 30000,
+            error: function(){
+            return true;
+            },
+            success: function(data){
+                var ndevices = data.ndevices;
+                var deviceTokens = data.tokens;
+                $(".modal-body #ndevices").val(ndevices);
+                $(".modal-body #devicetokens").val(deviceTokens);
+                document.getElementById("devicetokens").style.visibility = "none";
+            }
+        });
+      });
+
+      let notificationConfirm = function(callback) {
+        $("#notificationConfirmModal").modal('show');
+        $("#notification-modal-btn-yes").on("click", function () {
+            callback(true);
+            $("#notificationConfirmModal").modal('hide');
+        });
+        $("#notification-modal-btn-no").on("click", function(){
+            callback(false);
+            $("#notificationConfirmModal").modal('hide');
+        });
+      };
+
+      $("#notificationsend").click(function(e) {
+        e.preventDefault();
+        notificationConfirm(function(confirm){
+          if(confirm){
+            {% if isUser %}
+            let url = "{{ url_for('user_events.notification_event', id=post.platformEventId) }}"
+            {% else %}
+            let url = "{{ url_for('event.notification_event', id=post.platformEventId) }}"
+            {% endif %}
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    title: document.getElementById('title-name').value,
+                    message: document.getElementById('message-text').value,
+                    tokens: document.getElementById('devicetokens').value
+                },
+                success: function(data){
+                    location.reload();
+                }
+            });
+          }
+        });
+      });
 
       $("#approvebutton").click(function() {
         {% if isUser %}
@@ -331,9 +491,10 @@
         {% endif %}
         $.post(url,
         function(data) {
-          if (data == "success") {
-            location.reload();
+          if (data == "failed") {
+            alert("failed on events approval")
           }
+          location.reload();
         });
       });
       $("#disapprovebutton").click(function() {
@@ -349,6 +510,21 @@
           }
         });
       });
+
+      $("#deletion-modal-btn-yes").click(function() {
+          {% if isUser %}
+            let url = "{{ url_for('user_events.userevent_delete', id=post._id) }}"
+          {% endif %}
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function(data){
+                    location.href = "{{ url_for('user_events.user_events') }}"
+                }
+            });
+      });
+
+
     </script>
 
     {% if post.location %}

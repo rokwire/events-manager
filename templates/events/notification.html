@@ -1,0 +1,82 @@
+{% macro notification(usage, eventid, eventtitle) %}
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Event Notification</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="title-name" class="col-form-label">Title:</label>
+            <input type="text" class="form-control" id="title-name" onkeyup="success()" placeholder="Enter your Title...">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" onkeyup="success()" placeholder="Enter your Message..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="eventid-text" class="col-form-label">Event ID:</label>
+            <b>{{eventid}}</b>
+            </div>
+          <div class="form-group">
+            <label for="eventid-text" class="col-form-label">Event Title:</label>
+            <b>{{eventtitle}}</b>
+            </div>
+          <div class="form-group">
+            <label for="ndevices-text" class="col-form-label">Number of Devices:</label>
+            <input type="text" class="border-0" readonly name="ndevices-text" id="ndevices" value=""/>
+          </div>
+          <div class="invisible">
+            <input type="text" class="border-0" readonly name="ndevice-tokens" id="devicetokens" value=""/>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="notificationsend" disabled>Send message</button>
+
+        <div id="notificationConfirmModal" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-sm" role="content">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <!-- table form here -->
+                  <div class="form-group row">
+                    <label for="confirmNotification" class="col-12 col-form-label"><center>Do you want to send this notification?</center></label>
+                  </div>
+                   <div class="col text-center">
+                    <button type="button" class="btn btn-secondary" id="notification-modal-btn-no">No</button>
+                    <button type="submit" class="btn btn-primary" id="notification-modal-btn-yes">Yes</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% block scripts %}
+    <script>
+    function success() {
+	 if(document.getElementById("title-name").value==="" || document.getElementById("message-text").value==="") {
+            document.getElementById('notificationsend').disabled = true;
+        } else {
+            document.getElementById('notificationsend').disabled = false;
+        }
+    };
+    </script>
+  {% endblock %}
+{% endmacro %}
