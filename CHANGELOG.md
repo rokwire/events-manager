@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.7] - 2020-05-11
+## [2.0.0] - 2020-05-11
 ### Changed
 - Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
 - hide search bar, part of status selection and history requests on user events GUI.
