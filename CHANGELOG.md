@@ -6,6 +6,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2020-05-11
+### Changed
+- Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
+- hide search bar, part of status selection and history requests on user events GUI.
+- change the style of deletion modal the same as the approval modal on user events.
+- moved event date-time conversion code to python
+- made end date optional
+- updated backend code for editing an event.
+
+### Added
+- add user events deletion endpoint and GUI to click delete button to delete user event.
+- added 'Counseling Center' Calendar
+- add event notification
+- send data message with event notification.
+- support for creating all day events.
+- geocoding of location description/address when creating a new event.
+- support for authenticating using Shibboleth + OIDC.
+- basic home page.
+- email of user in `createdBy` field when creating a new event.
+- session timeout
+
+### Fixed
+- fix editing event location
+- fix the event id in data message on notification.
+- fix the event id on sending notification.
+- fix the browser redirection url after editing the user event.
+- fix userevent approval failure status change.
+- fix userevent approval.
+- fix the redirection when user clicks the add button to create a new event.
+- check the existence of startdate and enddate for user event html.
+- fix config for event notification.
+- load calendar from db.
+- skip events if there is no location or empty location.
+- optimize the google geolocation service usage
+- fix UTC time conversion outside of central timezone.
+- required fields bug in the add event page.
+- validation for optional end date field. 
+- fixed a few issues related to editing an event.
+- check before deleting field.
+
 ## [1.0.6] - 2020-03-17
 ### Added
 - Add tls,srv python module to pymongo.

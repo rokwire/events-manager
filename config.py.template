@@ -1,5 +1,5 @@
 import os
-
+from datetime import timedelta
 class Config(object):
 
     # MONGO_HOST and MONGO_PORT are combined to form MONGO_URL to setup connection with target mongoDB
@@ -25,6 +25,10 @@ class Config(object):
     # EVENT_COLLECTION defines the event collection name we are using to store events
     EVENT_COLLECTION='eventsmanager-events'
 
+    # url prefix to get the information of a specific event id.
+    FAVORITE_EVENTID_ENDPOINT_PREFIX=os.getenv("FAVORITE_EVENTID_ENDPOINT_PREFIX", 'http://localhost:9001/profiles/device-data?favorites.eventId=')
+    # url of notification
+    NOTIFICATION_URL = os.getenv("NOTIFICATION_URL", '...')
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
     EVENT_URL_PREFIX=os.getenv("EVENT_URL_PREFIX", 'https://xml.calendars.illinois.edu/eventXML11/')
     EVENT_URL_SUFFIX='.xml'
@@ -33,7 +37,10 @@ class Config(object):
     INT2CAL = [
       ---new calendars----
        # {"7": "General Events"},
+       # {"891": "Business - All Events"},
        # {"1095": "Fighting Illini Home Schedule"},
+       # {"6430": "Gies Graduate Programs Admission Events"},
+       # {"4661": "Counseling Center"},
 
        #  --- list of Calendars ---
        # {"25":"Center for Advanced Study"},
@@ -374,6 +381,9 @@ class Config(object):
     WEBTOOL_IMAGE_LINK_PREFIX=os.getenv('WEBTOOL_IMAGE_LINK_PREFIX', 'https://calendars.illinois.edu/eventImage')
     WEBTOOL_IMAGE_LINK_SUFFIX='large.png'
 
+    # WEBTOOL_CALENDAR_LINK_PREFIX are used for linking the webtools catagories to their respective illinois calendar page
+    WEBTOOL_CALENDAR_LINK_PREFIX=os.getenv('WEBTOOL_CALENDAR_LINK_PREFIX', 'https://calendars.illinois.edu/list/')
+
     # ROKWIRE_IMAGE_LINK_FORMAT defines a url format for Rokwire image access for the associated event
     ROKWIRE_IMAGE_LINK_FORMAT=os.getenv('ROKWIRE_IMAGE_LINK_FORMAT', 'http://localhost:9000/events/{}/images/{}')
     ROKWIRE_IMAGE_LINK_PREFIX=os.getenv('ROKWIRE_IMAGE_LINK_PREFIX','http://localhost:9000/events/image')
@@ -391,7 +401,10 @@ class Config(object):
 
     # Authentication ID Token - Request to event building block
     AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
-
+    # ROKWIRE API KEY
+    ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
+    # Notification Auth Token
+    FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")
     #Pagination Variables
     PER_PAGE = 4
 
@@ -411,3 +424,24 @@ class Config(object):
     # SCHEDULER_* defines hours and mins for scheduler to run on daily base crawling
     SCHEDULER_HOUR=''
     SCHEDULER_MINS=''
+
+    #OIDC CONFIG FOR LOGIN
+    ISSUER_URL = os.getenv("ISSUER_URL", "https://shibboleth-test.techservices.illinois.edu")  #test instance
+    SCOPES = os.getenv("SCOPES", ["openid", "profile", "email", "offline_access"])  # Other OIDC scopes can be added as needed.
+    REDIRECT_URIS = os.getenv("REDIRECT_URIS", "")
+    CLIENT_ID = os.getenv("CLIENT_ID", "")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET", "")
+
+    # LOGIN_MODE SELECTED
+    LOGIN_MODE = os.getenv("LOGIN_MODE", "shibboleth") # TODO: Add an option "local" for local login.
+
+    # ROLE OF USERS
+    ROLE = {
+       "both": (2, URL_PREFIX + "/auth/select-events"),
+       "source": (1, URL_PREFIX + "/event/source/0"),
+       "user": (1, URL_PREFIX + "/user-events"),
+       "either": (0, None)
+    }
+
+    # SESSION EXPIRATION TIME
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=os.getenv("SESSION_LIFETIME_IN_HOURS", 1))

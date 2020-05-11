@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        .title {
+            font-size: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Switch Space{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col text-center">
+            <p class="font-weight-bold title" font-size="40 px">Calendar Events</p>
+            <p>Manage events from sources like WebTools.</p>
+            <a class="btn btn-dark btn-lg" href="{{ url_for('event.source', sourceId=0) }}">Enter</a>
+        </div>
+        <div class="col text-center">
+            <p class="font-weight-bold title">User Events</p>
+            <p>Manage user created events.</p>
+            <a class="btn btn-dark btn-lg" href="{{ url_for('user_events.user_events') }}">Enter</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- <script>
+    $(".event").on("click", function(event) {
+        var event = $(this).attr("label");
+        $.ajax({
+            url: "{{ url_for('auth.select_events') }}",
+            crossOrigin: true, 
+            dataType: 'json',
+            type    : 'POST',
+            data : {
+                event: event
+            },
+            success: function(response) {
+                console.log("work");
+                window.location.href = response.redirect;
+            }
+        });
+    });
+</script> -->
+{% endblock %}
