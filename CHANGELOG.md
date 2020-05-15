@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - update pymongo to 3.10.0
-
+### Fixed
+- fix pymongo distinct find.
 
 ## [2.0.0] - 2020-05-11
 ### Changed
