@@ -220,7 +220,7 @@ def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
-            result = collection.distinct(key, filter=condition, **kwargs)
+            result = collection.distinct(key, filter=condition)
             if not result:
                 return []
             return list(result)
