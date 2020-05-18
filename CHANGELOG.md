@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2020-05-18
+### Changed
+- update pymongo to 3.10.0
+### Fixed
+- fix pymongo distinct find.
+- fixed delete button cursor hovering issue.
+
 ## [2.0.0] - 2020-05-11
 ### Changed
 - Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
