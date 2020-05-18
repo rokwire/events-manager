@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - validation for optional end date field. 
 - fixed a few issues related to editing an event.
 - check before deleting field.
+- fixed delete button cursor hovering issue.
 
 ## [1.0.6] - 2020-03-17
 ### Added
