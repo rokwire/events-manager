@@ -5,7 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- update pymongo to 3.10.0
+### Fixed
+- fix pymongo distinct find.
 
+## [2.0.0] - 2020-05-11
 ### Changed
 - Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
 - hide search bar, part of status selection and history requests on user events GUI.
@@ -44,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - validation for optional end date field. 
 - fixed a few issues related to editing an event.
 - check before deleting field.
+- fixed delete button cursor hovering issue.
 
 ## [1.0.6] - 2020-03-17
 ### Added
