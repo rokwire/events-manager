@@ -59,6 +59,9 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
+    if'endDate' in post:
+        post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
     #     targetAudience_origin_list = post['targetAudience']
