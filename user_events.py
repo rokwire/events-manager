@@ -284,3 +284,21 @@ def search():
     if request.method == "GET":
        return jsonify(["test1", "test2", "test3", "test4", "test5"])
     return jsonify([]), 200
+
+
+@userbp.route('/searchsub', methods=['GET'])
+@role_required('user')
+def searchsub():
+    term = request.args.get("data")
+    # TODO: waiting to fulfill backend functionality
+    # labels will appear in suggestion and values are subevents-id
+    return jsonify([
+        {
+            "label": "event1", 
+            "value": "5d4349936512c30e713013e6",
+        },
+        {
+            "label": "event2",
+            "value": "5d4349936512c30e713013e6",
+        }
+    ])

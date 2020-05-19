@@ -266,7 +266,7 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" name="id" type="text" placeholder="Sub-Event ID" />
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -390,6 +390,7 @@
    $('.add-sub').click(function(){
      $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
      attach_delete_sub();
+     attach_sub_search();
    });
 
    $('.exist-sub').ready(function(){
@@ -405,7 +406,24 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-     
+    
+   //Attach functionality to sub-event-id search
+   function attach_sub_search() {
+      $(".search-id").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          $.ajax({
+            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+            type:"GET",
+            dataType: "json",
+            success: function(data) {
+              response(data);
+            }
+          });
+        }
+      });
+   }
+
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
@@ -438,7 +456,6 @@
       }
 
     });
-
 
    </script>
 {% endblock %}
