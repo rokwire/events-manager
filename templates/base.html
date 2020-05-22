@@ -20,7 +20,7 @@
     <header class="sitebar">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Events Manager</a>
+          <a class="navbar-brand mr-4" href="{{ url_for('home.home') }}">Events Manager</a>
         </div>
         <div class="row align-items-center flex-nowrap">
         {% if g.user %}
