@@ -531,3 +531,39 @@ def item_not_list(item):
         return True
     else:
         return False
+
+def publish_user_image(id):
+    headers = {
+        'Content-Type': 'image/png',
+        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+    }
+
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+
+        # If platformEventId exists image should be put to certain url else post
+        if record:
+            image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+
+            if record.get('platformEventId'):
+                url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], record.get('platformEventId'))
+                response = requests.put(url, data=image.read(), headers=headers)
+            else:
+                url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+                response = requests.post(url, data=image.read(), headers=headers)
+
+        else:
+            return False
+
+        image.close()
+
+
+    except Exception:
+        traceback.print_exc()
+        return False
+
+    finally:
+        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+
