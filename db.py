@@ -280,7 +280,7 @@ def regex_search(co_or_ta, substring, **kwargs):
         try:
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
-            result = collection.find({"title": {'$regex': substring, '$options': 'i'}}, **kwargs)
+            result =list(collection.find({"title": {'$regex': substring, '$options': 'i'}}, **kwargs))
             if not result:
                 return []
             return result
