@@ -407,13 +407,16 @@
       {% endif %}
 
       if(typeof(document.getElementById('startDate')) != 'undefined' && document.getElementById('startDate') != null) {
-          console.log(document.getElementById('startDate').innerHTML)
           var date_html = document.getElementById('startDate').innerHTML.replace("T", " ");
           var date_start = new Date(date_html);
           {% if post.allDay %}
             document.getElementById('startDate').innerHTML = date_start.toDateString();
           {% else %}
-            document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+            var sec_str = date_start.toLocaleString();
+            var after_sec = sec_str.split(':');
+            var am_pm = after_sec[after_sec.length - 1].split(' ');
+            var result_date = after_sec[0] + ':' + after_sec[1] + ' ' + am_pm[am_pm.length - 1];
+            document.getElementById('startDate').innerHTML = result_date;
           {% endif %}
       }
       if(typeof(document.getElementById('endDate')) != 'undefined' && document.getElementById('endDate') != null) {
@@ -422,7 +425,11 @@
           {% if post.allDay %}
             document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
           {% else %}
-            document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+             var sec_str = date_end.toLocaleString();
+            var after_sec = sec_str.split(':');
+            var am_pm = after_sec[after_sec.length - 1].split(' ');
+            var result_date = after_sec[0] + ':' + after_sec[1] + ' ' + am_pm[am_pm.length - 1];
+            document.getElementById('endDate').innerHTML = result_date;
           {% endif %}
       }
 
