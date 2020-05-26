@@ -246,7 +246,7 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-#parameter: collection name, *objectId* list to delete
+# Parameters: collection name, *objectId* list to delete
 def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
@@ -265,5 +265,25 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
 
         except TypeError:
             return []
+        except Exception:
+            return []
+
+# Parameters: collection name, substring to look for
+def regex_search(co_or_ta, substring, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if substring is None or co_or_ta is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            # Will return all records with matching regex and is case insensitive for title search
+            result = collection.find({"title": {'$regex': substring, '$options': 'i'}}, **kwargs)
+            if not result:
+                return []
+            return result
+
         except Exception:
             return []
