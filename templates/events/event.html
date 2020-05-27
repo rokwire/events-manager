@@ -258,7 +258,7 @@
           <div class="col-12 col-sm-2">
             <h5>Description </h5>
           </div>
-          <div class="col-12 col-sm-9">
+          <div class="col-12 col-sm-9" id="longDes">
             {% autoescape false %}{{post.longDescription}}{% endautoescape %}
           </div>
         </div>
@@ -269,7 +269,7 @@
             <!-- location.description -->
             {% if post.location.description %}
               <div class="row">
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-2" id="longDes">
                   <h5>Location </h5>
                 </div>
                 <p class="col-12 col-sm-9">{{post.location.description}}</p>
@@ -424,7 +424,6 @@
             document.getElementById('endDate').innerHTML = date_end.toLocaleString();
           {% endif %}
       }
-
       $(document).on("click", "#notificationbutton", function () {
         let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
         $.ajax({
