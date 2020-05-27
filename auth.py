@@ -193,7 +193,11 @@ def callback():
     response = request.environ["QUERY_STRING"]
     authentication_response = client.parse_response(AuthorizationResponse, info=response, sformat="urlencoded")
     code = authentication_response["code"]
-    assert authentication_response["state"] == session["state"]
+    try:
+        assert authentication_response["state"] == session["state"]
+    except KeyError:
+        session.clear()
+        return redirect(url_for("auth.unexpected_error"))
     args = {"code": code}
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
@@ -206,8 +210,6 @@ def callback():
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x, 
         user_info.to_dict()["uiucedu_is_member_of"]
     ))
-    # if user has no privilege
-    # TODO: add a warning bar
     if len(rokwireAuth) == 0:
         return redirect(url_for("auth.login"))
     else:
@@ -236,7 +238,6 @@ def callback():
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
-            # TODO: add a warning bar
             session.clear()
             return redirect(url_for("auth.permission_denied"))
 
@@ -295,3 +296,7 @@ def login_required(view):
 @bp.route('/permission_denied')
 def permission_denied():
     return render_template("errors/permission_denied.html")
+
+@bp.route('/unexpected_error')
+def unexpected_error():
+    return render_template("errors/unexpected_error.html")
