@@ -59,6 +59,18 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    # transfer targetAudience into targetAudienceMap format
+    # if ('targetAudience' in post):
+    #     targetAudience_origin_list = post['targetAudience']
+    #     targetAudience_edit_list = []
+    #     for item in targetAudience_origin_list:
+    #         if item == "faculty":
+    #             targetAudience_edit_list += ["Faculty/Staff"]
+    #         elif item == "staff":
+    #             pass
+    #         else:
+    #             targetAudience_edit_list += [item.capitalize()]
+    #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
     return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
                             isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
@@ -67,6 +79,19 @@ def user_an_event(id):
 @role_required("user")
 def user_an_event_edit(id):
     post_by_id = find_user_event(id)
+    # transfer targetAudience into targetAudienceMap format
+    # if ((post_by_id['targetAudience']) != None):
+    #     targetAudience_origin_list = post_by_id['targetAudience']
+    #     targetAudience_edit_list = []
+    #     for item in targetAudience_origin_list:
+    #         if item == "faculty":
+    #             targetAudience_edit_list += ["Faculty/Staff"]
+    #         elif item == "staff":
+    #             pass
+    #         else:
+    #             targetAudience_edit_list += [item.capitalize()]
+    #     post_by_id['targetAudience'] = targetAudience_edit_list
+
     # POST Method
     if request.method == 'POST':
         super_event_checked = False
