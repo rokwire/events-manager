@@ -49,7 +49,7 @@ def role_required(role):
             else:
                 if Config.ROLE.get(access) is not None:
                     if Config.ROLE.get(access)[0] < Config.ROLE.get(role)[0] and access != role:
-                       return redirect(Config.ROLE.get(access))[1]
+                       return redirect(Config.ROLE.get(access)[1])
                 else:
                     return redirect(url_for("auth.login"))
                 return view(**kwargs)
@@ -252,6 +252,7 @@ def select_events():
         event = request.form.get("event")
         if event == "user":
             return redirect(url_for("user_events.user_events"))
+            # return render_template("auth/select-events.html")
         elif event == "source":
             return redirect(url_for("event.source", sourceId=0))
         else:
