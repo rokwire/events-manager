@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## Fixed
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
+- Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
 
 ## [2.0.1] - 2020-05-18
 ### Changed
