@@ -109,12 +109,25 @@ def delete_user_event_in_building_block(objectId_list):
     for _id in objectId_list:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition=_id)
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
-        result = requests.delete(url, headers=headers)
-        if result.status_code != 202:
-            print("Event {} deletion fails".format(_id))
+        try:
+            result = requests.delete(url, headers=headers)
+            if result.status_code != 202:
+                print("Event {} deletion fails".format(_id))
+                fail_count += 1
+            else:
+                delete_success_list.append(_id)
+        except requests.exceptions.ConnectionError as connectionErr:
+            print("Connection error when deleting user event, check configuration or network connection:", connectionErr)
             fail_count += 1
-        else:
-            delete_success_list.append(_id)
+        except requests.exceptions.HTTPError as httpErr:
+            print("HTTP error when deleting user event:", httpErr)
+            fail_count += 1
+        except requests.exceptions.Timeout as timeOutErr:
+            print("Time out when deleting user event:", timeOutErr)
+            fail_count += 1
+        except requests.exceptions.RequestException as err:
+            print("Unexpected error when deleting user event:", err)
+            fail_count += 1
     success_count = len(delete_success_list)
 
     print("failed deleted in building block: " + str(fail_count))
