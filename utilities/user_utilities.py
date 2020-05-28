@@ -116,17 +116,8 @@ def delete_user_event_in_building_block(objectId_list):
                 fail_count += 1
             else:
                 delete_success_list.append(_id)
-        except requests.exceptions.ConnectionError as connectionErr:
-            print("Connection error when deleting user event {}, check configuration or network connection:".format(_id), connectionErr)
-            fail_count += 1
-        except requests.exceptions.HTTPError as httpErr:
-            print("HTTP error when deleting user event {}:".format(_id), httpErr)
-            fail_count += 1
-        except requests.exceptions.Timeout as timeOutErr:
-            print("Time out when deleting user event {}:".format(_id), timeOutErr)
-            fail_count += 1
         except requests.exceptions.RequestException as err:
-            print("Unexpected error when deleting user event {}:".format(_id), err)
+            print("Unexpected network error when deleting user event {}:".format(_id), err)
             fail_count += 1
     success_count = len(delete_success_list)
 
