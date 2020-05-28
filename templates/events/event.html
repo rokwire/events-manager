@@ -407,21 +407,21 @@
       {% endif %}
 
       if(typeof(document.getElementById('startDate')) != 'undefined' && document.getElementById('startDate') != null) {
-          var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
-          var date_start = new Date(start_utc+"Z");
+          var date_html = document.getElementById('startDate').innerHTML.replace("T", " ");
+          var date_start = new Date(date_html);
           {% if post.allDay %}
-            document.getElementById('startDate').innerHTML = date_start.toLocaleDateString();
+            document.getElementById('startDate').innerHTML = date_start.toDateString();
           {% else %}
-            document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+            document.getElementById('startDate').innerHTML = moment(date_start).format('M/D/YYYY, hh:mm A');
           {% endif %}
       }
       if(typeof(document.getElementById('endDate')) != 'undefined' && document.getElementById('endDate') != null) {
-          var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
-          var date_end = new Date(end_utc + "Z");
+          var end_html = document.getElementById('endDate').innerHTML.replace("T", " ");
+          var date_end = new Date(end_html);
           {% if post.allDay %}
             document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
           {% else %}
-            document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+            document.getElementById('endDate').innerHTML = moment(date_end).format('M/D/YYYY, hh:mm A');
           {% endif %}
       }
 
