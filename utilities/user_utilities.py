@@ -342,6 +342,7 @@ def populate_event_from_form(post_form, email):
     new_event['targetAudience'] = get_target_audience(post_form)
 
     start_date = post_form.get('startDate')
+    print("start_date", start_date)
     new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
@@ -390,7 +391,7 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
-
+    print("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
         # Set time to match the
@@ -415,7 +416,7 @@ def get_datetime_in_local(str_utc_date, is_all_day_event):
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
     else:
-        return datetime_obj.strftime("%Y-%m-%dT%H:%M")
+        return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
 def get_contact_list (post_form):
