@@ -532,30 +532,61 @@ def item_not_list(item):
     else:
         return False
 
-def publish_user_image(id):
+def publish_user_image(eventId):
     headers = {
         'Content-Type': 'image/png',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
 
     try:
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)})
 
         # If platformEventId exists image should be put to certain url else post
         if record:
-            image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+            image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId), 'rb')
 
             if record.get('platformEventId'):
                 url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], record.get('platformEventId'))
-                response = requests.put(url, data=image.read(), headers=headers)
+                result = requests.put(url, data=image.read(), headers=headers)
+                image.close()
             else:
                 url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
-                response = requests.post(url, data=image.read(), headers=headers)
+                result = requests.post(url, data=image.read(), headers=headers)
+                platform_event_id = result.json()['id']
+                image.close()
+                #updateResult = update_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                 #                         update={
+                  #                            "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                   #                       })
+                image.close()
 
         else:
             return False
 
-        image.close()
+        # PUT request
+        if result.status_code in (200):
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": { 'submitBefore': True,
+                                                        'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+
+            return True
+
+        # POST request
+        elif result.status_code in (201):
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                            condition={'eventId': id},
+                            update={"$set": { 'submitBefore': False,
+                                              'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Update {} fails in update_user_event".format(id))
+
+        # Failed request
+        else:
+
+
 
 
     except Exception:

@@ -268,8 +268,6 @@ def get_devicetokens(id):
 
 @userbp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("user")
-
-
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
