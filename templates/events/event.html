@@ -264,6 +264,16 @@
         </div>
         {% endif %}
 
+        <!-- Upload image -->
+        {% if post.inputImage%}
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <h5>Event Image </h5>
+          </div>
+          <img class = "col-sm-9">{{post.inputImage}}</img>
+        </div>
+        {% endif %}
+        
         <!-- location -->
         {% if post.location %}
             <!-- location.description -->
