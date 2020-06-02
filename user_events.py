@@ -11,6 +11,9 @@ from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
 from .config import Config
+from werkzeug.utils import secure_filename
+import glob
+import os
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
@@ -277,3 +280,22 @@ def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
     return "", 200
+
+
+@userbp.route('/event/<id>/upload_image', methods=['POST'])
+@role_required("user")
+def upload_image(id):
+    if 'file' not in request.files:
+        return jsonify({"code": -1, "message": "No file in request"})
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"code": -1, "message": "No selected file"})
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filename = id + '.' + filename.rsplit('.', 1)[1]
+        for existed_file in glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
+            os.remove(existed_file)
+        file.save(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+        return jsonify({"code": 0, "message": "image uploaded"})
+    else:
+        return jsonify({"code": -1, "message": "file type not allowed"})

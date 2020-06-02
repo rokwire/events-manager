@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
+from ..config import Config
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -536,3 +537,8 @@ def item_not_list(item):
         return True
     else:
         return False
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
