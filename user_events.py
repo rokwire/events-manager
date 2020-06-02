@@ -12,8 +12,9 @@ from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
 from .config import Config
 from werkzeug.utils import secure_filename
-import glob
-import os
+from glob import glob
+from os import remove, path, getcwd
+
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
@@ -247,6 +248,20 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
+        # if 'file' not in request.files:
+        #     return jsonify({"code": -1, "message": "No file in request"})
+        file = request.files['file']
+        # if file.filename == '':
+        #     return jsonify({"code": -1, "message": "No selected file"})
+        # if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filename = id + '.' + filename.rsplit('.', 1)[1]
+        for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
+            remove(existed_file)
+        file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+        # return jsonify({"code": 0, "message": "image uploaded"})
+        # else:
+        #     return jsonify({"code": -1, "message": "file type not allowed"})
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
