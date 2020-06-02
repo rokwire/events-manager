@@ -512,7 +512,7 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -541,9 +541,9 @@
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
                                         {% if sub.id %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
+                                        <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
                                         {% else %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                                        <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
                                         {% endif %}
                                   </div>
 
@@ -762,6 +762,7 @@
    $('.add-sub').click(function(){
      $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
      attach_delete_sub();
+     attach_sub_search();
    });
 
    $('.exist-sub').ready(function(){
@@ -776,6 +777,23 @@
        $(this).closest('.sub-group').remove();
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
+   }
+
+   //Attach functionality to sub-event-id search
+   function attach_sub_search() {
+      $(".search-id").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          $.ajax({
+            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+            type:"GET",
+            dataType: "json",
+            success: function(data) {
+              response(data);
+            }
+          });
+        }
+      });
    }
 
    // Handle all-day event
@@ -803,8 +821,6 @@
       }
 
     });
-
-
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
