@@ -294,7 +294,7 @@ def text_index_search(co_or_ta, string, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if substring is None or co_or_ta is None:
+    if string is None or co_or_ta is None:
         return []
 
     if dbType == "mongoDB":
