@@ -11,7 +11,7 @@ from datetime import datetime
 from dateutil import tz
 
 
-from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
+from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, text_index_search
 
 def get_all_user_events(select_status):
 
@@ -531,3 +531,13 @@ def item_not_list(item):
         return True
     else:
         return False
+
+def beta_search(search_string):
+    queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
+    list_queries = list(queries_returned)
+    for query in list_queries:
+        query['label'] = query.pop('title')
+    print(list_queries)
+    return list_queries
+
+

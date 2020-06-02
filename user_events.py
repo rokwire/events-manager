@@ -1,5 +1,6 @@
 import traceback
 import requests
+import json
 from .utilities import source_utilities, notification
 
 from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
@@ -282,8 +283,15 @@ def userevent_delete(id):
 def search():
     # TODO: waiting to fulfill backend functionality
     if request.method == "GET":
-       return jsonify(["test1", "test2", "test3", "test4", "test5"])
-    return jsonify([]), 200
+       search_term = request.values.get("data")
+
+       #print("//////////////////////////////////////")
+       #list_queries_returned = beta_search(search_term)
+       #print("//////////////////////////////////////")
+
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
 
 
 @userbp.route('/searchsub', methods=['GET'])

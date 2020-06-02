@@ -289,12 +289,12 @@ def regex_search(co_or_ta, substring, **kwargs):
         except Exception:
             return []
 
-
-def text_index_search(co_or_ta, string, **kwargs):
+# Parameters: collection name, string to look for
+def text_index_search(co_or_ta, search_string, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
 
-    if string is None or co_or_ta is None:
+    if search_string is None or co_or_ta is None:
         return []
 
     if dbType == "mongoDB":
@@ -303,7 +303,7 @@ def text_index_search(co_or_ta, string, **kwargs):
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and eventID
             collection.create_index([('title', 'text')])
-            result = collection.find({"$text": {"$search": string}}).limit(10)
+            result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "_id": 0}).limit(10)
             if not result:
                 return []
             return result
