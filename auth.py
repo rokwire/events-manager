@@ -211,7 +211,7 @@ def callback():
     else:
         # fill in user information
         session["name"] = user_info.to_dict()["name"]
-        session["email"] = user_info.to_dict()["email"]
+        session["email"] = ""
         # check for corresponding privilege
         isUserAdmin = False 
         isSourceAdmin = False
