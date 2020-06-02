@@ -2,7 +2,8 @@ import traceback
 import requests
 from .utilities import source_utilities, notification
 
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
+    send_from_directory
 
 from .auth import role_required
 
@@ -297,20 +298,26 @@ def userevent_delete(id):
     return "", 200
 
 
-@userbp.route('/event/<id>/upload_image', methods=['POST'])
+@userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
-def upload_image(id):
-    if 'file' not in request.files:
-        return jsonify({"code": -1, "message": "No file in request"})
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"code": -1, "message": "No selected file"})
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filename = id + '.' + filename.rsplit('.', 1)[1]
-        for existed_file in glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
-            os.remove(existed_file)
-        file.save(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
-        return jsonify({"code": 0, "message": "image uploaded"})
-    else:
-        return jsonify({"code": -1, "message": "file type not allowed"})
+def view_image(id):
+    image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+    dir = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
+    return send_from_directory(dir, image_name)
+
+
+# @userbp.route('/event/upload_image', methods=['PUT'])
+# @role_required("user")
+# def upload_image():
+#     if 'file' not in request.files:
+#         return jsonify({"code": -1, "message": "No 'file' in request", "hash": None})
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"code": -1, "message": "No selected file", "hash": None})
+#     if file and allowed_file(file.filename):
+#         image_hash = sha256((file.filename + str(datetime.now().timestamp())).encode('utf-8')).hexdigest()
+#         filename = image_hash + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+#         file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+#         return jsonify({"code": 0, "message": "image uploaded", "hash": image_hash})
+#     else:
+#         return jsonify({"code": -1, "message": "file type not allowed", "hash": None})
