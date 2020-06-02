@@ -300,7 +300,7 @@ def create_new_user_event(new_user_event):
     if result.inserted_id:
         update = dict()
         update['eventStatus'] = 'pending'
-        update['eventId'] = result.inserted_id
+        update['eventId'] = str(result.inserted_id)
         # for key in update:
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
