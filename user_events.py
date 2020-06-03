@@ -3,7 +3,7 @@ import requests
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
-    send_from_directory
+    send_from_directory, abort
 
 from .auth import role_required
 
@@ -106,6 +106,16 @@ def user_an_event_edit(id):
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
 
+        file = request.files['file']
+        if file.filename != '':
+            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(id) + '*')):
+                remove(existed_file)
+            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                filename = secure_filename(file.filename)
+                filename = id + '.' + filename.rsplit('.', 1)[1]
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+            else:
+                abort(400) #TODO: Error page
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
