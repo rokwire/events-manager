@@ -297,16 +297,26 @@ def search():
 @userbp.route('/searchsub', methods=['GET'])
 @role_required('user')
 def searchsub():
-    term = request.args.get("data")
-    # TODO: waiting to fulfill backend functionality
-    # labels will appear in suggestion and values are subevents-id
-    return jsonify([
-        {
-            "label": "event1", 
-            "value": "5d4349936512c30e713013e6",
-        },
-        {
-            "label": "event2",
-            "value": "5d4349936512c30e713013e6",
-        }
-    ])
+    # term = request.args.get("data")
+    # # TODO: waiting to fulfill backend functionality
+    # # labels will appear in suggestion and values are subevents-id
+    # return jsonify([
+    #     {
+    #         "label": "event1",
+    #         "value": "5d4349936512c30e713013e6",
+    #     },
+    #     {
+    #         "label": "event2",
+    #         "value": "5d4349936512c30e713013e6",
+    #     }
+    # ])
+    if request.method == "GET":
+       search_term = request.values.get("data")
+
+       #print("//////////////////////////////////////")
+       #list_queries_returned = beta_search(search_term)
+       #print("//////////////////////////////////////")
+
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
