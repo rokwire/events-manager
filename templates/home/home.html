@@ -3,6 +3,11 @@
 
 {% block title %} Events Manager {% endblock %}
 {% block content %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+             {{ error }}
+        </div>
+    {% endif %}
     <h1>Introduction</h1>
     <p>
         Events Manager is the administrative interface to events in the Rokwire Platform. Through this web application,

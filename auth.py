@@ -196,8 +196,7 @@ def callback():
     try:
         assert authentication_response["state"] == session["state"]
     except KeyError:
-        session.clear()
-        return redirect(url_for("auth.unexpected_error"))
+        return redirect(url_for("home.home", error="Unexpected Error, please try again"))
     args = {"code": code}
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
@@ -205,7 +204,10 @@ def callback():
     user_info = client.do_user_info_request(state=authentication_response["state"])
 
     if "uiucedu_is_member_of" not in user_info.to_dict():
-        return redirect(url_for("auth.permission_denied"))
+        session["access"] = "none"
+        session["name"] = user_info.to_dict()["name"]
+        session.permanent = True
+        return redirect(url_for("home.home", error="You don't have permission to this page"))
     rokwireAuth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x, 
         user_info.to_dict()["uiucedu_is_member_of"]
@@ -238,10 +240,10 @@ def callback():
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
-            session.clear()
-            return redirect(url_for("auth.permission_denied"))
+            session["access"] = "none"
+            session.permanent = True
+            return redirect(url_for("home.home", error="You don't have permission to this page"))
 
-    
     # if "member" in user_info.to_dict()["eduperson_affiliation"]:
     #     return redirect(url_for('user_events.user_events'))
     # else:
@@ -292,11 +294,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
-@bp.route('/permission_denied')
-def permission_denied():
-    return render_template("errors/permission_denied.html")
-
-@bp.route('/unexpected_error')
-def unexpected_error():
-    return render_template("errors/unexpected_error.html")
