@@ -254,16 +254,13 @@ def add_new_event():
         file = request.files['file']
         # if file.filename == '':
         #     return jsonify({"code": -1, "message": "No selected file"})
-        # if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filename = id + '.' + filename.rsplit('.', 1)[1]
-        for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
-            remove(existed_file)
-        file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
-        # return jsonify({"code": 0, "message": "image uploaded"})
-        # else:
-        #     return jsonify({"code": -1, "message": "file type not allowed"})
-        return redirect(url_for('user_events.user_an_event', id=new_event_id))
+        if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+            filename = secure_filename(file.filename)
+            filename = str(new_event_id) + '.' + filename.rsplit('.', 1)[1]
+            file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+            return redirect(url_for('user_events.user_an_event', id=new_event_id))
+        else:
+            abort(400) #TODO: Error page
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
