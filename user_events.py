@@ -308,9 +308,12 @@ def userevent_delete(id):
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
 def view_image(id):
-    image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
-    dir = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
-    return send_from_directory(dir, image_name)
+    try:
+        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
+        return send_from_directory(directory, image_name)
+    except IndexError:
+        abort(404)
 
 
 # @userbp.route('/event/upload_image', methods=['PUT'])
