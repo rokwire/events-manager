@@ -1,7 +1,7 @@
 import os
 import atexit
 
-from flask import Flask, current_app, redirect, url_for, Blueprint, session
+from flask import Flask, current_app, redirect, url_for, Blueprint, session, render_template
 
 from .config import Config
 from .db import init_db
@@ -47,5 +47,13 @@ def create_app(config_class=Config):
     @check_login
     def index():
         return redirect(url_for('home.home'))
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('errors/404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        return render_template('errors/500.html'), 500
 
     return app
