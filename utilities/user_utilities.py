@@ -301,7 +301,7 @@ def create_new_user_event(new_user_event):
     if result.inserted_id:
         update = dict()
         update['eventStatus'] = 'pending'
-        update['eventId'] = result.inserted_id
+        update['eventId'] = str(result.inserted_id)
         # for key in update:
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
@@ -401,7 +401,10 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
         elif date_field == "endDate":
             datetime_obj = datetime_obj.replace(hour=23, minute=59)
     else:
-        datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        try:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
 
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
