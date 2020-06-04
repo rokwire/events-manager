@@ -204,10 +204,8 @@ def callback():
     user_info = client.do_user_info_request(state=authentication_response["state"])
 
     if "uiucedu_is_member_of" not in user_info.to_dict():
-        session["access"] = "either"
-        session["name"] = user_info.to_dict()["name"]
-        session.permanent = True
-        return redirect(url_for("home.home", error="You don't have permission to this page"))
+        session.clear()
+        return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     rokwireAuth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x, 
         user_info.to_dict()["uiucedu_is_member_of"]
@@ -240,9 +238,8 @@ def callback():
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
-            session["access"] = "either"
-            session.permanent = True
-            return redirect(url_for("home.home", error="You don't have permission to this page"))
+            session.clear()
+            return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
 
     # if "member" in user_info.to_dict()["eduperson_affiliation"]:
     #     return redirect(url_for('user_events.user_events'))
