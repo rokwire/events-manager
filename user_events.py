@@ -14,8 +14,7 @@ from flask_paginate import Pagination, get_page_args
 from .config import Config
 from werkzeug.utils import secure_filename
 from glob import glob
-from os import remove, path, getcwd
-
+from os import remove, path, getcwd, makedirs
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
@@ -107,16 +106,17 @@ def user_an_event_edit(id):
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
 
-        file = request.files['file']
-        if file.filename != '':
-            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(id) + '*')):
+        if 'file' in request.files and request.files['file'].filename != '':
+            if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id)):
+                makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
                 remove(existed_file)
+            file = request.files['file']
+            filename = secure_filename(file.filename)
             if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                filename = secure_filename(file.filename)
-                filename = id + '.' + filename.rsplit('.', 1)[1]
-                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, filename))
             else:
-                abort(400) #TODO: Error page
+                abort(400)  # TODO: Error page
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -266,12 +266,13 @@ def add_new_event():
         #     return jsonify({"code": -1, "message": "No selected file"})
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
+            filename = secure_filename(file.filename)
             if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                filename = secure_filename(file.filename)
-                filename = str(new_event_id) + '.' + filename.rsplit('.', 1)[1]
-                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+                if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id))):
+                    makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id)))
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id), filename))
             else:
-                abort(400) #TODO: Error page
+                abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
@@ -311,8 +312,8 @@ def userevent_delete(id):
 @role_required("user")
 def view_image(id):
     try:
-        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
-        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
+        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))[0].rsplit('/', 1)[1]
+        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1], id)
         return send_from_directory(directory, image_name)
     except IndexError:
         abort(404)
