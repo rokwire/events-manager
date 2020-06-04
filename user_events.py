@@ -278,7 +278,7 @@ def add_new_event():
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
-                                targetAudienceMap=targetAudienceMap)
+                                targetAudienceMap=targetAudienceMap, extensions=Config.ALLOWED_IMAGE_EXTENSIONS)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
