@@ -264,13 +264,14 @@ def add_new_event():
         file = request.files['file']
         # if file.filename == '':
         #     return jsonify({"code": -1, "message": "No selected file"})
-        if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-            filename = secure_filename(file.filename)
-            filename = str(new_event_id) + '.' + filename.rsplit('.', 1)[1]
-            file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
-            return redirect(url_for('user_events.user_an_event', id=new_event_id))
-        else:
-            abort(400) #TODO: Error page
+        if file.filename != '':
+            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                filename = secure_filename(file.filename)
+                filename = str(new_event_id) + '.' + filename.rsplit('.', 1)[1]
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+                return redirect(url_for('user_events.user_an_event', id=new_event_id))
+            else:
+                abort(400) #TODO: Error page
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
