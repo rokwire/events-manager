@@ -249,7 +249,7 @@
               <!-- <form action = "https://127.0.0.1:5000/events-manager/user-evenets/event/<id>/upload_image" method='POST' enctype="multipart/form-data"> -->
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" class="custom-file-input" name = "file" id="file">
+                  <input type="file" accept="image/*" class="custom-file-input" name = "file" id="file">
                   <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose image</label>
                 </div>
                 <!-- <div class="input-group-append">
@@ -425,7 +425,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-     
+
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
