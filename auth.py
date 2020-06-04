@@ -204,7 +204,7 @@ def callback():
     user_info = client.do_user_info_request(state=authentication_response["state"])
 
     if "uiucedu_is_member_of" not in user_info.to_dict():
-        session["access"] = "none"
+        session["access"] = "either"
         session["name"] = user_info.to_dict()["name"]
         session.permanent = True
         return redirect(url_for("home.home", error="You don't have permission to this page"))
@@ -240,7 +240,7 @@ def callback():
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
-            session["access"] = "none"
+            session["access"] = "either"
             session.permanent = True
             return redirect(url_for("home.home", error="You don't have permission to this page"))
 
