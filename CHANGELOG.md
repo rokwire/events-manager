@@ -5,7 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## Fixed
+
+### Feature
+- Image upload for user event [#320](https://github.com/rokwire/events-manager/issues/320)
+
+### Fixed
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
 - Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
 
