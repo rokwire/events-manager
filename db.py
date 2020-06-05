@@ -269,6 +269,7 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
             return []
 
 # Parameters: collection name, substring to look for
+# I'll leave this in the backend code for if we ever use it for something more trivial maybe?
 def regex_search(co_or_ta, substring, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
@@ -301,9 +302,9 @@ def text_index_search(co_or_ta, search_string, **kwargs):
         try:
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
-            # There is also a projection limiting the fields returned to only title and eventID
+            # There is also a projection limiting the fields returned to only title and platformEventID
             collection.create_index([('title', 'text')])
-            result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "eventId": 1, "_id": 0}).limit(10)
+            result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "platformEventId": 1, "_id": 0}).limit(10)
             if not result:
                 return []
             return result

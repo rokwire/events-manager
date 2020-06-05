@@ -532,13 +532,13 @@ def item_not_list(item):
     else:
         return False
 
+# Uses the implemented text index search to search the queries and modify the search results to JSON
 def beta_search(search_string):
     queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
     list_queries = list(queries_returned)
     for query in list_queries:
         query['label'] = query.pop('title')
-        query['value'] = query.pop('eventId')
-    print(list_queries)
+        query['value'] = query.pop('platformEventId')
     return list_queries
 
 
