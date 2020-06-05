@@ -320,10 +320,6 @@ def view_image(id):
     except IndexError:
         abort(404)
 
-@userbp.route('/event/extensions', methods=['GET'])
-@role_required("user")
-def image_extensions():
-    return jsonify(list(Config.ALLOWED_IMAGE_EXTENSIONS))
 # @userbp.route('/event/upload_image', methods=['PUT'])
 # @role_required("user")
 # def upload_image():
