@@ -264,6 +264,18 @@
         </div>
         {% endif %}
 
+        <!-- image: file -->
+        {% if post.file %}
+        <div class="row">
+          <div class="col-12 col-sm-2">
+            <h5>Event Image </h5>
+          </div>
+          <div class="col-12 col-sm-9" id="imagefile">
+            {{post.file}}
+          </div>
+        </div>
+        {% endif %}
+
         <!-- location -->
         {% if post.location %}
             <!-- location.description -->
