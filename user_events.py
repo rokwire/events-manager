@@ -209,7 +209,7 @@ def user_an_event_edit(id):
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
-                               extensions=list(Config.ALLOWED_IMAGE_EXTENSIONS))
+                               extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -279,7 +279,8 @@ def add_new_event():
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
-                                targetAudienceMap=targetAudienceMap, extensions=list(Config.ALLOWED_IMAGE_EXTENSIONS))
+                                targetAudienceMap=targetAudienceMap,
+                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
