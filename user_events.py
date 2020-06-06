@@ -66,6 +66,8 @@ def user_an_event(id):
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))) != 0:
+        post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
     #     targetAudience_origin_list = post['targetAudience']
