@@ -2,7 +2,8 @@ import traceback
 import requests
 from .utilities import source_utilities, notification
 
-from flask import Flask,render_template,url_for,flash, redirect, Blueprint, request, session, current_app
+from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
+    send_from_directory, abort
 
 from .auth import role_required
 
@@ -11,6 +12,9 @@ from .utilities.user_utilities import *
 from .utilities.constants import *
 from flask_paginate import Pagination, get_page_args
 from .config import Config
+from werkzeug.utils import secure_filename
+from glob import glob
+from os import remove, path, getcwd, makedirs
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
@@ -102,6 +106,17 @@ def user_an_event_edit(id):
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
 
+        if 'file' in request.files and request.files['file'].filename != '':
+            if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id)):
+                makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
+                remove(existed_file)
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, filename))
+            else:
+                abort(400)  # TODO: Error page
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -193,7 +208,8 @@ def user_an_event_edit(id):
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
-                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                               extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -245,12 +261,26 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
+        # if 'file' not in request.files:
+        #     return jsonify({"code": -1, "message": "No file in request"})
+        # if file.filename == '':
+        #     return jsonify({"code": -1, "message": "No selected file"})
+        if 'file' in request.files and request.files['file'].filename != '':
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id))):
+                    makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id)))
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id), filename))
+            else:
+                abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
         return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
-                                targetAudienceMap=targetAudienceMap)
+                                targetAudienceMap=targetAudienceMap,
+                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
@@ -278,3 +308,30 @@ def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
     return "", 200
+
+
+@userbp.route('/event/<id>/image', methods=['GET'])
+@role_required("user")
+def view_image(id):
+    try:
+        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))[0].rsplit('/', 1)[1]
+        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1], id)
+        return send_from_directory(directory, image_name)
+    except IndexError:
+        abort(404)
+
+# @userbp.route('/event/upload_image', methods=['PUT'])
+# @role_required("user")
+# def upload_image():
+#     if 'file' not in request.files:
+#         return jsonify({"code": -1, "message": "No 'file' in request", "hash": None})
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"code": -1, "message": "No selected file", "hash": None})
+#     if file and allowed_file(file.filename):
+#         image_hash = sha256((file.filename + str(datetime.now().timestamp())).encode('utf-8')).hexdigest()
+#         filename = image_hash + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
+#         file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
+#         return jsonify({"code": 0, "message": "image uploaded", "hash": image_hash})
+#     else:
+#         return jsonify({"code": -1, "message": "file type not allowed", "hash": None})
