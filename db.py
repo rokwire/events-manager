@@ -31,7 +31,6 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
-    collection.create_index([('title', 'text')])
 
 
 ######################################################################
@@ -304,6 +303,7 @@ def text_index_search(co_or_ta, search_string, **kwargs):
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and platformEventID
+            collection.create_index([('title', 'text')])
             result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "platformEventId": 1, "_id": 0}).limit(10)
             if not result:
                 return []
