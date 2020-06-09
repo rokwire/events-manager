@@ -5,6 +5,7 @@ import requests
 import traceback
 import googlemaps
 import os
+import re
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -557,7 +558,8 @@ def publish_image(eventId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
 
         submit_type = 'post'
-        image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId), 'rb')
+        image_name = re.compile('*', re.IGNORECASE)
+        image = open('{}/{}/{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, image_name), 'rb')
         url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], eventId)
 
         # if there is record shows image has been submit before then change post to put
