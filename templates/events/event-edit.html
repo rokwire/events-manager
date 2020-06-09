@@ -682,19 +682,25 @@
        }
 
      //Set the save button disabled in default
-     $('#form')
-         .each(function(){
-             $(this).data('serialized', $(this).serialize())
-         })
-         .on('change input', function(){
-             $(this)
-                 .find('input:submit, button:submit')
-                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
-             ;
-          })
-         .find('input:submit, button:submit')
-             .prop('disabled', true)
-     ;
+      $('form').each(function(){
+          $(this).data('serialized', $(this).serialize())
+      })
+      .on('change input', function(){
+          $(this).find(':submit, input[type="image"]')
+              .prop('disabled', $(this).serialize() == $(this).data('serialized'));
+
+          /* Check if input with type files has changed */
+          var changedFiles = $( ":file" ).filter(function( index ) {
+              return this.value != this.defaultValue;
+          }).length;
+
+          if ( changedFiles > 0) {
+              $(this).find(':submit, input[type="image"]')
+                  .prop('disabled', false);
+          }
+      })
+      .find(':submit, input[type="image"]').prop('disabled', true);
+
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
