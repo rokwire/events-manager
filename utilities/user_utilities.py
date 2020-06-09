@@ -570,21 +570,21 @@ def publish_image(eventId):
             response = requests.put(url, data=image.read(), headers=headers)
 
         image.close()
-
+        platform_event_id = response.json()['id']
 
         if response.status_code in (200, 201):
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                      condition={'eventId': id},
+                                      condition={'eventId': eventId},
                                       update={"$set": { 'submitBefore': True,
-                                                        'eventId': id}}, upsert=True)
+                                                        'eventId': eventId, "platformEventId": platform_event_id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("Update {} fails in update_user_event".format(id))
+                print("Update {} fails in update_user_event".format(eventId))
 
             return True
 
         else:
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                            condition={'eventId': id},
+                            condition={'eventId': eventId},
                             update={"$set": { 'submitBefore': False,
                                               'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
