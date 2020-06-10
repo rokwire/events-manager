@@ -468,10 +468,11 @@
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
-                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{ filename }}</label>
+                  <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{ filename }}</label>
                 </div>
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  <input type="hidden" id="delete-image">
                 </div>
               </div>
             </div>
@@ -840,6 +841,37 @@
       $('.custom-file-label').html('');
       $("#file").val(null);
     });
+    
+    //set delete image defult 0 (did not delete)
+    $('delete-image').val(0);
+
+    // signal of delete image
+    $('#form').submit(function(){
+      var label = document.getElementById("custom-file-label")
+      if(label.innerText === '' || label.textContent === ''){
+        console.log("image is null")
+        $('delete-image').val(1);
+      }
+    })
+
+    // $('#form').submit(function () {
+    // $(this).append($.map(params, function (param) {
+    //   // var label = document.getElementById("custom-file-label")
+    //   // if(label.innerText === '' || label.textContent === ''){
+    //     return $('<input>', {
+    //       type: 'hidden',
+    //       name: "delete_image",
+    //       value: 1
+    //       })
+    //   // } else {
+    //     // return  $('<input>', {
+    //     //   type: 'hidden',
+    //     //   name: "delete_image",
+    //     //   value: 0
+    //     //   })
+    //   // }
+    //   }))
+    // });
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
