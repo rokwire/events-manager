@@ -470,6 +470,9 @@
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
                   <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{ filename }}</label>
                 </div>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                </div>
               </div>
             </div>
           </div>
@@ -827,8 +830,15 @@
 
     // Handle image upload
     $('input[type="file"]').change(function(e){
-    var fileName = e.target.files[0].name;
-    $('.custom-file-label').html(fileName);
+      var fileName = e.target.files[0].name;
+      $('.custom-file-label').html(fileName);
+    });
+
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      $('.custom-file-label').html('');
+      $("#file").val(null);
     });
 
    </script>

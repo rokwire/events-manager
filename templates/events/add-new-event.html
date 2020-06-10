@@ -246,17 +246,15 @@
               <h5>Event Image </h5>
             </div>
             <div class="col-sm-9">
-              <!-- <form action = "https://127.0.0.1:5000/events-manager/user-evenets/event/<id>/upload_image" method='POST' enctype="multipart/form-data"> -->
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
                   <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose image</label>
                 </div>
-                <!-- <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick = "upload_image">Upload</button>
-                </div> -->
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                </div>
               </div>
-              <!-- </form> -->
             </div>
           </div>
 
@@ -461,16 +459,17 @@
 
     // Handle image upload
     $('input[type="file"]').change(function(e){
+        console.log("detect image change");
         var fileName = e.target.files[0].name;
         $('.custom-file-label').html(fileName);
     });
 
-    // function upload_image(e) {
-    //   var xhttp = new XMLHttpRequest();
-    //   xhttp.open("POST", "https://127.0.0.1:5000/events-manager/user-evenets/event/upload_image", true);
-    //   // xhttp.setRequestHeader("Content-type", "application/json");
-    //   xhttp.send(getDocumentById("file"));
-    // }
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      $('.custom-file-label').html('');
+      $("#file").val(null);
+    });
 
    </script>
 {% endblock %}
