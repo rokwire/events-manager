@@ -2,6 +2,7 @@ import pymongo
 import traceback
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo.mongo_client import MongoClient
 from flask import current_app,g
 
 ######################################################################
@@ -31,6 +32,11 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
+    global client
+    client = MongoClient('mongodb://localhost:27017')
+    db = client.get_database('rokwire')
+    events = db['eventsmanager_events']
+    events.create_index([("title", pymongo.TEXT)])
 
 
 ######################################################################
@@ -303,7 +309,6 @@ def text_index_search(co_or_ta, search_string, **kwargs):
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and platformEventID
-            collection.create_index([('title', 'text')])
             result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "platformEventId": 1, "_id": 0}).limit(10)
             if not result:
                 return []
