@@ -686,24 +686,38 @@
        }
 
      //Set the save button disabled in default
-      $('form').each(function(){
+      $("document").ready(function(){
+        var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+        $('form').each(function(){
           $(this).data('serialized', $(this).serialize())
-      })
-      .on('change input', function(){
-          $(this).find(':submit, input[type="image"]')
-              .prop('disabled', $(this).serialize() == $(this).data('serialized'));
+        })
+        .on('change input', function(){
+            $(this).find(':submit, input[type="image"]')
+                .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
-          /* Check if input with type files has changed */
-          var changedFiles = $( ":file" ).filter(function( index ) {
-              return this.value != this.defaultValue;
-          }).length;
-
-          if ( changedFiles > 0) {
+            /* Check if input with type files has changed */
+            var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+            console.log(label, originLabel)
+            if (label != originLabel){
               $(this).find(':submit, input[type="image"]')
-                  .prop('disabled', false);
-          }
+                .prop('disabled', false);
+            }
+
+            // var changedFiles = $( ":file" ).filter(function( index ) {
+            //     return this.value != this.defaultValue;
+            // }).length;
+
+            // if ( changedFiles > 0) {
+            //     $(this).find(':submit, input[type="image"]')
+            //         .prop('disabled', false);
+            // }
+        })
+        .find(':submit, input[type="image"]').prop('disabled', true);
+
       })
-      .find(':submit, input[type="image"]').prop('disabled', true);
+      
+
+
 
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
@@ -836,11 +850,23 @@
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
-      console.log("click the image delete button")
-      $('.custom-file-label').html('');
-      $("#file").val(null);
+    $(document).ready(function() {
+      $('.delete-image').click(function() {     
+          console.log("click the image delete button")
+          $('.custom-file-label').html('');
+          $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+          // $("#file").val('').change();
+          // var temp = {{filename}};
+          // console.log(temp)
+
+      });
     });
+    // $('.delete-image').click(function() { 
+      // $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+    //   console.log("click the image delete button")
+    //   $('.custom-file-label').html('');
+    //   $("#file").val(null);
+    // });
     
     // //set delete image defult 0 (did not delete)
     // $('delete-image').val(0);
