@@ -35,8 +35,8 @@
         You are about to delete the following event <b>{{post.title}}</b>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="deletion-modal-btn-yes">Confirm</button>
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary ml-1" id="deletion-modal-btn-yes">Confirm</button>
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@
           <div class="col-12 col-sm-2">
             <h5>Description </h5>
           </div>
-          <div class="col-12 col-sm-9">
+          <div class="col-12 col-sm-9" id="longDes">
             {% autoescape false %}{{post.longDescription}}{% endautoescape %}
           </div>
         </div>
@@ -269,7 +269,7 @@
             <!-- location.description -->
             {% if post.location.description %}
               <div class="row">
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-2" id="longDes">
                   <h5>Location </h5>
                 </div>
                 <p class="col-12 col-sm-9">{{post.location.description}}</p>
@@ -407,24 +407,23 @@
       {% endif %}
 
       if(typeof(document.getElementById('startDate')) != 'undefined' && document.getElementById('startDate') != null) {
-          var start_utc = document.getElementById('startDate').innerHTML.replace("T", " ");
-          var date_start = new Date(start_utc+"Z");
+          var date_html = document.getElementById('startDate').innerHTML.replace("T", " ");
+          var date_start = new Date(date_html);
           {% if post.allDay %}
-            document.getElementById('startDate').innerHTML = date_start.toLocaleDateString();
+            document.getElementById('startDate').innerHTML = date_start.toDateString();
           {% else %}
-            document.getElementById('startDate').innerHTML = date_start.toLocaleString();
+            document.getElementById('startDate').innerHTML = moment(date_start).format('M/D/YYYY, hh:mm A');
           {% endif %}
       }
       if(typeof(document.getElementById('endDate')) != 'undefined' && document.getElementById('endDate') != null) {
-          var end_utc = document.getElementById('endDate').innerHTML.replace("T", " ");
-          var date_end = new Date(end_utc + "Z");
+          var end_html = document.getElementById('endDate').innerHTML.replace("T", " ");
+          var date_end = new Date(end_html);
           {% if post.allDay %}
             document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
           {% else %}
-            document.getElementById('endDate').innerHTML = date_end.toLocaleString();
+            document.getElementById('endDate').innerHTML = moment(date_end).format('M/D/YYYY, hh:mm A');
           {% endif %}
       }
-
       $(document).on("click", "#notificationbutton", function () {
         let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
         $.ajax({
