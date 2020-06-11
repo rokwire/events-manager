@@ -281,7 +281,6 @@ def userevent_delete(id):
 @userbp.route('/search', methods=['GET', 'POST'])
 @role_required('user')
 def search():
-    # TODO: waiting to fulfill backend functionality
     if request.method == "GET":
        search_term = request.values.get("data")
        return jsonify(beta_search(search_term))
