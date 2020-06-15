@@ -273,10 +273,6 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
-        # if 'file' not in request.files:
-        #     return jsonify({"code": -1, "message": "No file in request"})
-        # if file.filename == '':
-        #     return jsonify({"code": -1, "message": "No selected file"})
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
