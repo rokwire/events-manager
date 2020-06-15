@@ -693,6 +693,7 @@
      //Set the save button disabled in default
       $("document").ready(function(){
         var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+        console.log("originLabel", originLabel)
         $('form').each(function(){
           $(this).data('serialized', $(this).serialize())
         })
@@ -702,7 +703,7 @@
 
             /* Check if input with type files has changed */
             var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-            console.log(label, originLabel)
+            console.log("label: ", label, " originLabel: ", originLabel)
             if (label != originLabel){
               $(this).find(':submit, input[type="image"]')
                 .prop('disabled', false);
