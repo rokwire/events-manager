@@ -855,21 +855,10 @@
           console.log("click the image delete button")
           $('.custom-file-label').html('');
           $("#form").find(':submit, input[type="image"]').prop('disabled', false);
-          // $("#file").val('').change();
-          // var temp = {{filename}};
-          // console.log(temp)
-
+          $("#file").val('')
+          console.log($("#file").value)
       });
     });
-    // $('.delete-image').click(function() { 
-      // $("#form").find(':submit, input[type="image"]').prop('disabled', false);
-    //   console.log("click the image delete button")
-    //   $('.custom-file-label').html('');
-    //   $("#file").val(null);
-    // });
-    
-    // //set delete image defult 0 (did not delete)
-    // $('delete-image').val(0);
 
     // signal of delete image
     $('#form').submit(function(){
