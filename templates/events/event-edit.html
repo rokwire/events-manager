@@ -471,7 +471,7 @@
                   <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{ filename }}</label>
                 </div>
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
                   <input type="hidden" id="delete-image" name="delete-image" value = 0>
                 </div>
               </div>
@@ -847,17 +847,21 @@
     $('input[type="file"]').change(function(e){
       var fileName = e.target.files[0].name;
       $('.custom-file-label').html(fileName);
+      $('.delete-image').prop('disabled', false);
     });
 
     // delete button for image upload
     $(document).ready(function() {
+      var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+      if(originLabel === ''){
+        $('.delete-image').prop('disabled', true);
+      } 
       $('.delete-image').click(function() {     
           console.log("click the image delete button")
-          var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-          if 
           $('.custom-file-label').html('');
-          // $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+          $("#form").find(':submit, input[type="image"]').prop('disabled', false);
           $("#file").val('')
+          $('.delete-image').prop('disabled', true);
           console.log($("#file").value)
       });
     });
