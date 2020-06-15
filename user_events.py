@@ -120,8 +120,10 @@ def user_an_event_edit(id):
                 else:
                     abort(400)  # TODO: Error page
             elif request.form['delete-image'] == '1':
-                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
-                    remove(existed_file)
+                try:
+                    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+                except FileNotFoundError:
+                    pass
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
