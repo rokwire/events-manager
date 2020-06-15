@@ -254,9 +254,13 @@
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
                 </div>
-                <img id = "preview-image" src = ""/>
               </div>
             </div>
+          </div>
+
+          <!-- Image preview -->
+          <div class="form-group row">
+            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
           </div>
 
           <!-- super event check box -->
@@ -465,13 +469,13 @@
         $('.custom-file-label').html(fileName);
         console.log(input)
         // console.log(input.files, input.files[0])
-        if (input.files && input.files[0]) {
+        if (input.target.files && input.target.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
                 $('#preview-image')
                     .attr('src', e.target.result);
             };
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(input.target.files[0]);
         }
     });
 
@@ -480,6 +484,7 @@
       console.log("click the image delete button")
       $('.custom-file-label').html('');
       $("#file").val(null);
+      $('#preview-image').attr('src', '');
     });
 
    </script>
