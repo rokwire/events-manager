@@ -263,10 +263,6 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
-        # if 'file' not in request.files:
-        #     return jsonify({"code": -1, "message": "No file in request"})
-        # if file.filename == '':
-        #     return jsonify({"code": -1, "message": "No selected file"})
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -321,19 +317,3 @@ def view_image(id):
         return send_from_directory(directory, image_name)
     except IndexError:
         abort(404)
-
-# @userbp.route('/event/upload_image', methods=['PUT'])
-# @role_required("user")
-# def upload_image():
-#     if 'file' not in request.files:
-#         return jsonify({"code": -1, "message": "No 'file' in request", "hash": None})
-#     file = request.files['file']
-#     if file.filename == '':
-#         return jsonify({"code": -1, "message": "No selected file", "hash": None})
-#     if file and allowed_file(file.filename):
-#         image_hash = sha256((file.filename + str(datetime.now().timestamp())).encode('utf-8')).hexdigest()
-#         filename = image_hash + '.' + secure_filename(file.filename).rsplit('.', 1)[1]
-#         file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, filename))
-#         return jsonify({"code": 0, "message": "image uploaded", "hash": image_hash})
-#     else:
-#         return jsonify({"code": -1, "message": "file type not allowed", "hash": None})
