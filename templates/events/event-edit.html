@@ -687,7 +687,7 @@
 
      //Set the save button disabled in default
       $("document").ready(function(){
-        var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+        // var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
         $('form').each(function(){
           $(this).data('serialized', $(this).serialize())
         })
@@ -696,21 +696,21 @@
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
             /* Check if input with type files has changed */
-            var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-            console.log(label, originLabel)
-            if (label != originLabel){
-              $(this).find(':submit, input[type="image"]')
-                .prop('disabled', false);
-            }
-
-            // var changedFiles = $( ":file" ).filter(function( index ) {
-            //     return this.value != this.defaultValue;
-            // }).length;
-
-            // if ( changedFiles > 0) {
-            //     $(this).find(':submit, input[type="image"]')
-            //         .prop('disabled', false);
+            // var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+            // console.log(label, originLabel)
+            // if (label != originLabel){
+            //   $(this).find(':submit, input[type="image"]')
+            //     .prop('disabled', false);
             // }
+
+            var changedFiles = $( ":file" ).filter(function( index ) {
+                return this.value != this.defaultValue;
+            }).length;
+
+            if ( changedFiles > 0) {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', false);
+            }
         })
         .find(':submit, input[type="image"]').prop('disabled', true);
 
@@ -853,8 +853,10 @@
     $(document).ready(function() {
       $('.delete-image').click(function() {     
           console.log("click the image delete button")
+          var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+          if 
           $('.custom-file-label').html('');
-          $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+          // $("#form").find(':submit, input[type="image"]').prop('disabled', false);
           $("#file").val('')
           console.log($("#file").value)
       });
