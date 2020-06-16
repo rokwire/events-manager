@@ -311,7 +311,7 @@ def text_index_search(co_or_ta, search_string, **kwargs):
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and platformEventID
-            result = collection.find({"$text": {"$search": search_string}}, {"title": 1, "platformEventId": 1, "_id": 0})
+            result = collection.find({"$text": {"$search": search_string}, "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, "_id": 0})
             if not result:
                 return []
             return result
