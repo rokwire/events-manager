@@ -484,7 +484,7 @@
 
           <!-- image preview -->
           {% if filename %}
-          <div class="form-group row">
+          <div class="form-group row" id = "image-display">
             <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
           </div>
           {% else %}
@@ -855,7 +855,6 @@
         $('.delete-image').prop('disabled', false);
         var fileName = input.target.files[0].name;
         $('.custom-file-label').html(fileName);
-        console.log(input)
         // console.log(input.files, input.files[0])
         document.getElementById("image-display").style = "";
         if (input.target.files && input.target.files[0]) {
@@ -875,6 +874,7 @@
       $('.custom-file-label').html('');
       $("#file").val(null);
       $('#preview-image').attr('src', '');
+      document.getElementById("image-display").style.display = "none";
       $("#form").off('change input');
     });
 
