@@ -687,7 +687,6 @@
 
      //Set the save button disabled in default
       $("document").ready(function(){
-        // var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
         $('form').each(function(){
           $(this).data('serialized', $(this).serialize())
         })
@@ -696,13 +695,6 @@
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
             /* Check if input with type files has changed */
-            // var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-            // console.log(label, originLabel)
-            // if (label != originLabel){
-            //   $(this).find(':submit, input[type="image"]')
-            //     .prop('disabled', false);
-            // }
-
             var changedFiles = $( ":file" ).filter(function( index ) {
                 return this.value != this.defaultValue;
             }).length;
