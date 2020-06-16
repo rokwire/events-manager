@@ -258,6 +258,11 @@
             </div>
           </div>
 
+          <!-- Image preview -->
+          <div class="form-group row" id = "image-display" style="display: none;">
+            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
+          </div>
+
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
@@ -457,11 +462,32 @@
 
     });
 
-    // Handle image upload
-    $('input[type="file"]').change(function(e){
+
+    // Handle image upload and preview
+    $('input[type="file"]').change(function(input){
         console.log("detect image change");
-        var fileName = e.target.files[0].name;
+        document.getElementById("image-display").style = "";
+        var fileName = input.target.files[0].name;
         $('.custom-file-label').html(fileName);
+        console.log(input)
+        // console.log(input.files, input.files[0])
+        if (input.target.files && input.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview-image')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.target.files[0]);
+        }
+    });
+
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      document.getElementById("image-display").style.display = "none";
+      $('.custom-file-label').html('');
+      $("#file").val(null);
+      $('#preview-image').attr('src', '');
     });
 
     // delete button for image upload
