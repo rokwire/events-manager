@@ -471,17 +471,25 @@
                   <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"></label>
                 </div>
                 <div class="input-group-append">
+                  {% if filename %}
                   <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  {% else %}
+                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04" disabled>Delete</button>
+                  {% endif %}
                   <input type="hidden" id="delete-image" name="delete-image" value = 0>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Image preview -->
+          <!-- image preview -->
           {% if filename %}
           <div class="form-group row">
             <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
+          </div>
+          {% else %}
+          <div class="form-group row" id = "image-display" style = "display: none;">
+            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
           </div>
           {% endif %}
 
@@ -694,10 +702,11 @@
 
      //Set the save button disabled in default
       $("document").ready(function(){
-        $('form').each(function(){
-          $(this).data('serialized', $(this).serialize())
+        $('form').each(function(index){
+          console.log(index, ": ", $(this)) // 0: form object
+          $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         })
-        .on('change input', function(){
+        .on('change input', function(){  // event handler of input change
             $(this).find(':submit, input[type="image"]')
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
@@ -711,6 +720,7 @@
                     .prop('disabled', false);
             }
         })
+
         .find(':submit, input[type="image"]').prop('disabled', true);
 
       })
@@ -842,10 +852,12 @@
     // Handle image upload and preview
     $('input[type="file"]').change(function(input){
         console.log("detect image change");
+        $('.delete-image').prop('disabled', false);
         var fileName = input.target.files[0].name;
         $('.custom-file-label').html(fileName);
         console.log(input)
         // console.log(input.files, input.files[0])
+        document.getElementById("image-display").style = "";
         if (input.target.files && input.target.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -856,21 +868,14 @@
         }
     });
 
-    // need to work on this
-    // $("document").ready(function(){
-    //   console.log($("#origin-image").value)
-    //   if(!$("#origin-image").value){
-    //     console.log("if there is no original image than show no preview")
-    //     $('#preview-image').attr('src', '');
-    //   }
-    // })
-
     // delete button for image upload
     $('.delete-image').click(function() { 
       console.log("click the image delete button")
+      $("#form").find(':submit, input[type="image"]').prop('disabled', false);
       $('.custom-file-label').html('');
       $("#file").val(null);
       $('#preview-image').attr('src', '');
+      $("#form").off('change input');
     });
 
     // signal of delete image need to be updated
