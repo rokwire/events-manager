@@ -543,7 +543,7 @@ def s3_publish_image(id, client):
 
         # Changing PNG to JPG for uploading purposes
         for filename in glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
-            if filename.endswith(".png"):
+            if filename.endswith('ALLOWED_IMAGE_EXTENSIONS_S3'):
                 im = Image.open(filename)
                 name = filename[:-4] + '.jpg'
                 rgb_im = im.convert('RGB')
