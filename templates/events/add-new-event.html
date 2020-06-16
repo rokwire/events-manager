@@ -32,7 +32,7 @@
 {% block content %}
  <!-- filter and select operations -->
   <!-- back to all events button -->
-  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
@@ -237,6 +237,26 @@
             </div>
             <div class="col-12 col-sm-9">
                 <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
+            </div>
+          </div>
+
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <!-- <form action = "https://127.0.0.1:5000/events-manager/user-evenets/event/<id>/upload_image" method='POST' enctype="multipart/form-data"> -->
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
+                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose image</label>
+                </div>
+                <!-- <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick = "upload_image">Upload</button>
+                </div> -->
+              </div>
+              <!-- </form> -->
             </div>
           </div>
 
@@ -455,6 +475,12 @@
         $("#endDate").attr("type", "datetime-local");
       }
 
+    });
+
+    // Handle image upload
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
     });
 
    </script>

@@ -62,7 +62,7 @@
  <!-- filter and select operations -->
   <!-- back to all events button -->
   {% if isUser %}
-  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
@@ -459,6 +459,21 @@
             </div>
           </div>
 
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
+                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{% if post.file %}{{post.file}}{% endif %}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- location map TODO no api key allow currently -->
           <!-- <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -820,6 +835,12 @@
           $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
       }
 
+    });
+
+    // Handle image upload
+    $('input[type="file"]').change(function(e){
+    var fileName = e.target.files[0].name;
+    $('.custom-file-label').html(fileName);
     });
 
    </script>
