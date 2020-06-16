@@ -871,6 +871,7 @@
     $('.delete-image').click(function() { 
       console.log("click the image delete button")
       $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+      $('.delete-image').prop('disabled', true);
       $('.custom-file-label').html('');
       $("#file").val(null);
       $('#preview-image').attr('src', '');
