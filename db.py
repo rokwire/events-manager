@@ -276,28 +276,6 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
         except Exception:
             return []
 
-# Parameters: collection name, substring to look for
-# I'll leave this in the backend code for if we ever use it for something more trivial maybe?
-def regex_search(co_or_ta, substring, **kwargs):
-    db = get_db()
-    dbType = current_app.config['DBTYPE']
-
-    if substring is None or co_or_ta is None:
-        return []
-
-    if dbType == "mongoDB":
-        try:
-            collection = db.get_collection(co_or_ta)
-            # Will return all records with matching regex and is case insensitive for title search
-            # There is also a projection limiting the fields returned to only title and eventID
-            result =list(collection.find({"title": {'$regex': substring, '$options': 'i'}}, {'title' : 1},**kwargs))
-            if not result:
-                return []
-            return result
-
-        except Exception:
-            return []
-
 # Parameters: collection name, string to look for
 def text_index_search(co_or_ta, search_string, **kwargs):
     db = get_db()
