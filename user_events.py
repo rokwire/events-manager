@@ -67,6 +67,8 @@ def user_an_event(id):
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))) != 0:
+        post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
     #     targetAudience_origin_list = post['targetAudience']
@@ -124,6 +126,7 @@ def user_an_event_edit(id):
                     shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
                 except FileNotFoundError:
                     pass
+
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -316,7 +319,6 @@ def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
     shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-    return "", 200
 
 
 @userbp.route('/event/<id>/image', methods=['GET'])

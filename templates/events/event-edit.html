@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
                   {% endif %}
               </div>
             </div>
@@ -202,7 +202,7 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
               </div>
             </div>
           {% endif %}
@@ -215,9 +215,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
                   {% endif %}
               </div>
             </div>
@@ -227,7 +227,7 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
               </div>
             </div>
           {% endif %}
@@ -874,6 +874,7 @@
         document.getElementById("delete-image").value = 1
       }
     })
+
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>

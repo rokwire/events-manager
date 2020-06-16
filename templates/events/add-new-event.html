@@ -105,7 +105,7 @@
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -114,7 +114,7 @@
               <h5>End Date</h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+              <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
             </div>
           </div>
           <!-- location -->
@@ -470,6 +470,7 @@
       $('.custom-file-label').html('');
       $("#file").val(null);
     });
+
 
    </script>
 {% endblock %}

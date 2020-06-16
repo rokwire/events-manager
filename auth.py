@@ -48,7 +48,7 @@ def role_required(role):
                 return redirect(url_for("auth.login"))
             else:
                 if Config.ROLE.get(access) is not None:
-                    if Config.ROLE.get(access)[0] < Config.ROLE.get(role)[0] and access != role:
+                    if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
                        return redirect(Config.ROLE.get(access)[1])
                 else:
                     return redirect(url_for("auth.login"))
