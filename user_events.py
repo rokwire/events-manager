@@ -67,6 +67,8 @@ def user_an_event(id):
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))) != 0:
+        post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
     #     targetAudience_origin_list = post['targetAudience']
@@ -120,8 +122,11 @@ def user_an_event_edit(id):
                 else:
                     abort(400)  # TODO: Error page
             elif request.form['delete-image'] == '1':
-                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
-                    remove(existed_file)
+                try:
+                    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+                except FileNotFoundError:
+                    pass
+
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -271,10 +276,6 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
-        # if 'file' not in request.files:
-        #     return jsonify({"code": -1, "message": "No file in request"})
-        # if file.filename == '':
-        #     return jsonify({"code": -1, "message": "No selected file"})
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -318,7 +319,6 @@ def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
     shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-    return "", 200
 
 
 @userbp.route('/event/<id>/image', methods=['GET'])
