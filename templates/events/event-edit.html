@@ -844,17 +844,12 @@
 
     // delete button for image upload
     $(document).ready(function() {
-      var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-      if(originLabel === ''){
-        $('.delete-image').prop('disabled', true);
-      } 
       $('.delete-image').click(function() {     
           console.log("click the image delete button")
           $('.custom-file-label').html('');
           $("#form").find(':submit, input[type="image"]').prop('disabled', false);
           $("#file").val('')
           $('.delete-image').prop('disabled', true);
-          console.log($("#file").value)
       });
     });
 
