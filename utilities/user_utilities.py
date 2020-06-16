@@ -9,6 +9,10 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
+from PIL import Image
+import boto3
+import os
+import glob
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -531,3 +535,51 @@ def item_not_list(item):
         return True
     else:
         return False
+
+def s3_publish_image(id, client):
+
+    try:
+
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+
+        for filename in glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            if filename.endswith(".png"):
+                im = Image.open(filename)
+                name = filename[:-4] + '.jpg'
+                rgb_im = im.convert('RGB')
+                rgb_im.save(name)
+                continue
+            else:
+                continue
+
+        # if there is no record before, insert it to get the id
+        if not record:
+            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                'eventId': id
+            })
+            if insertResult.inserted_id:
+                imageId = str(insertResult.inserted_id)
+            else:
+                return None
+        else:
+            imageId = str(record['_id'])
+
+
+        client.upload_file(
+            glob.glob('{}/{}/*.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)),
+            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], id, imageId),
+            ExtraArgs={
+                'ACL': 'bucket-owner-full-control'
+            }
+        )
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image for event {} failed".format(id))
+        return None
+
+    finally:
+        files = glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+        for f in files:
+            os.remove(f)
+    return imageId
