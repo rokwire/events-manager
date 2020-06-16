@@ -82,8 +82,9 @@ def user_an_event(id):
     #             targetAudience_edit_list += [item.capitalize()]
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
-    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
-                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+    return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
+                           isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                           timestamp=datetime.now().timestamp())
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 @role_required("user")
