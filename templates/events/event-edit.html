@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
                   {% endif %}
               </div>
             </div>
@@ -202,7 +202,7 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
               </div>
             </div>
           {% endif %}
@@ -215,9 +215,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
                   {% endif %}
               </div>
             </div>
@@ -227,7 +227,7 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
               </div>
             </div>
           {% endif %}
@@ -471,16 +471,11 @@
                   <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{{ filename }}</label>
                 </div>
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
                   <input type="hidden" id="delete-image" name="delete-image" value = 0>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Image preview -->
-          <div class="form-group row">
-            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
           </div>
 
           <!-- location map TODO no api key allow currently -->
@@ -692,8 +687,6 @@
 
      //Set the save button disabled in default
       $("document").ready(function(){
-        var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-        console.log("originLabel", originLabel)
         $('form').each(function(){
           $(this).data('serialized', $(this).serialize())
         })
@@ -702,20 +695,14 @@
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
             /* Check if input with type files has changed */
-            var label = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
-            console.log("label: ", label, " originLabel: ", originLabel)
-            if (label != originLabel){
-              $(this).find(':submit, input[type="image"]')
-                .prop('disabled', false);
-            }
-            // var changedFiles = $( ":file" ).filter(function( index ) {
-            //     return this.value != this.defaultValue;
-            // }).length;
+            var changedFiles = $( ":file" ).filter(function( index ) {
+                return this.value != this.defaultValue;
+            }).length;
 
-            // if ( changedFiles > 0) {
-            //     $(this).find(':submit, input[type="image"]')
-            //         .prop('disabled', false);
-            // }
+            if ( changedFiles > 0) {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', false);
+            }
         })
         .find(':submit, input[type="image"]').prop('disabled', true);
 
@@ -848,29 +835,27 @@
 
     });
 
-    // Handle image upload and preview
-    $('input[type="file"]').change(function(input){
-        console.log("detect image change");
-        var fileName = input.target.files[0].name;
-        $('.custom-file-label').html(fileName);
-        console.log(input)
-        // console.log(input.files, input.files[0])
-        if (input.target.files && input.target.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#preview-image')
-                    .attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.target.files[0]);
-        }
+    // Handle image upload
+    $('input[type="file"]').change(function(e){
+      var fileName = e.target.files[0].name;
+      $('.custom-file-label').html(fileName);
+      $('.delete-image').prop('disabled', false);
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
-      console.log("click the image delete button")
-      $('.custom-file-label').html('');
-      $("#file").val(null);
-      $('#preview-image').attr('src', '');
+    $(document).ready(function() {
+      // var originLabel = document.getElementById("custom-file-label").innerText || document.getElementById("custom-file-label").textContent;
+      // if(originLabel === ''){
+      //   $('.delete-image').prop('disabled', true);
+      // } 
+      $('.delete-image').click(function() {     
+          console.log("click the image delete button")
+          $('.custom-file-label').html('');
+          $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+          $("#file").val('')
+          $('.delete-image').prop('disabled', true);
+          console.log($("#file").value)
+      });
     });
 
     // signal of delete image
