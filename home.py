@@ -8,4 +8,8 @@ bp = Blueprint('home', __name__, url_prefix=Config.URL_PREFIX)
 
 @bp.route('/', methods=['GET'])
 def home():
-    return render_template("home/home.html")
+    if 'error' in request.args:
+        error = request.args['error']
+        return render_template("home/home.html", error=error)
+    else:
+        return render_template("home/home.html")
