@@ -32,6 +32,8 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
+
+    # Set up Mongo client for text indexing
     global client
     client = MongoClient('mongodb://localhost:27017')
     db = client.get_database('rokwire')
