@@ -330,3 +330,4 @@ def view_image(id):
         return send_from_directory(directory, image_name)
     except IndexError:
         abort(404)
+

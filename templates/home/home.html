@@ -30,4 +30,9 @@
         <li>Schedule Daily Downloads</li>
         <li>Manage Individual Events (Approve, Disapprove, etc.)</li>
     </ul>
+    {% if gitinfo %}
+    <div class="navbar container fixed-bottom">
+        <div class="font-weight-light">{{ gitinfo }}</div>
+    </div>
+    {% endif %}
 {% endblock %}
