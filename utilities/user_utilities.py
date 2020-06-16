@@ -567,6 +567,7 @@ def s3_publish_image(id, client):
 
         client.upload_file(
             glob.glob('{}/{}/*.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)),
+            current_app.config['BUCKET'],
             '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], id, imageId),
             ExtraArgs={
                 'ACL': 'bucket-owner-full-control'
