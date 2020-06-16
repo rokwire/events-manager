@@ -537,11 +537,11 @@ def item_not_list(item):
         return False
 
 def s3_publish_image(id, client):
-
     try:
 
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
 
+        # Changing PNG to JPG for uploading purposes
         for filename in glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
             if filename.endswith(".png"):
                 im = Image.open(filename)
@@ -552,7 +552,7 @@ def s3_publish_image(id, client):
             else:
                 continue
 
-        # if there is no record before, insert it to get the id
+        # If there is no record before, insert it to get the id
         if not record:
             insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
                 'eventId': id
