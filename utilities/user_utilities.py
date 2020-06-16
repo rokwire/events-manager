@@ -9,10 +9,13 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
+
 from PIL import Image
 import boto3
 import os
 import glob
+from ..config import Config
+
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -113,12 +116,16 @@ def delete_user_event_in_building_block(objectId_list):
     for _id in objectId_list:
         event = find_one(current_app.config['EVENT_COLLECTION'], condition=_id)
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
-        result = requests.delete(url, headers=headers)
-        if result.status_code != 202:
-            print("Event {} deletion fails".format(_id))
+        try:
+            result = requests.delete(url, headers=headers)
+            if result.status_code != 202:
+                print("Event {} deletion fails".format(_id))
+                fail_count += 1
+            else:
+                delete_success_list.append(_id)
+        except requests.exceptions.RequestException as err:
+            print("Unexpected network error when deleting user event {}:".format(_id), err)
             fail_count += 1
-        else:
-            delete_success_list.append(_id)
     success_count = len(delete_success_list)
 
     print("failed deleted in building block: " + str(fail_count))
@@ -300,7 +307,7 @@ def create_new_user_event(new_user_event):
     if result.inserted_id:
         update = dict()
         update['eventStatus'] = 'pending'
-        update['eventId'] = result.inserted_id
+        update['eventId'] = str(result.inserted_id)
         # for key in update:
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
@@ -342,6 +349,7 @@ def populate_event_from_form(post_form, email):
     new_event['targetAudience'] = get_target_audience(post_form)
 
     start_date = post_form.get('startDate')
+    print("start_date", start_date)
     new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
@@ -390,7 +398,7 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
-
+    print("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
         # Set time to match the
@@ -399,7 +407,10 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
         elif date_field == "endDate":
             datetime_obj = datetime_obj.replace(hour=23, minute=59)
     else:
-        datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        try:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
 
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
@@ -415,7 +426,7 @@ def get_datetime_in_local(str_utc_date, is_all_day_event):
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
     else:
-        return datetime_obj.strftime("%Y-%m-%dT%H:%M")
+        return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
 def get_contact_list (post_form):
@@ -584,3 +595,8 @@ def s3_publish_image(id, client):
         for f in files:
             os.remove(f)
     return imageId
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS

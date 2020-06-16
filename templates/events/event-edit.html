@@ -62,7 +62,7 @@
  <!-- filter and select operations -->
   <!-- back to all events button -->
   {% if isUser %}
-  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
                   {% endif %}
               </div>
             </div>
@@ -202,7 +202,7 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
               </div>
             </div>
           {% endif %}
@@ -215,9 +215,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
                   {% endif %}
               </div>
             </div>
@@ -227,7 +227,7 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
               </div>
             </div>
           {% endif %}
@@ -456,6 +456,21 @@
             </div>
             <div class="col-12 col-sm-9">
                 <textarea name = "longDescription" id="longDescription" class="form-control" rows="12">{% if post.longDescription %}{{post.longDescription}}{% endif %}</textarea>
+            </div>
+          </div>
+
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
+                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">{% if post.file %}{{post.file}}{% endif %}</label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -804,7 +819,11 @@
 
     });
 
-
+    // Handle image upload
+    $('input[type="file"]').change(function(e){
+    var fileName = e.target.files[0].name;
+    $('.custom-file-label').html(fileName);
+    });
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>

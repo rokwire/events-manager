@@ -5,16 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## Fixed
-- Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
 
+### Feature
+- Image upload for user event [#320](https://github.com/rokwire/events-manager/issues/320)
+
+### Fixed
+- Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
+- Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
+- Year can have 6 digits [#351](https://github.com/rokwire/events-manager/issues/351)
 ## [2.0.1] - 2020-05-18
 ### Changed
 - update pymongo to 3.10.0
 ### Fixed
 - fix pymongo distinct find.
 - fixed delete button cursor hovering issue.
-
 ## [2.0.0] - 2020-05-11
 ### Changed
 - Change approved user event to published, hide disapprove button and change approve button to be publish on GUI.
