@@ -1,3 +1,4 @@
+import shutil
 import traceback
 import requests
 import json
@@ -109,17 +110,24 @@ def user_an_event_edit(id):
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
 
-        if 'file' in request.files and request.files['file'].filename != '':
-            if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id)):
-                makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
-                remove(existed_file)
-            file = request.files['file']
-            filename = secure_filename(file.filename)
-            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, filename))
-            else:
-                abort(400)  # TODO: Error page
+        if 'file' in request.files:
+            if request.files['file'].filename != '':
+                if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id)):
+                    makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
+                    remove(existed_file)
+                file = request.files['file']
+                filename = secure_filename(file.filename)
+                if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                    file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, filename))
+                else:
+                    abort(400)  # TODO: Error page
+            elif request.form['delete-image'] == '1':
+                try:
+                    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+                except FileNotFoundError:
+                    pass
+
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -207,12 +215,16 @@ def user_an_event_edit(id):
                 audience_dic[audience] = 0
             for audience_select in post_by_id['targetAudience']:
                 audience_dic[audience_select] = 1
-
+        try:
+            image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))[0].rsplit('/', 1)[1]
+        except IndexError:
+            image_name = ""
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
-                               extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
+                               extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
+                               filename=image_name)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -222,8 +234,9 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
-        success = publish_user_event(id)
-        if success:
+        success_1 = publish_user_event(id)
+        #success_2 = publish_image(id)
+        if success_1:
             approve_user_event(id)
     except Exception:
         traceback.print_exc()
@@ -308,7 +321,7 @@ def get_devicetokens(id):
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
-    return "", 200
+    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
 
 @userbp.route('/search', methods=['GET', 'POST'])
 @role_required('user')
@@ -338,3 +351,4 @@ def view_image(id):
         return send_from_directory(directory, image_name)
     except IndexError:
         abort(404)
+
