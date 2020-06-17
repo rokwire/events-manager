@@ -9,7 +9,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
-
+from .source_utilities import s3_publish_image
 from PIL import Image
 import boto3
 import os
@@ -191,6 +191,12 @@ def publish_user_event(eventId):
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
+
+        # Should upload user images
+        s3_client = boto3.client('s3')
+        imageId = s3_publish_image(eventId, s3_client)
+        if imageId:
+            print("User image upload successful for event {}".format(eventId))
 
         if event:
             # Formatting Date and time for json dump
@@ -547,54 +553,54 @@ def item_not_list(item):
     else:
         return False
 
-def s3_publish_image(id, client):
-    try:
-
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
-
-        # Changing PNG to JPG for uploading purposes
-        for filename in glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
-            if filename.endswith('ALLOWED_IMAGE_EXTENSIONS_S3'):
-                im = Image.open(filename)
-                name = filename[:-4] + '.jpg'
-                rgb_im = im.convert('RGB')
-                rgb_im.save(name)
-                continue
-            else:
-                continue
-
-        # If there is no record before, insert it to get the id
-        if not record:
-            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                'eventId': id
-            })
-            if insertResult.inserted_id:
-                imageId = str(insertResult.inserted_id)
-            else:
-                return None
-        else:
-            imageId = str(record['_id'])
-
-
-        client.upload_file(
-            glob.glob('{}/{}/*.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)),
-            current_app.config['BUCKET'],
-            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], id, imageId),
-            ExtraArgs={
-                'ACL': 'bucket-owner-full-control'
-            }
-        )
-
-    except Exception:
-        traceback.print_exc()
-        print("Upload image for event {} failed".format(id))
-        return None
-
-    finally:
-        files = glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
-        for f in files:
-            os.remove(f)
-    return imageId
+# def s3_publish_image(id, client):
+#     try:
+#
+#         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+#
+#         # Changing PNG to JPG for uploading purposes
+#         for filename in glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+#             if filename.endswith('ALLOWED_IMAGE_EXTENSIONS_S3'):
+#                 im = Image.open(filename)
+#                 name = filename[:-4] + '.jpg'
+#                 rgb_im = im.convert('RGB')
+#                 rgb_im.save(name)
+#                 continue
+#             else:
+#                 continue
+#
+#         # If there is no record before, insert it to get the id
+#         if not record:
+#             insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+#                 'eventId': id
+#             })
+#             if insertResult.inserted_id:
+#                 imageId = str(insertResult.inserted_id)
+#             else:
+#                 return None
+#         else:
+#             imageId = str(record['_id'])
+#
+#
+#         client.upload_file(
+#             glob.glob('{}/{}/*.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)),
+#             current_app.config['BUCKET'],
+#             '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], id, imageId),
+#             ExtraArgs={
+#                 'ACL': 'bucket-owner-full-control'
+#             }
+#         )
+#
+#     except Exception:
+#         traceback.print_exc()
+#         print("Upload image for event {} failed".format(id))
+#         return None
+#
+#     finally:
+#         files = glob.glob('{}/{}/*'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+#         for f in files:
+#             os.remove(f)
+#     return imageId
 
 
 def allowed_file(filename):
