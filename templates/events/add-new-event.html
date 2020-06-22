@@ -432,19 +432,36 @@
     
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
-      $(".search-id").autocomplete({
-        minLength: 2,
-        source: function(request, response) {
+      $(".search-id").change(
+        function(request, response){
+          console.log("on change")
           $.ajax({
             url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
             type:"GET",
-            dataType: "json",
+            dataType:"json",
             success: function(data) {
-              response(data);
+              console.log(data)
             }
           });
         }
-      });
+      );
+      // $(".search-id").autocomplete(
+      //   {
+      //     minLength: 2,
+      //     source: function(request, response) {
+      //       console.log("autocomplete")
+      //       $.ajax({
+      //         url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+      //         type:"GET",
+      //         dataType: "json",
+      //         success: function(data) {
+      //           console.log(data)
+      //           // response(data);
+      //         }
+      //       });
+      //     }
+      //   }
+      // );
    }
 
     //Clone the hidden element and shows it for tags
