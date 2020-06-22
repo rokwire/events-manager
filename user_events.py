@@ -234,9 +234,8 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
-        success_1 = publish_user_event(id)
-        #success_2 = publish_image(id)
-        if success_1:
+        success = publish_user_event(id)
+        if success:
             approve_user_event(id)
     except Exception:
         traceback.print_exc()

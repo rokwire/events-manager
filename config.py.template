@@ -35,7 +35,7 @@ class Config(object):
 
     # This a mapping between webtools calendars id to name
     INT2CAL = [
-      ---new calendars----
+    #  ---new calendars----
        # {"7": "General Events"},
        # {"891": "Business - All Events"},
        # {"1095": "Fighting Illini Home Schedule"},
@@ -445,3 +445,8 @@ class Config(object):
 
     # SESSION EXPIRATION TIME
     PERMANENT_SESSION_LIFETIME = timedelta(hours=os.getenv("SESSION_LIFETIME_IN_HOURS", 1))
+
+    # Allowed image extensions for user event image upload
+    ALLOWED_IMAGE_EXTENSIONS = os.getenv('ALLOWED_IMAGE_EXTENSIONS', {'png', 'jpg', 'jpeg', 'gif'})
+
+    VERSION = 2.0.1
