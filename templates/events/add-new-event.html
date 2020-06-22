@@ -32,7 +32,7 @@
 {% block content %}
  <!-- filter and select operations -->
   <!-- back to all events button -->
-  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
@@ -105,7 +105,7 @@
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -114,7 +114,7 @@
               <h5>End Date</h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+              <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
             </div>
           </div>
           <!-- location -->
@@ -238,6 +238,29 @@
             <div class="col-12 col-sm-9">
                 <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
             </div>
+          </div>
+
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
+                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose image</label>
+                </div>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image preview -->
+          <div class="form-group row" id = "image-display" style="display: none;">
+            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
           </div>
 
           <!-- super event check box -->
@@ -405,7 +428,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-     
+
     //Clone the hidden element and shows it for tags
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
@@ -439,6 +462,32 @@
 
     });
 
+    // Handle image upload and preview
+    $('input[type="file"]').change(function(input){
+        console.log("detect image change");
+        document.getElementById("image-display").style = "";
+        var fileName = input.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+        console.log(input)
+        // console.log(input.files, input.files[0])
+        if (input.target.files && input.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview-image')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.target.files[0]);
+        }
+    });
+
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      document.getElementById("image-display").style.display = "none";
+      $('.custom-file-label').html('');
+      $("#file").val(null);
+      $('#preview-image').attr('src', '');
+    });
 
    </script>
 {% endblock %}

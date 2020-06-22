@@ -9,41 +9,44 @@
       <h1>User Events</h1>&nbsp
     </div>
     <!-- filter and select operations -->
-    <div class="row row-content justify-content-center">
+    <div class="row justify-content-around">
       <!--  checkbox group -->
-      <div class="form-check form-check-inline">
-        <label class="form-check-label" for="materialInline1"><h4>Show</h4></label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
-        <label class="form-check-label" for="materialInline1">
-            <!-- temporary change Approved to Published-->
-          <span class="badge badge-pill badge-success">Published </span>
-        </label>
-      </div>
-      <!-- comment out disapproved
-      <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
-          <label class="form-check-label" for="materialInline2">
-            <span class="badge badge-pill badge-danger">Disapproved </span>
+
+      <div class="col form-check">
+        <div class="form-check form-check-inline">
+          <label class="form-check-label" for="materialInline1"><h4>Show </h4></label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
+          <label class="form-check-label" for="materialInline1">
+              <!-- temporary change Approved to Published-->
+            <span class="badge badge-pill badge-success">Published </span>
           </label>
-      </div>
-      <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
-          <label class="form-check-label" for="materialInline3">
-            <span class="badge badge-pill badge-info">Published </span>
+        </div>
+        <!-- comment out disapproved
+        <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>
+            <label class="form-check-label" for="materialInline2">
+              <span class="badge badge-pill badge-danger">Disapproved </span>
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
+            <label class="form-check-label" for="materialInline3">
+              <span class="badge badge-pill badge-info">Published </span>
+            </label>
+        </div>
+         -->
+        <div class="form-check form-check-inline col-sm-3">
+          <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
+          <label class="form-check-label" for="materialInline4">
+            <span class="badge badge-pill badge-warning">Pending </span>
           </label>
-      </div>
-       -->
-      <div class="form-check form-check-inline col-sm-3">
-        <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
-        <label class="form-check-label" for="materialInline4">
-          <span class="badge badge-pill badge-warning">Pending </span>
-        </label>
+        </div>
       </div>
       <!-- Search form -->
-      <div>
-        <a class="btn btn-secondary mr-2" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
+      <div class="form-check form-check-inline row justify-content-end" >
+        <a class="btn btn-secondary mr-2 " href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
       </div>
     <!-- comment out search GUI
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">

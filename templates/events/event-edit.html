@@ -62,7 +62,7 @@
  <!-- filter and select operations -->
   <!-- back to all events button -->
   {% if isUser %}
-  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
@@ -190,9 +190,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
                   {% endif %}
               </div>
             </div>
@@ -202,7 +202,7 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
               </div>
             </div>
           {% endif %}
@@ -215,9 +215,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
                   {% endif %}
               </div>
             </div>
@@ -227,7 +227,7 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
               </div>
             </div>
           {% endif %}
@@ -459,6 +459,40 @@
             </div>
           </div>
 
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
+                  <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"></label>
+                </div>
+                <div class="input-group-append">
+                  {% if filename %}
+                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  {% else %}
+                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04" disabled>Delete</button>
+                  {% endif %}
+                  <input type="hidden" id="delete-image" name="delete-image" value = 0>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- image preview -->
+          {% if filename %}
+          <div class="form-group row" id = "image-display">
+            <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
+          </div>
+          {% else %}
+          <div class="form-group row" id = "image-display" style = "display: none;">
+            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
+          </div>
+          {% endif %}
+
           <!-- location map TODO no api key allow currently -->
           <!-- <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -667,19 +701,30 @@
        }
 
      //Set the save button disabled in default
-     $('#form')
-         .each(function(){
-             $(this).data('serialized', $(this).serialize())
-         })
-         .on('change input', function(){
-             $(this)
-                 .find('input:submit, button:submit')
-                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
-             ;
-          })
-         .find('input:submit, button:submit')
-             .prop('disabled', true)
-     ;
+      $("document").ready(function(){
+        $('form').each(function(index){
+          console.log(index, ": ", $(this)) // 0: form object
+          $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
+        })
+        .on('change input', function(){  // event handler of input change
+            $(this).find(':submit, input[type="image"]')
+                .prop('disabled', $(this).serialize() == $(this).data('serialized'));
+
+            /* Check if input with type files has changed */
+            var changedFiles = $( ":file" ).filter(function( index ) {
+                return this.value != this.defaultValue;
+            }).length;
+
+            if ( changedFiles > 0) {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', false);
+            }
+        })
+
+        .find(':submit, input[type="image"]').prop('disabled', true);
+
+      })
+
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
@@ -804,6 +849,44 @@
 
     });
 
+    // Handle image upload and preview
+    $('input[type="file"]').change(function(input){
+        console.log("detect image change");
+        $('.delete-image').prop('disabled', false);
+        var fileName = input.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+        // console.log(input.files, input.files[0])
+        document.getElementById("image-display").style = "";
+        if (input.target.files && input.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview-image')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.target.files[0]);
+        }
+    });
+
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+      $('.delete-image').prop('disabled', true);
+      $('.custom-file-label').html('');
+      $("#file").val(null);
+      $('#preview-image').attr('src', '');
+      document.getElementById("image-display").style.display = "none";
+      $("#form").off('change input');
+    });
+
+    // signal of delete image need to be updated
+    $('#form').submit(function(){
+      var label = document.getElementById("custom-file-label")
+      if(label.innerText === '' || label.textContent === ''){
+        console.log("image is null")
+        document.getElementById("delete-image").value = 1
+      }
+    })
 
 
    </script>
