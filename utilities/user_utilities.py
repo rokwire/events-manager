@@ -4,11 +4,20 @@ import datetime
 import requests
 import traceback
 import googlemaps
+import os
+import re
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
+from .source_utilities import s3_publish_image
+from PIL import Image
+import boto3
+import os
+import glob
+from ..config import Config
+
 
 
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
@@ -185,6 +194,12 @@ def publish_user_event(eventId):
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
 
+        # Should upload user images
+        s3_client = boto3.client('s3')
+        imageId = s3_publish_image(eventId, s3_client)
+        if imageId:
+            print("User image upload successful for event {}".format(eventId))
+
         if event:
             # Formatting Date and time for json dump
             if event.get('startDate'):
@@ -300,7 +315,7 @@ def create_new_user_event(new_user_event):
     if result.inserted_id:
         update = dict()
         update['eventStatus'] = 'pending'
-        update['eventId'] = result.inserted_id
+        update['eventId'] = str(result.inserted_id)
         # for key in update:
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
@@ -400,7 +415,10 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
         elif date_field == "endDate":
             datetime_obj = datetime_obj.replace(hour=23, minute=59)
     else:
-        datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        try:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
 
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
@@ -536,3 +554,7 @@ def item_not_list(item):
         return True
     else:
         return False
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS

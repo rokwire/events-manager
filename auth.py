@@ -48,8 +48,8 @@ def role_required(role):
                 return redirect(url_for("auth.login"))
             else:
                 if Config.ROLE.get(access) is not None:
-                    if Config.ROLE.get(access)[0] < Config.ROLE.get(role)[0] and access != role:
-                       return redirect(Config.ROLE.get(access))[1]
+                    if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
+                       return redirect(Config.ROLE.get(access)[1])
                 else:
                     return redirect(url_for("auth.login"))
                 return view(**kwargs)
@@ -193,19 +193,23 @@ def callback():
     response = request.environ["QUERY_STRING"]
     authentication_response = client.parse_response(AuthorizationResponse, info=response, sformat="urlencoded")
     code = authentication_response["code"]
-    assert authentication_response["state"] == session["state"]
+    try:
+        assert authentication_response["state"] == session["state"]
+    except KeyError:
+        return redirect(url_for("home.home", error="Unexpected Error, please try again"))
     args = {"code": code}
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
     user_info = client.do_user_info_request(state=authentication_response["state"])
-    
+
+    if "uiucedu_is_member_of" not in user_info.to_dict():
+        session.clear()
+        return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     rokwireAuth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x, 
         user_info.to_dict()["uiucedu_is_member_of"]
     ))
-    # if user has no privilege
-    # TODO: add a warning bar
     if len(rokwireAuth) == 0:
         return redirect(url_for("auth.login"))
     else:
@@ -234,11 +238,9 @@ def callback():
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
         else:
-            # TODO: add a warning bar
             session.clear()
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
 
-    
     # if "member" in user_info.to_dict()["eduperson_affiliation"]:
     #     return redirect(url_for('user_events.user_events'))
     # else:
@@ -252,6 +254,7 @@ def select_events():
         event = request.form.get("event")
         if event == "user":
             return redirect(url_for("user_events.user_events"))
+            # return render_template("auth/select-events.html")
         elif event == "source":
             return redirect(url_for("event.source", sourceId=0))
         else:
