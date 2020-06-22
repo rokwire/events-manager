@@ -312,12 +312,14 @@ def get_devicetokens(id):
 
 @userbp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("user")
-
-
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
-    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+    try:
+        shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
+    except FileNotFoundError:
+        pass
+    return "", 200
 
 
 @userbp.route('/event/<id>/image', methods=['GET'])
