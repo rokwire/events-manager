@@ -11,10 +11,14 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
 from dateutil import tz
+from .source_utilities import s3_publish_image
+from PIL import Image
+import boto3
+import os
+import glob
 from ..config import Config
-
-
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, text_index_search
+
 
 def get_all_user_events(select_status):
 
@@ -187,6 +191,12 @@ def publish_user_event(eventId):
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
+
+        # Should upload user images
+        s3_client = boto3.client('s3')
+        imageId = s3_publish_image(eventId, s3_client)
+        if imageId:
+            print("User image upload successful for event {}".format(eventId))
 
         if event:
             # Formatting Date and time for json dump
@@ -555,4 +565,3 @@ def beta_search(search_string):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
-

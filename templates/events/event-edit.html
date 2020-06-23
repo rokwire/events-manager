@@ -471,7 +471,7 @@
                   <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"></label>
                 </div>
                 <div class="input-group-append">
-                  {% if filename %}
+                  {% if image %}
                   <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
                   {% else %}
                   <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04" disabled>Delete</button>
@@ -483,7 +483,7 @@
           </div>
 
           <!-- image preview -->
-          {% if filename %}
+          {% if image %}
           <div class="form-group row" id = "image-display">
             <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
           </div>
