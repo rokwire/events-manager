@@ -289,7 +289,7 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control search-id" name="id" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" id="subEventId" name="subEventId" type="text" placeholder="Search Event Title For Sub-Event ID" value = ""/>
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -332,7 +332,7 @@
                     <th scope="col">StartDate</th>
                   </tr>
                 </thead>
-                <tbody onclick = select_sub_event()>
+                <tbody>
 
                 </tbody>
               </table>
@@ -457,19 +457,6 @@
     
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
-      // $(".search-id").change(
-      //   function(request, response){
-      //     console.log("on change")
-      //     $.ajax({
-      //       url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
-      //       type:"GET",
-      //       dataType:"json",
-      //       success: function(data) {
-      //         console.log(data)
-      //       }
-      //     });
-      //   }
-      // );
       $(".search-id").autocomplete(
         {
           minLength: 2,
@@ -484,29 +471,27 @@
                 // response(data);
                 if(data.length > 0){
                   document.getElementById("result-table").style = "";
-                  // var table = document.getElementById("table");
-                  // var row = table.insertRow();
-                  // var cell1 = row.insertCell(0);
-                  // var cell2 = row.insertCell(1);
-                  // var cell3 = row.insertCell(2);
-                  // cell1.innerHTML = "Title"
-                  // cell2.innerHTML = "Category"
-                  // cell3.innerHTML = "StartDate"
                   for(var i=0; i < data.length; i++){
-                    // var table = document.getElementById("table");
                     var tableRef = document.getElementById('table').getElementsByTagName('tbody')[0];
-                    // Insert a row in the table at row index 0
-                    var row   = tableRef.insertRow(tableRef.rows.length);
-                    // var row = table.insertRow();
+                    var row = tableRef.insertRow(tableRef.rows.length);
                     var cell1 = row.insertCell(0);
                     var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3)
                     cell1.innerHTML = data[i]['label'];
-                    cell2.innerHTML = data[i]['value'];
+                    cell2.innerHTML = data[i]['category'];
+                    cell3.innerHTML = data[i]['startDate']
+                    cell4.innerHTML = data[i]['value']
                   }
-                  console.log(document.getElementById("table"))
+                  $("#table td").click(function() {
+                    var row_num = parseInt( $(this).parent().index() )+1;
+                    console.log(row_num);
+                    document.getElementById('subEventId').value = data[row_num - 1]['value'];
+                  });
+
                 } else {
-                  console.log("hide the table")
-                  document.getElementById("result-table").style = "display:none;"
+                  console.log("hide the table");
+                  document.getElementById("result-table").style = "display:none;";
                   // $("#table").remove(); 
                   $("#table tbody tr").remove();
                   
@@ -516,11 +501,6 @@
           }
         }
       );
-   }
-
-   function select_sub_event(event){
-     console.log("click the event")
-     console.log(event)
    }
 
     //Clone the hidden element and shows it for tags
