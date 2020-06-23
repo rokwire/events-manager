@@ -336,9 +336,10 @@
 
 {% endblock %}
 
-{% block style %}
+{% block styles %}
+{{ super() }}
 <style>
-  .ui-autocomplete {
+.ui-autocomplete {
   position: absolute;
   top: 100%;
   left: 0;
@@ -346,10 +347,11 @@
   display: none;
   float: left;
   min-width: 160px;
-  padding: 5px 0;
+  padding: 5px 5px;
   margin: 2px 0 0;
   list-style: none;
-  font-size: 14px;
+  font-size: inherit;
+  font-family: inherit;
   text-align: left;
   background-color: #ffffff;
   border: 1px solid #cccccc;
@@ -388,8 +390,7 @@
   padding: 0;
   position: absolute;
   width: 1px;
-}
-
+} 
 </style>
 {% endblock %}
 
