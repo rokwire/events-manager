@@ -289,7 +289,7 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control search-id" id="subEventId" name="subEventId" type="text" placeholder="Search Event Title For Sub-Event ID" value = ""/>
+                            <input class="form-control search-id" id="subEventId" name="subEventId" type="text" placeholder="Sub-Event ID"/>
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -318,27 +318,6 @@
                 <!-- none -->
            </div>
 
-           <div class = "form-group row" id="result-table" style="display: none;">
-            <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
-              <h5></h5>
-            </div>
-            <div class="col-sm-9">
-
-              <table class="table table-hover" id="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">StartDate</th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-              </table>
-            </div>
-          </div>
-
         </div>
      </article>
 
@@ -355,6 +334,63 @@
   </div>
 </form>
 
+{% endblock %}
+
+{% block style %}
+<style>
+  .ui-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+
+.ui-autocomplete > li > div {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+}
+
+.ui-state-hover,
+.ui-state-active,
+.ui-state-focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.ui-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+</style>
 {% endblock %}
 
 <!-- js script for select list in form -->
@@ -469,33 +505,12 @@
               success: function(data) {
                 console.log(data)
                 // response(data);
-                if(data.length > 0){
-                  document.getElementById("result-table").style = "";
-                  for(var i=0; i < data.length; i++){
-                    var tableRef = document.getElementById('table').getElementsByTagName('tbody')[0];
-                    var row = tableRef.insertRow(tableRef.rows.length);
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-                    var cell4 = row.insertCell(3)
-                    cell1.innerHTML = data[i]['label'];
-                    cell2.innerHTML = data[i]['category'];
-                    cell3.innerHTML = data[i]['startDate']
-                    cell4.innerHTML = data[i]['value']
+                response($.map(data, function(v,i){
+                  return {
+                    label: v.label + " (Category:" +v.category + ", StartDate: " + v.startDate + ")",
+                    value : v.value
                   }
-                  $("#table td").click(function() {
-                    var row_num = parseInt( $(this).parent().index() )+1;
-                    console.log(row_num);
-                    document.getElementById('subEventId').value = data[row_num - 1]['value'];
-                  });
-
-                } else {
-                  console.log("hide the table");
-                  document.getElementById("result-table").style = "display:none;";
-                  // $("#table").remove(); 
-                  $("#table tbody tr").remove();
-                  
-                }
+                }))
               }
             });
           }
