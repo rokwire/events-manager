@@ -307,13 +307,38 @@
                     <div class="offset-sm-1">
                         <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
                     </div>
+
                 </div>
+              
+
             </div>
 
            <div id="sub-current" class="dynamic-stuff-sub">
                 <!-- existing sub-events-->
                 <!-- none -->
            </div>
+
+           <div class = "form-group row" id="result-table" style="display: none;">
+            <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
+              <h5></h5>
+            </div>
+            <div class="col-sm-9">
+
+              <table class="table table-hover" id="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">StartDate</th>
+                  </tr>
+                </thead>
+                <tbody onclick = select_sub_event()>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
      </article>
 
@@ -432,36 +457,70 @@
     
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
-      $(".search-id").change(
-        function(request, response){
-          console.log("on change")
-          $.ajax({
-            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
-            type:"GET",
-            dataType:"json",
-            success: function(data) {
-              console.log(data)
-            }
-          });
-        }
-      );
-      // $(".search-id").autocomplete(
-      //   {
-      //     minLength: 2,
-      //     source: function(request, response) {
-      //       console.log("autocomplete")
-      //       $.ajax({
-      //         url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
-      //         type:"GET",
-      //         dataType: "json",
-      //         success: function(data) {
-      //           console.log(data)
-      //           // response(data);
-      //         }
-      //       });
-      //     }
+      // $(".search-id").change(
+      //   function(request, response){
+      //     console.log("on change")
+      //     $.ajax({
+      //       url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+      //       type:"GET",
+      //       dataType:"json",
+      //       success: function(data) {
+      //         console.log(data)
+      //       }
+      //     });
       //   }
       // );
+      $(".search-id").autocomplete(
+        {
+          minLength: 2,
+          source: function(request, response) {
+            console.log("autocomplete")
+            $.ajax({
+              url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+              type:"GET",
+              dataType: "json",
+              success: function(data) {
+                console.log(data)
+                // response(data);
+                if(data.length > 0){
+                  document.getElementById("result-table").style = "";
+                  // var table = document.getElementById("table");
+                  // var row = table.insertRow();
+                  // var cell1 = row.insertCell(0);
+                  // var cell2 = row.insertCell(1);
+                  // var cell3 = row.insertCell(2);
+                  // cell1.innerHTML = "Title"
+                  // cell2.innerHTML = "Category"
+                  // cell3.innerHTML = "StartDate"
+                  for(var i=0; i < data.length; i++){
+                    // var table = document.getElementById("table");
+                    var tableRef = document.getElementById('table').getElementsByTagName('tbody')[0];
+                    // Insert a row in the table at row index 0
+                    var row   = tableRef.insertRow(tableRef.rows.length);
+                    // var row = table.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    cell1.innerHTML = data[i]['label'];
+                    cell2.innerHTML = data[i]['value'];
+                  }
+                  console.log(document.getElementById("table"))
+                } else {
+                  console.log("hide the table")
+                  document.getElementById("result-table").style = "display:none;"
+                  // $("#table").remove(); 
+                  $("#table tbody tr").remove();
+                  
+                }
+              }
+            });
+          }
+        }
+      );
+   }
+
+   function select_sub_event(event){
+     console.log("click the event")
+     console.log(event)
    }
 
     //Clone the hidden element and shows it for tags
