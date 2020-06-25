@@ -67,7 +67,8 @@ def user_an_event(id):
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
-    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+    record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+    if record or len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
@@ -330,6 +331,13 @@ def userevent_delete(id):
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
 def view_image(id):
+    record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+    if record:
+        # location = boto3.client('s3').get_bucket_location(Bucket=Config.BUCKET)['LocationConstraint']
+        # TODO: not sure if the above code is working, currently using hard coding below
+        location = 'us-east-2'
+        url = 'https://{}.s3.{}.amazonaws.com/{}/{}/{}.jpg'.format(Config.BUCKET, location, Config.AWS_IMAGE_FOLDER_PREFIX, id, record["_id"])
+        return redirect(url)
     try:
         image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
         directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
