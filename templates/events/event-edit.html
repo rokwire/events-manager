@@ -485,11 +485,11 @@
           <!-- image preview -->
           {% if image %}
           <div class="form-group row" id = "image-display">
-            <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
+            <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 600px; max-height: 337px;; margin: auto;"/>
           </div>
           {% else %}
           <div class="form-group row" id = "image-display" style = "display: none;">
-            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
+            <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px; margin: auto;"/>
           </div>
           {% endif %}
 
