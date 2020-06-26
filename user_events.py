@@ -1,6 +1,7 @@
 import shutil
 import traceback
 import requests
+import json
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
@@ -287,7 +288,9 @@ def add_new_event():
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
-        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+        return render_template("events/add-new-event.html", 
+                                isUser=True,
+                                eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
                                 targetAudienceMap=targetAudienceMap,
@@ -326,6 +329,24 @@ def userevent_delete(id):
         delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
     return "", 200
 
+@userbp.route('/search', methods=['GET', 'POST'])
+@role_required('user')
+def search():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
+
+
+@userbp.route('/searchsub', methods=['GET'])
+@role_required('user')
+def searchsub():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
 
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
