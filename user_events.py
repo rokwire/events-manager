@@ -65,6 +65,8 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    if 'allDay' not in post:
+        post['allDay'] = None
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
