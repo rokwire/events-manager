@@ -1,6 +1,7 @@
 import shutil
 import traceback
 import requests
+import json
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
@@ -64,10 +65,12 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    if 'allDay' not in post:
+        post['allDay'] = None
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
-    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))) != 0:
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
@@ -82,8 +85,9 @@ def user_an_event(id):
     #             targetAudience_edit_list += [item.capitalize()]
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
-    return render_template("events/event.html", post = post, eventTypeMap = eventTypeMap,
-                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+    return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
+                           isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                           timestamp=datetime.now().timestamp())
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 @role_required("user")
@@ -111,22 +115,23 @@ def user_an_event_edit(id):
 
         if 'file' in request.files:
             if request.files['file'].filename != '':
-                if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id)):
-                    makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*')):
+                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
                     remove(existed_file)
                 file = request.files['file']
                 filename = secure_filename(file.filename)
-                if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                    file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, filename))
+                if file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                    file.save(
+                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                 else:
                     abort(400)  # TODO: Error page
-            elif request.form['delete-image'] == '1':
+            elif request.form['delete-image'] == '1' and len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
                 try:
-                    shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-                except FileNotFoundError:
-                    pass
-
+                    remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
+                except OSError:
+                    print("delete event:{} image failed".format(id))
+                record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+                if record:
+                    delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -215,7 +220,7 @@ def user_an_event_edit(id):
             for audience_select in post_by_id['targetAudience']:
                 audience_dic[audience_select] = 1
         try:
-            image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))[0].rsplit('/', 1)[1]
+            image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
         except IndexError:
             image_name = ""
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
@@ -278,15 +283,16 @@ def add_new_event():
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
-            if file and '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                if not path.exists(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id))):
-                    makedirs(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id)))
-                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, str(new_event_id), filename))
+            if file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT,
+                                    str(new_event_id) + '.' + filename.rsplit('.', 1)[1].lower()))
             else:
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
-        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+        return render_template("events/add-new-event.html", 
+                                isUser=True,
+                                eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
                                 targetAudienceMap=targetAudienceMap,
@@ -315,20 +321,41 @@ def get_devicetokens(id):
 def userevent_delete(id):
     print("delete user event id: %s" % id)
     delete_user_event(id)
-    try:
-        shutil.rmtree(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id))
-    except FileNotFoundError:
-        pass
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+        try:
+            remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
+        except OSError:
+            print("delete event:{} image failed".format(id))
+    record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+    if record:
+        delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
     return "", 200
 
+@userbp.route('/search', methods=['GET', 'POST'])
+@role_required('user')
+def search():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
+
+
+@userbp.route('/searchsub', methods=['GET'])
+@role_required('user')
+def searchsub():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
 
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
 def view_image(id):
     try:
-        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id, '*'))[0].rsplit('/', 1)[1]
-        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1], id)
+        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
         return send_from_directory(directory, image_name)
     except IndexError:
         abort(404)
-

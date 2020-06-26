@@ -471,7 +471,7 @@
                   <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"></label>
                 </div>
                 <div class="input-group-append">
-                  {% if filename %}
+                  {% if image %}
                   <button class="btn btn-outline-danger delete-image rounded-right" type="button" id="inputGroupFileAddon04">Delete</button>
                   {% else %}
                   <button class="btn btn-outline-danger delete-image rounded-right" type="button" id="inputGroupFileAddon04" disabled>Delete</button>
@@ -483,13 +483,13 @@
           </div>
 
           <!-- image preview -->
-          {% if filename %}
+          {% if image %}
           <div class="form-group row" id = "image-display">
-            <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 50%; margin: auto;"/>
+            <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 600px; max-height: 337px;; margin: auto;"/>
           </div>
           {% else %}
           <div class="form-group row" id = "image-display" style = "display: none;">
-            <img id = "preview-image" src = "" style = "max-width: 50%; margin: auto;"/>
+            <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px; margin: auto;"/>
           </div>
           {% endif %}
 
@@ -546,7 +546,7 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -575,9 +575,9 @@
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
                                         {% if sub.id %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
+                                        <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
                                         {% else %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                                        <input class="form-control search-id" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
                                         {% endif %}
                                   </div>
 
@@ -807,6 +807,7 @@
    $('.add-sub').click(function(){
      $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
      attach_delete_sub();
+     attach_sub_search();
    });
 
    $('.exist-sub').ready(function(){
@@ -821,6 +822,23 @@
        $(this).closest('.sub-group').remove();
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
+   }
+
+   //Attach functionality to sub-event-id search
+   function attach_sub_search() {
+      $(".search-id").autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+          $.ajax({
+            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+            type:"GET",
+            dataType: "json",
+            success: function(data) {
+              response(data);
+            }
+          });
+        }
+      });
    }
 
    // Handle all-day event
