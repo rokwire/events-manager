@@ -6,6 +6,7 @@ import traceback
 import googlemaps
 import os
 import re
+import tempfile
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -574,15 +575,17 @@ def s3_image_download(client, eventId, imageId):
             _, tmpfolder = os.path.split(tempfile.mkdtemp())
             tmpfolder = current_app.config['IMAGE_FILE_MOUNTPOINT'] + tmpfolder
             os.mkdir(tmpfolder)
-            tmpfile = os.path.join(tmpfolder, eventId + "." + imageId)
+            tmpfile = os.path.join(tmpfolder, eventId)
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
                 print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
+                return True
 
         else:
             print('Event: {} does not exist'.format(eventId))
+            return False
 
     except Exception:
         traceback.print_exc()
         print("Image: {} for event: {} download failed".format(imageId, eventId))
-        return None
+        return False
