@@ -32,7 +32,7 @@
 {% block content %}
  <!-- filter and select operations -->
   <!-- back to all events button -->
-  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" enctype="multipart/form-data">
+  <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method = "POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
