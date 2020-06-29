@@ -572,6 +572,7 @@ def s3_image_delete(client, eventId, imageId):
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
+            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
         else:
             print('Event: {} does not exist'.format(eventId))
 
