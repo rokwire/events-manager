@@ -323,16 +323,25 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
+        # TODO: Delete image on S3
         delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
     return "", 200
 
 
-@userbp.route('/event/<id>/image', methods=['GET'])
+@userbp.route('/event/<id>/image', methods=['GET', 'DELETE'])
 @role_required("user")
 def view_image(id):
-    try:
-        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
-        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
-        return send_from_directory(directory, image_name)
-    except IndexError:
-        abort(404)
+    if request.method == 'GET':
+        try:
+            image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+            directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
+            return send_from_directory(directory, image_name)
+        except IndexError:
+            abort(404)
+    elif request.method == 'DELETE':
+        try:
+            # TODO: Delete image on S3
+            os.remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
+        except OSError as e:
+            print("Delete image failed (event id: {}), Error message:".format(id))
+            print(e)
