@@ -363,7 +363,10 @@ def view_image(id):
             abort(404)
     elif request.method == 'DELETE':
         try:
-            # TODO: Delete image on S3
+            record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(id)})
+            if record:
+                client = boto3.client('s3')
+                s3_image_delete(client, id, record["_id"])
             os.remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
         except OSError as e:
             print("Delete image failed (event id: {}), Error message:".format(id))
