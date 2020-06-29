@@ -328,7 +328,6 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
-        # TODO: Delete image on S3
         delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
     return "", 200
 
@@ -366,7 +365,7 @@ def view_image(id):
             record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(id)})
             if record:
                 client = boto3.client('s3')
-                s3_image_delete(client, id, record["_id"])
+                s3_image_delete(client, id, record.get("_id"))
             os.remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
         except OSError as e:
             print("Delete image failed (event id: {}), Error message:".format(id))
