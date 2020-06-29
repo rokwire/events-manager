@@ -328,6 +328,8 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
+        client = boto3.client('s3')
+        s3_image_delete(client, id, record.get("id"))
         delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
     return "", 200
 
