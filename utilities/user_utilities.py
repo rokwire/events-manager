@@ -565,3 +565,18 @@ def beta_search(search_string):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+def s3_image_delete(client, eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
+            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
+        else:
+            print('Event: {} does not exist'.format(eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        return None
