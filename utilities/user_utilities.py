@@ -568,7 +568,7 @@ def allowed_file(filename):
 
 def s3_image_delete(client, eventId, imageId):
     try:
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)})
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
