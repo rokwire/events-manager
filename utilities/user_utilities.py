@@ -565,3 +565,14 @@ def beta_search(search_string):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+def s3_image_download(client, eventId, imageId):
+    try:
+        fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+
+
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} download failed".format(imageId, eventId))
+        return None
