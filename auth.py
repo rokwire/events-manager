@@ -258,8 +258,8 @@ def select_events():
         elif event == "source":
             return redirect(url_for("event.source", sourceId=0))
         else:
-            return render_template("auth/select-events.html")
-    return render_template("auth/select-events.html")
+            return render_template("auth/select-events.html", no_search=True)
+    return render_template("auth/select-events.html", no_search=True)
 
 @bp.before_app_request
 def load_logged_in_user_info():

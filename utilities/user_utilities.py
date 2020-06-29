@@ -17,10 +17,8 @@ import boto3
 import os
 import glob
 from ..config import Config
+from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, text_index_search
 
-
-
-from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
 
 def get_all_user_events(select_status):
 
@@ -555,6 +553,30 @@ def item_not_list(item):
     else:
         return False
 
+# Uses the implemented text index search to search the queries and modify the search results to JSON
+def beta_search(search_string):
+    queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
+    list_queries = list(queries_returned)
+    for query in list_queries:
+        query['label'] = query.pop('title')
+        query['value'] = query.pop('platformEventId')
+    return list_queries
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+def s3_image_delete(client, eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
+            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
+        else:
+            print('Event: {} does not exist'.format(eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        return None

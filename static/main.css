@@ -122,3 +122,7 @@ main.container {
 .dynamic-element{
   margin-bottom:0px;
 }
+
+.ui-autocomplete { 
+  z-index:2000; 
+}
