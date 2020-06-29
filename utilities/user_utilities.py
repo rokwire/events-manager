@@ -568,9 +568,19 @@ def allowed_file(filename):
 
 def s3_image_download(client, eventId, imageId):
     try:
-        fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"_id": ObjectId(eventId)})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            _, tmpfolder = os.path.split(tempfile.mkdtemp())
+            tmpfolder = current_app.config['IMAGE_FILE_MOUNTPOINT'] + tmpfolder
+            os.mkdir(tmpfolder)
+            tmpfile = os.path.join(tmpfolder, eventId + "." + imageId)
+            with open(tmpfile, 'wb') as f:
+                client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
+                print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
 
-
+        else:
+            print('Event: {} does not exist'.format(eventId))
 
     except Exception:
         traceback.print_exc()
