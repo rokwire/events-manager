@@ -17,6 +17,7 @@ from .config import Config
 from werkzeug.utils import secure_filename
 from glob import glob
 from os import remove, path, getcwd, makedirs
+from base64 import b64decode
 
 userbp = Blueprint('user_events', __name__, url_prefix=Config.URL_PREFIX+'/user-events')
 
@@ -280,12 +281,17 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
-        if 'file' in request.files and request.files['file'].filename != '':
+        if request.form['compress'] != '' and request.files['file'].filename != '':
+            _, encoded = request.form['compress'].split(",", 1)
+            data = b64decode(encoded)
             file = request.files['file']
             filename = secure_filename(file.filename)
             if file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                file.save(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT,
-                                    str(new_event_id) + '.' + filename.rsplit('.', 1)[1].lower()))
+                image_path = path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT,
+                                        str(new_event_id) + '.' + filename.rsplit('.', 1)[1].lower())
+                with open(image_path, "wb") as image:
+                    image.write(data)
+                image.close()
             else:
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
