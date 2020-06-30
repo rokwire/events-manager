@@ -580,3 +580,36 @@ def s3_image_delete(client, eventId, imageId):
         traceback.print_exc()
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
         return None
+
+def s3_image_upload(client, eventId, imageId):
+    try:
+        client.upload_file(
+            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+            current_app.config['BUCKET'],
+            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
+            ExtraArgs={
+                'ACL': 'bucket-owner-full-control'
+            }
+        )
+        return True
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image: {} for event {} failed".format(imageId, eventId))
+        return False
+
+def s3_delete_reupload(client, eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            s3_image_delete(client, eventId, imageId)
+            s3_image_upload(client, eventId, imageId)
+            return True
+        else:
+            print('Event: {} does not exist'.format(eventId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
+        return False
