@@ -613,3 +613,17 @@ def s3_delete_reupload(client, eventId, imageId):
         traceback.print_exc()
         print("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
         return False
+
+def imagedId_from_eventId(eventId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            return record['eventId']
+        else:
+            print('Event: {} does not have associated image'.format(eventId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        print("imageId retrieval for event: {} failed".format(eventId))
+        return False
