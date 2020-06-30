@@ -526,6 +526,7 @@
         img.src = e.target.result;
       }
       reader.readAsDataURL(file);
+      $("#file").prop("disabled", true)
     });
 
     // delete button for image upload
