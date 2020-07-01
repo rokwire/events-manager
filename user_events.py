@@ -221,14 +221,16 @@ def user_an_event_edit(id):
                 audience_dic[audience_select] = 1
         try:
             image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+            image = True
         except IndexError:
             image_name = ""
+            image = False
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               filename=image_name)
+                               filename=image_name, image=image)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
