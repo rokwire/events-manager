@@ -578,7 +578,7 @@ def s3_image_delete(client, eventId, imageId):
             return True
         else:
             print('Event: {} does not exist'.format(eventId))
-            rteturn False
+            return False
 
     except Exception:
         traceback.print_exc()
