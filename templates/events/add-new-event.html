@@ -248,8 +248,8 @@
             <div class="col-sm-9">
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than 1 MB">
-                  <label class="custom-file-label" for="file">Choose image (Only support no larger than 1 MB)</label>
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
+                  <label class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
                 </div>
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
@@ -515,8 +515,6 @@
       $("#file").val(null);
       $('#preview-image').attr('src', '');
     });
-
-    $('#file').popover();
 
    </script>
 {% endblock %}
