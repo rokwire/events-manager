@@ -566,7 +566,12 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
 
-def s3_image_delete(client, eventId, imageId):
+#S3 Utilities
+
+#Initialization of global client
+client = boto3.client('s3')
+
+def s3_image_delete(eventId, imageId):
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
@@ -581,7 +586,7 @@ def s3_image_delete(client, eventId, imageId):
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
         return None
 
-def s3_image_upload(client, eventId, imageId):
+def s3_image_upload(eventId, imageId):
     try:
         client.upload_file(
             '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
@@ -598,7 +603,7 @@ def s3_image_upload(client, eventId, imageId):
         print("Upload image: {} for event {} failed".format(imageId, eventId))
         return False
 
-def s3_delete_reupload(client, eventId, imageId):
+def s3_delete_reupload(eventId, imageId):
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
