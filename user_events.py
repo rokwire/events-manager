@@ -112,7 +112,7 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
-
+        x = get_user_event_status(id)
         record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
             if request.files['file'].filename != '':
@@ -132,6 +132,18 @@ def user_an_event_edit(id):
                             print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                     else:
                         print("reuploading image for event:{} failed in event edit page".format(id))
+                elif get_user_event_status(id) == "approved":
+                    success = s3_image_upload(id, record.get("_id"))
+                    if success:
+                        print("{}, s3: s3_image_upload())()".format(record.get('status')))
+                        insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                            'eventId': id,
+                            'status': 'new',
+                        })
+                        if not insertResult.inserted_id:
+                            print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
+                    else:
+                        print("initial image upload for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
                     file.save(
                         path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
