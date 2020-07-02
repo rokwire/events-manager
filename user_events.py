@@ -121,13 +121,17 @@ def user_an_event_edit(id):
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 if record and record.get('status') == 'new' or record.get('status') == 'replaced':
-                    print("{}, s3: s3_delete_reupload()".format(record.get('status')))
-                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                                 condition={'eventId': id},
-                                                 update={"$set": {'status': 'replaced',
-                                                                  'eventId': id}}, upsert=True)
-                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                        print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
+                    success = s3_delete_reupload(id, record.get("_id"))
+                    if success:
+                        print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                     condition={'eventId': id},
+                                                     update={"$set": {'status': 'replaced',
+                                                                      'eventId': id}}, upsert=True)
+                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                            print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
+                    else:
+                        print("reuploading image for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
                     file.save(
                         path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
@@ -135,17 +139,20 @@ def user_an_event_edit(id):
                     abort(400)  # TODO: Error page
         if request.form['delete-image'] == '1':
             if record:
-                updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                success = s3_image_delete(id, record.get("_id"))
+                if success:
+                    print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                           condition={'eventId': id},
                                           update={"$set": {'status': 'deleted',
                                                            'eventId': id}}, upsert=True)
-                if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                    print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
             else:
                 try:
                     remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
                 except OSError:
-                    print("delete event:{} image failed".format(id))
+                    print("delete event:{} image failed in ".format(id))
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -348,12 +355,17 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
-        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                  condition={'eventId': id},
-                                  update={"$set": {'status': 'deleted',
-                                                   'eventId': id}}, upsert=True)
-        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            print("Failed to mark image record as deleted of event: {} in the deletion of event".format(id))
+        success = s3_image_delete(id, record.get("_id"))
+        if success:
+            print("{}, s3: s3_image_delete()".format(record.get('status')))
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": {'status': 'deleted',
+                                                       'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Failed to mark image record as deleted of event: {} in the deletion of event".format(id))
+        else:
+            print("deleting image for event:{} failed in event deletion".format(id))
     return "", 200
 
 @userbp.route('/search', methods=['GET', 'POST'])
