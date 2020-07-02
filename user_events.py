@@ -114,7 +114,6 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
-        x = get_user_event_status(id)
         record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
             if request.files['file'].filename != '':
@@ -171,6 +170,8 @@ def user_an_event_edit(id):
                                                            'eventId': id}}, upsert=True)
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
+                else:
+                    print("deleting image for event:{} on s3 failed in event edit page".format(id))
             else:
                 try:
                     remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
