@@ -138,12 +138,21 @@ def user_an_event_edit(id):
                     success = s3_image_upload(id, record.get("_id"))
                     if success:
                         print("{}, s3: s3_image_upload())()".format(record.get('status')))
-                        insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                            'eventId': id,
-                            'status': 'new',
-                        })
-                        if not insertResult.inserted_id:
-                            print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
+                        if record.get('status') == 'deleted':
+                            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                      condition={'eventId': id},
+                                                      update={"$set": {'status': 'new',
+                                                                       'eventId': id}}, upsert=True)
+                            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                                print("Failed to mark image record as replaced of event: {} in event edit page".format(
+                                    id))
+                        else:
+                            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                                'eventId': id,
+                                'status': 'new',
+                            })
+                            if not insertResult.inserted_id:
+                                print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                     else:
                         print("initial image upload for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
