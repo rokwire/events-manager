@@ -283,8 +283,10 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
+        if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+            image = True
         success = publish_user_event(id)
-        if success:
+        if success and image:
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                       condition={'eventId': id},
                                       update={"$set": {'status': 'new',
