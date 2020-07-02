@@ -580,3 +580,26 @@ def s3_image_delete(client, eventId, imageId):
         traceback.print_exc()
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
         return None
+
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            #return f'{num:.1f} {x}'
+            #Alternative return statement works with Python 3.5 and above
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
+def size_check(eventID):
+    try:
+        image_path = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
+
+        if os.path.isfile(image_path):
+            file_information = os.stat(image_path)
+            return convert_bytes(file_information.st_size)
+        else:
+            print('Image associated with event: {} does not exist'.format(eventID))
+
+    except Exception:
+        traceback.print_exc()
+        print('Unknown Error occurred')
+        return False
