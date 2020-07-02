@@ -70,7 +70,9 @@ def user_an_event(id):
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
-    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+    record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0 \
+            or (record and record.get("status") == "new" or record.get("status") == "replaced"):
         post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
@@ -273,12 +275,12 @@ def user_an_event_approve(id):
         # By default, we will not upload user images and we will set user image upload to be False
         success = publish_user_event(id)
         if success:
-            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                'eventId': id,
-                'status': 'new',
-            })
-            if not insertResult.inserted_id:
-                print('inserting image document for event:{} upon event publishing failed'.format(id))
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": {'status': 'replaced',
+                                                       'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Failed to mark image record as new of event: {} upon event publishing".format(id))
             approve_user_event(id)
     except Exception:
         traceback.print_exc()
