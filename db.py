@@ -2,6 +2,7 @@ import pymongo
 import traceback
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo.mongo_client import MongoClient
 from flask import current_app,g
 
 ######################################################################
@@ -31,6 +32,13 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
+
+    # Set up Mongo client for text indexing
+    global client
+    client = MongoClient('mongodb://localhost:27017')
+    db = client.get_database('rokwire')
+    events = db['eventsmanager_events']
+    events.create_index([("title", pymongo.TEXT)])
 
 
 ######################################################################
@@ -246,7 +254,7 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-#parameter: collection name, *objectId* list to delete
+# Parameters: collection name, *objectId* list to delete
 def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
@@ -267,3 +275,27 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
             return []
         except Exception:
             return []
+
+# Parameters: collection name, string to look for
+def text_index_search(co_or_ta, search_string, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if search_string is None or co_or_ta is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            # Will return all records with matching regex and is case insensitive for title search
+            # There is also a projection limiting the fields returned to only title and platformEventID
+            result = collection.find({"$text": {"$search": search_string}, "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, "_id": 0})
+            if not result:
+                return []
+            return result
+
+        except Exception:
+            return []
+
+
+

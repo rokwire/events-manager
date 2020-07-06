@@ -1,6 +1,6 @@
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, jsonify
 )
 from .config import Config
 from git import Repo
