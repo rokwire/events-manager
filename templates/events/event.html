@@ -64,26 +64,103 @@
         <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
         <hr class="divider"/>
 
-        {% if post.eventStatus%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Event Status </h5>
+        <div class="grid-container col-12">
+          <div class="item1" style="grid-area: auto / right;">
+            {% if post.eventStatus%}
+            <div class="row">
+              <div class="col-sm-2">
+                <h5>Event Status </h5>
+              </div>
+              <p class="col-sm-5">
+                {% if post.eventStatus == "approved" %}
+                    <!-- temporily change to published -->
+                  <span class="badge badge-pill badge-success"> published </span>
+                {% elif post.eventStatus == "disapproved"%}
+                  <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
+                {% elif post.eventStatus == "pending"%}
+                  <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
+                {% else %}
+                  <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
+                {% endif %}
+              </p>
             </div>
-            <p class="col-sm-9">
-              {% if post.eventStatus == "approved" %}
-                  <!-- temporily change to published -->
-                <span class="badge badge-pill badge-success"> published </span>
-              {% elif post.eventStatus == "disapproved"%}
-                <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
-              {% elif post.eventStatus == "pending"%}
-                <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
-              {% else %}
-                <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
-              {% endif %}
-            </p>
-
+          {% endif %}
           </div>
-        {% endif %}
+
+          <div class="item2" style="grid-area: auto / right;">
+            <!-- event category -->
+            {% if post.category %}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>Category </h5>
+                </div>
+                <p class="col-sm-5">{{post.category}}</p>
+              </div>
+            {% endif %}
+
+
+            <!-- event subcategory -->
+            {% if post.subcategory %}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>Sub Category </h5>
+                </div>
+                <p class="col-sm-5">{{post.subcategory}}</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class = "item3" style="grid-area: auto / right;">
+            <!-- All Day Event -->
+            {% if post.allDay %}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>All Day Event</h5>
+                </div>
+                    <p class = "col-sm-5">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>All Day Event</h5>
+                </div>
+                    <p class = "col-sm-5">No</p>
+              </div>
+            {% endif %}
+
+            <!-- startDate -->
+            {% if post.startDate%}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>Start Date </h5>
+                </div>
+                <p class="col-sm-5" id="startDate">
+                  {{post.startDate}}
+                </p>
+              </div>
+            {% endif %}
+
+            <!-- endDate -->
+            {% if post.endDate%}
+              <div class="row">
+                <div class="col-sm-2">
+                  <h5>End Date </h5>
+                </div>
+                <p class="col-sm-5" id="endDate">{{ post.endDate}}</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item4" style="grid-column: 1/-1;">
+            <!-- image -->
+            {% if post.image %}
+              <!-- <div class="col-12 col-sm-9" id="imagefile"> -->
+                  <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" class="rounded float-left" alt="event image" style="max-width: 600px; max-height: 337px;">
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
 
         <!-- event url -->
         {% if post.titleURL%}
@@ -102,66 +179,6 @@
               <h5>Event ID </h5>
             </div>
             <p class="col-sm-9">{{post.platformEventId}}</p>
-          </div>
-        {% endif %}
-
-        <!-- event category -->
-        {% if post.category %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Category </h5>
-            </div>
-            <p class="col-sm-9">{{post.category}}</p>
-          </div>
-        {% endif %}
-
-
-        <!-- event subcategory -->
-        {% if post.subcategory %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Sub Category </h5>
-            </div>
-            <p class="col-sm-9">{{post.subcategory}}</p>
-          </div>
-        {% endif %}
-
-        <!-- All Day Event -->
-        {% if post.allDay %}
-           <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>All Day Event</h5>
-            </div>
-                <p class = "col-sm-9">Yes</p>
-          </div>
-        {% else %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>All Day Event</h5>
-            </div>
-                <p class = "col-sm-9">No</p>
-          </div>
-        {% endif %}
-
-        <!-- startDate -->
-        {% if post.startDate%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Start Date </h5>
-            </div>
-            <p class="col-sm-9" id="startDate">
-              {{post.startDate}}
-            </p>
-          </div>
-        {% endif %}
-
-        <!-- endDate -->
-        {% if post.endDate%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>End Date </h5>
-            </div>
-            <p class="col-sm-9" id="endDate">{{ post.endDate}}</p>
           </div>
         {% endif %}
 
@@ -260,18 +277,6 @@
           </div>
           <div class="col-12 col-sm-9" id="longDes">
             {% autoescape false %}{{post.longDescription}}{% endautoescape %}
-          </div>
-        </div>
-        {% endif %}
-
-        <!-- image -->
-        {% if post.image %}
-        <div class="row">
-          <div class="col-12 col-sm-2">
-            <h5>Event Image </h5>
-          </div>
-          <div class="col-12 col-sm-9" id="imagefile">
-              <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" class="rounded float-left" alt="event image" style="max-width: 600px; max-height: 337px;">
           </div>
         </div>
         {% endif %}
