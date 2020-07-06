@@ -6,6 +6,7 @@ import traceback
 import googlemaps
 import os
 import re
+import tempfile
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -17,13 +18,11 @@ import boto3
 import os
 import glob
 from ..config import Config
+from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
+    text_index_search
 
-
-
-from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list
 
 def get_all_user_events(select_status):
-
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}})
@@ -41,22 +40,21 @@ def get_all_user_events(select_status):
     # return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": {"$exists": False},
     #                                                                 "eventStatus": {"$in": select_status}})
 
-def get_all_user_events_count(select_status):
 
+def get_all_user_events_count(select_status):
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}}))
 
 
 def get_all_user_events_pagination(select_status, skip, limit):
-
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}},
                              skip=skip,
                              limit=limit)
     begin = skip
-    end = min(len(eventIds), skip+limit)
+    end = min(len(eventIds), skip + limit)
     events_by_eventId = {}
     for eventId in eventIds[begin:end]:
         events = list(find_all(current_app.config['EVENT_COLLECTION'],
@@ -70,10 +68,10 @@ def get_all_user_events_pagination(select_status, skip, limit):
 
 # TODO get searched posts
 def get_searched_user_events(searchDic, select_status):
-
     searchDic['sourceId'] = {"$exists": False}
     searchDic['eventStatus'] = {"$in": select_status}
     return list(find_all(current_app.config['EVENT_COLLECTION'], filter=searchDic))
+
 
 def find_user_event(objectId):
     try:
@@ -101,12 +99,14 @@ def update_user_event(objectId, update, delete_field=None):
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
         print("Update {} fails in update_user_event".format(objectId))
 
+
 def find_user_all_object_events(eventId):
     print(eventId)
-    result_events =  find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
+    result_events = find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
     if result_events is None:
         return []
     return result_events
+
 
 def delete_user_event_in_building_block(objectId_list):
     headers = {
@@ -133,6 +133,7 @@ def delete_user_event_in_building_block(objectId_list):
     print("failed deleted in building block: " + str(fail_count))
     print("successfully deleted in building block: " + str(success_count))
     return delete_success_list
+
 
 def delete_user_event(eventId):
     # Fetching event status
@@ -176,13 +177,15 @@ def get_user_event_status(objectId):
     event_status = event['eventStatus']
     return event_status
 
+
 def approve_user_event(objectId):
     print("{} is going to be approved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
-        "$set": {"eventStatus":  "approved"}
+        "$set": {"eventStatus": "approved"}
     })
     if not result:
         print("Approve event {} fails in approve_event".format(id))
+
 
 def publish_user_event(eventId):
     headers = {
@@ -192,7 +195,8 @@ def publish_user_event(eventId):
 
     try:
         # Put event in object, but exclude ID and status
-        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, projection={'_id': 0, 'eventStatus': 0})
+        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                         projection={'_id': 0, 'eventStatus': 0})
 
         # Should upload user images
         s3_client = boto3.client('s3')
@@ -221,26 +225,30 @@ def publish_user_event(eventId):
 
             event = {k: v for k, v in event.items() if v}
             # Setting up post request
-            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers, data=json.dumps(event))
+            result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
+                                   data=json.dumps(event))
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
                 print("Event {} submission fails".format(eventId))
-                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
+                                                   condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
-                })
+                    })
                 return False
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                                "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
-                })
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                          update={
+                                              "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
+                                          })
                 return True
 
     except Exception:
         traceback.print_exc()
         return False
+
 
 def put_user_event(eventId):
     headers = {
@@ -285,29 +293,33 @@ def put_user_event(eventId):
             # If PUT request fails, print that out and change status back to pending
             if result.status_code != 200:
                 print("Event {} submission fails".format(eventId))
-                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
+                failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
+                                                   condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
-                })
+                    })
                 return False
 
             # If PUT request successful, change status to approved
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)}, update={
-                    "$set": {"eventStatus": "approved"}
-                })
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                          update={
+                                              "$set": {"eventStatus": "approved"}
+                                          })
                 return True
 
     except Exception:
         traceback.print_exc()
         return False
 
+
 def disapprove_user_event(objectId):
     print("{} is going to be disapproved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
-        "$set": {"eventStatus":  "pending"}
+        "$set": {"eventStatus": "pending"}
     })
     if not result:
         print("Disapprove event {} fails in disapprove_event".format(objectId))
+
 
 def create_new_user_event(new_user_event):
     update_result = None
@@ -320,11 +332,12 @@ def create_new_user_event(new_user_event):
         update_result = update_one(current_app.config['EVENT_COLLECTION'],
                                    condition={"_id": ObjectId(result.inserted_id)},
                                    update={
-                                      "$set": update
-                                  })
+                                       "$set": update
+                                   })
     if update_result is None or update_result.modified_count == 0 and update_result.matched_count == 0 and update_result.upserted_id is None:
         print("create_new_user_event {} failed")
     return result.inserted_id
+
 
 def populate_event_from_form(post_form, email):
     new_event = dict()
@@ -345,10 +358,10 @@ def populate_event_from_form(post_form, email):
     if not all_day_event:
         new_event['allDay'] = False
 
-    new_event['contacts'] = get_contact_list (post_form)
+    new_event['contacts'] = get_contact_list(post_form)
 
     if new_event['isSuperEvent'] == True:
-        new_event['subEvents'] = get_subevent_list (post_form)
+        new_event['subEvents'] = get_subevent_list(post_form)
     else:
         new_event['subEvents'] = None
 
@@ -403,7 +416,6 @@ def get_location_details(location_description):
 
 
 def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
-
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
     print("str_local_date", str_local_date)
@@ -425,11 +437,11 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
 
 
 def get_datetime_in_local(str_utc_date, is_all_day_event):
-
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
 
-    datetime_obj = datetime.strptime(str_utc_date, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(tz.tzlocal())
+    datetime_obj = datetime.strptime(str_utc_date, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
+        tz.tzlocal())
 
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
@@ -437,8 +449,7 @@ def get_datetime_in_local(str_utc_date, is_all_day_event):
         return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def get_contact_list (post_form):
-
+def get_contact_list(post_form):
     contacts_arrays = []
     has_contacts_in_request = False
     for item in post_form:
@@ -462,11 +473,11 @@ def get_contact_list (post_form):
             phone = contacts_arrays[3][i]
             orginazation = contacts_arrays[4][i]
             if firstName != "":
-                 a_contact['firstName'] = firstName
+                a_contact['firstName'] = firstName
             if lastName != "":
-                 a_contact['lastName'] = lastName
+                a_contact['lastName'] = lastName
             if email != "":
-                 a_contact['email'] = email
+                a_contact['email'] = email
             if phone != "":
                 a_contact['phone'] = phone
             if orginazation != "":
@@ -479,8 +490,8 @@ def get_contact_list (post_form):
         # return ""
 
 
-#helper function to get subevent
-def get_subevent_list (post_form):
+# helper function to get subevent
+def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
         if item == 'id' or item == 'track' or item == 'isFeatured':
@@ -511,7 +522,8 @@ def get_subevent_list (post_form):
         if subevent_dict != []:
             return subevent_dict
 
-def get_tags (post_form):
+
+def get_tags(post_form):
     tag_arrays = []
     for item in post_form:
         if item == 'tags':
@@ -528,6 +540,7 @@ def get_tags (post_form):
                 tag_dict.append(a_tag)
         if tag_dict != []:
             return tag_dict
+
 
 def get_target_audience(post_form):
     target_audience_arrays = []
@@ -555,6 +568,112 @@ def item_not_list(item):
     else:
         return False
 
+
+# Uses the implemented text index search to search the queries and modify the search results to JSON
+def beta_search(search_string):
+    queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
+    list_queries = list(queries_returned)
+    for query in list_queries:
+        query['label'] = query.pop('title')
+        query['value'] = query.pop('platformEventId')
+    return list_queries
+
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+
+# S3 Utilities
+
+# Initialization of global client
+client = boto3.client('s3')
+
+def s3_image_delete(eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
+            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
+        else:
+            print('Event: {} does not exist'.format(eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        return None
+
+
+def s3_image_upload(eventId, imageId):
+    try:
+        client.upload_file(
+            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+            current_app.config['BUCKET'],
+            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
+            ExtraArgs={
+                'ACL': 'bucket-owner-full-control'
+            }
+        )
+        return True
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image: {} for event {} failed".format(imageId, eventId))
+        return False
+
+
+def s3_image_download(eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            _, tmpfolder = os.path.split(tempfile.mkdtemp())
+            tmpfolder = current_app.config['IMAGE_FILE_MOUNTPOINT'] + tmpfolder
+            os.mkdir(tmpfolder)
+            tmpfile = os.path.join(tmpfolder, eventId)
+            with open(tmpfile, 'wb') as f:
+                client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
+                print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
+                return True
+
+        else:
+            print('Event: {} does not exist'.format(eventId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} download failed".format(imageId, eventId))
+        return False
+
+
+def s3_delete_reupload(eventId, imageId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            s3_image_delete(client, eventId, imageId)
+            s3_image_upload(client, eventId, imageId)
+            return True
+        else:
+            print('Event: {} does not exist'.format(eventId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        print("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
+        return False
+
+
+def imagedId_from_eventId(eventId):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        if record:
+            return record['eventId']
+        else:
+            print('Event: {} does not have associated image'.format(eventId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        print("imageId retrieval for event: {} failed".format(eventId))
+        return False

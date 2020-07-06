@@ -1,6 +1,7 @@
 import shutil
 import traceback
 import requests
+import json
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
@@ -64,10 +65,14 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    if 'allDay' not in post:
+        post['allDay'] = None
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
-    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+    record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+    if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0 \
+            or (record and record.get("status") == "new" or record.get("status") == "replaced"):
         post['image'] = True
     # transfer targetAudience into targetAudienceMap format
     # if ('targetAudience' in post):
@@ -109,26 +114,69 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
-
+        record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
             if request.files['file'].filename != '':
                 for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
                     remove(existed_file)
                 file = request.files['file']
                 filename = secure_filename(file.filename)
-                if file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                if record and record.get('status') == 'new' or record.get('status') == 'replaced':
+                    success = s3_delete_reupload(id, record.get("_id"))
+                    if success:
+                        print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                     condition={'eventId': id},
+                                                     update={"$set": {'status': 'replaced',
+                                                                      'eventId': id}}, upsert=True)
+                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                            print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
+                    else:
+                        print("reuploading image for event:{} failed in event edit page".format(id))
+                elif get_user_event_status(id) == "approved":
+                    success = s3_image_upload(id, record.get("_id"))
+                    if success:
+                        print("{}, s3: s3_image_upload())()".format(record.get('status')))
+                        if record.get('status') == 'deleted':
+                            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                      condition={'eventId': id},
+                                                      update={"$set": {'status': 'new',
+                                                                       'eventId': id}}, upsert=True)
+                            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                                print("Failed to mark image record as new of event: {} in event edit page".format(
+                                    id))
+                        else:
+                            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                                'eventId': id,
+                                'status': 'new',
+                            })
+                            if not insertResult.inserted_id:
+                                print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                    else:
+                        print("initial image upload for event:{} failed in event edit page".format(id))
+                elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
                     file.save(
                         path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                 else:
                     abort(400)  # TODO: Error page
-            elif request.form['delete-image'] == '1' and len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+        if request.form['delete-image'] == '1':
+            if record:
+                success = s3_image_delete(id, record.get("_id"))
+                if success:
+                    print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                          condition={'eventId': id},
+                                          update={"$set": {'status': 'deleted',
+                                                           'eventId': id}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
+                else:
+                    print("deleting image for event:{} on s3 failed in event edit page".format(id))
+            else:
                 try:
                     remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
                 except OSError:
-                    print("delete event:{} image failed".format(id))
-                record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
-                if record:
-                    delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
+                    print("delete event:{} image failed in ".format(id))
         all_day_event = False
         if 'allDay' in request.form and request.form.get('allDay') == 'on':
             post_by_id['allDay'] = True
@@ -235,8 +283,16 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
+        if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
+            image = True
         success = publish_user_event(id)
-        if success:
+        if success and image:
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": {'status': 'new',
+                                                       'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Failed to mark image record as new of event: {} upon event publishing".format(id))
             approve_user_event(id)
     except Exception:
         traceback.print_exc()
@@ -287,7 +343,9 @@ def add_new_event():
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
-        return render_template("events/add-new-event.html", eventTypeMap=eventTypeMap,
+        return render_template("events/add-new-event.html", 
+                                isUser=True,
+                                eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
                                 targetAudienceMap=targetAudienceMap,
@@ -323,9 +381,37 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
-        delete_events_in_list(Config.IMAGE_COLLECTION, [record.get("_id")])
+        success = s3_image_delete(id, record.get("_id"))
+        if success:
+            print("{}, s3: s3_image_delete()".format(record.get('status')))
+            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                      condition={'eventId': id},
+                                      update={"$set": {'status': 'deleted',
+                                                       'eventId': id}}, upsert=True)
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("Failed to mark image record as deleted of event: {} in the deletion of event".format(id))
+        else:
+            print("deleting image for event:{} failed in event deletion".format(id))
     return "", 200
 
+@userbp.route('/search', methods=['GET', 'POST'])
+@role_required('user')
+def search():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
+
+
+@userbp.route('/searchsub', methods=['GET'])
+@role_required('user')
+def searchsub():
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       return jsonify(beta_search(search_term))
+    else:
+       return jsonify([]), 200
 
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
