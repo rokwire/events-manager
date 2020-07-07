@@ -224,7 +224,11 @@ def user_an_event_edit(id):
             image = True
         except IndexError:
             image_name = ""
-            image = False
+            record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+            if record and record.get('status') == "replaced" or record.get('status') == "new":
+                image = True
+            else:
+                image = False
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
