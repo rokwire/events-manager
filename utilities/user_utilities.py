@@ -7,6 +7,7 @@ import googlemaps
 import os
 import re
 import tempfile
+import shutil
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -631,7 +632,7 @@ def s3_image_download(eventId, imageId):
             # _, tmpfolder = os.path.split(tempfile.mkdtemp())
             tmpfolder = 'temp'
             os.mkdir(tmpfolder)
-            tmpfile = os.path.join(tmpfolder, eventId)
+            tmpfile = os.path.join(tmpfolder, eventId + ".jpg")
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
                 print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
@@ -643,9 +644,18 @@ def s3_image_download(eventId, imageId):
 
     except Exception:
         traceback.print_exc()
+        deletefile(tmpfile)
         print("Image: {} for event: {} download failed".format(imageId, eventId))
         return False
 
+def deletefile(tmpfile):
+    try:
+        if os.path.exists(tmpfile):
+            tmpfolder, _ = os.path.split(tmpfile)
+            shutil.rmtree(tmpfolder)
+
+    except Exception as ex:
+        pass
 
 def s3_delete_reupload(eventId, imageId):
     try:
