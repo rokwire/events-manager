@@ -429,7 +429,7 @@ def view_image(id):
                         yield from f
                     os.remove(path_to_tmp_image)
 
-                response = current_app.response_class(get_image(), mimetype='image/png')
+                response = current_app.response_class(get_image(), mimetype='image/jpg')
                 return response
             except Exception:
                 traceback.print_exc()
