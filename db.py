@@ -4,6 +4,7 @@ from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
 from pymongo.mongo_client import MongoClient
 from flask import current_app,g
+from .config import Config
 
 ######################################################################
 ### Basic DB creation and access functions
@@ -35,7 +36,7 @@ def init_db(app):
 
     # Set up Mongo client for text indexing
     global client
-    client = MongoClient('mongodb://localhost:27017')
+    client = MongoClient(Config.MONGO_URL)
     db = client.get_database('rokwire')
     events = db['eventsmanager_events']
     events.create_index([("title", pymongo.TEXT)])
