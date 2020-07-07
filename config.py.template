@@ -450,3 +450,5 @@ class Config(object):
     ALLOWED_IMAGE_EXTENSIONS = os.getenv('ALLOWED_IMAGE_EXTENSIONS', {'png', 'jpg', 'jpeg', 'gif'})
 
     VERSION = 2.0.1
+
+    IMAGE_SIZE_LIMIT = 1
