@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - LICENSE file [#429](https://github.com/rokwire/events-manager/issues/429)
+- Code of conduct file [#446](https://github.com/rokwire/events-manager/issues/446)
 
 ### Feature
 - Image upload for user event [#320](https://github.com/rokwire/events-manager/issues/320)
