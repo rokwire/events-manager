@@ -279,7 +279,7 @@ def user_an_event_edit(id):
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               filename=image_name,
+                               image = image,
                                size_limit=Config.IMAGE_SIZE_LIMIT)
 
 
