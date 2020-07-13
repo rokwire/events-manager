@@ -266,14 +266,20 @@ def user_an_event_edit(id):
                 audience_dic[audience_select] = 1
         try:
             image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+            image = True
         except IndexError:
             image_name = ""
+            record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+            if record and record.get('status') == "replaced" or record.get('status') == "new":
+                image = True
+            else:
+                image = False
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               filename=image_name,
+                               image = image,
                                size_limit=Config.IMAGE_SIZE_LIMIT)
 
 
