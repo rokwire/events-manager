@@ -95,7 +95,7 @@
               <h5>All Day Event</h5>
             </div>
             <div class="col-sm-1">
-              <input class="form-control" type="checkbox" id="allDay" name="allDay"/>
+              <input class="form_control" type="checkbox" id="allDay" name="allDay"/> Yes
             </div>
           </div>
 
@@ -248,8 +248,8 @@
             <div class="col-sm-9">
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
-                  <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose image</label>
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
+                  <label class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
                 </div>
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
@@ -260,7 +260,10 @@
 
           <!-- Image preview -->
           <div class="form-group row" id = "image-display" style="display: none;">
-            <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px; margin: auto;"/>
+          <div class="col-12 col-sm-2"></div>
+          <div class="col-sm-9">
+            <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px;"/>
+          </div>
           </div>
 
           <!-- super event check box -->
@@ -432,19 +435,29 @@
     
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
-      $(".search-id").autocomplete({
+    $(".search-id").autocomplete(
+      {
         minLength: 2,
         source: function(request, response) {
+          console.log("autocomplete")
           $.ajax({
             url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
             type:"GET",
             dataType: "json",
             success: function(data) {
-              response(data);
+              console.log(data)
+              // response(data);
+              response($.map(data, function(v,i){
+                return {
+                  label: v.label + " (Category:" +v.category + ", StartDate: " + v.startDate + ")",
+                  value : v.value
+                }
+              }))
             }
           });
         }
-      });
+      }
+    );
    }
 
     //Clone the hidden element and shows it for tags
@@ -482,19 +495,25 @@
 
     // Handle image upload and preview
     $('input[type="file"]').change(function(input){
-        console.log("detect image change");
-        document.getElementById("image-display").style = "";
-        var fileName = input.target.files[0].name;
-        $('.custom-file-label').html(fileName);
-        console.log(input)
-        // console.log(input.files, input.files[0])
+        //console.log("detect image change");
         if (input.target.files && input.target.files[0]) {
+          var size = (input.target.files[0].size / 1024 / 1024).toFixed(4)
+          if(size > {{ size_limit }}){
+            $('input[type="file"]').popover('show');
+            $('input[type="file"]').val(null)
+            setTimeout(function(){ $('input[type="file"]').popover('hide'); }, 2000);
+          } else {
+            $('input[type="file"]').popover('hide');
+            document.getElementById("image-display").style = "";
+            var fileName = input.target.files[0].name;
+            $('.custom-file-label').html(fileName);
             var reader = new FileReader();
             reader.onload = function (e) {
                 $('#preview-image')
                     .attr('src', e.target.result);
             };
             reader.readAsDataURL(input.target.files[0]);
+          }
         }
     });
 
@@ -508,4 +527,62 @@
     });
 
    </script>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+.ui-autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 5px;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+
+.ui-autocomplete > li > div {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+}
+
+.ui-state-hover,
+.ui-state-active,
+.ui-state-focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.ui-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+} 
+</style>
 {% endblock %}
