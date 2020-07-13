@@ -227,7 +227,11 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
+                {% if post.allDay == True %}
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                {% else %}
                 <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+                {% endif %}
               </div>
             </div>
           {% endif %}
