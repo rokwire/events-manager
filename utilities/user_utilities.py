@@ -441,7 +441,7 @@ def get_datetime_in_local(str_utc_date, is_all_day_event):
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
 
-    datetime_obj = datetime.strptime(str_utc_date, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
         tz.tzlocal())
 
     if is_all_day_event:
