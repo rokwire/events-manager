@@ -451,5 +451,4 @@ class Config(object):
 
     VERSION = '2.0.1'
 
-    IMAGE_SIZE_LIMIT = 1
-
+    IMAGE_SIZE_LIMIT = os.getenv('IMAGE_SIZE_LIMIT', 1)
