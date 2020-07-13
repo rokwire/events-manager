@@ -25,6 +25,58 @@
         line-height: 30px;
         padding-left: 10px;
       }
+      .ui-autocomplete {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 5px;
+        margin: 2px 0 0;
+        list-style: none;
+        font-size: inherit;
+        font-family: inherit;
+        text-align: left;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background-clip: padding-box;
+      }
+
+      .ui-autocomplete > li > div {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
+      }
+
+      .ui-state-hover,
+      .ui-state-active,
+      .ui-state-focus {
+        text-decoration: none;
+        color: #262626;
+        background-color: #f5f5f5;
+        cursor: pointer;
+      }
+
+      .ui-helper-hidden-accessible {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      } 
     </style>
 {% endblock %}
 
@@ -176,9 +228,9 @@
             </div>
             <div class="col-sm-1">
                {% if post.allDay == True %}
-                <input class="form-control" type="checkbox" id="allDay" name="allDay" checked/>
+                <input class="form_control" type="checkbox" id="allDay" name="allDay" checked/> Yes
                {% else %}
-                <input class="form-control" type="checkbox" id="allDay" name="allDay"/>
+                <input class="form_control" type="checkbox" id="allDay" name="allDay"/> Yes
                {% endif %}
             </div>
           </div>
@@ -227,7 +279,11 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
+                {% if post.allDay == True %}
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                {% else %}
                 <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+                {% endif %}
               </div>
             </div>
           {% endif %}
@@ -467,8 +523,8 @@
             <div class="col-sm-9">
               <div class="input-group mb-3">
                 <div class="custom-file">
-                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file">
-                  <label id="custom-file-label" class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"></label>
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
+                  <label id="custom-file-label" class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
                 </div>
                 <div class="input-group-append">
                   {% if image %}
@@ -833,19 +889,29 @@
 
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
-      $(".search-id").autocomplete({
+      $(".search-id").autocomplete(
+      {
         minLength: 2,
         source: function(request, response) {
+          console.log("autocomplete")
           $.ajax({
             url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
             type:"GET",
             dataType: "json",
             success: function(data) {
-              response(data);
+              console.log(data)
+              // response(data);
+              response($.map(data, function(v,i){
+                return {
+                  label: v.label + " (Category:" +v.category + ", StartDate: " + v.startDate + ")",
+                  value : v.value
+                }
+              }))
             }
           });
         }
-      });
+      }
+    );
    }
 
    // Handle all-day event
@@ -876,19 +942,24 @@
 
     // Handle image upload and preview
     $('input[type="file"]').change(function(input){
-        console.log("detect image change");
-        $('.delete-image').prop('disabled', false);
-        var fileName = input.target.files[0].name;
-        $('.custom-file-label').html(fileName);
-        // console.log(input.files, input.files[0])
-        document.getElementById("image-display").style = "";
-        if (input.target.files && input.target.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#preview-image')
-                    .attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.target.files[0]);
+        //console.log("detect image change");
+        var size = (input.target.files[0].size / 1024 / 1024).toFixed(4)
+        if(size > {{size_limit}}){
+          $('input[type="file"]').popover('show');
+          $('input[type="file"]').val(null)
+          setTimeout(function(){ $('input[type="file"]').popover('hide'); }, 2000);
+        } else {
+          $('input[type="file"]').popover('hide');
+          $('.delete-image').prop('disabled', false);
+          document.getElementById("image-display").style = "";
+          var fileName = input.target.files[0].name;
+          $('.custom-file-label').html(fileName);
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              $('#preview-image')
+                  .attr('src', e.target.result);
+          };
+          reader.readAsDataURL(input.target.files[0]);
         }
     });
 
@@ -902,18 +973,10 @@
       $('#preview-image').attr('src', '');
       document.getElementById("image-display").style.display = "none";
       $("#form").off('change input');
+      document.getElementById("delete-image").value = 1
     });
-
-    // signal of delete image need to be updated
-    $('#form').submit(function(){
-      var label = document.getElementById("custom-file-label")
-      if(label.innerText === '' || label.textContent === ''){
-        console.log("image is null")
-        document.getElementById("delete-image").value = 1
-      }
-    })
-
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
+

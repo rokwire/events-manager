@@ -273,7 +273,8 @@ def user_an_event_edit(id):
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               filename=image_name)
+                               filename=image_name,
+                               size_limit=Config.IMAGE_SIZE_LIMIT)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -349,7 +350,8 @@ def add_new_event():
                                 eventTypeValues=eventTypeValues,
                                 subcategoriesMap=subcategoriesMap,
                                 targetAudienceMap=targetAudienceMap,
-                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS))
+                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
+                                size_limit=Config.IMAGE_SIZE_LIMIT)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
@@ -416,9 +418,30 @@ def searchsub():
 @userbp.route('/event/<id>/image', methods=['GET'])
 @role_required("user")
 def view_image(id):
-    try:
-        image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
-        directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
-        return send_from_directory(directory, image_name)
-    except IndexError:
-        abort(404)
+    record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+    if record:
+        success = s3_image_download(id, record.get("_id"))
+        if success:
+            try:
+                print("{}, s3: s3_image_download()".format(record.get('status')))
+                path_to_tmp_image = os.path.join(os.getcwd(), 'temp', id + ".jpg")
+
+                def get_image():
+                    with open(path_to_tmp_image, 'rb') as f:
+                        yield from f
+                    os.remove(path_to_tmp_image)
+
+                response = current_app.response_class(get_image(), mimetype='image/jpg')
+                return response
+            except Exception:
+                traceback.print_exc()
+                print("returning image for event:{} on s3 to user failed".format(id))
+        else:
+            abort(404)
+    else:
+        try:
+            image_name = glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0].rsplit('/', 1)[1]
+            directory = path.join(getcwd(), Config.WEBTOOL_IMAGE_MOUNT_POINT.rsplit('/', 1)[1])
+            return send_from_directory(directory, image_name)
+        except IndexError:
+            abort(404)
