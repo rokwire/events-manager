@@ -441,7 +441,7 @@ def get_datetime_in_local(str_utc_date, is_all_day_event):
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
 
-    datetime_obj = datetime.strptime(str_utc_date, "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
         tz.tzlocal())
 
     if is_all_day_event:
@@ -629,9 +629,9 @@ def s3_image_download(eventId, imageId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
-            # _, tmpfolder = os.path.split(tempfile.mkdtemp())
             tmpfolder = 'temp'
-            os.mkdir(tmpfolder)
+            if not os.path.isdir(tmpfolder):
+                os.mkdir(tmpfolder)
             tmpfile = os.path.join(tmpfolder, eventId + ".jpg")
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
@@ -651,8 +651,9 @@ def s3_image_download(eventId, imageId):
 def deletefile(tmpfile):
     try:
         if os.path.exists(tmpfile):
-            tmpfolder, _ = os.path.split(tmpfile)
-            shutil.rmtree(tmpfolder)
+            os.remove(tmpfile)
+            # tmpfolder, _ = os.path.split(tmpfile)
+            # shutil.rmtree(tmpfolder)
 
     except Exception as ex:
         pass
