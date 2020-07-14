@@ -651,8 +651,9 @@ def s3_image_download(eventId, imageId):
 def deletefile(tmpfile):
     try:
         if os.path.exists(tmpfile):
-            tmpfolder, _ = os.path.split(tmpfile)
-            shutil.rmtree(tmpfolder)
+            os.remove(tmpfile)
+            # tmpfolder, _ = os.path.split(tmpfile)
+            # shutil.rmtree(tmpfolder)
 
     except Exception as ex:
         pass
