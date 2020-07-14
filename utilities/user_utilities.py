@@ -629,9 +629,9 @@ def s3_image_download(eventId, imageId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
-            # _, tmpfolder = os.path.split(tempfile.mkdtemp())
             tmpfolder = 'temp'
-            os.mkdir(tmpfolder)
+            if not os.path.isdir(tmpfolder):
+                os.mkdir(tmpfolder)
             tmpfile = os.path.join(tmpfolder, eventId + ".jpg")
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
