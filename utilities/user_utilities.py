@@ -652,8 +652,6 @@ def deletefile(tmpfile):
     try:
         if os.path.exists(tmpfile):
             os.remove(tmpfile)
-            # tmpfolder, _ = os.path.split(tmpfile)
-            # shutil.rmtree(tmpfolder)
 
     except Exception as ex:
         pass
@@ -662,8 +660,8 @@ def s3_delete_reupload(eventId, imageId):
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
         if record:
-            s3_image_delete(client, eventId, imageId)
-            s3_image_upload(client, eventId, imageId)
+            s3_image_delete(eventId, imageId)
+            s3_image_upload(eventId, imageId)
             return True
         else:
             print('Event: {} does not exist'.format(eventId))
