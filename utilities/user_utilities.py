@@ -606,13 +606,13 @@ def s3_image_delete(eventId, imageId):
         return None
 
 
-# def convert_bytes(num):
-#     for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
-#         if num < 1024.0:
-#             #return f'{num:.1f} {x}'
-#             #Alternative return statement works with Python 3.5 and above
-#             return "%3.1f %s" % (num, x)
-#         num /= 1024.0
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            #return f'{num:.1f} {x}'
+            #Alternative return statement works with Python 3.5 and above
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
 
 
 def size_check(eventID):
