@@ -214,12 +214,7 @@ def publish_user_event(eventId):
                          projection={'_id': 0, 'eventStatus': 0})
 
         # Should upload user images
-        # s3_client = boto3.client('s3')
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=Config.ACCESS_KEY,
-            aws_secret_access_key=Config.SECRET_KEY,
-        )
+        s3_client = boto3.client('s3')
         imageId = s3_publish_image(eventId, s3_client)
         if imageId:
             print("User image upload successful for event {}".format(eventId))
@@ -607,11 +602,7 @@ def allowed_file(filename):
 # S3 Utilities
 
 # Initialization of global client
-client = boto3.client(
-    's3',
-    aws_access_key_id=Config.ACCESS_KEY,
-    aws_secret_access_key=Config.SECRET_KEY,
-)
+client = boto3.client('s3')
 
 def s3_image_delete(eventId, imageId):
     try:
