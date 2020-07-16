@@ -136,6 +136,8 @@ def user_an_event_edit(id):
                 file = request.files['file']
                 filename = secure_filename(file.filename)
                 if image_record and image_record.get('status') == 'new' or image_record.get('status') == 'replaced':
+                    file.save(
+                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                     success = s3_delete_reupload(id, image_record.get("_id"))
                     if success:
                         print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
