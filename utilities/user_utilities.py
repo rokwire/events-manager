@@ -214,7 +214,12 @@ def publish_user_event(eventId):
                          projection={'_id': 0, 'eventStatus': 0})
 
         # Should upload user images
-        s3_client = boto3.client('s3')
+        # s3_client = boto3.client('s3')
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=Config.ACCESS_KEY,
+            aws_secret_access_key=Config.SECRET_KEY,
+        )
         imageId = s3_publish_image(eventId, s3_client)
         if imageId:
             print("User image upload successful for event {}".format(eventId))
@@ -602,7 +607,11 @@ def allowed_file(filename):
 # S3 Utilities
 
 # Initialization of global client
-client = boto3.client('s3')
+client = boto3.client(
+    's3',
+    aws_access_key_id=Config.ACCESS_KEY,
+    aws_secret_access_key=Config.SECRET_KEY,
+)
 
 def s3_image_delete(eventId, imageId):
     try:
@@ -622,6 +631,11 @@ def s3_image_delete(eventId, imageId):
 
 def s3_image_upload(eventId, imageId):
     try:
+        image_png_location = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
+        # convert from png to jpg and save it
+        with Image.open(image_png_location) as im:
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+                                    quality=95)
         client.upload_file(
             '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
             current_app.config['BUCKET'],
@@ -630,13 +644,20 @@ def s3_image_upload(eventId, imageId):
                 'ACL': 'bucket-owner-full-control'
             }
         )
-        return True
+        success = True
 
     except Exception:
         traceback.print_exc()
         print("Upload image: {} for event {} failed".format(imageId, eventId))
-        return False
+        success = False
+    finally:
+        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
+            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
 
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
+
+        return success
 
 def s3_image_download(eventId, imageId):
     try:

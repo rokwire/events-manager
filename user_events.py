@@ -164,6 +164,8 @@ def user_an_event_edit(id):
                         image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
                         if not insertResult.inserted_id:
                             print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                    file.save(
+                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                     success = s3_image_upload(id, image_record.get("_id"))
                     if success:
                         print("{}, s3: s3_image_upload()".format(image_record.get('status')))
@@ -305,6 +307,7 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
+        image = False
         if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
             image = True
         success = publish_user_event(id)
