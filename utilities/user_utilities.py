@@ -611,17 +611,24 @@ def s3_image_delete(eventId, imageId):
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
             print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
+            return True
         else:
             print('Event: {} does not exist'.format(eventId))
+            return False
 
     except Exception:
         traceback.print_exc()
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
-        return None
+        return False
 
 
 def s3_image_upload(eventId, imageId):
     try:
+        image_png_location = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
+        # convert from png to jpg and save it
+        with Image.open(image_png_location) as im:
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+                                    quality=95)
         client.upload_file(
             '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
             current_app.config['BUCKET'],
@@ -630,13 +637,20 @@ def s3_image_upload(eventId, imageId):
                 'ACL': 'bucket-owner-full-control'
             }
         )
-        return True
+        success = True
 
     except Exception:
         traceback.print_exc()
         print("Upload image: {} for event {} failed".format(imageId, eventId))
-        return False
+        success = False
+    finally:
+        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
+            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
 
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
+
+        return success
 
 def s3_image_download(eventId, imageId):
     try:
