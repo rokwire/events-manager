@@ -128,17 +128,17 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
-        record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+        image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
             if request.files['file'].filename != '':
                 for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
                     remove(existed_file)
                 file = request.files['file']
                 filename = secure_filename(file.filename)
-                if record and record.get('status') == 'new' or record.get('status') == 'replaced':
-                    success = s3_delete_reupload(id, record.get("_id"))
+                if image_record and image_record.get('status') == 'new' or image_record.get('status') == 'replaced':
+                    success = s3_delete_reupload(id, image_record.get("_id"))
                     if success:
-                        print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                        print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                         updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                                      condition={'eventId': id},
                                                      update={"$set": {'status': 'replaced',
@@ -148,24 +148,25 @@ def user_an_event_edit(id):
                     else:
                         print("reuploading image for event:{} failed in event edit page".format(id))
                 elif get_user_event_status(id) == "approved":
-                    success = s3_image_upload(id, record.get("_id"))
+                    if image_record and image_record.get('status') == 'deleted':
+                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                  condition={'eventId': id},
+                                                  update={"$set": {'status': 'new',
+                                                                   'eventId': id}}, upsert=True)
+                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                            print("Failed to mark image record as new of event: {} in event edit page".format(
+                                id))
+                    else:
+                        insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                            'eventId': id,
+                            'status': 'new',
+                        })
+                        image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+                        if not insertResult.inserted_id:
+                            print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                    success = s3_image_upload(id, image_record.get("_id"))
                     if success:
-                        print("{}, s3: s3_image_upload())()".format(record.get('status')))
-                        if record.get('status') == 'deleted':
-                            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                                      condition={'eventId': id},
-                                                      update={"$set": {'status': 'new',
-                                                                       'eventId': id}}, upsert=True)
-                            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                                print("Failed to mark image record as new of event: {} in event edit page".format(
-                                    id))
-                        else:
-                            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                                'eventId': id,
-                                'status': 'new',
-                            })
-                            if not insertResult.inserted_id:
-                                print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                        print("{}, s3: s3_image_upload()".format(image_record.get('status')))
                     else:
                         print("initial image upload for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
@@ -174,10 +175,10 @@ def user_an_event_edit(id):
                 else:
                     abort(400)  # TODO: Error page
         if request.form['delete-image'] == '1':
-            if record:
-                success = s3_image_delete(id, record.get("_id"))
+            if image_record:
+                success = s3_image_delete(id, image_record.get("_id"))
                 if success:
-                    print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                    print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                     updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                           condition={'eventId': id},
                                           update={"$set": {'status': 'deleted',
@@ -283,8 +284,8 @@ def user_an_event_edit(id):
             image = True
         except IndexError:
             image_name = ""
-            record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
-            if record and record.get('status') == "replaced" or record.get('status') == "new":
+            image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+            if image_record and image_record.get('status') == "replaced" or image_record.get('status') == "new":
                 image = True
             else:
                 image = False
