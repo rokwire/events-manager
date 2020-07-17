@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix subevent name updates [#505](https://github.com/rokwire/events-manager/issues/505)
 
+### Changed
+- Reduces container image size to 498 MB from 1.27 GB using a multistage
+  Dockerfile [#507](https://github.com/rokwire/events-manager/pull/507)
+
+### Security
+- The container runs gunicorn as user nobody instead of as root
+  [#507](https://github.com/rokwire/events-manager/pull/507)
+- Eliminates all unnecessary development tools used to build container
+  [#507](https://github.com/rokwire/events-manager/pull/507)
+
 ## [2.1.1] - 2020-08-05
 ### Fixed
 - Fix user event datetime conversion [#492](https://github.com/rokwire/events-manager/issues/492)
