@@ -471,3 +471,10 @@ def view_image(id):
             return send_from_directory(directory, image_name)
         except IndexError:
             abort(404)
+
+@userbp.route('/event/publish/<id>',  methods=['GET'])
+@role_required("user")
+def sub_event(publish_id):
+    # get event id by publish_id
+    id = ...
+    return redirect(url_for('user_events.user_an_event', id = id))
