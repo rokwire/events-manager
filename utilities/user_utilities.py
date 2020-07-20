@@ -599,6 +599,20 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
 
 
+def clickable_utility(platformEventId):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": platformEventId})
+        if record:
+            return record['eventId']
+        else:
+            print("Record with platformEventId:{} does not exist".format(platformEventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Record with platformEventId:{} does not exist".format(platformEventId))
+        return False
+
+
 # S3 Utilities
 
 # Initialization of global client

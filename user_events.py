@@ -474,7 +474,12 @@ def view_image(id):
 
 @userbp.route('/event/publish/<id>',  methods=['GET'])
 @role_required("user")
-def sub_event(publish_id):
-    # get event id by publish_id
-    id = ...
-    return redirect(url_for('user_events.user_an_event', id = id))
+def sub_event(platformEventId):
+    try:
+        eventId = clickable_utility(platformEventId)
+        return redirect(url_for('user_events.user_an_event', id=eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Redirect for platformEventId {} failed".format(platformEventId))
+        return False
