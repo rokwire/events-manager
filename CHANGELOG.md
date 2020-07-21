@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Feature
 - Image upload for user event [#320](https://github.com/rokwire/events-manager/issues/320)
 - Image preview(with a fixed resolution) when user uploads the image and edits the image [#380](https://github.com/rokwire/events-manager/pull/380) [#401](https://github.com/rokwire/events-manager/issues/401)
-- Sub-events in a super-event preview page now clickable, redirecting to the sub-event preview page [#454](https://github.com/rokwire/events-manager/issues/454)
+- Sub-events in a super-event preview page are now clickable, redirecting to the sub-event preview page [#454](https://github.com/rokwire/events-manager/issues/454)
 
 ### Fixed
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
