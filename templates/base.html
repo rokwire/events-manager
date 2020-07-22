@@ -44,14 +44,14 @@
         {% if g.user %}
           <!-- {% from 'events/searchbox.html' import searchbox %}
           {{ searchbox(g.eventTypeValues) }} -->
-          {% if not no_search %}
+          <!-- {% if not no_search %}
             <div class="col text-nowrap">
               <div class="ui-widget">
                 <label for="searchbar">Search: </label>
                 <input id="searchbar">
               </div>
             </div>
-          {% endif %}
+          {% endif %} -->
           <div class="col"><span class="text-light text-nowrap">Hello, {{ g.user["username"] }}</span></div>
           {% if g.user["access"] == "both" %}
             <div class="col"><a role="button" class="btn btn-light text-nowrap" href="{{ url_for('auth.select_events') }}">Switch Space</a></div>
