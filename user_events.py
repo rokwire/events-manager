@@ -475,7 +475,6 @@ def view_image(id):
 @userbp.route('/event/publish/<platformEventId>',  methods=['GET'])
 @role_required("user")
 def sub_event(platformEventId):
-    print(platformEventId)
     try:
         eventId = clickable_utility(platformEventId)
         return redirect(url_for('user_events.user_an_event', id=eventId))
