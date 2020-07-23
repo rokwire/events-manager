@@ -483,4 +483,5 @@ def sub_event(platformEventId):
     except Exception:
         traceback.print_exc()
         print("Redirect for platformEventId {} failed".format(platformEventId))
-        return False
+        abort(500)
+
