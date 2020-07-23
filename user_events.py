@@ -401,6 +401,25 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
+    if get_user_event_status(id) == "approved":
+        super_events = find_all(current_app.config['EVENT_COLLECTION'],
+                                filter={"subEvents": {'$type': 'array'}},
+                                projection={"_id": 1, "subEvents": 1})
+        platform_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                condition={"_id": ObjectId(id)})['platformEventId']
+        find = False
+        for super_event in super_events:
+            if find:
+                break
+            for sub_event in super_event['subEvents']:
+                if sub_event['id'] == platform_id:
+                    new_sub_events = super_event['subEvents']
+                    new_sub_events.remove(sub_event)
+                    update_one(current_app.config['EVENT_COLLECTION'],
+                               condition={"_id": ObjectId(super_event['_id'])},
+                               update={"$set": {"subEvents": new_sub_events}})
+                    find = True
+                    break
     delete_user_event(id)
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         try:
