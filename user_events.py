@@ -418,6 +418,11 @@ def userevent_delete(id):
                     update_one(current_app.config['EVENT_COLLECTION'],
                                condition={"_id": ObjectId(super_event['_id'])},
                                update={"$set": {"subEvents": new_sub_events}})
+
+                    if get_user_event_status(super_event['_id']) == "approved":
+                        success = put_user_event(super_event['_id'])
+                        if not success:
+                            print("updating super event in building block failed")
                     find = True
                     break
     delete_user_event(id)
