@@ -238,7 +238,19 @@ def publish_user_event(eventId):
             if event.get('eventId'):
                 del event['eventId']
 
-            event = {k: v for k, v in event.items() if v}
+            # event = {k: v for k, v in event.items() if v}
+            if 'subcategory' in event.keys() and event['subcategory'] is None:
+                event['subcategory'] = ''
+            if 'targetAudience' in event.keys() and event['targetAudience'] is None:
+                event['targetAudience'] = []
+            if 'contacts' in event.keys() and event['contacts'] is None:
+                event['contacts'] = []
+            if 'tags' in event.keys() and event['tags'] is None:
+                event['tags'] = []
+            if 'subEvents' in event.keys() and event['subEvents'] is None:
+                event['subEvents'] = []
+            if 'location' in event.keys() and event['location'] is None:
+                event['location'] = dict()
             # Setting up post request
             result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                    data=json.dumps(event))
@@ -294,8 +306,19 @@ def put_user_event(eventId):
                 del event['eventId']
 
             # Getting rid of all the empty fields for PUT request
-            event = {k: v for k, v in event.items() if v}
-
+            # event = {k: v for k, v in event.items() if v}
+            if 'subcategory' in event.keys() and event['subcategory'] is None:
+                event['subcategory'] = ''
+            if 'targetAudience' in event.keys() and event['targetAudience'] is None:
+                event['targetAudience'] = []
+            if 'contacts' in event.keys() and event['contacts'] is None:
+                event['contacts'] = []
+            if 'tags' in event.keys() and event['tags'] is None:
+                event['tags'] = []
+            if 'subEvents' in event.keys() and event['subEvents'] is None:
+                event['subEvents'] = []
+            if 'location' in event.keys() and event['location'] is None:
+                event['location'] = dict()
             # Generation of URL via platformEventId
             url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
             # Getting rid of platformEventId from PUT request
