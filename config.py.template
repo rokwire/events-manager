@@ -467,4 +467,4 @@ class Config(object):
 
     IMAGE_SIZE_LIMIT = 1
 
-    EXCLUDED_LOCATION = {"Zoom", "Online"}
+    EXCLUDED_LOCATION = ["Zoom", "Online"]
