@@ -408,7 +408,7 @@ def populate_event_from_form(post_form, email):
     new_event['targetAudience'] = get_target_audience(post_form)
 
     start_date = post_form.get('startDate')
-    print("start_date", start_date)
+
     new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
@@ -532,7 +532,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'id' or item == 'track' or item == 'isFeatured':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -542,9 +542,12 @@ def get_subevent_list(post_form):
         subevent_dict = []
         for i in range(num_of_sub):
             a_subevent = {}
-            sub_id = subevent_arrays[0][i]
-            sub_track = subevent_arrays[1][i]
-            sub_feature = subevent_arrays[2][i]
+            sub_name = subevent_arrays[0][i]
+            sub_id = subevent_arrays[1][i]
+            sub_track = subevent_arrays[2][i]
+            sub_feature = subevent_arrays[3][i]
+            if sub_name != "":
+                a_subevent['name'] = sub_name
             if sub_id != "":
                 a_subevent['id'] = sub_id
             if sub_track != "":
@@ -554,11 +557,14 @@ def get_subevent_list(post_form):
                     a_subevent['isFeatured'] = True
                 else:
                     a_subevent['isFeatured'] = False
-
             if a_subevent != {}:
                 subevent_dict.append(a_subevent)
         if subevent_dict != []:
             return subevent_dict
+        else:
+            return None
+    else:
+        return None
 
 
 def get_tags(post_form):
@@ -620,6 +626,20 @@ def beta_search(search_string):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+
+def clickable_utility(platformEventId):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": platformEventId})
+        if record:
+            return record['eventId']
+        else:
+            print("Record with platformEventId:{} does not exist".format(platformEventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Record with platformEventId:{} does not exist".format(platformEventId))
+        return False
 
 
 # S3 Utilities

@@ -366,7 +366,7 @@
               <table class="table table-hover col-sm-8">
                 <thead>
                   <tr>
-                    <th scope="col-sm-2">Sub-event ID</th>
+                    <th scope="col-sm-2">Sub-Event Title</th>
                     <th scope="col-sm-2">Track</th>
                     <th scope="col-sm-2">Featured Event</th>
                   </tr>
@@ -374,7 +374,9 @@
                 <tbody>
                   {% for subevent in post.subEvents %}
                   <tr>
-                    <td>{{subevent.id}}</td>
+                    <td>
+                      <a href ="{{ url_for('user_events.sub_event', platformEventId=subevent.id) }}">{{subevent.name}}</a>
+                    </td>
                     <td>{{subevent.track}}</td>
                     {% if subevent.isFeatured%}
                       <td>Yes</td>
