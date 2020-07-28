@@ -495,3 +495,16 @@ def view_image(id):
             return send_from_directory(directory, image_name)
         except IndexError:
             abort(404)
+
+@userbp.route('/event/publish/<platformEventId>',  methods=['GET'])
+@role_required("user")
+def sub_event(platformEventId):
+    try:
+        eventId = clickable_utility(platformEventId)
+        return redirect(url_for('user_events.user_an_event', id=eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Redirect for platformEventId {} failed".format(platformEventId))
+        abort(500)
+
