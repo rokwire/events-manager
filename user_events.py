@@ -145,7 +145,7 @@ def user_an_event_edit(id):
                                                      condition={'eventId': id},
                                                      update={"$set": {'status': 'replaced',
                                                                       'eventId': id}}, upsert=True)
-                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
+                        post_by_id['imageUrl'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
                         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                             print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                     else:
@@ -172,7 +172,7 @@ def user_an_event_edit(id):
                     success = s3_image_upload(id, image_record.get("_id"))
                     if success:
                         print("{}, s3: s3_image_upload()".format(image_record.get('status')))
-                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
+                        post_by_id['imageUrl'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
                     else:
                         print("initial image upload for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
@@ -189,7 +189,7 @@ def user_an_event_edit(id):
                                           condition={'eventId': id},
                                           update={"$set": {'status': 'deleted',
                                                            'eventId': id}}, upsert=True)
-                    post_by_id['imageURL'] = ''
+                    post_by_id['imageUrl'] = ''
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
                 else:
