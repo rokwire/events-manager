@@ -323,6 +323,9 @@ def user_an_event_approve(id):
                                                        'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                 print("Failed to mark image record as new of event: {} upon event publishing".format(id))
+            image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+            update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
+                       update={"$set": {"imageURL": current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))}})
             approve_user_event(id)
     except Exception:
         traceback.print_exc()
