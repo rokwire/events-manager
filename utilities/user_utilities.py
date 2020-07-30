@@ -218,6 +218,7 @@ def publish_user_event(eventId):
         imageId = s3_publish_image(eventId, s3_client)
         if imageId:
             print("User image upload successful for event {}".format(eventId))
+            event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(eventId, imageId)
 
         if event:
             # Formatting Date and time for json dump
