@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sub-events in a super-event preview page are now clickable, redirecting to the sub-event preview page [#454](https://github.com/rokwire/events-manager/issues/454)
 
 ### Fixed
+- Add the missing `imageUrl` in events [#482](https://github.com/rokwire/events-manager/issues/482)
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
 - Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
 - Year can have 6 digits [#351](https://github.com/rokwire/events-manager/issues/351)
