@@ -1,3 +1,19 @@
+<!------------------------------------------------------------------------
+  Copyright 2020 Board of Trustees of the University of Illinois.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ------------------------------------------------------------------------>
+
 {% extends "base.html" %}
 
 {% block title %}
@@ -25,6 +41,58 @@
         line-height: 30px;
         padding-left: 10px;
       }
+      .ui-autocomplete {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 5px;
+        margin: 2px 0 0;
+        list-style: none;
+        font-size: inherit;
+        font-family: inherit;
+        text-align: left;
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        background-clip: padding-box;
+      }
+
+      .ui-autocomplete > li > div {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: normal;
+        line-height: 1.42857143;
+        color: #333333;
+        white-space: nowrap;
+      }
+
+      .ui-state-hover,
+      .ui-state-active,
+      .ui-state-focus {
+        text-decoration: none;
+        color: #262626;
+        background-color: #f5f5f5;
+        cursor: pointer;
+      }
+
+      .ui-helper-hidden-accessible {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      } 
     </style>
 {% endblock %}
 
@@ -62,7 +130,7 @@
  <!-- filter and select operations -->
   <!-- back to all events button -->
   {% if isUser %}
-  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST">
+  <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST" enctype="multipart/form-data">
   <div class="media">
     <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
@@ -176,9 +244,9 @@
             </div>
             <div class="col-sm-1">
                {% if post.allDay == True %}
-                <input class="form-control" type="checkbox" id="allDay" name="allDay" checked/>
+                <input class="form_control" type="checkbox" id="allDay" name="allDay" checked/> Yes
                {% else %}
-                <input class="form-control" type="checkbox" id="allDay" name="allDay"/>
+                <input class="form_control" type="checkbox" id="allDay" name="allDay"/> Yes
                {% endif %}
             </div>
           </div>
@@ -190,9 +258,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" required/>
+                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
                   {% endif %}
               </div>
             </div>
@@ -202,7 +270,7 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" required/>
+                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
               </div>
             </div>
           {% endif %}
@@ -215,9 +283,9 @@
               </div>
               <div class="col-sm-4">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}"/>
+                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
                   {% endif %}
               </div>
             </div>
@@ -227,7 +295,11 @@
                 <h5> End Date</h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate"/>
+                {% if post.allDay == True %}
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                {% else %}
+                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+                {% endif %}
               </div>
             </div>
           {% endif %}
@@ -324,7 +396,7 @@
                 <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization"/>
+                <input class="form-control" id="organization" name="organization" type="text" placeholder="Organization"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -372,9 +444,9 @@
                   </div>
                   <div class="col-sm-3">
                     {% if contact.organization %}
-                      <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization" value="{{contact.organization}}"/>
+                      <input class="form-control" id="organization" name="organization" type="text" placeholder="Organization" value="{{contact.organization}}"/>
                     {% else %}
-                      <input class="form-control" id="organization" name="organization" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Organization" />
+                      <input class="form-control" id="organization" name="organization" type="text" placeholder="Organization" />
                     {% endif %}
                   </div>
                   <!-- End of fields-->
@@ -459,6 +531,47 @@
             </div>
           </div>
 
+          <!-- event image -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Event Image </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="input-group mb-3">
+                <div class="custom-file">
+                  <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
+                  <label id="custom-file-label" class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
+                </div>
+                <div class="input-group-append">
+                  {% if image %}
+                  <button class="btn btn-outline-danger delete-image rounded-right" type="button" id="inputGroupFileAddon04">Delete</button>
+                  {% else %}
+                  <button class="btn btn-outline-danger delete-image rounded-right" type="button" id="inputGroupFileAddon04" disabled>Delete</button>
+                  {% endif %}
+                  <input type="hidden" id="delete-image" name="delete-image" value = 0>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- image preview -->
+          {% if image %}
+          <div class="form-group row" id = "image-display">
+            <div class="col-12 col-sm-2"></div>
+            <div class="col-sm-9">
+              <img id = "preview-image" src = "{{ url_for('user_events.view_image', id=post['_id']) }}" style = "max-width: 600px; max-height: 337px;"/>
+
+            </div>
+          </div>
+          {% else %}
+          <div class="form-group row" id = "image-display" style = "display: none;">
+            <div class="col-12 col-sm-2"></div>
+            <div class="col-sm-9">
+              <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px;"/>
+            </div>
+          </div>
+          {% endif %}
+
           <!-- location map TODO no api key allow currently -->
           <!-- <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -512,7 +625,8 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control" type="hidden" name="id" placeholder=''>
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -540,10 +654,11 @@
                         <div class="form-group sub-group dynamic-element-sub">
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
-                                        {% if sub.id %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" value="{{sub.id}}" />
+                                        {% if sub.name %}
+                                        <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" value="{{sub.name}}" />
+                                        <input type="hidden" name="id" value="{{sub.id}}"/>
                                         {% else %}
-                                        <input class="form-control" id="sub-id" name="id" type="text" placeholder="Sub-Event ID" />
+                                        <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" />
                                         {% endif %}
                                   </div>
 
@@ -667,19 +782,29 @@
        }
 
      //Set the save button disabled in default
-     $('#form')
-         .each(function(){
-             $(this).data('serialized', $(this).serialize())
-         })
-         .on('change input', function(){
-             $(this)
-                 .find('input:submit, button:submit')
-                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
-             ;
-          })
-         .find('input:submit, button:submit')
-             .prop('disabled', true)
-     ;
+      $("document").ready(function(){
+        $('form').each(function(index){
+          $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
+        })
+        .on('change input', function(){  // event handler of input change
+            $(this).find(':submit, input[type="image"]')
+                .prop('disabled', $(this).serialize() == $(this).data('serialized'));
+
+            /* Check if input with type files has changed */
+            var changedFiles = $( ":file" ).filter(function( index ) {
+                return this.value != this.defaultValue;
+            }).length;
+
+            if ( changedFiles > 0) {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', false);
+            }
+        })
+
+        .find(':submit, input[type="image"]').prop('disabled', true);
+
+      })
+
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
@@ -762,6 +887,7 @@
    $('.add-sub').click(function(){
      $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
      attach_delete_sub();
+     attach_sub_search();
    });
 
    $('.exist-sub').ready(function(){
@@ -776,6 +902,36 @@
        $(this).closest('.sub-group').remove();
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
+   }
+
+   //Attach functionality to sub-event-id search
+   function attach_sub_search() {
+    $(".search-id").autocomplete(
+      {
+        minLength: 2,
+        source: function(request, response) {
+          $.ajax({
+            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+            type:"GET",
+            dataType: "json",
+            success: function(data) {
+              response($.map(data, function(item){
+                return {
+                  label: item.label + " (Category:" +item.category + ", StartDate: " + item.startDate + ")",
+                  value : item.label,
+                  data: item
+                }
+              }))
+            }
+          });
+        },
+        select: function (event, ui){
+          selectedItemData = ui.item.data;
+          id_input = $(event.target).next('input')
+          id_input.val(selectedItemData.value)
+        }
+      }
+    );
    }
 
    // Handle all-day event
@@ -804,8 +960,43 @@
 
     });
 
+    // Handle image upload and preview
+    $('input[type="file"]').change(function(input){
+        //console.log("detect image change");
+        var size = (input.target.files[0].size / 1024 / 1024).toFixed(4)
+        if(size > {{size_limit}}){
+          $('input[type="file"]').popover('show');
+          $('input[type="file"]').val(null)
+          setTimeout(function(){ $('input[type="file"]').popover('hide'); }, 2000);
+        } else {
+          $('input[type="file"]').popover('hide');
+          $('.delete-image').prop('disabled', false);
+          document.getElementById("image-display").style = "";
+          var fileName = input.target.files[0].name;
+          $('.custom-file-label').html(fileName);
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              $('#preview-image')
+                  .attr('src', e.target.result);
+          };
+          reader.readAsDataURL(input.target.files[0]);
+        }
+    });
 
+    // delete button for image upload
+    $('.delete-image').click(function() { 
+      console.log("click the image delete button")
+      $("#form").find(':submit, input[type="image"]').prop('disabled', false);
+      $('.delete-image').prop('disabled', true);
+      $('.custom-file-label').html('');
+      $("#file").val(null);
+      $('#preview-image').attr('src', '');
+      document.getElementById("image-display").style.display = "none";
+      $("#form").off('change input');
+      document.getElementById("delete-image").value = 1
+    });
 
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
+

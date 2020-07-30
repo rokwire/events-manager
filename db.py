@@ -1,8 +1,24 @@
+#  Copyright 2020 Board of Trustees of the University of Illinois.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import pymongo
 import traceback
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo.mongo_client import MongoClient
 from flask import current_app,g
+from .config import Config
 
 ######################################################################
 ### Basic DB creation and access functions
@@ -31,6 +47,13 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
+
+    # Set up Mongo client for text indexing
+    global client
+    client = MongoClient(Config.MONGO_URL)
+    db = client.get_database('rokwire')
+    events = db['eventsmanager_events']
+    events.create_index([("title", pymongo.TEXT)])
 
 
 ######################################################################
@@ -246,7 +269,7 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-#parameter: collection name, *objectId* list to delete
+# Parameters: collection name, *objectId* list to delete
 def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
@@ -267,3 +290,27 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
             return []
         except Exception:
             return []
+
+# Parameters: collection name, string to look for
+def text_index_search(co_or_ta, search_string, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if search_string is None or co_or_ta is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            # Will return all records with matching regex and is case insensitive for title search
+            # There is also a projection limiting the fields returned to only title and platformEventID
+            result = collection.find({"$text": {"$search": search_string}, "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 0})
+            if not result:
+                return []
+            return result
+
+        except Exception:
+            return []
+
+
+
