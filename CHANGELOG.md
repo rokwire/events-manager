@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2020-07-29
+
 ### Added
 - LICENSE file [#429](https://github.com/rokwire/events-manager/issues/429)
 - Code of conduct file [#446](https://github.com/rokwire/events-manager/issues/446)
