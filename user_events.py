@@ -124,6 +124,19 @@ def user_an_event_edit(id):
 
     # POST Method
     if request.method == 'POST':
+        old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
+                                  condition={"_id": ObjectId(id)})['subEvents']
+        new_sub_events = post_by_id['subEvents']
+        if old_sub_events is None:
+            old_sub_events = list()
+        if new_sub_events is None:
+            old_sub_events = list()
+        for old_sub_event in old_sub_events:
+            if old_sub_event not in new_sub_events:
+                update_super_event_id(old_sub_event['id'], '')
+        for new_sub_event in new_sub_events:
+            if new_sub_event not in old_sub_events:
+                update_super_event_id(new_sub_event['id'], id)
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
@@ -363,6 +376,8 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
+        for subEvent in new_event['subEvents']:
+            update_super_event_id(subEvent['id'], new_event_id)
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -404,6 +419,8 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
+    for subEvent in find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['subEvents']:
+        update_super_event_id(subEvent['id'], '')
     if get_user_event_status(id) == "approved":
         super_events = find_all(current_app.config['EVENT_COLLECTION'],
                                 filter={"subEvents": {'$type': 'array'}},
