@@ -238,7 +238,8 @@ def publish_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
-
+            if event.get('superEventID'):
+                del event['superEventID']
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
@@ -305,6 +306,8 @@ def put_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
+            if event.get('superEventID'):
+                del event['superEventID']
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
