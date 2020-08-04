@@ -307,6 +307,7 @@ def put_user_event(eventId):
             if event.get('eventId'):
                 del event['eventId']
             if event.get('superEventID'):
+                superEventID = event['superEventID']
                 del event['superEventID']
 
             # Getting rid of all the empty fields for PUT request
@@ -345,7 +346,8 @@ def put_user_event(eventId):
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                                           update={
-                                              "$set": {"eventStatus": "approved"}
+                                              "$set": {"eventStatus": "approved",
+                                                       "superEventID": superEventID}
                                           })
                 return True
 
