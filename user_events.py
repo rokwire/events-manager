@@ -270,9 +270,9 @@ def user_an_event_edit(id):
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
             all_day_event = True
 
-        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], all_day_event)
+        post_by_id['startDate'] = get_datetime_in_local(request.form.get('location'), post_by_id['startDate'], all_day_event)
         if 'endDate' in post_by_id:
-            post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], all_day_event)
+            post_by_id['endDate'] = get_datetime_in_local(request.form.get('location'), post_by_id['endDate'], all_day_event)
 
         tags_text = ""
         if 'tags' in post_by_id and post_by_id['tags'] != None:
