@@ -82,8 +82,10 @@ def user_an_event(id):
     if 'allDay' not in post:
         post['allDay'] = None
     post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
+    print("LINE 86", post['startDate'])
     if'endDate' in post:
         post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+        print("LINE 88", post['endDate'])
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0 \
             or (record and record.get("status") == "new" or record.get("status") == "replaced"):
@@ -101,6 +103,7 @@ def user_an_event(id):
     #             targetAudience_edit_list += [item.capitalize()]
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
+    print("line106", post)
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                            timestamp=datetime.now().timestamp())
@@ -361,6 +364,7 @@ def select():
 @role_required("user")
 def add_new_event():
     if request.method == 'POST':
+        print(request.form)
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
         if 'file' in request.files and request.files['file'].filename != '':

@@ -121,7 +121,7 @@
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
+              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" placeholder="mm/dd/yyyy, --:-- --" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -353,198 +353,217 @@
 <!-- js script for select list in form -->
 {% block scripts %}
   {{super()}}
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-   <script>
-     //Set the save button disabled in default
-     $('#form')
-         .each(function(){
-             $(this).data('serialized', $(this).serialize())
-         })
-         .on('change input', function(){
-             $(this)
-                 .find('input:submit, button:submit')
-                     .prop('disabled', $(this).serialize() == $(this).data('serialized'))
-             ;
+  <script src="..\..\static\js-webshim\minified\polyfiller.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+  <script>
+    webshims.polyfill('forms forms-ext');	
+    $(function(){
+    // use all implemented API-features on DOM-ready
+      //Set the save button disabled in default
+      $('#form')
+          .each(function(){
+              $(this).data('serialized', $(this).serialize())
           })
-         .find('input:submit, button:submit')
-             .prop('disabled', true)
-     ;
-     //only allow subcategory to be choose when the category is Athletics
-     $('#form select[name="category"]').on("change", function(event) {
-       if(event.target.value != "Athletics"){
-         $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker('refresh');
-       }else{
-         $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker('refresh');
-       }
-     })
+          .on('change input', function(){
+              $(this)
+                  .find('input:submit, button:submit')
+                      .prop('disabled', $(this).serialize() == $(this).data('serialized'))
+              ;
+            })
+          .find('input:submit, button:submit')
+              .prop('disabled', true)
+      ;
+      //only allow subcategory to be choose when the category is Athletics
+      $('#form select[name="category"]').on("change", function(event) {
+        if(event.target.value != "Athletics"){
+          $('#subcategory').prop("disabled", true);
+          $('#subcategory').selectpicker('refresh');
+        }else{
+          $('#subcategory').prop("disabled", false);
+          $('#subcategory').selectpicker('refresh');
+        }
+      })
 
-     //change back to utc time on submit
-     // Commenting out below code. Doing conversion in Python code.
-     {#var myform = document.getElementById('form');#}
-     {#myform.onsubmit = function(){#}
-     {#  var start_local = document.getElementById('startDate').value.replace("T", " ");#}
-     {#  var start_utc = new Date(start_local).toISOString();#}
-     {#  document.getElementById('startDate').value = start_utc.replace("Z", "").replace(".000", "");#}
-     {##}
-     {#  var end_local = document.getElementById('endDate').value.replace("T", " ");#}
-     {#  var end_utc = new Date(end_local).toISOString();#}
-     {#  document.getElementById('endDate').value = end_utc.replace("Z", "").replace(".000", "");#}
-     {#;#}
+      //change back to utc time on submit
+      // Commenting out below code. Doing conversion in Python code.
+      {#var myform = document.getElementById('form');#}
+      {#myform.onsubmit = function(){#}
+      {#  var start_local = document.getElementById('startDate').value.replace("T", " ");#}
+      {#  var start_utc = new Date(start_local).toISOString();#}
+      {#  document.getElementById('startDate').value = start_utc.replace("Z", "").replace(".000", "");#}
+      {##}
+      {#  var end_local = document.getElementById('endDate').value.replace("T", " ");#}
+      {#  var end_utc = new Date(end_local).toISOString();#}
+      {#  document.getElementById('endDate').value = end_utc.replace("Z", "").replace(".000", "");#}
+      {#;#}
 
-    //Clone the hidden element and shows it
-   $('.add-one').click(function(){
-     $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
-     attach_delete();
-   });
+      //Clone the hidden element and shows it
+      $('.add-one').click(function(){
+        $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
+        attach_delete();
+      });
 
-   $('.exist-contact').ready(function(){
-     attach_delete();
-   });
+      $('.exist-contact').ready(function(){
+        attach_delete();
+      });
 
-   //Attach functionality to delete buttons
-   function attach_delete(){
-     $('.delete').off();
-     $('.delete').click(function(){
-       console.log("click");
-       $(this).closest('.contact-group').remove();
-       $('#form').find('input:submit, button:submit').prop("disabled", false);
-     });
-   }
+      //Attach functionality to delete buttons
+      function attach_delete(){
+        $('.delete').off();
+        $('.delete').click(function(){
+          console.log("click");
+          $(this).closest('.contact-group').remove();
+          $('#form').find('input:submit, button:submit').prop("disabled", false);
+        });
+      }
 
-    //Super event checkbox
-   function display_super_event_description(){
-     var check = document.getElementById("super-event");
-     var sub = document.getElementById("super-des");
-     var subCurrent = document.getElementById("sub-current");
-     if (check.checked == true){
-        sub.style.display = "block";
-        subCurrent.style.display = "block";
-     } else {
-        sub.style.display = "none";
-        subCurrent.style.display = "none";
-     }
-   }
+      //Super event checkbox
+      function display_super_event_description(){
+        var check = document.getElementById("super-event");
+        var sub = document.getElementById("super-des");
+        var subCurrent = document.getElementById("sub-current");
+        if (check.checked == true){
+            sub.style.display = "block";
+            subCurrent.style.display = "block";
+        } else {
+            sub.style.display = "none";
+            subCurrent.style.display = "none";
+        }
+      }
 
-   //Clone the hidden element and shows it for sub-event
-   $('.add-sub').click(function(){
-     $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
-     attach_delete_sub();
-     attach_sub_search();
-   });
+      //Clone the hidden element and shows it for sub-event
+      $('.add-sub').click(function(){
+        $('.dynamic-element-sub').first().clone().appendTo('.dynamic-stuff-sub').show();
+        attach_delete_sub();
+        attach_sub_search();
+      });
 
-   $('.exist-sub').ready(function(){
-     attach_delete_sub();
-   });
+      $('.exist-sub').ready(function(){
+        attach_delete_sub();
+      });
 
-   //Attach functionality to delete buttons for sub-event
-   function attach_delete_sub(){
-     $('.delete-sub').off();
-     $('.delete-sub').click(function(){
-       console.log("click");
-       $(this).closest('.sub-group').remove();
-       $('#form').find('input:submit, button:submit').prop("disabled", false);
-     });
-   }
-    
-   //Attach functionality to sub-event-id search
-   function attach_sub_search() {
-    $(".search-id").autocomplete(
-      {
-        minLength: 2,
-        source: function(request, response) {
-          $.ajax({
-            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
-            type:"GET",
-            dataType: "json",
-            success: function(data) {
-              response($.map(data, function(item){
-                return {
-                  label: item.label + " (Category:" +item.category + ", StartDate: " + item.startDate + ")",
-                  value : item.label,
-                  data: item
+      //Attach functionality to delete buttons for sub-event
+      function attach_delete_sub(){
+        $('.delete-sub').off();
+        $('.delete-sub').click(function(){
+          console.log("click");
+          $(this).closest('.sub-group').remove();
+          $('#form').find('input:submit, button:submit').prop("disabled", false);
+        });
+      }
+        
+      //Attach functionality to sub-event-id search
+      function attach_sub_search() {
+        $(".search-id").autocomplete(
+          {
+            minLength: 2,
+            source: function(request, response) {
+              $.ajax({
+                url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+                type:"GET",
+                dataType: "json",
+                success: function(data) {
+                  response($.map(data, function(item){
+                    return {
+                      label: item.label + " (Category:" +item.category + ", StartDate: " + item.startDate + ")",
+                      value : item.label,
+                      data: item
+                    }
+                  }))
                 }
-              }))
+              });
+            },
+            select: function (event, ui){
+              selectedItemData = ui.item.data;
+              id_input = $(event.target).next('input')
+              id_input.val(selectedItemData.value)
             }
-          });
-        },
-        select: function (event, ui){
-          selectedItemData = ui.item.data;
-          id_input = $(event.target).next('input')
-          id_input.val(selectedItemData.value)
-        }
-      }
-    );
-   }
-
-    //Clone the hidden element and shows it for tags
-   $('.add-tag').click(function(){
-     $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
-     attach_delete_tags();
-   });
-
-   $('.exist-tags').ready(function(){
-     attach_delete_tags();
-   });
-
-   //Attach functionality to delete buttons for tags
-   function attach_delete_tags(){
-     $('.delete-tag').off();
-     $('.delete-tag').click(function(){
-       $(this).closest('.tag-group').remove();
-       $('#form').find('input:submit, button:submit').prop("disabled", false);
-     });
-   }
-
-   // Handle all-day event
-    $("#allDay").change(function () {
-
-      if (this.checked) {
-        $("#startDate").attr("type", "date");
-        $("#endDate").attr("type", "date");
-      }
-      else {
-        $("#startDate").attr("type", "datetime-local");
-        $("#endDate").attr("type", "datetime-local");
-      }
-
-    });
-
-    // Handle image upload and preview
-    $('input[type="file"]').change(function(input){
-        //console.log("detect image change");
-        if (input.target.files && input.target.files[0]) {
-          var size = (input.target.files[0].size / 1024 / 1024).toFixed(4)
-          if(size > {{ size_limit }}){
-            $('input[type="file"]').popover('show');
-            $('input[type="file"]').val(null)
-            setTimeout(function(){ $('input[type="file"]').popover('hide'); }, 2000);
-          } else {
-            $('input[type="file"]').popover('hide');
-            document.getElementById("image-display").style = "";
-            var fileName = input.target.files[0].name;
-            $('.custom-file-label').html(fileName);
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#preview-image')
-                    .attr('src', e.target.result);
-            };
-            reader.readAsDataURL(input.target.files[0]);
           }
+        );
+      }
+
+      //Clone the hidden element and shows it for tags
+      $('.add-tag').click(function(){
+        $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
+        attach_delete_tags();
+      });
+
+      $('.exist-tags').ready(function(){
+        attach_delete_tags();
+      });
+
+      //Attach functionality to delete buttons for tags
+      function attach_delete_tags(){
+        $('.delete-tag').off();
+        $('.delete-tag').click(function(){
+          $(this).closest('.tag-group').remove();
+          $('#form').find('input:submit, button:submit').prop("disabled", false);
+        });
+      }
+
+      // Handle all-day event
+      $("#allDay").change(function () {
+
+        if (this.checked) {
+          console.log("checked all day")
+          $("#startDate").attr("type", "date");
+          $("#endDate").attr("type", "date");
         }
-    });
+        else {
+          $("#startDate").attr("type", "datetime-local");
+          $("#endDate").attr("type", "datetime-local");
+        }
 
-    // delete button for image upload
-    $('.delete-image').click(function() { 
-      console.log("click the image delete button")
-      document.getElementById("image-display").style.display = "none";
-      $('.custom-file-label').html('');
-      $("#file").val(null);
-      $('#preview-image').attr('src', '');
-    });
+      });
 
-   </script>
+      // Handle image upload and preview
+      $('input[type="file"]').change(function(input){
+          //console.log("detect image change");
+          if (input.target.files && input.target.files[0]) {
+            var size = (input.target.files[0].size / 1024 / 1024).toFixed(4)
+            if(size > {{ size_limit }}){
+              $('input[type="file"]').popover('show');
+              $('input[type="file"]').val(null)
+              setTimeout(function(){ $('input[type="file"]').popover('hide'); }, 2000);
+            } else {
+              $('input[type="file"]').popover('hide');
+              document.getElementById("image-display").style = "";
+              var fileName = input.target.files[0].name;
+              $('.custom-file-label').html(fileName);
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  $('#preview-image')
+                      .attr('src', e.target.result);
+              };
+              reader.readAsDataURL(input.target.files[0]);
+            }
+          }
+      });
+
+      // delete button for image upload
+      $('.delete-image').click(function() { 
+        console.log("click the image delete button")
+        document.getElementById("image-display").style.display = "none";
+        $('.custom-file-label').html('');
+        $("#file").val(null);
+        $('#preview-image').attr('src', '');
+      });
+
+      // set the earliest startDate to today
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1; 
+      var yyyy = today.getFullYear();
+      if(dd<10){
+        dd='0'+dd
+      } 
+      if(mm<10){
+        mm='0'+mm
+      } 
+      today = yyyy+'-'+mm+'-'+dd+'T00:00';
+      document.getElementById("startDate").setAttribute("min", today);
+    });
+  </script>
 {% endblock %}
 
 {% block styles %}

@@ -415,6 +415,7 @@ def populate_event_from_form(post_form, email):
     end_date = post_form.get('endDate')
     if end_date != '':
         new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+        print("LINE 418 endDate in dict", new_event['endDate'])
 
     location = post_form.get('location')
     if location != '':
@@ -457,14 +458,25 @@ def get_location_details(location_description):
 def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
-    print("str_local_date", str_local_date)
+    if date_field == 'endDate':
+        print("LINE 461 endDate", str_local_date)
+    else:
+        print("LINE 461 startDate", str_local_date)
+
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
+        if date_field == 'endDate':
+            print("LINE 465 endDate",datetime_obj)
+        else:
+            print("LINE 465 startDate",datetime_obj)
+
         # Set time to match the
         if date_field == "startDate":
             datetime_obj = datetime_obj.replace(hour=00, minute=00)
+            print("LINE 471 startDate", datetime_obj)
         elif date_field == "endDate":
-            datetime_obj = datetime_obj.replace(hour=23, minute=59)
+            datetime_obj = datetime_obj.replace(hour=00, minute=00)
+            print("LINE 471 endDate", datetime_obj)
     else:
         try:
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
@@ -472,6 +484,12 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
 
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
+    if date_field == 'endDate':
+        print("LINE 480 endDate", datetime_obj)
+        print("LINE 481 endDate", datetime_obj.strftime("%Y-%m-%dT%H:%M:%S"))
+    else:
+        print("LINE 480 startDate", datetime_obj)
+        print("LINE 481 startDate", datetime_obj.strftime("%Y-%m-%dT%H:%M:%S"))
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
