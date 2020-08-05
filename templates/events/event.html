@@ -166,7 +166,9 @@
                 <div class="col-12 col-sm-3">
                   <h5>End Date </h5>
                 </div>
-                <p class="col-sm-8" id="endDate">{{ post.endDate}}</p>
+                <p class="col-sm-8" id="endDate">
+                  {{ post.endDate}}
+                </p>
               </div>
             {% endif %}
           </div>
@@ -460,7 +462,7 @@
           var end_html = document.getElementById('endDate').innerHTML.replace("T", " ");
           var date_end = new Date(end_html);
           {% if post.allDay %}
-            document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
+            document.getElementById('endDate').innerHTML = date_end.toDateString();
           {% else %}
             document.getElementById('endDate').innerHTML = moment(date_end).format('M/D/YYYY, hh:mm A');
           {% endif %}
