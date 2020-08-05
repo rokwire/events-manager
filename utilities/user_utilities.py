@@ -459,8 +459,6 @@ def get_location_details(location_description):
 
 
 def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
     print("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
@@ -490,7 +488,7 @@ def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
             except googlemaps.exceptions.ApiError as e:
                 print("API Key Error: {}".format(e))
         return utctime(datetime_obj, latitude, longitude)
-    datetime_obj = datetime_obj.astimezone(pytz.UTC)
+    datetime_obj = datetime_obj.astimezone(pytz.timezone("US/Central"))
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
