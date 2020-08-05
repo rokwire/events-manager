@@ -414,11 +414,11 @@ def populate_event_from_form(post_form, email):
 
     start_date = post_form.get('startDate')
 
-    new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
+    new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
     if end_date != '':
-        new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+        new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
     location = post_form.get('location')
     if location != '':
@@ -494,12 +494,16 @@ def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def get_datetime_in_local(str_utc_date, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
+def get_datetime_in_local(location, str_utc_date, is_all_day_event):
+    timezone = pytz.UTC
+    localzone = tz.tzlocal()
+    if location and location.get('latitude') and location.get('longitude'):
+        latitude = location.get('latitude')
+        longitude = location.get('longitude')
+        timezone_str = get_timezone_by_geolocation(latitude, longitude)
+        localzone = tz.gettz(timezone_str)
 
-    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
-        tz.tzlocal())
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(localzone)
 
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
