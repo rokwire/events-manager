@@ -33,9 +33,13 @@ import boto3
 import os
 import glob
 from ..config import Config
+from .constants import *
+from .event_time_conversion import *
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
     text_index_search
 
+GOOGLEKEY = Config.GOOGLE_KEY
+gmaps = googlemaps.Client(key=GOOGLEKEY)
 
 def get_all_user_events(select_status):
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
@@ -410,11 +414,11 @@ def populate_event_from_form(post_form, email):
 
     start_date = post_form.get('startDate')
 
-    new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
+    new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
     if end_date != '':
-        new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+        new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
     location = post_form.get('location')
     if location != '':
@@ -454,9 +458,7 @@ def get_location_details(location_description):
     return location_obj
 
 
-def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
+def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
     print("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
@@ -470,17 +472,38 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
         except ValueError:
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
-
-    datetime_obj = datetime_obj.astimezone(pytz.UTC)
+    if location:
+        latitude = None
+        longitude = None
+        if location in predefined_locations:
+            latitude = predefined_locations[location].latitude
+            longitude = predefined_locations[location].longitude
+        else:
+            try:
+                GeoResponse = gmaps.geocode(address=location + ',Urbana',
+                                            components={'administrative_area': 'Urbana', 'country': "US"})
+                if len(GeoResponse) != 0:
+                    latitude = GeoResponse[0]['geometry']['location']['lat']
+                    longitude = GeoResponse[0]['geometry']['location']['lng']
+            except googlemaps.exceptions.ApiError as e:
+                print("API Key Error: {}".format(e))
+        return utctime(datetime_obj, latitude, longitude)
+    local_tz = pytz.timezone("US/Central")
+    datetime_with_tz = local_tz.localize(datetime_obj, is_dst=None)  # No daylight saving time
+    datetime_obj = datetime_with_tz.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def get_datetime_in_local(str_utc_date, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
+def get_datetime_in_local(location, str_utc_date, is_all_day_event):
+    timezone = pytz.UTC
+    localzone = tz.tzlocal()
+    if location and location.get('latitude') and location.get('longitude'):
+        latitude = location.get('latitude')
+        longitude = location.get('longitude')
+        timezone_str = get_timezone_by_geolocation(latitude, longitude)
+        localzone = tz.gettz(timezone_str)
 
-    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
-        tz.tzlocal())
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(localzone)
 
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
