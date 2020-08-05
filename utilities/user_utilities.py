@@ -488,7 +488,9 @@ def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
             except googlemaps.exceptions.ApiError as e:
                 print("API Key Error: {}".format(e))
         return utctime(datetime_obj, latitude, longitude)
-    datetime_obj = datetime_obj.astimezone(pytz.timezone("US/Central"))
+    local_tz = pytz.timezone("US/Central")
+    datetime_with_tz = local_tz.localize(datetime_obj, is_dst=None)  # No daylight saving time
+    datetime_obj = datetime_with_tz.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
