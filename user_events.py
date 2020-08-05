@@ -226,11 +226,11 @@ def user_an_event_edit(id):
                 else:
                     post_by_id['isSuperEvent'] = False
             elif item == 'startDate':
-                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', all_day_event)
+                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), request.form.get('startDate'), 'startDate', all_day_event)
             elif item == 'endDate':
                 end_date = request.form.get('endDate')
                 if end_date != '':
-                    post_by_id['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+                    post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
             elif item == 'location':

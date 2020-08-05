@@ -33,9 +33,13 @@ import boto3
 import os
 import glob
 from ..config import Config
+from .constants import *
+from .event_time_conversion import *
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
     text_index_search
 
+GOOGLEKEY = Config.GOOGLE_KEY
+gmaps = googlemaps.Client(key=GOOGLEKEY)
 
 def get_all_user_events(select_status):
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
@@ -454,7 +458,7 @@ def get_location_details(location_description):
     return location_obj
 
 
-def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
+def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
     # TODO: This assumes events taking place in local time zone of the user.
     #  Need to immediately fix this using location information.
     print("str_local_date", str_local_date)
@@ -470,7 +474,22 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
         except ValueError:
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
-
+    if location:
+        latitude = None
+        longitude = None
+        if location in predefined_locations:
+            latitude = predefined_locations[location].latitude
+            longitude = predefined_locations[location].longitude
+        else:
+            try:
+                GeoResponse = gmaps.geocode(address=location + ',Urbana',
+                                            components={'administrative_area': 'Urbana', 'country': "US"})
+                if len(GeoResponse) != 0:
+                    latitude = GeoResponse[0]['geometry']['location']['lat']
+                    longitude = GeoResponse[0]['geometry']['location']['lng']
+            except googlemaps.exceptions.ApiError as e:
+                print("API Key Error: {}".format(e))
+        return utctime(datetime_obj, latitude, longitude)
     datetime_obj = datetime_obj.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
