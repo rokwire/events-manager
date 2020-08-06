@@ -33,9 +33,13 @@ import boto3
 import os
 import glob
 from ..config import Config
+from .constants import *
+from .event_time_conversion import *
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
     text_index_search
 
+GOOGLEKEY = Config.GOOGLE_KEY
+gmaps = googlemaps.Client(key=GOOGLEKEY)
 
 def get_all_user_events(select_status):
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
@@ -218,6 +222,7 @@ def publish_user_event(eventId):
         imageId = s3_publish_image(eventId, s3_client)
         if imageId:
             print("User image upload successful for event {}".format(eventId))
+            event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(eventId, imageId)
 
         if event:
             # Formatting Date and time for json dump
@@ -238,7 +243,19 @@ def publish_user_event(eventId):
             if event.get('eventId'):
                 del event['eventId']
 
-            event = {k: v for k, v in event.items() if v}
+            # event = {k: v for k, v in event.items() if v}
+            if 'subcategory' in event.keys() and event['subcategory'] is None:
+                event['subcategory'] = ''
+            if 'targetAudience' in event.keys() and event['targetAudience'] is None:
+                event['targetAudience'] = []
+            if 'contacts' in event.keys() and event['contacts'] is None:
+                event['contacts'] = []
+            if 'tags' in event.keys() and event['tags'] is None:
+                event['tags'] = []
+            if 'subEvents' in event.keys() and event['subEvents'] is None:
+                event['subEvents'] = []
+            if 'location' in event.keys() and event['location'] is None:
+                event['location'] = dict()
             # Setting up post request
             result = requests.post(current_app.config['EVENT_BUILDING_BLOCK_URL'], headers=headers,
                                    data=json.dumps(event))
@@ -294,8 +311,19 @@ def put_user_event(eventId):
                 del event['eventId']
 
             # Getting rid of all the empty fields for PUT request
-            event = {k: v for k, v in event.items() if v}
-
+            # event = {k: v for k, v in event.items() if v}
+            if 'subcategory' in event.keys() and event['subcategory'] is None:
+                event['subcategory'] = ''
+            if 'targetAudience' in event.keys() and event['targetAudience'] is None:
+                event['targetAudience'] = []
+            if 'contacts' in event.keys() and event['contacts'] is None:
+                event['contacts'] = []
+            if 'tags' in event.keys() and event['tags'] is None:
+                event['tags'] = []
+            if 'subEvents' in event.keys() and event['subEvents'] is None:
+                event['subEvents'] = []
+            if 'location' in event.keys() and event['location'] is None:
+                event['location'] = dict()
             # Generation of URL via platformEventId
             url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
             # Getting rid of platformEventId from PUT request
@@ -385,12 +413,12 @@ def populate_event_from_form(post_form, email):
     new_event['targetAudience'] = get_target_audience(post_form)
 
     start_date = post_form.get('startDate')
-    print("start_date", start_date)
-    new_event['startDate'] = get_datetime_in_utc(start_date, 'startDate', all_day_event)
+
+    new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
     if end_date != '':
-        new_event['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+        new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
     location = post_form.get('location')
     if location != '':
@@ -434,9 +462,7 @@ def get_location_details(location_description):
     return location_obj
 
 
-def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
+def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
     print("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
@@ -450,17 +476,38 @@ def get_datetime_in_utc(str_local_date, date_field, is_all_day_event):
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M")
         except ValueError:
             datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%dT%H:%M:%S")
-
-    datetime_obj = datetime_obj.astimezone(pytz.UTC)
+    if location:
+        latitude = None
+        longitude = None
+        if location in predefined_locations:
+            latitude = predefined_locations[location].latitude
+            longitude = predefined_locations[location].longitude
+        else:
+            try:
+                GeoResponse = gmaps.geocode(address=location + ',Urbana',
+                                            components={'administrative_area': 'Urbana', 'country': "US"})
+                if len(GeoResponse) != 0:
+                    latitude = GeoResponse[0]['geometry']['location']['lat']
+                    longitude = GeoResponse[0]['geometry']['location']['lng']
+            except googlemaps.exceptions.ApiError as e:
+                print("API Key Error: {}".format(e))
+        return utctime(datetime_obj, latitude, longitude)
+    local_tz = pytz.timezone("US/Central")
+    datetime_with_tz = local_tz.localize(datetime_obj, is_dst=None)  # No daylight saving time
+    datetime_obj = datetime_with_tz.astimezone(pytz.UTC)
     return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
 
 
-def get_datetime_in_local(str_utc_date, is_all_day_event):
-    # TODO: This assumes events taking place in local time zone of the user.
-    #  Need to immediately fix this using location information.
+def get_datetime_in_local(location, str_utc_date, is_all_day_event):
+    timezone = pytz.UTC
+    localzone = tz.tzlocal()
+    if location and location.get('latitude') and location.get('longitude'):
+        latitude = location.get('latitude')
+        longitude = location.get('longitude')
+        timezone_str = get_timezone_by_geolocation(latitude, longitude)
+        localzone = tz.gettz(timezone_str)
 
-    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=pytz.UTC).astimezone(
-        tz.tzlocal())
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(localzone)
 
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
@@ -513,7 +560,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'id' or item == 'track' or item == 'isFeatured':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -523,9 +570,12 @@ def get_subevent_list(post_form):
         subevent_dict = []
         for i in range(num_of_sub):
             a_subevent = {}
-            sub_id = subevent_arrays[0][i]
-            sub_track = subevent_arrays[1][i]
-            sub_feature = subevent_arrays[2][i]
+            sub_name = subevent_arrays[0][i]
+            sub_id = subevent_arrays[1][i]
+            sub_track = subevent_arrays[2][i]
+            sub_feature = subevent_arrays[3][i]
+            if sub_name != "":
+                a_subevent['name'] = sub_name
             if sub_id != "":
                 a_subevent['id'] = sub_id
             if sub_track != "":
@@ -535,11 +585,14 @@ def get_subevent_list(post_form):
                     a_subevent['isFeatured'] = True
                 else:
                     a_subevent['isFeatured'] = False
-
             if a_subevent != {}:
                 subevent_dict.append(a_subevent)
         if subevent_dict != []:
             return subevent_dict
+        else:
+            return None
+    else:
+        return None
 
 
 def get_tags(post_form):
@@ -601,6 +654,20 @@ def beta_search(search_string):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
+
+
+def clickable_utility(platformEventId):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": platformEventId})
+        if record:
+            return record['eventId']
+        else:
+            print("Record with platformEventId:{} does not exist".format(platformEventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Record with platformEventId:{} does not exist".format(platformEventId))
+        return False
 
 
 # S3 Utilities
