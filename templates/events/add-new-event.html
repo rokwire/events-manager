@@ -503,13 +503,46 @@
       if (this.checked) {
         $("#startDate").attr("type", "date");
         $("#endDate").attr("type", "date");
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+        if(dd<10){
+          dd='0'+dd
+        } 
+        if(mm<10){
+          mm='0'+mm
+        } 
+        date = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("startDate").setAttribute("min", date);
+        document.getElementById("endDate").setAttribute("min", date);
       }
       else {
         $("#startDate").attr("type", "datetime-local");
         $("#endDate").attr("type", "datetime-local");
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+        if(dd<10){
+          dd='0'+dd
+        } 
+        if(mm<10){
+          mm='0'+mm
+        } 
+        date = yyyy+'-'+mm+'-'+dd;
+        var dateTime = date+'T'+'00:00:00';
+        document.getElementById("startDate").setAttribute("min", dateTime);
+        document.getElementById("endDate").setAttribute("min", dateTime);
       }
 
     });
+
+    // Handle endDate constraint based on the choice of startDate
+    $('#startDate').change(function(){
+      var start = $('#startDate').val()
+      document.getElementById("endDate").setAttribute("min", start)
+    })
 
     // Handle image upload and preview
     $('input[type="file"]').change(function(input){
@@ -543,6 +576,23 @@
       $("#file").val(null);
       $('#preview-image').attr('src', '');
     });
+
+    // set the min value of startDate and endDate to be current time
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    if(dd<10){
+      dd='0'+dd
+    } 
+    if(mm<10){
+      mm='0'+mm
+    } 
+    date = yyyy+'-'+mm+'-'+dd;
+    var dateTime = date+'T'+'00:00:00';
+    document.getElementById("startDate").setAttribute("min", dateTime);
+    document.getElementById("endDate").setAttribute("min", dateTime);
+    
 
    </script>
 {% endblock %}
