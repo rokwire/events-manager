@@ -499,10 +499,16 @@
 
    // Handle all-day event
     $("#allDay").change(function () {
+      let $startDate = $("#startDate");
+      let $endDate = $("#endDate");
+
+      let startDate = moment($startDate.val());
+      let endDate = moment($endDate.val());
 
       if (this.checked) {
-        $("#startDate").attr("type", "date");
-        $("#endDate").attr("type", "date");
+        $endDate.attr("type", "date");
+        $startDate.attr("type", "date");
+        console.log($startDate.val())
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1; 
@@ -515,11 +521,21 @@
         } 
         date = yyyy+'-'+mm+'-'+dd;
         document.getElementById("startDate").setAttribute("min", date);
-        document.getElementById("endDate").setAttribute("min", date);
+        $startDate.val(startDate.format("YYYY-MM-DD"));
+        $endDate.val(endDate.format("YYYY-MM-DD"));
+        if ($startDate.val() != ""){
+          document.getElementById("endDate").setAttribute("min", $startDate.val());
+
+        } else {
+          document.getElementById("endDate").setAttribute("min", date);
+        }
       }
       else {
-        $("#startDate").attr("type", "datetime-local");
-        $("#endDate").attr("type", "datetime-local");
+        $startDate.attr("type", "datetime-local");
+        $endDate.attr("type", "datetime-local");
+
+        $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
+        $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1; 
@@ -533,9 +549,13 @@
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
         document.getElementById("startDate").setAttribute("min", dateTime);
-        document.getElementById("endDate").setAttribute("min", dateTime);
-      }
+        if ($startDate.val() != ""){
+          document.getElementById("endDate").setAttribute("min", $startDate.val());
 
+        } else {
+          document.getElementById("endDate").setAttribute("min", date);
+        }
+      }
     });
 
     // Handle endDate constraint based on the choice of startDate
@@ -593,7 +613,6 @@
     document.getElementById("startDate").setAttribute("min", dateTime);
     document.getElementById("endDate").setAttribute("min", dateTime);
     
-
    </script>
 {% endblock %}
 
