@@ -294,6 +294,7 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
 def filterOutKeys(event):
     keysWanted = ["title", "platformEventId", "category", "startDate"]
     return {key: event[key] for key in keysWanted}
+    
 # Parameters: collection name, string to look for
 def text_index_search(co_or_ta, search_string, **kwargs):
     db = get_db()
@@ -319,4 +320,3 @@ def text_index_search(co_or_ta, search_string, **kwargs):
             return map(filterOutKeys, auto_complete_events)
         except Exception:
             return []
-            
