@@ -123,7 +123,7 @@ def find_all(co_or_ta, **kwarg):
             traceback.print_exc()
             return []
 
-def find_all_previous_event_ids(co_or_ta, findDataSourceEventId, **kwarg):
+def find_all_previous_event_ids(co_or_ta, filter, **kwarg):
     db = get_db()
     dbType = current_app.config['DBTYPE']
     if co_or_ta is None or db is None:
@@ -133,10 +133,7 @@ def find_all_previous_event_ids(co_or_ta, findDataSourceEventId, **kwarg):
         try:
             collection = db.get_collection(co_or_ta)
             projection = {'_id':1,'dataSourceEventId':1}
-            if findDataSourceEventId:
-                result = collection.find(filter={"dataSourceEventId": {'$exists': 'true'}}, projection=projection, **kwarg)
-            else:
-                result = collection.find(projection=projection, **kwarg)
+            result = collection.find(filter=filter, projection=projection, **kwarg)
             if not result:
                 return []
 
