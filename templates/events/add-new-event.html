@@ -562,6 +562,10 @@
     $('#startDate').change(function(){
       var start = $('#startDate').val()
       document.getElementById("endDate").setAttribute("min", start)
+      var end = $('#endDate').val()
+      if (end < start){
+        $('#endDate').val(null)
+      }
     })
 
     // Handle image upload and preview
@@ -597,7 +601,7 @@
       $('#preview-image').attr('src', '');
     });
 
-    // set the min value of startDate and endDate to be current time
+    // set the min value of startDate and endDate to be current time as the default behavior
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1; 
