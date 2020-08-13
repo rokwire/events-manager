@@ -1,3 +1,17 @@
+#  Copyright 2020 Board of Trustees of the University of Illinois.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import shutil
 import traceback
 import requests
@@ -67,9 +81,9 @@ def user_an_event(id):
     post = find_user_event(id)
     if 'allDay' not in post:
         post['allDay'] = None
-    post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
+    post['startDate'] = get_datetime_in_local(post.get('location'), post['startDate'], post['allDay'])
     if'endDate' in post:
-        post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+        post['endDate'] = get_datetime_in_local(post.get('location'), post['endDate'], post['allDay'])
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0 \
             or (record and record.get("status") == "new" or record.get("status") == "replaced"):
@@ -114,44 +128,51 @@ def user_an_event_edit(id):
         post_by_id['contacts'] = get_contact_list(request.form)
         post_by_id['tags'] = get_tags(request.form)
         post_by_id['targetAudience'] = get_target_audience(request.form)
-        record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+        image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
             if request.files['file'].filename != '':
                 for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
                     remove(existed_file)
                 file = request.files['file']
                 filename = secure_filename(file.filename)
-                if record and record.get('status') == 'new' or record.get('status') == 'replaced':
-                    success = s3_delete_reupload(id, record.get("_id"))
+                if image_record and image_record.get('status') == 'new' or image_record.get('status') == 'replaced':
+                    file.save(
+                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+                    success = s3_delete_reupload(id, image_record.get("_id"))
                     if success:
-                        print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                        print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                         updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                                      condition={'eventId': id},
                                                      update={"$set": {'status': 'replaced',
                                                                       'eventId': id}}, upsert=True)
+                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
                         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                             print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                     else:
                         print("reuploading image for event:{} failed in event edit page".format(id))
                 elif get_user_event_status(id) == "approved":
-                    success = s3_image_upload(id, record.get("_id"))
+                    if image_record and image_record.get('status') == 'deleted':
+                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                  condition={'eventId': id},
+                                                  update={"$set": {'status': 'new',
+                                                                   'eventId': id}}, upsert=True)
+                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                            print("Failed to mark image record as new of event: {} in event edit page".format(
+                                id))
+                    else:
+                        insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                            'eventId': id,
+                            'status': 'new',
+                        })
+                        image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+                        if not insertResult.inserted_id:
+                            print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                    file.save(
+                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+                    success = s3_image_upload(id, image_record.get("_id"))
                     if success:
-                        print("{}, s3: s3_image_upload())()".format(record.get('status')))
-                        if record.get('status') == 'deleted':
-                            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                                      condition={'eventId': id},
-                                                      update={"$set": {'status': 'new',
-                                                                       'eventId': id}}, upsert=True)
-                            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                                print("Failed to mark image record as new of event: {} in event edit page".format(
-                                    id))
-                        else:
-                            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                                'eventId': id,
-                                'status': 'new',
-                            })
-                            if not insertResult.inserted_id:
-                                print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                        print("{}, s3: s3_image_upload()".format(image_record.get('status')))
+                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
                     else:
                         print("initial image upload for event:{} failed in event edit page".format(id))
                 elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
@@ -160,14 +181,15 @@ def user_an_event_edit(id):
                 else:
                     abort(400)  # TODO: Error page
         if request.form['delete-image'] == '1':
-            if record:
-                success = s3_image_delete(id, record.get("_id"))
+            if image_record:
+                success = s3_image_delete(id, image_record.get("_id"))
                 if success:
-                    print("{}, s3: s3_delete_reupload()".format(record.get('status')))
+                    print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                     updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                           condition={'eventId': id},
                                           update={"$set": {'status': 'deleted',
                                                            'eventId': id}}, upsert=True)
+                    post_by_id['imageURL'] = ''
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to mark image record as deleted of event: {} in event edit page".format(id))
                 else:
@@ -204,11 +226,11 @@ def user_an_event_edit(id):
                 else:
                     post_by_id['isSuperEvent'] = False
             elif item == 'startDate':
-                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', all_day_event)
+                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), request.form.get('startDate'), 'startDate', all_day_event)
             elif item == 'endDate':
                 end_date = request.form.get('endDate')
                 if end_date != '':
-                    post_by_id['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+                    post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
             elif item == 'location':
@@ -248,9 +270,9 @@ def user_an_event_edit(id):
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
             all_day_event = True
 
-        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], all_day_event)
+        post_by_id['startDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['startDate'], all_day_event)
         if 'endDate' in post_by_id:
-            post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], all_day_event)
+            post_by_id['endDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['endDate'], all_day_event)
 
         tags_text = ""
         if 'tags' in post_by_id and post_by_id['tags'] != None:
@@ -269,8 +291,8 @@ def user_an_event_edit(id):
             image = True
         except IndexError:
             image_name = ""
-            record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
-            if record and record.get('status') == "replaced" or record.get('status') == "new":
+            image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+            if image_record and image_record.get('status') == "replaced" or image_record.get('status') == "new":
                 image = True
             else:
                 image = False
@@ -290,6 +312,7 @@ def user_an_event_approve(id):
     try:
         # So far, we do not have any information about user event image.
         # By default, we will not upload user images and we will set user image upload to be False
+        image = False
         if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
             image = True
         success = publish_user_event(id)
@@ -381,6 +404,30 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
+    if get_user_event_status(id) == "approved":
+        super_events = find_all(current_app.config['EVENT_COLLECTION'],
+                                filter={"subEvents": {'$type': 'array'}},
+                                projection={"_id": 1, "subEvents": 1})
+        platform_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                condition={"_id": ObjectId(id)})['platformEventId']
+        find = False
+        for super_event in super_events:
+            if find:
+                break
+            for sub_event in super_event['subEvents']:
+                if sub_event['id'] == platform_id:
+                    new_sub_events = super_event['subEvents']
+                    new_sub_events.remove(sub_event)
+                    update_one(current_app.config['EVENT_COLLECTION'],
+                               condition={"_id": ObjectId(super_event['_id'])},
+                               update={"$set": {"subEvents": new_sub_events}})
+
+                    if get_user_event_status(super_event['_id']) == "approved":
+                        success = put_user_event(super_event['_id'])
+                        if not success:
+                            print("updating super event in building block failed")
+                    find = True
+                    break
     delete_user_event(id)
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         try:
@@ -451,3 +498,16 @@ def view_image(id):
             return send_from_directory(directory, image_name)
         except IndexError:
             abort(404)
+
+@userbp.route('/event/publish/<platformEventId>',  methods=['GET'])
+@role_required("user")
+def sub_event(platformEventId):
+    try:
+        eventId = clickable_utility(platformEventId)
+        return redirect(url_for('user_events.user_an_event', id=eventId))
+
+    except Exception:
+        traceback.print_exc()
+        print("Redirect for platformEventId {} failed".format(platformEventId))
+        abort(500)
+
