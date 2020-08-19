@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix subevent name updates [#505](https://github.com/rokwire/events-manager/issues/505)
+
 ## [2.1.1] - 2020-08-05
 ### Fixed
 - Fix user event datetime conversion [#492](https://github.com/rokwire/events-manager/issues/492)
