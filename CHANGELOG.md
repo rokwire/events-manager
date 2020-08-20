@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2020-08-20
+### Fixed
+- Fix subevent name updates [#505](https://github.com/rokwire/events-manager/issues/505)
+
 ## [2.1.1] - 2020-08-05
 ### Fixed
 - Fix user event datetime conversion [#492](https://github.com/rokwire/events-manager/issues/492)
+- Fixed the endDate display in the preview page and match its format with startDate. [#491](https://github.com/rokwire/events-manager/issues/491)
+
 ### Added
 - CODEONWERS file. [#493](https://github.com/rokwire/events-manager/issues/493)
 
@@ -22,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sub-events in a super-event preview page are now clickable, redirecting to the sub-event preview page [#454](https://github.com/rokwire/events-manager/issues/454)
 
 ### Fixed
+- Not calculating geocoordinates for virtual events [#427](https://github.com/rokwire/events-manager/issues/427)
 - Add the missing `imageUrl` in events [#482](https://github.com/rokwire/events-manager/issues/482)
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
 - Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
