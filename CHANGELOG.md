@@ -6,17 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2020-08-20
 ### Fixed
 - Fix subevent name updates [#505](https://github.com/rokwire/events-manager/issues/505)
 
 ## [2.1.1] - 2020-08-05
 ### Fixed
 - Fix user event datetime conversion [#492](https://github.com/rokwire/events-manager/issues/492)
+- Fixed the endDate display in the preview page and match its format with startDate. [#491](https://github.com/rokwire/events-manager/issues/491)
+
 ### Added
 - CODEONWERS file. [#493](https://github.com/rokwire/events-manager/issues/493)
-
-### Fixed
-- Fixed the endDate display in the preview page and match its format with startDate. [#491](https://github.com/rokwire/events-manager/issues/491)
 
 ## [2.1.0] - 2020-07-29
 ### Added
