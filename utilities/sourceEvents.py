@@ -334,11 +334,11 @@ def store(documents):
             calendar_status = calendarStatus.get(calendarId)
 
             # if calendar is disapproved
-            if calendar_status == "disapproved":
+            if calendar_status.get('status') == "disapproved":
                 document['eventStatus'] = 'disapproved'
 
             # if calendar is approved
-            elif calendar_status == 'approved':
+            elif calendar_status.get('status') == 'approved':
                 document['eventStatus'] = 'approved'
 
             # if calendar status is unknown
@@ -353,11 +353,14 @@ def store(documents):
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
 
-        # if event is not found
+        # if event is found
         else:
-            if result['eventStatus'] == 'published':
+            if result.get('submitType') == 'post' and result.get('eventStatus') == 'pending':
+                document['submitType'] = 'post'
+                document['eventStatus'] = 'approved'
+            elif result['eventStatus'] == 'published':
                 document['submitType'] ='put'
-            update += 1
+                update += 1
 
         updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                 update={'$set': document}, upsert=True)
