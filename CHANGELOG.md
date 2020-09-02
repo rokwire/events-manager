@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
-- Fix calendar events publish [#513] (https://github.com/rokwire/events-manager/issues/513)
+- Fix calendar events publish [#513](https://github.com/rokwire/events-manager/issues/513)
 
 ## [2.1.2] - 2020-08-20
 ### Fixed
