@@ -334,11 +334,11 @@ def store(documents):
             calendar_status = calendarStatus.get(calendarId)
 
             # if calendar is disapproved
-            if calendar_status == "disapproved":
+            if calendar_status.get('status') == "disapproved":
                 document['eventStatus'] = 'disapproved'
 
             # if calendar is approved
-            elif calendar_status == 'approved':
+            elif calendar_status.get('status') == 'approved':
                 document['eventStatus'] = 'approved'
 
             # if calendar status is unknown
@@ -353,11 +353,16 @@ def store(documents):
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
 
-        # if event is not found
+        # if it is an existing event
         else:
-            if result['eventStatus'] == 'published':
-                document['submitType'] ='put'
-            update += 1
+            # TODO: The following IF condition is a temporary fix to make sure that the current data is updated. It can
+            #  be removed later.
+            if result.get('submitType') == 'post' and result.get('eventStatus') == 'pending':
+                document['submitType'] = 'post'
+                document['eventStatus'] = 'approved'
+            elif result['eventStatus'] == 'published':
+                document['submitType'] = 'put'
+                update += 1
 
         updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                 update={'$set': document}, upsert=True)
@@ -441,7 +446,7 @@ def start(targets=None):
     new_eventId_list = []
 
     # get all previous event ids from db
-    previous_eventId_list = find_all_previous_event_ids(current_app.config['EVENT_COLLECTION'])
+    previous_eventId_list = find_all_previous_event_ids(current_app.config['EVENT_COLLECTION'], filter={"dataSourceEventId": {'$exists': 'true'}})
     urls = geturls(targets)
     for url in urls:
         try:
