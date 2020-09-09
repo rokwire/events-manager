@@ -206,6 +206,11 @@ def user_an_event_edit(id):
         else:
             post_by_id['allDay'] = False
 
+        if 'isVirtual' in request.form and request.form.get('isVirtual') == 'on':
+            post_by_id['isVirtual'] = True
+        else:
+            post_by_id['isVirtual'] = False
+
         for item in request.form:
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
