@@ -129,6 +129,25 @@
           </div>
 
           <div class="item3" style="grid-area: auto / left;">
+            <!-- Virtual Event -->
+            {% if post.isVirtual %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Virtual Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Virtual Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item4" style="grid-area: auto / left;">
             <!-- All Day Event -->
             {% if post.allDay %}
               <div class="row">
@@ -147,7 +166,7 @@
             {% endif %}
           </div>
 
-          <div class="item4" style="grid-area: auto / left;">
+          <div class="item5" style="grid-area: auto / left;">
             <!-- startDate -->
             {% if post.startDate%}
               <div class="row">
@@ -173,7 +192,7 @@
             {% endif %}
           </div>
 
-          <div class="item5" style="grid-row: 1 / span 6; display: flex; justify-content: flex-end; align-items: baseline;">
+          <div class="item6" style="grid-row: 1 / span 6; display: flex; justify-content: flex-end; align-items: baseline;">
             <!-- image -->
             {% if post.image %}
               <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" alt="event image" style="max-width: 423px; max-height: 160px;">
@@ -183,7 +202,7 @@
 
         <div class="grid container"
         style="display: grid; grid-auto-rows: auto; grid-template-columns: auto;">
-          <div class="item6">
+          <div class="item7">
             <!-- event url -->
             {% if post.titleURL%}
             <div class="row">

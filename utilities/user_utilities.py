@@ -394,6 +394,8 @@ def populate_event_from_form(post_form, email):
             elif item == 'allDay' and post_form.get(item) == 'on':
                 new_event['allDay'] = True
                 all_day_event = True
+            elif item == 'isVirtual' and post_form.get(item) == 'on':
+                new_event['isVirtual'] = True
             else:
                 new_event[item] = post_form.get(item)
     if not super_event:
