@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Provide an option to mark an event as virtual (Add `isVirtual` to document) [#517](https://github.com/rokwire/events-manager/issues/517)
+- Add field `superEventID` to document to keep track of the super event locally [#480](https://github.com/rokwire/events-manager/issues/480)
+
+### Fixed 
+- The sub event name in the super event will not change when the sub event name changes [#483](https://github.com/rokwire/events-manager/issues/483)
 
 ## [2.1.3] - 2020-09-03
 ### Fixed
