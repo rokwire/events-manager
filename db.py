@@ -232,6 +232,23 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
             traceback.print_exc()
             return UpdateResult()
 
+def replace_one(co_or_ta, condition=None, replacement=None, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None or condition is None or replacement is None or db is None:
+        return UpdateResult()
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            result = collection.replace_one(condition, replacement, **kwargs)
+            if not result:
+                return UpdateResult()
+            return result
+        except Exception:
+            traceback.print_exc()
+            return UpdateResult()
 
 def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
     db = get_db()
