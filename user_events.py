@@ -81,9 +81,9 @@ def user_an_event(id):
     post = find_user_event(id)
     if 'allDay' not in post:
         post['allDay'] = None
-    post['startDate'] = get_datetime_in_local(post['startDate'], post['allDay'])
+    post['startDate'] = get_datetime_in_local(post.get('location'), post['startDate'], post['allDay'])
     if'endDate' in post:
-        post['endDate'] = get_datetime_in_local(post['endDate'], post['allDay'])
+        post['endDate'] = get_datetime_in_local(post.get('location'), post['endDate'], post['allDay'])
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0 \
             or (record and record.get("status") == "new" or record.get("status") == "replaced"):
@@ -206,6 +206,11 @@ def user_an_event_edit(id):
         else:
             post_by_id['allDay'] = False
 
+        if 'isVirtual' in request.form and request.form.get('isVirtual') == 'on':
+            post_by_id['isVirtual'] = True
+        else:
+            post_by_id['isVirtual'] = False
+
         for item in request.form:
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
@@ -226,11 +231,11 @@ def user_an_event_edit(id):
                 else:
                     post_by_id['isSuperEvent'] = False
             elif item == 'startDate':
-                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('startDate'), 'startDate', all_day_event)
+                post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), request.form.get('startDate'), 'startDate', all_day_event)
             elif item == 'endDate':
                 end_date = request.form.get('endDate')
                 if end_date != '':
-                    post_by_id['endDate'] = get_datetime_in_utc(end_date, 'endDate', all_day_event)
+                    post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
             elif item == 'location':
@@ -298,9 +303,9 @@ def user_an_event_edit(id):
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
             all_day_event = True
 
-        post_by_id['startDate'] = get_datetime_in_local(post_by_id['startDate'], all_day_event)
+        post_by_id['startDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['startDate'], all_day_event)
         if 'endDate' in post_by_id:
-            post_by_id['endDate'] = get_datetime_in_local(post_by_id['endDate'], all_day_event)
+            post_by_id['endDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['endDate'], all_day_event)
 
         tags_text = ""
         if 'tags' in post_by_id and post_by_id['tags'] != None:

@@ -127,9 +127,20 @@
                     type:"GET",
                     dataType: "json",
                     success: function(data) {
-                      response(data);
+                      response($.map(data, function(item){
+                        return {
+                          label: item.label + " (Category:" +item.category + ", StartDate: " + item.startDate + ")",
+                          value : item.label,
+                          data: item
+                        }
+                      }))
                     }
                   });
+                },
+                select: function (event, ui){
+                  selectedItemData = ui.item.data;
+                  id_input = $(event.target).next('input')
+                  id_input.val(selectedItemData.value)
                 }
               });
           }

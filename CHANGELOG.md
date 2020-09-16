@@ -5,6 +5,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Provide an option to mark an event as virtual (Add `isVirtual` to document) [#517](https://github.com/rokwire/events-manager/issues/517)
+
+## [2.1.3] - 2020-09-03
+### Fixed
+- Fix calendar events publish [#513](https://github.com/rokwire/events-manager/issues/513)
+- Fix calendar event view page [#515](https://github.com/rokwire/events-manager/issues/515)
+
+## [2.1.2] - 2020-08-20
+### Fixed
+- Fix subevent name updates [#505](https://github.com/rokwire/events-manager/issues/505)
+
+### Changed
+- Reduces container image size to 498 MB from 1.27 GB using a multistage
+  Dockerfile [#507](https://github.com/rokwire/events-manager/pull/507)
+
+### Security
+- The container runs gunicorn as user nobody instead of as root
+  [#507](https://github.com/rokwire/events-manager/pull/507)
+- Eliminates all unnecessary development tools used to build container
+  [#507](https://github.com/rokwire/events-manager/pull/507)
+
+## [2.1.1] - 2020-08-05
+### Fixed
+- Fix user event datetime conversion [#492](https://github.com/rokwire/events-manager/issues/492)
+- Fixed the endDate display in the preview page and match its format with startDate. [#491](https://github.com/rokwire/events-manager/issues/491)
+
+### Added
+- CODEONWERS file. [#493](https://github.com/rokwire/events-manager/issues/493)
 
 ## [2.1.0] - 2020-07-29
 ### Added
@@ -16,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sub-events in a super-event preview page are now clickable, redirecting to the sub-event preview page [#454](https://github.com/rokwire/events-manager/issues/454)
 
 ### Fixed
+- Not calculating geocoordinates for virtual events [#427](https://github.com/rokwire/events-manager/issues/427)
 - Add the missing `imageUrl` in events [#482](https://github.com/rokwire/events-manager/issues/482)
 - Redirection to home page. [#296](https://github.com/rokwire/events-manager/issues/296)
 - Network exception handling when deleting user event from building block. [#308](https://github.com/rokwire/events-manager/issues/308)
@@ -102,7 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2019-10-11
 ### Fixed
--- setting requires user's login.
+- setting requires user's login.
 
 ### Added
 - dockerize events manager
@@ -130,3 +160,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - References to AWS keys and variables.
+
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.1.3...HEAD
+[2.1.3]: https://github.com/rokwire/events-manager/compare/2.1.2...2.1.3
+[2.1.2]: https://github.com/rokwire/events-manager/compare/2.1.1...2.1.2
+[2.1.1]: https://github.com/rokwire/events-manager/compare/2.1.0...2.1.1
+[2.1.0]: https://github.com/rokwire/events-manager/compare/2.0.1...2.1.0
+[2.0.1]: https://github.com/rokwire/events-manager/compare/2.0.0...2.0.1
+[2.0.0]: https://github.com/rokwire/events-manager/compare/1.0.6...2.0.0
+[1.0.6]: https://github.com/rokwire/events-manager/compare/1.0.5...1.0.6
+[1.0.5]: https://github.com/rokwire/events-manager/compare/1.0.4...1.0.5
+[1.0.4]: https://github.com/rokwire/events-manager/compare/1.0.3...1.0.4
+[1.0.3]: https://github.com/rokwire/events-manager/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/rokwire/events-manager/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/rokwire/events-manager/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/rokwire/events-manager/releases/tag/1.0.0
