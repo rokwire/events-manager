@@ -358,11 +358,11 @@ def store(documents):
             calendar_status = calendarStatus.get(calendarId)
 
             # if calendar is disapproved
-            if calendar_status == "disapproved":
+            if calendar_status.get('status') == "disapproved":
                 document['eventStatus'] = 'disapproved'
 
             # if calendar is approved
-            elif calendar_status == 'approved':
+            elif calendar_status.get('status') == 'approved':
                 document['eventStatus'] = 'approved'
 
             # if calendar status is unknown
@@ -377,12 +377,19 @@ def store(documents):
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
 
-        # if event is found
+        # if it is an existing event
         else:
+            # In event replacement, eventStatus, eventId and platformEventId(when event is published) will 
+            # not be contained in parsed events. 
             document["eventStatus"] = result['eventStatus']
             document["eventId"] = result["eventId"]
-            if result['eventStatus'] == 'published':
-                document['submitType'] ='put'
+            # TODO: The following IF condition is a temporary fix to make sure that the current data is updated. It can
+            #  be removed later.
+            if result.get('submitType') == 'post' and result.get('eventStatus') == 'pending':
+                document['submitType'] = 'post'
+                document['eventStatus'] = 'approved'
+            elif result['eventStatus'] == 'published':
+                document['submitType'] = 'put'
                 document["platformEventId"] = result["platformEventId"]
             update += 1
 
