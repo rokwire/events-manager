@@ -544,10 +544,7 @@ def start(targets=None):
     print("# new_eventId_list: " + str(len(new_eventId_list)))
     print("# previous_eventId_list: " + str(len(previous_eventId_list)))
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    previous_events_to_delete_len = len(previous_events_to_delete)
-    print("# previous_events_to_delete: " + str(previous_events_to_delete_len))
-    add_more_to_delete_list(notShareWithMobileList, previous_events_to_delete)
-    print("# not_shareWithMobile_events_to_delete: " + str(len(previous_events_to_delete)-previous_events_to_delete_len))
+    print("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
     deletion = delete_events(previous_events_to_delete)
 
     print(
@@ -569,8 +566,3 @@ def start(targets=None):
         ])
     )
 
-# functions to add notShareWithMobile List to delete list
-def add_more_to_delete_list(notShareWithMobileList, delete_list):
-    for _id in notShareWithMobileList:
-        if  _id not in delete_list:
-            delete_list.append(_id)
