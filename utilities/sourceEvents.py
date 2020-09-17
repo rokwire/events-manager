@@ -83,10 +83,9 @@ def parse(content, gmaps):
         tree = ET.fromstring(content)
     except ET.ParseError as e:
         print("Parsing Error: {}".format(e))
-        return None
+        return []
 
     XML2JSON=[]
-
     for publicEvent in tree:
         if publicEvent.tag != "publicEventWS":
             print("There is a error arrangement in the structure")
@@ -116,10 +115,21 @@ def parse(content, gmaps):
     print("Get {} raw events".format(len(XML2JSON)))
 
     xmltoMongoDB = []
+    notSharedWithMobileList = []
 
     for pe in XML2JSON:
         # skip if location not exist or empty.
         if not pe.get('location'):
+            continue
+        
+        if pe.get("shareWithIllinoisMobileApp", "false") == "false":
+            dataSourceEventId = pe.get("eventId", "")
+            result = find_one(
+                current_app.config['EVENT_COLLECTION'], 
+                condition={'dataSourceEventId': dataSourceEventId}
+            )
+            if result:
+                notSharedWithMobileList.append(result["_id"])
             continue
 
         entry = dict()
@@ -328,7 +338,8 @@ def parse(content, gmaps):
 
         xmltoMongoDB.append(entry)
     print("Get {} parsed events".format(len(xmltoMongoDB)))
-    return xmltoMongoDB
+    print("Get {} not shareWithIllinoisMobileApp events".format(len(notSharedWithMobileList)))
+    return (xmltoMongoDB, notSharedWithMobileList)
 
 
 def store(documents):
@@ -497,7 +508,7 @@ def start(targets=None):
                 print("Invalid content in: {}".format(url))
                 continue
             print("Begin parsing url: {}".format(url))
-            parsedEvents = parse(rawEvents, gmaps)
+            parsedEvents, notShareWithMobileList = parse(rawEvents, gmaps)
 
             #getting new event id's
             for event_current in parsedEvents:
@@ -533,8 +544,10 @@ def start(targets=None):
     print("# new_eventId_list: " + str(len(new_eventId_list)))
     print("# previous_eventId_list: " + str(len(previous_eventId_list)))
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    print("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
-    print(previous_events_to_delete)
+    previous_events_to_delete_len = len(previous_events_to_delete)
+    print("# previous_events_to_delete: " + str(previous_events_to_delete_len))
+    add_more_to_delete_list(notShareWithMobileList, previous_events_to_delete)
+    print("# not_shareWithMobile_events_to_delete: " + str(len(previous_events_to_delete)-previous_events_to_delete_len))
     deletion = delete_events(previous_events_to_delete)
 
     print(
@@ -555,3 +568,9 @@ def start(targets=None):
             "Total images uploaded are: {}\n".format(image_upload_total)
         ])
     )
+
+# functions to add notShareWithMobile List to delete list
+def add_more_to_delete_list(notShareWithMobileList, delete_list):
+    for _id in notShareWithMobileList:
+        if  _id not in delete_list:
+            delete_list.append(_id)
