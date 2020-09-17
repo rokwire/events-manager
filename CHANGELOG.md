@@ -6,12 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] - 2020-09-17
 ### Added
-- Create a filter for blocking events that are not shared with Illinois Mobile and clean previous records [#520](https://github.com/rokwire/events-manager/issues/520)
+- Add a filter for blocking events that are not shared with Illinois Mobile and clean previous records [#520](https://github.com/rokwire/events-manager/issues/520)
 
 ## [Unreleased] - 2020-09-16
 ### Fixed
 - Fix calendar events display location on online events [#510](https://github.com/rokwire/events-manager/issues/510)
-- Update EXCLUDED_LOCATION in form of os environment variable
+- Fix EXCLUDED_LOCATION in form of os environment variable
 
 ## [Unreleased]
 ### Added
