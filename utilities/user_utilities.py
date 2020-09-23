@@ -242,7 +242,8 @@ def publish_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
-
+            if event.get('superEventID'):
+                del event['superEventID']
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
@@ -309,6 +310,9 @@ def put_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
+            if event.get('superEventID'):
+                superEventID = event['superEventID']
+                del event['superEventID']
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
@@ -346,7 +350,8 @@ def put_user_event(eventId):
             else:
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                                           update={
-                                              "$set": {"eventStatus": "approved"}
+                                              "$set": {"eventStatus": "approved",
+                                                       "superEventID": superEventID}
                                           })
                 return True
 
@@ -786,4 +791,26 @@ def imagedId_from_eventId(eventId):
     except Exception:
         traceback.print_exc()
         print("imageId retrieval for event: {} failed".format(eventId))
+        return False
+
+def update_super_event_id(sub_event_id, super_event_id):
+    try:
+        sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                     condition={"platformEventId": sub_event_id})['_id']
+        if super_event_id == "":
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                         condition={'_id': ObjectId(sub_event_id)},
+                                         update={"$unset": {'superEventID': 1}}, upsert=True)
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                         condition={'_id': ObjectId(sub_event_id)},
+                                         update={"$set": {'superEventID': super_event_id}}, upsert=True)
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            return False
+        else:
+            return True
+    except Exception:
+        traceback.print_exc()
+        print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
