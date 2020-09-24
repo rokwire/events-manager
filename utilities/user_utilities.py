@@ -441,7 +441,7 @@ def populate_event_from_form(post_form, email):
 def get_location_details(location_description):
     location_obj = dict()
     for excluded_location in Config.EXCLUDED_LOCATION:
-        if excluded_location in location_description:
+        if excluded_location.lower() in location_description.lower():
             location_obj['description'] = location_description
             return location_obj
     google_geocoding_api_key = current_app.config['GOOGLE_KEY']
