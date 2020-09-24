@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import os
+import ast
+
 from datetime import timedelta
 class Config(object):
 
@@ -470,4 +472,4 @@ class Config(object):
     IMAGE_SIZE_LIMIT = os.getenv('IMAGE_SIZE_LIMIT', 1)
 
     # Excluded location for calculating geo location
-    EXCLUDED_LOCATION = os.getenv("EXCLUDED_LOCATION", ["Zoom", "Online", "youtu.be"])
+    EXCLUDED_LOCATION = ast.literal_eval(os.getenv("EXCLUDED_LOCATION", "{'zoom', 'online'}"))
