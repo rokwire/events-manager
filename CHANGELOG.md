@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix the EXCLUDED_LOCATION to use ENV variables. [#510](https://github.com/rokwire/events-manager/issues/510)
 - Fix calendar events display location on online events [#510](https://github.com/rokwire/events-manager/issues/510)
-- Fix EXCLUDED_LOCATION in form of os environment variable
 
 ## [Unreleased]
 ### Added
