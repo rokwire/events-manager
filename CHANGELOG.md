@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix the EXCLUDED_LOCATION to use ENV variables. [#510](https://github.com/rokwire/events-manager/issues/510)
 - Fix calendar events display location on online events [#510](https://github.com/rokwire/events-manager/issues/510)
+- Fix the existence of super event id [#531] (https://github.com/rokwire/events-manager/issues/531)
 
 ### Added
 - Provide an option to mark an event as virtual (Add `isVirtual` to document) [#517](https://github.com/rokwire/events-manager/issues/517)

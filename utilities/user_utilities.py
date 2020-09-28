@@ -348,11 +348,17 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={
-                                              "$set": {"eventStatus": "approved",
-                                                       "superEventID": superEventID}
-                                          })
+                if superEventID:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID}
+                                              })
+                else:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved"}
+                                              })
                 return True
 
     except Exception:
