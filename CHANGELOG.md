@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2020-09-17
 ### Added
 - Add a filter for blocking events that are not shared with Illinois Mobile and clean previous records [#520](https://github.com/rokwire/events-manager/issues/520)
-
+- Add `virtualEvent` flag coming from WebTools[#526] (https://github.com/rokwire/events-manager/issues/526)
 ### Fixed
 - Fix the EXCLUDED_LOCATION to use ENV variables. [#510](https://github.com/rokwire/events-manager/issues/510)
 - Fix calendar events display location on online events [#510](https://github.com/rokwire/events-manager/issues/510)
