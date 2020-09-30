@@ -294,6 +294,7 @@ def put_user_event(eventId):
                          projection={'_id': 0, 'eventStatus': 0})
         if event:
             # Formatting Date and time for json dump
+            timezone = None
             if event.get('startDate'):
                 if isinstance(event.get('startDate'), str):
                     event['startDate'] = datetime.strptime(event.get('startDate'), '%Y-%m-%dT%H:%M:%S')
@@ -313,6 +314,10 @@ def put_user_event(eventId):
             if event.get('superEventID'):
                 superEventID = event['superEventID']
                 del event['superEventID']
+            if event.get('timezone'):
+                timezone = event['timezone']
+                del event['timezone']
+                # TODO: Time zone conversion
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
@@ -348,11 +353,22 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={
-                                              "$set": {"eventStatus": "approved",
-                                                       "superEventID": superEventID}
-                                          })
+                if timezone:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID,
+                                                           "timezone": timezone}
+                                              })
+                else:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID}
+                                              })
+
                 return True
 
     except Exception:
