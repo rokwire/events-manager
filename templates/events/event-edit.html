@@ -201,6 +201,25 @@
               </div>
             </div>
           </div>
+          <!-- timezones -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Time Zone<span style="color: red">*</span></h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                  {% for key, value in timezones.items() %}
+                      {% if post.timezone == key%}
+                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
+                      {% else %}
+                          <option value = "{{key}}" id = {{key}}>{{value}}</option>
+                      {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
           <!-- subcategory -->
           {% if post['category'] == 'Athletics' %}
             <div class="form-group row ">

@@ -103,7 +103,8 @@ def user_an_event(id):
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
-                           timestamp=datetime.now().timestamp())
+                           timestamp=datetime.now().timestamp(),
+                           timezones=Config.TIMEZONES)
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 @role_required("user")
@@ -284,6 +285,8 @@ def user_an_event_edit(id):
                                               })
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to update the title of sub-event {} in super event {}".format(id, post_by_id['superEventID']))
+        if 'timezone' in request.form:
+            post_by_id['timezone'] = request.form['timezone']
 
         update_user_event(id, post_by_id, None)
 
@@ -335,7 +338,8 @@ def user_an_event_edit(id):
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                image = image,
-                               size_limit=Config.IMAGE_SIZE_LIMIT)
+                               size_limit=Config.IMAGE_SIZE_LIMIT,
+                               timezones=Config.TIMEZONES)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -416,7 +420,8 @@ def add_new_event():
                                 subcategoriesMap=subcategoriesMap,
                                 targetAudienceMap=targetAudienceMap,
                                 extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                                size_limit=Config.IMAGE_SIZE_LIMIT)
+                                size_limit=Config.IMAGE_SIZE_LIMIT,
+                                timezones=Config.TIMEZONES)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")

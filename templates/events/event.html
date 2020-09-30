@@ -117,6 +117,16 @@
               </div>
             {% endif %}
 
+            <!-- timezone -->
+            {% if post.timezone %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Time Zone </h5>
+                </div>
+                <p class="col-sm-9">{{timezones[post.timezone]}}</p>
+              </div>
+            {% endif %}
+
             <!-- event subcategory -->
             {% if post.subcategory %}
               <div class="row">
