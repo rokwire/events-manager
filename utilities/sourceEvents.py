@@ -133,6 +133,8 @@ def parse(content, gmaps):
             continue
 
         entry = dict()
+        if pe.get("virtualEvent", "false") == "true":
+            entry['isVirtual'] = True
 
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -188,7 +190,7 @@ def parse(content, gmaps):
                         }
                         entry['location'] = GeoInfo
 
-        if not skip_google_geoservice:
+        if not entry.get('isVirtual') or not skip_google_geoservice:
             location = pe['location']
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
