@@ -4,13 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2020-09-17
+## [2.1.4] - 2020-10-08
 ### Added
 - Add a filter for blocking events that are not shared with Illinois Mobile and clean previous records [#520](https://github.com/rokwire/events-manager/issues/520)
 - Add `virtualEvent` flag coming from WebTools[#526] (https://github.com/rokwire/events-manager/issues/526)
 ### Fixed
 - Fix the EXCLUDED_LOCATION to use ENV variables. [#510](https://github.com/rokwire/events-manager/issues/510)
 - Fix calendar events display location on online events [#510](https://github.com/rokwire/events-manager/issues/510)
+- Fix the existence of super event id [#531] (https://github.com/rokwire/events-manager/issues/531)
 
 ### Added
 - Provide an option to mark an event as virtual (Add `isVirtual` to document) [#517](https://github.com/rokwire/events-manager/issues/517)

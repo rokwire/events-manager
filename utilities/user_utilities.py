@@ -288,6 +288,7 @@ def put_user_event(eventId):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
+    superEventID = None
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
@@ -348,11 +349,17 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={
-                                              "$set": {"eventStatus": "approved",
-                                                       "superEventID": superEventID}
-                                          })
+                if superEventID:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID}
+                                              })
+                else:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved"}
+                                              })
                 return True
 
     except Exception:
