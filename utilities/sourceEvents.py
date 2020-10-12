@@ -16,7 +16,8 @@ import os
 import boto3
 from datetime import datetime, timedelta
 
-from ..db import update_one, find_one, insert_one, find_all_previous_event_ids
+from ..db import update_one, replace_one, find_one, insert_one, find_all_previous_event_ids
+from ..config import Config
 from .constants import CalName2Location, tip4CalALoc, eventTypeMap
 from .downloadImage import downloadImage
 from .source_utilities import get_all_calendar_status, publish_event, s3_publish_image, delete_events
@@ -82,10 +83,9 @@ def parse(content, gmaps):
         tree = ET.fromstring(content)
     except ET.ParseError as e:
         print("Parsing Error: {}".format(e))
-        return None
+        return []
 
     XML2JSON=[]
-
     for publicEvent in tree:
         if publicEvent.tag != "publicEventWS":
             print("There is a error arrangement in the structure")
@@ -115,13 +115,26 @@ def parse(content, gmaps):
     print("Get {} raw events".format(len(XML2JSON)))
 
     xmltoMongoDB = []
+    notSharedWithMobileList = []
 
     for pe in XML2JSON:
         # skip if location not exist or empty.
         if not pe.get('location'):
             continue
+        
+        if pe.get("shareWithIllinoisMobileApp", "false") == "false":
+            dataSourceEventId = pe.get("eventId", "")
+            result = find_one(
+                current_app.config['EVENT_COLLECTION'], 
+                condition={'dataSourceEventId': dataSourceEventId}
+            )
+            if result:
+                notSharedWithMobileList.append(result["_id"])
+            continue
 
         entry = dict()
+        if pe.get("virtualEvent", "false") == "true":
+            entry['isVirtual'] = True
 
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -139,26 +152,45 @@ def parse(content, gmaps):
 
         # find geographical location
         skip_google_geoservice = False
+        # flag for checking online event
+        found_online_event = False
         # compare with the existing location
         existing_event = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': entry[
             'dataSourceEventId'
         ]})
         existing_location = existing_event.get('location')
-        if existing_location:
-            existing_description = existing_location.get('description')
-            if existing_description == pe.get('location'):
-                if existing_location.get('latitude') and existing_location.get('longitude'):
-                    skip_google_geoservice = True
-                    lat = existing_location.get('latitude')
-                    lng = existing_location.get('longitude')
-                    GeoInfo = {
-                        'latitude': lat,
-                        'longitude': lng,
-                        'description': pe['location']
-                    }
-                    entry['location'] = GeoInfo
 
-        if not skip_google_geoservice:
+        # filter out online location
+        pe_location_lower_case = pe["location"].lower()
+        for excluded_location in Config.EXCLUDED_LOCATION:
+            if excluded_location.lower() in pe_location_lower_case:
+                skip_google_geoservice = True
+                found_online_event = True
+                entry["location"] = {
+                    "description": pe["location"]
+                }
+                break
+
+        if existing_location:
+            # mark previouly unidentified online events
+            if found_online_event:
+                if existing_location.get('latitude') and existing_location.get('longitude'):
+                    entry["replace_event"] = True
+            else:
+                existing_description = existing_location.get('description')
+                if existing_description == pe.get('location'):
+                    if existing_location.get('latitude') and existing_location.get('longitude'):
+                        skip_google_geoservice = True
+                        lat = existing_location.get('latitude')
+                        lng = existing_location.get('longitude')
+                        GeoInfo = {
+                            'latitude': lat,
+                            'longitude': lng,
+                            'description': pe['location']
+                        }
+                        entry['location'] = GeoInfo
+
+        if not entry.get('isVirtual') or not skip_google_geoservice:
             location = pe['location']
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
@@ -201,8 +233,9 @@ def parse(content, gmaps):
             endDate = pe['endDate']
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
-            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            # TODO: current default time zone is CDT
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
 
         if pe['timeType'] == "ALL_DAY":
             entry['allDay'] = True
@@ -211,8 +244,9 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
-            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            # TODO: current default time zone is CDT
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
 
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
@@ -222,8 +256,9 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' ' + startTime, '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' ' + endTime, '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
-            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            # TODO: current default time zone is CDT
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
 
         # when time type is None, usually happens in calendar 468
         elif pe['timeType'] == "NONE":
@@ -233,8 +268,9 @@ def parse(content, gmaps):
             startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
-            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
-            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude'), entry_location.get('longitude'))
+            # TODO: current default time zone is CDT
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
 
         # Optional Field
         if 'description' in pe:
@@ -304,7 +340,8 @@ def parse(content, gmaps):
 
         xmltoMongoDB.append(entry)
     print("Get {} parsed events".format(len(xmltoMongoDB)))
-    return xmltoMongoDB
+    print("Get {} not shareWithIllinoisMobileApp events".format(len(notSharedWithMobileList)))
+    return (xmltoMongoDB, notSharedWithMobileList)
 
 
 def store(documents):
@@ -355,6 +392,10 @@ def store(documents):
 
         # if it is an existing event
         else:
+            # In event replacement, eventStatus, eventId and platformEventId(when event is published) will 
+            # not be contained in parsed events. 
+            document["eventStatus"] = result['eventStatus']
+            document["eventId"] = result["eventId"]
             # TODO: The following IF condition is a temporary fix to make sure that the current data is updated. It can
             #  be removed later.
             if result.get('submitType') == 'post' and result.get('eventStatus') == 'pending':
@@ -362,13 +403,27 @@ def store(documents):
                 document['eventStatus'] = 'approved'
             elif result['eventStatus'] == 'published':
                 document['submitType'] = 'put'
-                update += 1
+                document["platformEventId"] = result["platformEventId"]
+            update += 1
 
-        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
-                update={'$set': document}, upsert=True)
-        # insert update error check
-        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+        # if this event is marked as replacement
+        if document.get("replace_event", False):
+            del document["replace_event"]
+            replaceResult = replace_one(
+                current_app.config['EVENT_COLLECTION'], 
+                condition={'dataSourceEventId': document['dataSourceEventId']}, 
+                replacement=document,
+                upsert=True,
+            )
+            # insert replace error check
+            if replaceResult.modified_count == 0 and replaceResult.matched_count == 0 and replaceResult.upserted_id is None:
+                print("replace event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
+                    update={'$set': document}, upsert=True)
+            # insert update error check
+            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
 
     s3_client = boto3.client('s3')
     # upload approved or published events
@@ -455,12 +510,11 @@ def start(targets=None):
                 print("Invalid content in: {}".format(url))
                 continue
             print("Begin parsing url: {}".format(url))
-            parsedEvents = parse(rawEvents, gmaps)
+            parsedEvents, notShareWithMobileList = parse(rawEvents, gmaps)
 
             #getting new event id's
             for event_current in parsedEvents:
                 new_eventId_list.append(event_current['dataSourceEventId'])
-
 
             parsed_in_total += len(parsedEvents)
             (insert, update, post, put, patch, unknown, image_download, image_upload) = store(parsedEvents)
@@ -493,7 +547,6 @@ def start(targets=None):
     print("# previous_eventId_list: " + str(len(previous_eventId_list)))
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
     print("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
-    print(previous_events_to_delete)
     deletion = delete_events(previous_events_to_delete)
 
     print(
@@ -514,3 +567,4 @@ def start(targets=None):
             "Total images uploaded are: {}\n".format(image_upload_total)
         ])
     )
+

@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import os
+import ast
+
 from datetime import timedelta
 class Config(object):
 
@@ -37,14 +39,14 @@ class Config(object):
     GOOGLE_MAP_VIEW_KEY = os.getenv("GOOGLE_MAP_VIEW_KEY", "...")
 
     # EVENT_COLLECTION defines the event collection name we are using to store events
-    EVENT_COLLECTION='eventsmanager-events'
+    EVENT_COLLECTION='eventsmanager_events'
 
     # url prefix to get the information of a specific event id.
     FAVORITE_EVENTID_ENDPOINT_PREFIX=os.getenv("FAVORITE_EVENTID_ENDPOINT_PREFIX", 'http://localhost:9001/profiles/device-data?favorites.eventId=')
     # url of notification
     NOTIFICATION_URL = os.getenv("NOTIFICATION_URL", '...')
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
-    EVENT_URL_PREFIX=os.getenv("EVENT_URL_PREFIX", 'https://xml.calendars.illinois.edu/eventXML11/')
+    EVENT_URL_PREFIX=os.getenv("EVENT_URL_PREFIX", 'https://xml.calendars.illinois.edu/eventXML12/')
     EVENT_URL_SUFFIX='.xml'
 
     # This a mapping between webtools calendars id to name
@@ -463,8 +465,11 @@ class Config(object):
     # Allowed image extensions for user event image upload
     ALLOWED_IMAGE_EXTENSIONS = os.getenv('ALLOWED_IMAGE_EXTENSIONS', {'png', 'jpg', 'jpeg', 'gif'})
 
+    # Version to be displayed on home page
     VERSION = '2.0.1'
 
+    # The limit of user-uploaded image (measured in MB)
     IMAGE_SIZE_LIMIT = os.getenv('IMAGE_SIZE_LIMIT', 1)
 
-    EXCLUDED_LOCATION = ["Zoom", "Online"]
+    # Excluded location for calculating geo location
+    EXCLUDED_LOCATION = ast.literal_eval(os.getenv("EXCLUDED_LOCATION", "{'zoom', 'online'}"))

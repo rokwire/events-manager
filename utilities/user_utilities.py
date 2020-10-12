@@ -242,7 +242,8 @@ def publish_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
-
+            if event.get('superEventID'):
+                del event['superEventID']
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
@@ -287,6 +288,7 @@ def put_user_event(eventId):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
+    superEventID = None
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
@@ -309,6 +311,9 @@ def put_user_event(eventId):
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
             if event.get('eventId'):
                 del event['eventId']
+            if event.get('superEventID'):
+                superEventID = event['superEventID']
+                del event['superEventID']
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
@@ -344,10 +349,17 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={
-                                              "$set": {"eventStatus": "approved"}
-                                          })
+                if superEventID:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID}
+                                              })
+                else:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved"}
+                                              })
                 return True
 
     except Exception:
@@ -394,6 +406,8 @@ def populate_event_from_form(post_form, email):
             elif item == 'allDay' and post_form.get(item) == 'on':
                 new_event['allDay'] = True
                 all_day_event = True
+            elif item == 'isVirtual' and post_form.get(item) == 'on':
+                new_event['isVirtual'] = True
             else:
                 new_event[item] = post_form.get(item)
     if not super_event:
@@ -434,7 +448,7 @@ def populate_event_from_form(post_form, email):
 def get_location_details(location_description):
     location_obj = dict()
     for excluded_location in Config.EXCLUDED_LOCATION:
-        if excluded_location in location_description:
+        if excluded_location.lower() in location_description.lower():
             location_obj['description'] = location_description
             return location_obj
     google_geocoding_api_key = current_app.config['GOOGLE_KEY']
@@ -784,4 +798,26 @@ def imagedId_from_eventId(eventId):
     except Exception:
         traceback.print_exc()
         print("imageId retrieval for event: {} failed".format(eventId))
+        return False
+
+def update_super_event_id(sub_event_id, super_event_id):
+    try:
+        sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                     condition={"platformEventId": sub_event_id})['_id']
+        if super_event_id == "":
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                         condition={'_id': ObjectId(sub_event_id)},
+                                         update={"$unset": {'superEventID': 1}}, upsert=True)
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                         condition={'_id': ObjectId(sub_event_id)},
+                                         update={"$set": {'superEventID': super_event_id}}, upsert=True)
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            return False
+        else:
+            return True
+    except Exception:
+        traceback.print_exc()
+        print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
