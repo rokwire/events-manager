@@ -272,6 +272,7 @@ def user_an_event_edit(id):
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
         new_title = post_by_id['title']
+        # Special case for changing title of sub-events in super-event's page.
         if old_title != new_title:
             try:
                 sub_event_list = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(find_one(
@@ -553,4 +554,3 @@ def sub_event(platformEventId):
         traceback.print_exc()
         print("Redirect for platformEventId {} failed".format(platformEventId))
         abort(500)
-
