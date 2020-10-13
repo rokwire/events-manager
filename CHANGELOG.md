@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix the exception of editing the subevent title. [#556](https://github.com/rokwire/events-manager/issues/556)
+
 ## [2.1.5] - 2020-10-13
 ### Fixed
 - Fix image folder permission within Docker image to fix image upload/download error. [#547](https://github.com/rokwire/events-manager/issues/547)
