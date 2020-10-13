@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.6] - 2020-10-13
+### Fixed
+- Fix the exception of editing the subevent title. [#556](https://github.com/rokwire/events-manager/issues/556)
+
 ## [2.1.5] - 2020-10-13
 ### Fixed
 - Fix image folder permission within Docker image to fix image upload/download error. [#547](https://github.com/rokwire/events-manager/issues/547)
@@ -177,7 +181,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.1.5...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.1.6...HEAD
+[2.1.6]: https://github.com/rokwire/events-manager/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/rokwire/events-manager/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/rokwire/events-manager/compare/2.1.3...2.1.4
 [2.1.3]: https://github.com/rokwire/events-manager/compare/2.1.2...2.1.3
