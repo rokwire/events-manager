@@ -34,6 +34,10 @@ RUN python -m compileall .
 
 COPY --from=requirements /root/.local /usr/local
 
+RUN mkdir -p /app/images /app/temp
+RUN chown -R nobody:nogroup /app/images /app/temp
+RUN chmod -R 755 /app/images /app/temp
+
 USER nobody
 
 CMD ["gunicorn", "events-manager:create_app()", "--config", "/app/events-manager/gunicorn.config.py", "--timeout", "7200"]
