@@ -272,18 +272,21 @@ def user_an_event_edit(id):
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
         new_title = post_by_id['title']
-        if old_title != new_title and post_by_id.get("isSuperEvent") == True:
-            sub_event_list = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(find_one(
-                current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['superEventID'])})['subEvents']
-            for sub_event in sub_event_list:
-                if sub_event['id'] == find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['platformEventId']:
-                    sub_event['name'] = new_title
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(post_by_id['superEventID'])},
-                                              update={
-                                                  "$set": {"subEvents": sub_event_list}
-                                              })
-                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                        print("Failed to update the title of sub-event {} in super event {}".format(id, post_by_id['superEventID']))
+        if old_title != new_title:
+            try:
+                sub_event_list = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(find_one(
+                    current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['superEventID'])})['subEvents']
+                for sub_event in sub_event_list:
+                    if sub_event['id'] == find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['platformEventId']:
+                        sub_event['name'] = new_title
+                        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(post_by_id['superEventID'])},
+                                                  update={
+                                                      "$set": {"subEvents": sub_event_list}
+                                                  })
+                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                            print("Failed to update the title of sub-event {} in super event {}".format(id, post_by_id['superEventID']))
+            except Exception as ex:
+                pass
 
         update_user_event(id, post_by_id, None)
 
