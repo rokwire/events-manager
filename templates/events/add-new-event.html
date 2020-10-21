@@ -133,11 +133,7 @@
               <div class="form-group">
                 <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
                   {% for key, value in timezones.items() %}
-                      {% if key == "Chicago"%}
-                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
-                      {% else %}
-                          <option value = "{{key}}" id = {{key}}>{{value}}</option>
-                      {% endif %}
+                      <option value = "{{key}}" id = {{key}}>{{value}}</option>
                   {% endfor %}
                 </select>
               </div>
