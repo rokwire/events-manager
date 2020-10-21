@@ -5,7 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Add time zone selection drop down box for user (front end only) [#534](https://github.com/rokwire/events-manager/issues/534)
+### Added
+- Add time zone selection feature. [#533](https://github.com/rokwire/events-manager/issues/533)
 
 ## [2.1.6] - 2020-10-13
 ### Fixed
