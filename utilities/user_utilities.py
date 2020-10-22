@@ -244,6 +244,8 @@ def publish_user_event(eventId):
                 del event['eventId']
             if event.get('superEventID'):
                 del event['superEventID']
+            if event.get('timezone'):
+                del event['timezone']
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
@@ -289,6 +291,7 @@ def put_user_event(eventId):
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     superEventID = None
+    timezone = None
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
@@ -314,6 +317,10 @@ def put_user_event(eventId):
             if event.get('superEventID'):
                 superEventID = event['superEventID']
                 del event['superEventID']
+            if event.get('timezone'):
+                timezone = event['timezone']
+                del event['timezone']
+                # TODO: Time zone conversion
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
@@ -349,17 +356,35 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                if superEventID:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                if timezone and superEventID:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "superEventID": superEventID,
+                                                           "timezone": timezone}
+                                              })
+                elif superEventID:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
                                               update={
                                                   "$set": {"eventStatus": "approved",
                                                            "superEventID": superEventID}
                                               })
+                elif timezone:
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={
+                                                  "$set": {"eventStatus": "approved",
+                                                           "timezone": timezone}
+                                              })
                 else:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
                                               update={
                                                   "$set": {"eventStatus": "approved"}
                                               })
+
                 return True
 
     except Exception:
@@ -428,11 +453,17 @@ def populate_event_from_form(post_form, email):
 
     start_date = post_form.get('startDate')
 
-    new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
+    if 'timezone' in post_form:
+        new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), start_date, 'startDate', all_day_event)
+    else:
+        new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
     if end_date != '':
-        new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
+        if 'timezone' in post_form:
+            new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
+        else:
+            new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
     location = post_form.get('location')
     if location != '':
@@ -523,6 +554,33 @@ def get_datetime_in_local(location, str_utc_date, is_all_day_event):
 
     datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(localzone)
 
+    if is_all_day_event:
+        return datetime_obj.strftime("%Y-%m-%d")
+    else:
+        return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def time_zone_to_utc(time_zone, str_date, date_field, is_all_day_event):
+    if is_all_day_event:
+        datetime_obj = datetime.strptime(str_date, "%Y-%m-%d")
+        if date_field == "startDate":
+            datetime_obj = datetime_obj.replace(hour=00, minute=00)
+        elif date_field == "endDate":
+            datetime_obj = datetime_obj.replace(hour=23, minute=59)
+    else:
+        try:
+            datetime_obj = datetime.strptime(str_date, "%Y-%m-%dT%H:%M")
+        except ValueError:
+            datetime_obj = datetime.strptime(str_date, "%Y-%m-%dT%H:%M:%S")
+    local_tz = pytz.timezone(time_zone)
+    datetime_obj = local_tz.localize(datetime_obj, is_dst=None).astimezone(pytz.UTC)
+    return datetime_obj.strftime("%Y-%m-%dT%H:%M:%S")
+
+
+def utc_to_time_zone(time_zone, str_date, is_all_day_event):
+    datetime_obj = datetime.strptime(str_date, "%Y-%m-%dT%H:%M:%S")
+    local_tz = pytz.timezone(time_zone)
+    datetime_obj = pytz.UTC.localize(datetime_obj, is_dst=None).astimezone(local_tz)
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
     else:

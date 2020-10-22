@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Read ALLOWED_IMAGE_EXTENSIONS as string. [#553](https://github.com/rokwire/events-manager/issues/553)
 - Use latest base image when building Docker image. [#560](https://github.com/rokwire/events-manager/issues/560)
+
 ### Added
 - Yelp's detect secrets baseline file and pre-commit hook. [#563](https://github.com/rokwire/events-manager/issues/563)
+- Add time zone selection feature. [#533](https://github.com/rokwire/events-manager/issues/533)
 
 ## [2.1.6] - 2020-10-13
 ### Fixed
