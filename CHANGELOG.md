@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ## [2.2.0] - 2020-10-27
 ### Changed
+- Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
 - Read ALLOWED_IMAGE_EXTENSIONS as string. [#553](https://github.com/rokwire/events-manager/issues/553)
 - Use latest base image when building Docker image. [#560](https://github.com/rokwire/events-manager/issues/560)
 - Change the timezone name on GUI.[#568](https://github.com/rokwire/events-manager/issues/568)
