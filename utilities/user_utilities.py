@@ -770,8 +770,8 @@ def s3_image_upload(eventId, imageId):
     success = False
     try:
         for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
-            image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)
-            if os.path.isfile(image_location):
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)
                 break
         # convert to jpg and save it
         if image_location == '':
