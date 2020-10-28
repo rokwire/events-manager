@@ -1,3 +1,19 @@
+<!------------------------------------------------------------------------
+  Copyright 2020 Board of Trustees of the University of Illinois.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ------------------------------------------------------------------------>
+
 {% extends 'base.html' %}
 
 {% from 'events/confirmation.html' import confirmation %}
@@ -64,304 +80,347 @@
         <h2><a class="article-title" href="{{ post.titleURL}}">{{ post.title }}</a></h2>
         <hr class="divider"/>
 
-        {% if post.eventStatus%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Event Status </h5>
-            </div>
-            <p class="col-sm-9">
-              {% if post.eventStatus == "approved" %}
-                  <!-- temporily change to published -->
-                <span class="badge badge-pill badge-success"> published </span>
-              {% elif post.eventStatus == "disapproved"%}
-                <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
-              {% elif post.eventStatus == "pending"%}
-                <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
-              {% else %}
-                <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
-              {% endif %}
-            </p>
-
-          </div>
-        {% endif %}
-
-        <!-- event url -->
-        {% if post.titleURL%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Event URL </h5>
-            </div>
-            <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
-          </div>
-        {% endif %}
-
-        <!-- event building block id -->
-        {% if post.platformEventId %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Event ID </h5>
-            </div>
-            <p class="col-sm-9">{{post.platformEventId}}</p>
-          </div>
-        {% endif %}
-
-        <!-- event category -->
-        {% if post.category %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Category </h5>
-            </div>
-            <p class="col-sm-9">{{post.category}}</p>
-          </div>
-        {% endif %}
-
-
-        <!-- event subcategory -->
-        {% if post.subcategory %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Sub Category </h5>
-            </div>
-            <p class="col-sm-9">{{post.subcategory}}</p>
-          </div>
-        {% endif %}
-
-        <!-- All Day Event -->
-        {% if post.allDay %}
-           <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>All Day Event</h5>
-            </div>
-                <p class = "col-sm-9">Yes</p>
-          </div>
-        {% else %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>All Day Event</h5>
-            </div>
-                <p class = "col-sm-9">No</p>
-          </div>
-        {% endif %}
-
-        <!-- startDate -->
-        {% if post.startDate%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Start Date </h5>
-            </div>
-            <p class="col-sm-9" id="startDate">
-              {{post.startDate}}
-            </p>
-          </div>
-        {% endif %}
-
-        <!-- endDate -->
-        {% if post.endDate%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>End Date </h5>
-            </div>
-            <p class="col-sm-9" id="endDate">{{ post.endDate}}</p>
-          </div>
-        {% endif %}
-
-        <!-- target audience -->
-<!--        {% if post.targetAudience %}-->
-<!--          <div class="row">-->
-<!--            <div class="col-12 col-sm-2">-->
-<!--              <h5>Target Audience </h5>-->
-<!--            </div>-->
-<!--            <div class = "col-sm-9">-->
-<!--            {%for i in range(post.targetAudience | length)%}-->
-<!--              {%if i == (post.targetAudience | length) - 1 %}-->
-<!--                <span>{{post.targetAudience[i]}}</span>-->
-<!--              {%else %}-->
-<!--                <span>{{post.targetAudience[i]}}, </span>-->
-<!--              {% endif%}-->
-<!--            {% endfor%}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        {% endif %}-->
-
-        <!-- cost -->
-        {% if post.cost%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Cost </h5>
-            </div>
-            <p class="col-sm-9">{{ post.cost}}</p>
-          </div>
-        {% endif %}
-
-        <!-- contacts -->
-        {% if post.contacts%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Contacts </h5>
-            </div>
-            <table class="table table-hover col-sm-8">
-              <thead>
-                <tr>
-                  <th scope="col-sm-2">First Name</th>
-                  <th scope="col-sm-2">Last Name</th>
-                  <th scope="col-sm-2">Email</th>
-                  <th scope="col-sm-2">Phone</th>
-                  <th scope="col-sm-2">Organization</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for contact in post.contacts %}
-                   <tr>
-                    <td>{{contact.firstName}}</td>
-                    <td>{{contact.lastName}}</td>
-                    <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
-                    <td>{{contact.phone}}</td>
-                     <td>{{contact.organization}}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        {% endif %}
-
-        <!-- tags -->
-        {% if post.tags%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Tags </h5>
-            </div>
-            <div class = "col-sm-9">
-              {%for i in range(post.tags | length)%}
-                {%if i == (post.tags | length) - 1 %}
-                  <span>{{post.tags[i]}} </span>
-                {%else %}
-                  <span>{{post.tags[i]}}, </span>
-                {% endif%}
-              {% endfor%}
-            </div>
-          </div>
-        {% endif %}
-
-        <!-- sponsor -->
-        {% if post.sponsor%}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Sponsor </h5>
-            </div>
-            <p class = "col-sm-9">{{post.sponsor}}</p>
-          </div>
-        {% endif %}
-
-        <!-- description: longDescription -->
-        {% if post.longDescription%}
-        <div class="row">
-          <div class="col-12 col-sm-2">
-            <h5>Description </h5>
-          </div>
-          <div class="col-12 col-sm-9" id="longDes">
-            {% autoescape false %}{{post.longDescription}}{% endautoescape %}
-          </div>
-        </div>
-        {% endif %}
-
-        <!-- image -->
-        {% if post.image %}
-        <div class="row">
-          <div class="col-12 col-sm-2">
-            <h5>Event Image </h5>
-          </div>
-          <div class="col-12 col-sm-9" id="imagefile">
-              <img src="{{ url_for('user_events.view_image', id=post['_id']) }}" class="rounded float-left" alt="event image" style="max-width: 50%;;">
-          </div>
-        </div>
-        {% endif %}
-
-        <!-- location -->
-        {% if post.location %}
-            <!-- location.description -->
-            {% if post.location.description %}
-              <div class="row">
-                <div class="col-12 col-sm-2" id="longDes">
-                  <h5>Location </h5>
-                </div>
-                <p class="col-12 col-sm-9">{{post.location.description}}</p>
+        <!-- Grid container to hold image at top-right -->
+        <div class="grid container"
+        style="display: grid;grid-auto-flow: column;grid-auto-rows: auto;grid-template-columns: [left] 66.67% [right] 33.33%;">
+          <div class="item1" style="grid-area: auto / left;">
+            {% if post.eventStatus%}
+            <div class="row">
+              <div class="col-12 col-sm-3">
+                <h5>Event Status </h5>
               </div>
-            {% endif %}
-            <!-- location.address -->
-            {% if post.location.latitude %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Latitude </h5>
-                </div>
-                <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
-              </div>
-            {% endif %}
-            {% if post.location.longitude %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Longitude </h5>
-                </div>
-                <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
-              </div>
-            {% endif %}
-          <!-- google map API -->
-          <div class="row">
-            <div class="col-12 col-sm-9 offset-sm-2">
-            {% if post.location.latitude and post.location.longitude %}
-              <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-
-      <!-- is super event? -->
-      {% if post.isSuperEvent %}
-           <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Is Super Event</h5>
-            </div>
-                <p class = "col-sm-9">Yes</p>
-          </div>
-      {% else %}
-          <div class="row">
-            <div class="col-12 col-sm-2">
-              <h5>Is Super Event</h5>
-            </div>
-                <p class = "col-sm-9">No</p>
-          </div>
-      {% endif %}
-
-
-      <!-- sub event -->
-      {% if post.subEvents %}
-        <div class="row">
-          <div class="col-12 col-sm-2">
-            <h5>Sub-Events</h5>
-          </div>
-          <table class="table table-hover col-sm-8">
-            <thead>
-              <tr>
-                <th scope="col-sm-2">Sub-event ID</th>
-                <th scope="col-sm-2">Track</th>
-                <th scope="col-sm-2">Featured Event</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for subevent in post.subEvents %}
-              <tr>
-                <td>{{subevent.id}}</td>
-                <td>{{subevent.track}}</td>
-                {% if subevent.isFeatured%}
-                   <td>Yes</td>
+              <p class="col-sm-9">
+                {% if post.eventStatus == "approved" %}
+                    <!-- temporily change to published -->
+                  <span class="badge badge-pill badge-success"> published </span>
+                {% elif post.eventStatus == "disapproved"%}
+                  <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
+                {% elif post.eventStatus == "pending"%}
+                  <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
                 {% else %}
-                   <td>No</td>
+                  <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
                 {% endif %}
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </p>
+  
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="item2" style="grid-area: auto / left;">
+            <!-- event category -->
+            {% if post.category %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Category </h5>
+                </div>
+                <p class="col-sm-9">{{post.category}}</p>
+              </div>
+            {% endif %}
+
+            <!-- event subcategory -->
+            {% if post.subcategory %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Sub Category </h5>
+                </div>
+                <p class="col-sm-9">{{post.subcategory}}</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item3" style="grid-area: auto / left;">
+            <!-- Virtual Event -->
+            {% if post.isVirtual %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Virtual Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Virtual Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item4" style="grid-area: auto / left;">
+            <!-- All Day Event -->
+            {% if post.allDay %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>All Day Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>All Day Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item5" style="grid-area: auto / left;">
+            <!-- timezone -->
+            {% if post.timezone %}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Time Zone </h5>
+                </div>
+                <p class="col-sm-9">{{timezones[post.timezone]}}</p>
+              </div>
+            {% endif %}
+            <!-- startDate -->
+            {% if post.startDate%}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Start Date </h5>
+                </div>
+                <p class="col-sm-9" id="startDate">
+                  {{post.startDate}}
+                </p>
+              </div>
+            {% endif %}
+
+            <!-- endDate -->
+            {% if post.endDate%}
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>End Date </h5>
+                </div>
+                <p class="col-sm-8" id="endDate">
+                  {{ post.endDate}}
+                </p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="item6" style="grid-row: 1 / span 6; display: flex; justify-content: flex-end; align-items: baseline;">
+            <!-- image -->
+            {% if post.image %}
+              <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" alt="event image" style="max-width: 423px; max-height: 160px;">
+            {% endif %}
+          </div>
         </div>
-      {% endif %}
+
+        <div class="grid container"
+        style="display: grid; grid-auto-rows: auto; grid-template-columns: auto;">
+          <div class="item7">
+            <!-- event url -->
+            {% if post.titleURL%}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Event URL </h5>
+              </div>
+              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
+            </div>
+            {% endif %}
+
+            <!-- event building block id -->
+            {% if post.platformEventId %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Event ID </h5>
+                </div>
+                <p class="col-sm-9">{{post.platformEventId}}</p>
+              </div>
+            {% endif %}
+
+            <!-- target audience -->
+  <!--        {% if post.targetAudience %}-->
+  <!--          <div class="row">-->
+  <!--            <div class="col-12 col-sm-2">-->
+  <!--              <h5>Target Audience </h5>-->
+  <!--            </div>-->
+  <!--            <div class = "col-sm-9">-->
+  <!--            {%for i in range(post.targetAudience | length)%}-->
+  <!--              {%if i == (post.targetAudience | length) - 1 %}-->
+  <!--                <span>{{post.targetAudience[i]}}</span>-->
+  <!--              {%else %}-->
+  <!--                <span>{{post.targetAudience[i]}}, </span>-->
+  <!--              {% endif%}-->
+  <!--            {% endfor%}-->
+  <!--            </div>-->
+  <!--          </div>-->
+  <!--        {% endif %}-->
+
+            <!-- cost -->
+            {% if post.cost%}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Cost </h5>
+                </div>
+                <p class="col-sm-9">{{ post.cost}}</p>
+              </div>
+            {% endif %}
+
+            <!-- contacts -->
+            {% if post.contacts%}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Contacts </h5>
+                </div>
+                <table class="table table-hover col-sm-8">
+                  <thead>
+                    <tr>
+                      <th scope="col-sm-2">First Name</th>
+                      <th scope="col-sm-2">Last Name</th>
+                      <th scope="col-sm-2">Email</th>
+                      <th scope="col-sm-2">Phone</th>
+                      <th scope="col-sm-2">Organization</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for contact in post.contacts %}
+                      <tr>
+                        <td>{{contact.firstName}}</td>
+                        <td>{{contact.lastName}}</td>
+                        <td><a href="mailto:{{contact.email}}">{{contact.email}}</a></td>
+                        <td>{{contact.phone}}</td>
+                        <td>{{contact.organization}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% endif %}
+
+            <!-- tags -->
+            {% if post.tags%}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Tags </h5>
+                </div>
+                <div class = "col-sm-9">
+                  {%for i in range(post.tags | length)%}
+                    {%if i == (post.tags | length) - 1 %}
+                      <span>{{post.tags[i]}} </span>
+                    {%else %}
+                      <span>{{post.tags[i]}}, </span>
+                    {% endif%}
+                  {% endfor%}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- sponsor -->
+            {% if post.sponsor%}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Sponsor </h5>
+                </div>
+                <p class = "col-sm-9">{{post.sponsor}}</p>
+              </div>
+            {% endif %}
+
+            <!-- description: longDescription -->
+            {% if post.longDescription%}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Description </h5>
+              </div>
+              <div class="col-12 col-sm-9" id="longDes">
+                {% autoescape false %}{{post.longDescription}}{% endautoescape %}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- location -->
+            {% if post.location %}
+              <!-- location.description -->
+              {% if post.location.description %}
+                <div class="row">
+                  <div class="col-12 col-sm-2" id="longDes">
+                    <h5>Location </h5>
+                  </div>
+                  <p class="col-12 col-sm-9">{{post.location.description}}</p>
+                </div>
+              {% endif %}
+              <!-- location.address -->
+              {% if post.location.latitude %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Latitude </h5>
+                  </div>
+                  <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
+                </div>
+              {% endif %}
+              {% if post.location.longitude %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Longitude </h5>
+                  </div>
+                  <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
+                </div>
+              {% endif %}
+              <!-- google map API -->
+              <div class="row">
+                <div class="col-12 col-sm-9 offset-sm-2">
+                {% if post.location.latitude and post.location.longitude %}
+                  <div id="map" class="z-depth-1-half map-container" style="width: 720px"></div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- is super event? -->
+            {% if post.isSuperEvent %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Is Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Is Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+
+
+            <!-- sub event -->
+            {% if post.subEvents %}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Sub-Events</h5>
+              </div>
+              <table class="table table-hover col-sm-8">
+                <thead>
+                  <tr>
+                    <th scope="col-sm-2">Sub-Event Title</th>
+                    <th scope="col-sm-2">Track</th>
+                    <th scope="col-sm-2">Featured Event</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subevent in post.subEvents %}
+                  <tr>
+                    <td>
+                      <a href ="{{ url_for('user_events.sub_event', platformEventId=subevent.id) }}">{{subevent.name}}</a>
+                    </td>
+                    <td>{{subevent.track}}</td>
+                    {% if subevent.isFeatured%}
+                      <td>Yes</td>
+                    {% else %}
+                      <td>No</td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endif %}
+          </div>
+        </div>
 
       </div class = "media-body">
     </article>
@@ -431,68 +490,71 @@
           var end_html = document.getElementById('endDate').innerHTML.replace("T", " ");
           var date_end = new Date(end_html);
           {% if post.allDay %}
-            document.getElementById('endDate').innerHTML = date_end.toLocaleDateString();
+            document.getElementById('endDate').innerHTML = date_end.toDateString();
           {% else %}
             document.getElementById('endDate').innerHTML = moment(date_end).format('M/D/YYYY, hh:mm A');
           {% endif %}
       }
-      $(document).on("click", "#notificationbutton", function () {
-        let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
-        $.ajax({
-            url: url,
-            type: 'GET',
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function(){
-            return true;
-            },
-            success: function(data){
-                var ndevices = data.ndevices;
-                var deviceTokens = data.tokens;
-                $(".modal-body #ndevices").val(ndevices);
-                $(".modal-body #devicetokens").val(deviceTokens);
-                document.getElementById("devicetokens").style.visibility = "none";
-            }
-        });
-      });
 
-      let notificationConfirm = function(callback) {
-        $("#notificationConfirmModal").modal('show');
-        $("#notification-modal-btn-yes").on("click", function () {
-            callback(true);
-            $("#notificationConfirmModal").modal('hide');
-        });
-        $("#notification-modal-btn-no").on("click", function(){
-            callback(false);
-            $("#notificationConfirmModal").modal('hide');
-        });
-      };
-
-      $("#notificationsend").click(function(e) {
-        e.preventDefault();
-        notificationConfirm(function(confirm){
-          if(confirm){
-            {% if isUser %}
-            let url = "{{ url_for('user_events.notification_event', id=post.platformEventId) }}"
-            {% else %}
-            let url = "{{ url_for('event.notification_event', id=post.platformEventId) }}"
-            {% endif %}
+      {% if isUser %}
+          $(document).on("click", "#notificationbutton", function () {
+            let url = "{{ url_for('user_events.get_devicetokens', id=post.platformEventId) }}";
             $.ajax({
                 url: url,
-                type: 'POST',
-                data: {
-                    title: document.getElementById('title-name').value,
-                    message: document.getElementById('message-text').value,
-                    tokens: document.getElementById('devicetokens').value
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
                 },
                 success: function(data){
-                    location.reload();
+                    var ndevices = data.ndevices;
+                    var deviceTokens = data.tokens;
+                    $(".modal-body #ndevices").val(ndevices);
+                    $(".modal-body #devicetokens").val(deviceTokens);
+                    document.getElementById("devicetokens").style.visibility = "none";
                 }
             });
-          }
-        });
-      });
+          });
+
+          let notificationConfirm = function(callback) {
+            $("#notificationConfirmModal").modal('show');
+            $("#notification-modal-btn-yes").on("click", function () {
+                callback(true);
+                $("#notificationConfirmModal").modal('hide');
+            });
+            $("#notification-modal-btn-no").on("click", function(){
+                callback(false);
+                $("#notificationConfirmModal").modal('hide');
+            });
+          };
+
+          $("#notificationsend").click(function(e) {
+            e.preventDefault();
+            notificationConfirm(function(confirm){
+              if(confirm){
+                {% if isUser %}
+                let url = "{{ url_for('user_events.notification_event', id=post.platformEventId) }}"
+                {% else %}
+                let url = "{{ url_for('event.notification_event', id=post.platformEventId) }}"
+                {% endif %}
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        title: document.getElementById('title-name').value,
+                        message: document.getElementById('message-text').value,
+                        tokens: document.getElementById('devicetokens').value
+                    },
+                    success: function(data){
+                        location.reload();
+                    }
+                });
+              }
+            });
+          });
+      {% endif %}
 
       $("#approvebutton").click(function() {
         {% if isUser %}

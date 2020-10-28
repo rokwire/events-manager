@@ -1,3 +1,17 @@
+#  Copyright 2020 Board of Trustees of the University of Illinois.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import os
 import json
 import boto3
@@ -12,6 +26,9 @@ from bson.errors import InvalidId
 
 from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one, delete_events_in_list
 from .downloadImage import downloadImage
+
+from ..config import Config
+
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
 
@@ -261,7 +278,10 @@ def disapprove_event(id):
 
 
 def get_event(objectId):
-    return find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    # temporary solution for online event location display
+    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    filter_online_location(event)
+    return event
 
 
 def update_event(objectId, update):
@@ -348,8 +368,14 @@ def get_search_events(conditions, select_status, skip, limit):
     else:
         conditions['eventStatus'] = {"$in": select_status}
         conditions['sourceId'] = {"$exists": True}
-        return find_all(current_app.config['EVENT_COLLECTION'],
+        events = find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
+        
+        # temporary solution for online event location display
+        for event in events:
+            filter_online_location(event)
+        return events
+
 
 # delete events in building block
 def delete_events_in_building_block(objectId_list_to_delete):
@@ -378,3 +404,17 @@ def delete_events(objectId_list_to_delete):
     delete_events_remote = delete_events_in_building_block(objectId_list_to_delete)
     delete_events_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], delete_events_remote)
     return delete_events_local
+
+
+def filter_online_location(event):
+    if event:
+        location_description = event.get("location", {}).get("description", "")
+        if location_description == "":
+            return event
+        else:
+            for excluded_location in Config.EXCLUDED_LOCATION:
+                if excluded_location.lower() in location_description.lower():
+                    event["location"]["latitude"] = None
+                    event["location"]["longitude"] = None
+                    return event
+    return event

@@ -1,3 +1,19 @@
+<!------------------------------------------------------------------------
+  Copyright 2020 Board of Trustees of the University of Illinois.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ------------------------------------------------------------------------>
+
 {% macro confirmation(usage, title) %}
 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -9,7 +25,7 @@
           {% elif usage == "disapprove" %}
           Disapprove calendar
           {% elif usage == "approveEvent" %}
-          Approve event
+          Publish event
           {% elif usage == "disapproveEvent" %}
           Disapprove event
           {% else %}
@@ -26,7 +42,7 @@
         {% elif usage == "disapprove" %}
         Are you sure you want to disapprove the calendar <b>{{title}}</b> ?
         {% elif usage == "approveEvent" %}
-        You are about to approve the following event <b>{{title}}</b>
+        You are about to publish the following event <b>{{title}}</b>
         {% elif usage == "disapproveEvent" %}
         You are about to disapprove the following event <b>{{title}}</b>
         {% else %}

@@ -1,8 +1,24 @@
+#  Copyright 2020 Board of Trustees of the University of Illinois.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import pymongo
 import traceback
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from pymongo.results import InsertOneResult, UpdateResult
+from pymongo.mongo_client import MongoClient
 from flask import current_app,g
+from .config import Config
 
 ######################################################################
 ### Basic DB creation and access functions
@@ -31,6 +47,13 @@ def close_db(e=None):
 
 def init_db(app):
     app.teardown_appcontext(close_db)
+
+    # Set up Mongo client for text indexing
+    global client
+    client = MongoClient(Config.MONGO_URL)
+    db = client.get_database('rokwire')
+    events = db['eventsmanager_events']
+    events.create_index([("title", pymongo.TEXT)])
 
 
 ######################################################################
@@ -100,7 +123,7 @@ def find_all(co_or_ta, **kwarg):
             traceback.print_exc()
             return []
 
-def find_all_previous_event_ids(co_or_ta, **kwarg):
+def find_all_previous_event_ids(co_or_ta, filter, **kwarg):
     db = get_db()
     dbType = current_app.config['DBTYPE']
     if co_or_ta is None or db is None:
@@ -110,7 +133,7 @@ def find_all_previous_event_ids(co_or_ta, **kwarg):
         try:
             collection = db.get_collection(co_or_ta)
             projection = {'_id':1,'dataSourceEventId':1}
-            result = collection.find(projection=projection, **kwarg)
+            result = collection.find(filter=filter, projection=projection, **kwarg)
             if not result:
                 return []
 
@@ -209,6 +232,23 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
             traceback.print_exc()
             return UpdateResult()
 
+def replace_one(co_or_ta, condition=None, replacement=None, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if co_or_ta is None or condition is None or replacement is None or db is None:
+        return UpdateResult()
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            result = collection.replace_one(condition, replacement, **kwargs)
+            if not result:
+                return UpdateResult()
+            return result
+        except Exception:
+            traceback.print_exc()
+            return UpdateResult()
 
 def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
     db = get_db()
@@ -246,7 +286,7 @@ def get_count(co_or_ta, filter, **kwargs):
             traceback.print_exc()
             return 0
 
-#parameter: collection name, *objectId* list to delete
+# Parameters: collection name, *objectId* list to delete
 def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
@@ -267,3 +307,27 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
             return []
         except Exception:
             return []
+
+# Parameters: collection name, string to look for
+def text_index_search(co_or_ta, search_string, **kwargs):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
+
+    if search_string is None or co_or_ta is None:
+        return []
+
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            # Will return all records with matching regex and is case insensitive for title search
+            # There is also a projection limiting the fields returned to only title and platformEventID
+            result = collection.find({"$text": {"$search": search_string}, "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 0})
+            if not result:
+                return []
+            return result
+
+        except Exception:
+            return []
+
+
+
