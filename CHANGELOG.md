@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Yelp's detect secrets baseline file and pre-commit hook. [#563](https://github.com/rokwire/events-manager/issues/563)
 - Add time zone selection feature. [#533](https://github.com/rokwire/events-manager/issues/533)
 
+### Fixed
+- Fix timezone conversion issue with end date [#578](https://github.com/rokwire/events-manager/issues/578)
+
 ## [2.1.6] - 2020-10-13
 ### Fixed
 - Fix the exception of editing the subevent title. [#556](https://github.com/rokwire/events-manager/issues/556)
