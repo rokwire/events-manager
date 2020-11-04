@@ -461,7 +461,7 @@ def populate_event_from_form(post_form, email):
     end_date = post_form.get('endDate')
     if end_date != '':
         if 'timezone' in post_form:
-            new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
+            new_event['endDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
         else:
             new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 

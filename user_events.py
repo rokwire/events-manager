@@ -327,7 +327,7 @@ def user_an_event_edit(id):
         else:
             post_by_id['startDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['startDate'], all_day_event)
         if 'endDate' in post_by_id:
-            if 'timezone' in request.form:
+            if 'timezone' in post_by_id:
                 post_by_id['endDate'] = utc_to_time_zone(post_by_id.get('timezone'), post_by_id['endDate'], all_day_event)
             else:
                 post_by_id['endDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['endDate'], all_day_event)
