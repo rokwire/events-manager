@@ -124,6 +124,21 @@
             </div>
           </div>
 
+          <!-- timezones -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Time Zone<span style="color: red">*</span></h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                  {% for key, value in timezones.items() %}
+                      <option value = "{{key}}" id = {{key}}>{{value}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
           <!-- startDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">

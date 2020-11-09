@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2020-10-27
+### Changed
+- Read ALLOWED_IMAGE_EXTENSIONS as string. [#553](https://github.com/rokwire/events-manager/issues/553)
+- Use latest base image when building Docker image. [#560](https://github.com/rokwire/events-manager/issues/560)
+- Change the timezone name on GUI.[#568](https://github.com/rokwire/events-manager/issues/568)
+
+### Added
+- Yelp's detect secrets baseline file and pre-commit hook. [#563](https://github.com/rokwire/events-manager/issues/563)
+- Add time zone selection feature. [#533](https://github.com/rokwire/events-manager/issues/533)
+
+### Fixed
+- Fix timezone conversion issue with end date [#578](https://github.com/rokwire/events-manager/issues/578)
+
 ## [2.1.6] - 2020-10-13
 ### Fixed
 - Fix the exception of editing the subevent title. [#556](https://github.com/rokwire/events-manager/issues/556)
@@ -181,7 +194,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
+<<<<<<< HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.2.0...HEAD
+[2.2.0]: https://github.com/rokwire/events-manager/compare/2.1.6...2.2.0
+=======
 [Unreleased]: https://github.com/rokwire/events-manager/compare/2.1.6...HEAD
+>>>>>>> 953fa042249044d2df09295960a278e1aa53a2b5
 [2.1.6]: https://github.com/rokwire/events-manager/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/rokwire/events-manager/compare/2.1.4...2.1.5
 [2.1.4]: https://github.com/rokwire/events-manager/compare/2.1.3...2.1.4

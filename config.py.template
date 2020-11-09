@@ -14,6 +14,7 @@
 
 import os
 import ast
+import json
 
 from datetime import timedelta
 class Config(object):
@@ -463,7 +464,7 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = timedelta(hours=os.getenv("SESSION_LIFETIME_IN_HOURS", 1))
 
     # Allowed image extensions for user event image upload
-    ALLOWED_IMAGE_EXTENSIONS = os.getenv('ALLOWED_IMAGE_EXTENSIONS', {'png', 'jpg', 'jpeg', 'gif'})
+    ALLOWED_IMAGE_EXTENSIONS = ast.literal_eval(os.getenv('ALLOWED_IMAGE_EXTENSIONS', "{'png', 'jpg', 'jpeg', 'gif'}"))
 
     # Version to be displayed on home page
     VERSION = '2.0.1'
@@ -473,3 +474,7 @@ class Config(object):
 
     # Excluded location for calculating geo location
     EXCLUDED_LOCATION = ast.literal_eval(os.getenv("EXCLUDED_LOCATION", "{'zoom', 'online'}"))
+
+    # Time zones for user to select from
+    TIMEZONES = json.loads(os.getenv("TIMEZONES", '{"US/Pacific": "US/Pacific","US/Mountain": "US/Mountain", '
+                                                  '"US/Central": "US/Central", "US/Eastern": "US/Eastern"}'))
