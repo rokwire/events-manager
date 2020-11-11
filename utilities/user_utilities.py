@@ -773,10 +773,9 @@ def s3_image_upload(eventId, imageId):
             if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)):
                 image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)
                 break
-        # convert to jpg and save it
         if image_location == '':
-            print("Image for event {} not found".format(eventId))
-            raise FileNotFoundError
+            raise FileNotFoundError("Image for event {} not found".format(eventId))
+        # convert to jpg and save it
         with Image.open(image_location) as im:
             im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
                                     quality=95)
