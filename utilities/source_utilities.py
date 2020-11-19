@@ -200,14 +200,17 @@ def publish_image(id):
     return True
 
 def s3_publish_image(id, client):
-
+    image_location = ''
     try:
-
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
-        image_png_location = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
-
-        # convert from png to jpg and save it
-        with Image.open(image_png_location) as im:
+        for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id, extension)
+                break
+        if image_location == '':
+            raise FileNotFoundError("Image for event {} not found".format(id))
+        # convert to jpg and save it
+        with Image.open(image_location) as im:
             im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
                                     quality=95)
 
@@ -240,8 +243,8 @@ def s3_publish_image(id, client):
         return None
 
     finally:
-        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
-            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+        if os.path.exists(image_location):
+            os.remove(image_location)
 
         if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))

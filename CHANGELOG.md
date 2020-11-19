@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## [2.2.0] - 2020-10-27
+### Added
+- Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/553)
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
+
+## [2.2.0] - 2020-10-27
+- Accept all image extension in ALLWED_IMAGE_EXTENSIONS. [#555](https://github.com/rokwire/events-manager/issues/555)
 - Read ALLOWED_IMAGE_EXTENSIONS as string. [#553](https://github.com/rokwire/events-manager/issues/553)
 - Use latest base image when building Docker image. [#560](https://github.com/rokwire/events-manager/issues/560)
 - Change the timezone name on GUI.[#568](https://github.com/rokwire/events-manager/issues/568)
@@ -15,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Yelp's detect secrets baseline file and pre-commit hook. [#563](https://github.com/rokwire/events-manager/issues/563)
 - Add time zone selection feature. [#533](https://github.com/rokwire/events-manager/issues/533)
+
+### Fixed
+- Fix timezone conversion issue with end date [#578](https://github.com/rokwire/events-manager/issues/578)
 
 ## [2.1.6] - 2020-10-13
 ### Fixed

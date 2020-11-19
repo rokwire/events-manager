@@ -187,7 +187,7 @@ def user_an_event_edit(id):
                         path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                 else:
                     abort(400)  # TODO: Error page
-        if request.form['delete-image'] == '1':
+        elif request.form['delete-image'] == '1':
             if image_record:
                 success = s3_image_delete(id, image_record.get("_id"))
                 if success:
@@ -327,7 +327,7 @@ def user_an_event_edit(id):
         else:
             post_by_id['startDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['startDate'], all_day_event)
         if 'endDate' in post_by_id:
-            if 'timezone' in request.form:
+            if 'timezone' in post_by_id:
                 post_by_id['endDate'] = utc_to_time_zone(post_by_id.get('timezone'), post_by_id['endDate'], all_day_event)
             else:
                 post_by_id['endDate'] = get_datetime_in_local(post_by_id.get('location'), post_by_id['endDate'], all_day_event)

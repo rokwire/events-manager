@@ -461,7 +461,7 @@ def populate_event_from_form(post_form, email):
     end_date = post_form.get('endDate')
     if end_date != '':
         if 'timezone' in post_form:
-            new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
+            new_event['endDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
         else:
             new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
@@ -766,10 +766,17 @@ def s3_image_delete(eventId, imageId):
 
 
 def s3_image_upload(eventId, imageId):
+    image_location = ''
+    success = False
     try:
-        image_png_location = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
-        # convert from png to jpg and save it
-        with Image.open(image_png_location) as im:
+        for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)
+                break
+        if image_location == '':
+            raise FileNotFoundError("Image for event {} not found".format(eventId))
+        # convert to jpg and save it
+        with Image.open(image_location) as im:
             im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
                                     quality=95)
         client.upload_file(
@@ -787,8 +794,8 @@ def s3_image_upload(eventId, imageId):
         print("Upload image: {} for event {} failed".format(imageId, eventId))
         success = False
     finally:
-        if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
-            os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
+        if os.path.exists(image_location):
+            os.remove(image_location)
 
         if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
