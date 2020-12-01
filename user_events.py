@@ -187,7 +187,7 @@ def user_an_event_edit(id):
                         path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
                 else:
                     abort(400)  # TODO: Error page
-        if request.form['delete-image'] == '1':
+        elif request.form['delete-image'] == '1':
             if image_record:
                 success = s3_image_delete(id, image_record.get("_id"))
                 if success:
