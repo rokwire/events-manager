@@ -1,5 +1,5 @@
-# events-manager
-The goal of the events manager is to provide a web interface to manage events in the Rokwire platform. This includes the crawling events from event sources, the approval of the events ingestion to Rokwire events building block and the visualization of the events, etc.
+# Events Manager
+The goal of the Events Manager is to provide a web interface to manage events in the Rokwire platform. This includes the crawling events from event sources, the approval of the events ingestion to Rokwire events building block and the visualization of the events, etc.
 
 ## Run in Development Mode
 MongoDB's service needs to be started and a Mongo Shell needs to be connected in a separate terminal instance
@@ -49,6 +49,12 @@ The second one:
 virtualenv -p python3 venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+## Install pre-commit hooks
+```bash
+pip install -r requirements-dev.txt
+pre-commit install
 ```
 
 The following environment variables need to be set when running on development machine. This is not required when running within AWS.
