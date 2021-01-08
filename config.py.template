@@ -14,6 +14,7 @@
 
 import os
 import ast
+import json
 
 from datetime import timedelta
 class Config(object):
@@ -475,5 +476,5 @@ class Config(object):
     EXCLUDED_LOCATION = ast.literal_eval(os.getenv("EXCLUDED_LOCATION", "{'zoom', 'online'}"))
 
     # Time zones for user to select from
-    TIMEZONES = json.loads(os.getenv("TIMEZONES", '{"US/Pacific": "Pacific Time","US/Mountain": "Mountain Time", '
-                                                  '"US/Central": "Central Time", "US/Eastern": "Eastern Time"}'))
+    TIMEZONES = json.loads(os.getenv("TIMEZONES", '{"US/Pacific": "US/Pacific","US/Mountain": "US/Mountain", '
+                                                  '"US/Central": "US/Central", "US/Eastern": "US/Eastern"}'))

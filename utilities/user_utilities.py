@@ -461,7 +461,7 @@ def populate_event_from_form(post_form, email):
     end_date = post_form.get('endDate')
     if end_date != '':
         if 'timezone' in post_form:
-            new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
+            new_event['endDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
         else:
             new_event['endDate'] = get_datetime_in_utc(post_form.get('location'), end_date, 'endDate', all_day_event)
 
@@ -762,6 +762,31 @@ def s3_image_delete(eventId, imageId):
     except Exception:
         traceback.print_exc()
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        return False
+
+
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            #return f'{num:.1f} {x}'
+            #Alternative return statement works with Python 3.5 and above
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
+
+def size_check(eventID):
+    try:
+        image_path = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
+
+        if os.path.isfile(image_path):
+            file_information = os.stat(image_path)
+            return file_information.st_size
+        else:
+            print('Image associated with event: {} does not exist'.format(eventID))
+
+    except Exception:
+        traceback.print_exc()
+        print('Unknown Error occurred')
         return False
 
 
