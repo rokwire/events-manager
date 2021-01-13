@@ -321,6 +321,9 @@ def put_user_event(eventId):
                 timezone = event['timezone']
                 del event['timezone']
                 # TODO: Time zone conversion
+            if event.get('subEvents'):
+                for subEvent in event['subEvents']:
+                    del subEvent['name']
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
