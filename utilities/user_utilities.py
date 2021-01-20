@@ -66,7 +66,7 @@ def get_all_user_events_count(select_status):
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "endDate": {"$gt": today}}))
+                                            "endDate": {"$gte": today}}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}}))
@@ -78,7 +78,7 @@ def get_all_user_events_pagination(select_status, skip, limit):
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "endDate": {"$gt": today}},
+                                            "endDate": {"$gte": today}},
                                  skip=skip,
                                  limit=limit)
     else:
@@ -95,7 +95,7 @@ def get_all_user_events_pagination(select_status, skip, limit):
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
                                            "eventStatus": {"$in": select_status},
-                                           "endDate": {"$gt": today}}))
+                                           "endDate": {"$gte": today}}))
         else:
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
