@@ -25,7 +25,7 @@ import shutil
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import tz
 from .source_utilities import s3_publish_image
 from PIL import Image
@@ -61,24 +61,45 @@ def get_all_user_events(select_status):
 
 
 def get_all_user_events_count(select_status):
+    if 'hide_past' in select_status:
+        today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+        return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status},
+                                            "endDate": {"$gt": today}}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}}))
 
 
 def get_all_user_events_pagination(select_status, skip, limit):
-    eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
-                             condition={"sourceId": {"$exists": False},
-                                        "eventStatus": {"$in": select_status}},
-                             skip=skip,
-                             limit=limit)
+    today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+    if 'hide_past' in select_status:
+        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status},
+                                            "endDate": {"$gt": today}},
+                                 skip=skip,
+                                 limit=limit)
+    else:
+        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status}},
+                                 skip=skip,
+                                 limit=limit)
     begin = skip
     end = min(len(eventIds), skip + limit)
     events_by_eventId = {}
     for eventId in eventIds[begin:end]:
-        events = list(find_all(current_app.config['EVENT_COLLECTION'],
-                               filter={"eventId": eventId,
-                                       "eventStatus": {"$in": select_status}}))
+        if 'hide_past' in select_status:
+            events = list(find_all(current_app.config['EVENT_COLLECTION'],
+                                   filter={"eventId": eventId,
+                                           "eventStatus": {"$in": select_status},
+                                           "endDate": {"$gt": today}}))
+        else:
+            events = list(find_all(current_app.config['EVENT_COLLECTION'],
+                                   filter={"eventId": eventId,
+                                           "eventStatus": {"$in": select_status}}))
         if events:
             events_by_eventId[eventId] = events
 
