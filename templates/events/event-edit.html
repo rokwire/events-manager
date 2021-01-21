@@ -1017,7 +1017,6 @@
         } 
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
-        document.getElementById("startDate").setAttribute("min", dateTime);
         if ($startDate.val() != ""){
           document.getElementById("endDate").setAttribute("min", $startDate.val());
 
@@ -1086,7 +1085,6 @@
     } 
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
-    document.getElementById("startDate").setAttribute("min", dateTime);
 
     // set the min value of endDate to be startDate
     var start = $('#startDate').val()
