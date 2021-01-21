@@ -25,7 +25,7 @@ import shutil
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import tz
 from .source_utilities import s3_publish_image
 from PIL import Image
@@ -61,24 +61,45 @@ def get_all_user_events(select_status):
 
 
 def get_all_user_events_count(select_status):
+    if 'hide_past' in select_status:
+        today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+        return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status},
+                                            "endDate": {"$gte": today}}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}}))
 
 
 def get_all_user_events_pagination(select_status, skip, limit):
-    eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
-                             condition={"sourceId": {"$exists": False},
-                                        "eventStatus": {"$in": select_status}},
-                             skip=skip,
-                             limit=limit)
+    today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+    if 'hide_past' in select_status:
+        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status},
+                                            "endDate": {"$gte": today}},
+                                 skip=skip,
+                                 limit=limit)
+    else:
+        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": {"$exists": False},
+                                            "eventStatus": {"$in": select_status}},
+                                 skip=skip,
+                                 limit=limit)
     begin = skip
     end = min(len(eventIds), skip + limit)
     events_by_eventId = {}
     for eventId in eventIds[begin:end]:
-        events = list(find_all(current_app.config['EVENT_COLLECTION'],
-                               filter={"eventId": eventId,
-                                       "eventStatus": {"$in": select_status}}))
+        if 'hide_past' in select_status:
+            events = list(find_all(current_app.config['EVENT_COLLECTION'],
+                                   filter={"eventId": eventId,
+                                           "eventStatus": {"$in": select_status},
+                                           "endDate": {"$gte": today}}))
+        else:
+            events = list(find_all(current_app.config['EVENT_COLLECTION'],
+                                   filter={"eventId": eventId,
+                                           "eventStatus": {"$in": select_status}}))
         if events:
             events_by_eventId[eventId] = events
 
@@ -290,8 +311,6 @@ def put_user_event(eventId):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
-    superEventID = None
-    timezone = None
     try:
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
@@ -320,7 +339,6 @@ def put_user_event(eventId):
             if event.get('timezone'):
                 timezone = event['timezone']
                 del event['timezone']
-                # TODO: Time zone conversion
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
@@ -356,34 +374,11 @@ def put_user_event(eventId):
 
             # If PUT request successful, change status to approved
             else:
-                if timezone and superEventID:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                              condition={"_id": ObjectId(eventId)},
-                                              update={
-                                                  "$set": {"eventStatus": "approved",
-                                                           "superEventID": superEventID,
-                                                           "timezone": timezone}
-                                              })
-                elif superEventID:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                              condition={"_id": ObjectId(eventId)},
-                                              update={
-                                                  "$set": {"eventStatus": "approved",
-                                                           "superEventID": superEventID}
-                                              })
-                elif timezone:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                              condition={"_id": ObjectId(eventId)},
-                                              update={
-                                                  "$set": {"eventStatus": "approved",
-                                                           "timezone": timezone}
-                                              })
-                else:
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                              condition={"_id": ObjectId(eventId)},
-                                              update={
-                                                  "$set": {"eventStatus": "approved"}
-                                              })
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                          condition={"_id": ObjectId(eventId)},
+                                          update={
+                                              "$set": {"eventStatus": "approved"}
+                                          })
 
                 return True
 
@@ -762,6 +757,31 @@ def s3_image_delete(eventId, imageId):
     except Exception:
         traceback.print_exc()
         print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        return False
+
+
+def convert_bytes(num):
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+        if num < 1024.0:
+            #return f'{num:.1f} {x}'
+            #Alternative return statement works with Python 3.5 and above
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+
+
+def size_check(eventID):
+    try:
+        image_path = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)
+
+        if os.path.isfile(image_path):
+            file_information = os.stat(image_path)
+            return file_information.st_size
+        else:
+            print('Image associated with event: {} does not exist'.format(eventID))
+
+    except Exception:
+        traceback.print_exc()
+        print('Unknown Error occurred')
         return False
 
 
