@@ -41,6 +41,7 @@ from ..db import find_all, find_one, update_one, find_distinct, insert_one, find
 GOOGLEKEY = Config.GOOGLE_KEY
 gmaps = googlemaps.Client(key=GOOGLEKEY)
 
+
 def get_all_user_events(select_status):
     eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
@@ -66,7 +67,8 @@ def get_all_user_events_count(select_status):
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "endDate": {"$gte": today}}))
+                                            "$or": [{"endDate": {"$gte": today}},
+                                                    {"endDate": {"$exists": False}}]}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
                                         "eventStatus": {"$in": select_status}}))
@@ -78,7 +80,8 @@ def get_all_user_events_pagination(select_status, skip, limit):
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "endDate": {"$gte": today}},
+                                            "$or": [{"endDate": {"$gte": today}},
+                                                    {"endDate": {"$exists": False}}]},
                                  skip=skip,
                                  limit=limit)
     else:
@@ -95,7 +98,8 @@ def get_all_user_events_pagination(select_status, skip, limit):
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
                                            "eventStatus": {"$in": select_status},
-                                           "endDate": {"$gte": today}}))
+                                           "$or": [{"endDate": {"$gte": today}},
+                                                   {"endDate": {"$exists": False}}]}))
         else:
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
@@ -547,7 +551,8 @@ def get_datetime_in_local(location, str_utc_date, is_all_day_event):
         timezone_str = get_timezone_by_geolocation(latitude, longitude)
         localzone = tz.gettz(timezone_str)
 
-    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(localzone)
+    datetime_obj = datetime.strptime(str_utc_date[0:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone).astimezone(
+        localzone)
 
     if is_all_day_event:
         return datetime_obj.strftime("%Y-%m-%d")
@@ -742,6 +747,7 @@ def clickable_utility(platformEventId):
 # Initialization of global client
 client = boto3.client('s3')
 
+
 def s3_image_delete(eventId, imageId):
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
@@ -763,8 +769,8 @@ def s3_image_delete(eventId, imageId):
 def convert_bytes(num):
     for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
         if num < 1024.0:
-            #return f'{num:.1f} {x}'
-            #Alternative return statement works with Python 3.5 and above
+            # return f'{num:.1f} {x}'
+            # Alternative return statement works with Python 3.5 and above
             return "%3.1f %s" % (num, x)
         num /= 1024.0
 
@@ -798,7 +804,7 @@ def s3_image_upload(eventId, imageId):
         # convert to jpg and save it
         with Image.open(image_location) as im:
             im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
-                                    quality=95)
+                                   quality=95)
         client.upload_file(
             '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
             current_app.config['BUCKET'],
@@ -821,6 +827,7 @@ def s3_image_upload(eventId, imageId):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
 
         return success
+
 
 def s3_image_download(eventId, imageId):
     try:
@@ -846,6 +853,7 @@ def s3_image_download(eventId, imageId):
         print("Image: {} for event: {} download failed".format(imageId, eventId))
         return False
 
+
 def deletefile(tmpfile):
     try:
         if os.path.exists(tmpfile):
@@ -853,6 +861,7 @@ def deletefile(tmpfile):
 
     except Exception as ex:
         pass
+
 
 def s3_delete_reupload(eventId, imageId):
     try:
@@ -885,18 +894,19 @@ def imagedId_from_eventId(eventId):
         print("imageId retrieval for event: {} failed".format(eventId))
         return False
 
+
 def update_super_event_id(sub_event_id, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
-                                     condition={"platformEventId": sub_event_id})['_id']
+                                condition={"platformEventId": sub_event_id})['_id']
         if super_event_id == "":
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                         condition={'_id': ObjectId(sub_event_id)},
-                                         update={"$unset": {'superEventID': 1}}, upsert=True)
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$unset": {'superEventID': 1}}, upsert=True)
         else:
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                         condition={'_id': ObjectId(sub_event_id)},
-                                         update={"$set": {'superEventID': super_event_id}}, upsert=True)
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$set": {'superEventID': super_event_id}}, upsert=True)
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
             return False
