@@ -15,11 +15,12 @@
   ------------------------------------------------------------------------>
 
 <script>
-    $("#materialInline1, #materialInline2, #materialInline3, #materialInline4").on('click', function() {
+    $("#materialInline1, #materialInline2, #materialInline3, #materialInline4, #materialInline5").on('click', function() {
         let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
         let disapproved = ( $('#materialInline2').is(':checked') ? 1: 0);
         let published = ( $('#materialInline3').is(':checked') ? 1: 0);
         let pending = ( $('#materialInline4').is(':checked') ? 1: 0);
+        let hide_past = ( $('#materialInline5').is(':checked') ? 1: 0);
         $.ajax({
             {% if isUser %}
             url: "{{ url_for('user_events.select') }}",
@@ -32,7 +33,8 @@
                 approved: approved,
                 disapproved: disapproved,
                 published: published,
-                pending: pending
+                pending: pending,
+                hide_past: hide_past
             },
         }).always(function() {
             location.reload(true);

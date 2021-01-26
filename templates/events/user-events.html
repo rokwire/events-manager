@@ -53,10 +53,16 @@
             </label>
         </div>
          -->
-        <div class="form-check form-check-inline col-sm-3">
+        <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline4">
             <span class="badge badge-pill badge-warning">Pending </span>
+          </label>
+        </div>
+        <div class="form-check form-check-inline col-sm-3">
+          <input type="checkbox" class="form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
+          <label class="form-check-label" for="materialInline5">
+            <span class="badge badge-pill badge-warning">Hide Past Event </span>
           </label>
         </div>
       </div>
