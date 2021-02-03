@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
+- Change to allow to download and upload campus events without location.[#540](https://github.com/rokwire/events-manager/issues/540)
 
 ## [2.2.0] - 2020-10-27
 - Accept all image extension in ALLWED_IMAGE_EXTENSIONS. [#555](https://github.com/rokwire/events-manager/issues/555)
