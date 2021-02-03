@@ -70,9 +70,9 @@
       <div class="form-check form-check-inline row justify-content-end" >
         <div style="margin-right: 2px">
             <span>From</span>
-          <input type="datetime-local" id="from" value="{{start[:19]}}" max="9999-12-31T23:59:59"/>
+          <input type="date" id="from" value="{{start}}" max="9999-12-31"/>
             <span>to</span>
-          <input type="datetime-local" id="to" value="{{end[:19]}}" max="9999-12-31T23:59:59"/>
+          <input type="date" id="to" value="{{end}}" max="9999-12-31"/>
         </div>
         <a class="btn btn-secondary mr-2 " href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
       </div>

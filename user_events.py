@@ -69,14 +69,14 @@ def user_events():
         per_page = current_app.config['PER_PAGE']
         offset = (page - 1) * per_page
         if 'from' in session:
-            total = get_all_user_events_count(select_status, session['from'], session['to'])
+            total = get_all_user_events_count(select_status, start, end)
         else:
             total = get_all_user_events_count(select_status)
         if page <= 0 or offset >= total:
             offset = 0
             page = 1
         if 'from' in session:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page, session['from'], session['to'])
+            posts_dic = get_all_user_events_pagination(select_status, offset, per_page, start, end)
         else:
             posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
