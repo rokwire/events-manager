@@ -40,4 +40,25 @@
             location.reload(true);
         });
     })
+
+$("#from, #to").on('change', function() {
+        let from =  document.getElementById('from').value;
+        let to =  document.getElementById('to').value;
+        if(from === "" || to === "") return;
+        if(from.length !== 19) from = `${from}:00`;
+        if(to.length !== 19) to = `${to}:00`;
+        console.log(`\"${from}\"`);
+        console.log(`\"${to}\"`);
+        $.ajax({
+            url: "{{ url_for('user_events.time_range') }}",
+            dataType: 'json',
+            type    : 'POST',
+            data    : {
+                from: `${from}:00`,
+                to: `${to}:00`,
+            },
+        }).always(function() {
+            location.reload(true);
+        });
+    })
 </script>

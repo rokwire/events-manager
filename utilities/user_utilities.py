@@ -66,8 +66,8 @@ def get_all_user_events_count(select_status, start=None, end=None):
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "$and": [{"endDate": {"$gte": start}},
-                                                     {"endDate": {"$lte": end}}]}))
+                                            "$and": [{"startDate": {"$gte": start}},
+                                                     {"startDate": {"$lte": end}}]}))
     if 'hide_past' in select_status:
         today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
@@ -80,14 +80,14 @@ def get_all_user_events_count(select_status, start=None, end=None):
                                         "eventStatus": {"$in": select_status}}))
 
 
-def get_all_user_events_pagination(select_status, skip, limit, start=None, end=None):
+def get_all_user_events_pagination(select_status, skip, limit, startDate=None, endDate=None):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
-    if start and end:
+    if startDate and endDate:
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "$and": [{"endDate": {"$gte": start}},
-                                                     {"endDate": {"$lte": end}}]},
+                                            "$and": [{"startDate": {"$gte": startDate}},
+                                                     {"startDate": {"$lte": endDate}}]},
                                  skip=skip,
                                  limit=limit)
     elif 'hide_past' in select_status:
@@ -108,12 +108,12 @@ def get_all_user_events_pagination(select_status, skip, limit, start=None, end=N
     end = min(len(eventIds), skip + limit)
     events_by_eventId = {}
     for eventId in eventIds[begin:end]:
-        if start and end:
+        if startDate and endDate:
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
                                            "eventStatus": {"$in": select_status},
-                                           "$and": [{"endDate": {"$gte": start}},
-                                                    {"endDate": {"$lte": end}}]}))
+                                           "$and": [{"startDate": {"$gte": startDate}},
+                                                    {"startDate": {"$lte": endDate}}]}))
         elif 'hide_past' in select_status:
             events = list(find_all(current_app.config['EVENT_COLLECTION'],
                                    filter={"eventId": eventId,
