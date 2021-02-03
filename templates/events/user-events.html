@@ -96,11 +96,11 @@
                 {% endif %}
                     <div style="display:flex; position:absolute; left: 60%">
                         <div style="display:flex; overflow: hidden; padding-right: 10px">
-                            <h5 style="padding-right: 5px">Start</h5>
+                            <h5 style="padding-right: 5px">Starts:</h5>
                             <span>{{ posts_dic[eventID][0].startDate[:10] }} {{ posts_dic[eventID][0].startDate[11:] }}</span>
                         </div>
                         <div style="display:flex; overflow: hidden">
-                            <h5 style="padding-right: 5px">End </h5>
+                            <h5 style="padding-right: 5px">Ends: </h5>
                             {% if posts_dic[eventID][0].endDate %}
                                 <span>{{ posts_dic[eventID][0].endDate[:10] }} {{ posts_dic[eventID][0].endDate[11:] }}</span>
                             {% else %}
