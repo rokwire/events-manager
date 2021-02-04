@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom error pages. [#356](https://github.com/rokwire/events-manager/issues/356)
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
+- Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
+
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
 - Change to allow to download and upload campus events without location.[#540](https://github.com/rokwire/events-manager/issues/540)
