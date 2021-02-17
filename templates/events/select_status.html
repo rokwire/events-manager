@@ -14,6 +14,7 @@
   limitations under the License.
   ------------------------------------------------------------------------>
 
+<script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
 <script>
     $("#materialInline1, #materialInline2, #materialInline3, #materialInline4, #materialInline5").on('click', function() {
         let approved = ( $('#materialInline1').is(':checked') ? 1: 0);
@@ -40,4 +41,24 @@
             location.reload(true);
         });
     })
+
+    $("#from, #to").on('change', function() {
+        let from = moment(document.getElementById('from').value).utc();
+        let to = moment(document.getElementById('to').value).utc();
+        let from_string = from.format('YYYY-MM-DD');
+        let to_string = to.format('YYYY-MM-DD');
+        if (document.getElementById('from').value === "") from_string = "";
+        if (document.getElementById('to').value === "") to_string = "";
+        $.ajax({
+                url: "{{ url_for('user_events.time_range') }}",
+                dataType: 'json',
+                type    : 'POST',
+                data    : {
+                    from: from_string,
+                    to: to_string,
+                },
+            }).always(function() {
+                location.reload(true);
+            });
+        })
 </script>
