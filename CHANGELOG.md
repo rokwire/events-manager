@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- More information in event list. [#537](https://github.com/rokwire/events-manager/issues/537)
 - Checkbox to hide past event [#587](https://github.com/rokwire/events-manager/issues/587)
 - Custom error pages. [#356](https://github.com/rokwire/events-manager/issues/356)
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
