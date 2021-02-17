@@ -231,7 +231,10 @@ def parse(content, gmaps):
                 entry['location'] = {
                             'description': ""
                         }
-
+        else:
+            entry['location'] = {
+                'description': ""
+            }
         entry_location = entry['location']
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']
