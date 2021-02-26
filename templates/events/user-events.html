@@ -68,6 +68,13 @@
       </div>
       <!-- Search form -->
       <div class="form-check form-check-inline row justify-content-end" >
+        <div style="margin-right: 2px">
+            <span>From</span>
+          <input type="date" id="from" value="{{start}}" max="9999-12-31"/>
+            <span>to</span>
+          <input type="date" id="to" value="{{end}}" max="9999-12-31"/>
+            <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
+        </div>
         <a class="btn btn-secondary mr-2 " href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
       </div>
     <!-- comment out search GUI
