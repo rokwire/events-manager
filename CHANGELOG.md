@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Allow user to view event within selected time range. [#588](https://github.com/rokwire/events-manager/issues/588)
+- More information in event list. [#537](https://github.com/rokwire/events-manager/issues/537)
 - Checkbox to hide past event [#587](https://github.com/rokwire/events-manager/issues/587)
 - Custom error pages. [#356](https://github.com/rokwire/events-manager/issues/356)
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
@@ -15,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
+- Change to allow to download and upload campus events without location.[#540](https://github.com/rokwire/events-manager/issues/540)
+- Change .secrets-baseline.[#591](https://github.com/rokwire/events-manager/issues/591)
 
 ## [2.2.0] - 2020-10-27
 - Accept all image extension in ALLWED_IMAGE_EXTENSIONS. [#555](https://github.com/rokwire/events-manager/issues/555)
