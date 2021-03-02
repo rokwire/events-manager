@@ -118,10 +118,10 @@ def parse(content, gmaps):
     notSharedWithMobileList = []
 
     for pe in XML2JSON:
-        # skip if location not exist or empty.
-        if not pe.get('location'):
-            continue
-        
+        # decide not to skip if location not exist or empty.
+        # if not pe.get('location'):
+        #     continue
+
         if pe.get("shareWithIllinoisMobileApp", "false") == "false":
             dataSourceEventId = pe.get("eventId", "")
             result = find_one(
@@ -152,6 +152,8 @@ def parse(content, gmaps):
 
         # find geographical location
         skip_google_geoservice = False
+        if not pe.get('location'):
+            skip_google_geoservice = True
         # flag for checking online event
         found_online_event = False
         # compare with the existing location
@@ -161,15 +163,16 @@ def parse(content, gmaps):
         existing_location = existing_event.get('location')
 
         # filter out online location
-        pe_location_lower_case = pe["location"].lower()
-        for excluded_location in Config.EXCLUDED_LOCATION:
-            if excluded_location.lower() in pe_location_lower_case:
-                skip_google_geoservice = True
-                found_online_event = True
-                entry["location"] = {
-                    "description": pe["location"]
-                }
-                break
+        if pe.get('location'):
+            pe_location_lower_case = pe["location"].lower()
+            for excluded_location in Config.EXCLUDED_LOCATION:
+                if excluded_location.lower() in pe_location_lower_case:
+                    skip_google_geoservice = True
+                    found_online_event = True
+                    entry["location"] = {
+                        "description": pe["location"]
+                    }
+                    break
 
         if existing_location:
             # mark previouly unidentified online events
@@ -191,14 +194,14 @@ def parse(content, gmaps):
                         entry['location'] = GeoInfo
 
         if not entry.get('isVirtual') or not skip_google_geoservice:
-            location = pe['location']
+            location = pe.get('location')
             calendarName = pe['calendarName']
             sponsor = pe['sponsor']
 
             if location in predefined_locations:
                 entry['location'] = predefined_locations[location]
                 print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
-            else:
+            elif location:
                 (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
                 if found:
                     entry['location'] = GeoInfo
@@ -224,7 +227,14 @@ def parse(content, gmaps):
                         entry['location'] = {'description': pe['location']}
                         print("calendarId: %s, dataSourceEventId: %s,  location: %s geolocation not found" %
                               (entry.get('calendarId'), entry.get('dataSourceEventId'), entry.get('location')))
-
+            else:
+                entry['location'] = {
+                            'description': ""
+                        }
+        else:
+            entry['location'] = {
+                'description': ""
+            }
         entry_location = entry['location']
         if pe['timeType'] == "START_TIME_ONLY":
             startDate = pe['startDate']

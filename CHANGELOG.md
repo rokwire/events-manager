@@ -6,8 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - 2020-10-27
+## [2.3.0] - 2021-03-02
+### Added
+- Allow user to view event within selected time range. [#588](https://github.com/rokwire/events-manager/issues/588)
+- More information in event list. [#537](https://github.com/rokwire/events-manager/issues/537)
+- Checkbox to hide past event [#587](https://github.com/rokwire/events-manager/issues/587)
+- Custom error pages. [#356](https://github.com/rokwire/events-manager/issues/356)
+- Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
+- A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
+- Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
+
 ### Changed
+- Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
+- Change to allow to download and upload campus events without location.[#540](https://github.com/rokwire/events-manager/issues/540)
+- Change .secrets-baseline.[#591](https://github.com/rokwire/events-manager/issues/591)
+
+## [2.2.0] - 2020-10-27
+- Accept all image extension in ALLWED_IMAGE_EXTENSIONS. [#555](https://github.com/rokwire/events-manager/issues/555)
 - Read ALLOWED_IMAGE_EXTENSIONS as string. [#553](https://github.com/rokwire/events-manager/issues/553)
 - Use latest base image when building Docker image. [#560](https://github.com/rokwire/events-manager/issues/560)
 - Change the timezone name on GUI.[#568](https://github.com/rokwire/events-manager/issues/568)
@@ -194,7 +209,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.2.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.3.0...HEAD
+[2.3.0]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/rokwire/events-manager/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/rokwire/events-manager/compare/2.1.5...2.1.6
 [2.1.5]: https://github.com/rokwire/events-manager/compare/2.1.4...2.1.5
