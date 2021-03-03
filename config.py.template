@@ -422,9 +422,10 @@ class Config(object):
     ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     # Notification Auth Token
     FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")
-    #Pagination Variables
-    PER_PAGE = 4
-
+    # Pagination Variables
+    PER_PAGE = os.getenv("PER_PAGE", 5)
+    # All Pagination Variables Available
+    EVENTS_PER_PAGE = ast.literal_eval(os.getenv('EVENTS_PER_PAGE', "[5, 10, 20]"))
     # LDAP_* are used in NCSA or UIUC LDAP system for authentication access
     LDAP_ON=True
     LDAP_HOSTNAME=""
