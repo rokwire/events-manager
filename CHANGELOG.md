@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
 - Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
-- Allow user to select events per pages. [#586](https://github.com/rokwire/events-manager/issues/586)
+- Allow user to select events per pages. [#586] (https://github.com/rokwire/events-manager/issues/586)
 
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
