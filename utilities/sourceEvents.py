@@ -514,13 +514,24 @@ def start(targets=None):
     previous_eventId_list = find_all_previous_event_ids(current_app.config['EVENT_COLLECTION'], filter={"dataSourceEventId": {'$exists': 'true'}})
     urls = geturls(targets)
     for url in urls:
+        parsedEvents = list()
+        notShareWithMobileList = list()
         try:
-            rawEvents = download(url)
-            if rawEvents is None:
-                print("Invalid content in: {}".format(url))
-                continue
-            print("Begin parsing url: {}".format(url))
-            parsedEvents, notShareWithMobileList = parse(rawEvents, gmaps)
+            page_number = 0
+            while True:
+                pagination_url = url + "?pageNumber=%d" % page_number
+                rawEvents = download(pagination_url)
+                if rawEvents is None:
+                    print("Invalid content in: {}".format(pagination_url))
+                    continue
+                print("Begin parsing url: {}".format(pagination_url))
+                parsedEvents_iteration, notShareWithMobileList_iteration = parse(rawEvents, gmaps)
+                parsedEvents.extend(parsedEvents_iteration)
+                notShareWithMobileList.extend(notShareWithMobileList_iteration)
+                if not parsedEvents_iteration:
+                    break
+                    print("Stop downloading and parsing on url: {}".format(pagination_url))
+                page_number += 1
 
             #getting new event id's
             for event_current in parsedEvents:
