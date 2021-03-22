@@ -523,7 +523,6 @@ def start(targets=None):
                 rawEvents = download(pagination_url)
                 if rawEvents is None:
                     print("Invalid content in: {}".format(pagination_url))
-                    continue
                 print("Begin parsing url: {}".format(pagination_url))
                 parsedEvents_iteration, notShareWithMobileList_iteration = parse(rawEvents, gmaps)
                 parsedEvents.extend(parsedEvents_iteration)
@@ -532,6 +531,9 @@ def start(targets=None):
                     break
                     print("Stop downloading and parsing on url: {}".format(pagination_url))
                 page_number += 1
+
+            if not parsedEvents:
+                continue
 
             #getting new event id's
             for event_current in parsedEvents:
