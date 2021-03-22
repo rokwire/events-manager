@@ -528,8 +528,8 @@ def start(targets=None):
                 parsedEvents.extend(parsedEvents_iteration)
                 notShareWithMobileList.extend(notShareWithMobileList_iteration)
                 if not parsedEvents_iteration:
-                    break
                     print("Stop downloading and parsing on url: {}".format(pagination_url))
+                    break
                 page_number += 1
 
             if not parsedEvents:
