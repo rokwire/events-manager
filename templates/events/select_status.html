@@ -66,7 +66,7 @@
     $("#time-range-reset").on('click', reselect_time_range)
     $("#per_page").on('change', function () {
         $.ajax({
-            url: "{{ url_for('user_events.per_page') }}",
+            url: "{{ url_for('user_events.user_events') }}",
             dataType: 'json',
             type: 'POST',
             data: {

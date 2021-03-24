@@ -51,16 +51,20 @@ def user_events():
 
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
-        searchInput = request.form['searchInput']
-        query_dic = {}
-        search_list = searchInput.split('&')
-        for search in search_list:
-            params = search.split('=')
-            if params and len(params) == 2:
-                key = params[0]
-                value = params[1]
-                query_dic[key] = value
-        posts = get_searched_user_events(query_dic, select_status)
+        if 'searchInput' in request.form:
+            searchInput = request.form['searchInput']
+            query_dic = {}
+            search_list = searchInput.split('&')
+            for search in search_list:
+                params = search.split('=')
+                if params and len(params) == 2:
+                    key = params[0]
+                    value = params[1]
+                    query_dic[key] = value
+            posts = get_searched_user_events(query_dic, select_status)
+        if 'per_page' in request.form:
+            session["per_page"] = int(request.form.get('per_page'))
+            return "", 200
     else:
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -440,13 +444,6 @@ def select():
 def time_range():
     session["from"] = request.form.get('from')
     session["to"] = request.form.get('to')
-    return "", 200
-
-
-@userbp.route('/per_page', methods=['POST'])
-@role_required("user")
-def per_page():
-    session["per_page"] = int(request.form.get('per_page'))
     return "", 200
 
 
