@@ -293,3 +293,15 @@ def search():
     if request.method == "GET":
         return jsonify(["test1", "test2", "test3", "test4", "test5"])
     return jsonify([]), 200
+
+@bp.route('/event/<id>/delete', methods=['DELETE'])
+@role_required("source")
+def event_delete(id):
+    print("delete event id: %s" % id)
+    objectId_list_to_delete = list()
+    objectId_list_to_delete.append(ObjectId(id))
+    if event_status(id) == "published":
+        delete_events(objectId_list_to_delete)
+    else: # just delete from local
+        delete_events_in_list(current_app.config['EVENT_COLLECTION'], objectId_list_to_delete)
+    return "", 200
