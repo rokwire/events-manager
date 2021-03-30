@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
 
 ## [2.3.1] - 2021-03-22
 ### Security
@@ -20,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
 - Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
-- Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
 
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
