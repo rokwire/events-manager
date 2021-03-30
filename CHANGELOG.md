@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.1] - 2021-03-22
+### Security
+- Bump pillow from 8.0.0 to 8.1.1.(https://github.com/rokwire/events-manager/pull/610)
+- Bump jinja2 from 2.10.1 to 2.11.3.(https://github.com/rokwire/events-manager/pull/611)
+
 ## [2.3.0] - 2021-03-02
 ### Added
 - Allow user to view event within selected time range. [#588](https://github.com/rokwire/events-manager/issues/588)
@@ -210,7 +215,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.3.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.3.1...HEAD
+[2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1
 [2.3.0]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/rokwire/events-manager/compare/2.1.6...2.2.0
 [2.1.6]: https://github.com/rokwire/events-manager/compare/2.1.5...2.1.6
