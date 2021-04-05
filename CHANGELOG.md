@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
 
+### Fixed
+- Issue with download scheduler (when using manual calendar events download) blocking the web app and resulting in internal server error. [#620](https://github.com/rokwire/events-manager/issues/620).
+
 ## [2.3.1] - 2021-03-22
 ### Security
 - Bump pillow from 8.0.0 to 8.1.1.(https://github.com/rokwire/events-manager/pull/610)
