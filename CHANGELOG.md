@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add deletion button to delete campus events. [#618](https://github.com/rokwire/events-manager/issues/618)
+- Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
+
+### Changed
+- Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
+
+### Fixed
+- Issue with download scheduler (when using manual calendar events download) blocking the web app and resulting in internal server error. [#620](https://github.com/rokwire/events-manager/issues/620).
 
 ## [2.3.1] - 2021-03-22
 ### Security
@@ -22,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
 - Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
+- Allow user to select events per pages. [#586](https://github.com/rokwire/events-manager/issues/586)
 
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)

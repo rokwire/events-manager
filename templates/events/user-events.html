@@ -161,6 +161,12 @@
 
   <div class="d-flex justify-content-center">
   {{ pagination.links }}
+      <select id="per_page" class="selectpicker w-auto">
+          {% for key in page_config %}
+              <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+          {% endfor %}
+      </select>
+      <span style="margin-top: 5px">Events Per Page</span>
   </div>
 
 {% endblock %}
