@@ -51,22 +51,30 @@ def user_events():
 
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
-        searchInput = request.form['searchInput']
-        query_dic = {}
-        search_list = searchInput.split('&')
-        for search in search_list:
-            params = search.split('=')
-            if params and len(params) == 2:
-                key = params[0]
-                value = params[1]
-                query_dic[key] = value
-        posts = get_searched_user_events(query_dic, select_status)
+        if 'searchInput' in request.form:
+            searchInput = request.form['searchInput']
+            query_dic = {}
+            search_list = searchInput.split('&')
+            for search in search_list:
+                params = search.split('=')
+                if params and len(params) == 2:
+                    key = params[0]
+                    value = params[1]
+                    query_dic[key] = value
+            posts = get_searched_user_events(query_dic, select_status)
+        if 'per_page' in request.form:
+            session["per_page"] = int(request.form.get('per_page'))
+            return "", 200
     else:
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         except ValueError:
             page = 1
-        per_page = current_app.config['PER_PAGE']
+        if 'per_page' in session:
+            per_page = session['per_page']
+        else:
+            per_page = Config.PER_PAGE
+            session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
             total = get_all_user_events_count(select_status, start, end)
@@ -85,7 +93,7 @@ def user_events():
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
                             per_page=per_page, pagination=pagination,
-                            isUser=True, start=start, end=end)
+                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 @role_required("user")
@@ -437,6 +445,7 @@ def time_range():
     session["from"] = request.form.get('from')
     session["to"] = request.form.get('to')
     return "", 200
+
 
 @userbp.route('/event/add', methods=['GET', 'POST'])
 @role_required("user")
