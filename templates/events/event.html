@@ -606,7 +606,10 @@
                 type: 'DELETE',
                 success: function(data){
                     location.href = "{{ url_for('event.source', sourceId=0) }}"
-                }
+                },
+                error: function(data) {
+                    alert("event failed to delete")
+                },
             });
           {% endif %}
       });

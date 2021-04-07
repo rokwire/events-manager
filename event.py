@@ -300,8 +300,12 @@ def event_delete(id):
     print("delete event id: %s" % id)
     objectId_list_to_delete = list()
     objectId_list_to_delete.append(ObjectId(id))
+    deleted_events = list()
     if event_status(id) == "published":
-        delete_events(objectId_list_to_delete)
+        deleted_events = delete_events(objectId_list_to_delete)
     else: # just delete from local
-        delete_events_in_list(current_app.config['EVENT_COLLECTION'], objectId_list_to_delete)
+        deleted_events = delete_events_in_list(current_app.config['EVENT_COLLECTION'], objectId_list_to_delete)
+    # expect one event deletion
+    if len(deleted_events) != 1:
+        return "", 500
     return "", 200
