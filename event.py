@@ -34,6 +34,7 @@ from .config import Config
 
 bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
+
 @bp.route('/source/<sourceId>')
 @role_required("source")
 def source(sourceId):
@@ -109,7 +110,7 @@ def setting():
                             isUser=False,
                             sources=INT2SRC, 
                             allstatus=calendar_status, 
-                            url_prefix=calendar_prefix)
+                            url_prefix=calendar_prefix, schedule_time=get_download_schedule_time())
 
 @bp.route('/download', methods=['POST'])
 @role_required("source")
@@ -247,14 +248,15 @@ def searchresult():
 @role_required("source")
 def schedule():
     time = request.form.get('time')
+    update_download_schedule_time(time)
     targets = json.loads(request.form.get('targets'))
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
-    if time < present:
-        time = present
-        print("incorrect time")
-        return redirect('event.setting')
+    # if time < present:
+    #     time = present
+    #     print("incorrect time")
+    #     return redirect('event.setting')
     # scheduler function
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
