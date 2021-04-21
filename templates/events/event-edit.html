@@ -500,7 +500,7 @@
                     <input id="tags" name="tags" class="form-control" placeholder="Tags" type="text"/>
                 </div>
           </div>
-       
+
           <!-- sponsor -->
           {% if post.sponsor%}
             <div class="form-group row ">
@@ -852,6 +852,7 @@
    }
 
    //Clone the hidden element and shows it for tags
+   /*
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
      attach_delete_tags();
@@ -869,7 +870,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-
+   */
        //Super event checkbox
    function display_super_event_description(){
      var check = document.getElementById("super-event");
