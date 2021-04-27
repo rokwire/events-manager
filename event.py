@@ -253,11 +253,6 @@ def schedule():
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
-    # if time < present:
-    #     time = present
-    #     print("incorrect time")
-    #     return redirect('event.setting')
-    # scheduler function
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
