@@ -286,6 +286,18 @@ def get_event(objectId):
     filter_online_location(event)
     return event
 
+def get_download_schedule_time():
+    schedule_time = find_one('schedule_time', condition={ "time": { '$exists': True }})
+    return schedule_time.get('time')
+
+def update_download_schedule_time(schedule_time):
+    update_time = {"time": schedule_time}
+    update_one('schedule_time', condition={ "time": { '$exists': True }}, update={
+                                  "$set": update_time
+                              })
+
+def init_download_schedule_time(schedule_time):
+    insert_one('schedule_time', document={"time": schedule_time})
 
 def update_event(objectId, update):
     try:
