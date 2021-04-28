@@ -605,7 +605,7 @@
                 url: "{{ url_for('event.event_delete', id=post._id) }}",
                 type: 'DELETE',
                 success: function(data){
-                    location.href = "{{ url_for('event.source', sourceId=0) }}"
+                    location.href = "{{ url_for('event.calendar', calendarId=post.calendarId) }}"
                 },
                 error: function(data) {
                     alert("event failed to delete")

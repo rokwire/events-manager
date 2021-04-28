@@ -298,6 +298,8 @@ def search():
 @role_required("source")
 def event_delete(id):
     print("delete event id: %s" % id)
+    event = get_event(id)
+    calendar_id = event.get('calendarId')
     objectId_list_to_delete = list()
     objectId_list_to_delete.append(ObjectId(id))
     deleted_events = list()
@@ -308,4 +310,4 @@ def event_delete(id):
     # expect one event deletion
     if len(deleted_events) != 1:
         return "", 500
-    return "", 200
+    return calendar_id, 200
