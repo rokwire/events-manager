@@ -498,7 +498,7 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
-    sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['subEvents']
+    sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
         for sub_event in sub_events:
             update_super_event_id(sub_event['id'], '')

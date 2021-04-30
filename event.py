@@ -290,3 +290,21 @@ def search():
     if request.method == "GET":
         return jsonify(["test1", "test2", "test3", "test4", "test5"])
     return jsonify([]), 200
+
+@bp.route('/event/<id>/delete', methods=['DELETE'])
+@role_required("source")
+def event_delete(id):
+    print("delete event id: %s" % id)
+    event = get_event(id)
+    calendar_id = event.get('calendarId')
+    objectId_list_to_delete = list()
+    objectId_list_to_delete.append(ObjectId(id))
+    deleted_events = list()
+    if event_status(id) == "published":
+        deleted_events = delete_events(objectId_list_to_delete)
+    else: # just delete from local
+        deleted_events = delete_events_in_list(current_app.config['EVENT_COLLECTION'], objectId_list_to_delete)
+    # expect one event deletion
+    if len(deleted_events) != 1:
+        return "", 500
+    return calendar_id, 200

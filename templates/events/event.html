@@ -454,6 +454,13 @@
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
               </div>
           {% endif %}
+       {% else %}
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+            <button class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </button>
+          </div>
       {% endif %}
     </div>
   </div>
@@ -586,15 +593,25 @@
 
       $("#deletion-modal-btn-yes").click(function() {
           {% if isUser %}
-            let url = "{{ url_for('user_events.userevent_delete', id=post._id) }}"
-          {% endif %}
             $.ajax({
-                url: url,
+                url: "{{ url_for('user_events.userevent_delete', id=post._id) }}",
                 type: 'DELETE',
                 success: function(data){
                     location.href = "{{ url_for('user_events.user_events') }}"
                 }
             });
+          {% else %}
+            $.ajax({
+                url: "{{ url_for('event.event_delete', id=post._id) }}",
+                type: 'DELETE',
+                success: function(data){
+                    location.href = "{{ url_for('event.calendar', calendarId=post.calendarId) }}"
+                },
+                error: function(data) {
+                    alert("event failed to delete")
+                },
+            });
+          {% endif %}
       });
 
 

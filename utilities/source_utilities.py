@@ -433,3 +433,9 @@ def filter_online_location(event):
                     event["location"]["longitude"] = None
                     return event
     return event
+
+# Find the approval status for one event
+def event_status(objectId):
+    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    event_status = event['eventStatus']
+    return event_status
