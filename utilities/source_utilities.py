@@ -274,10 +274,14 @@ def approve_event(id):
 def disapprove_event(id):
     print("{} is going to be disapproved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-        "$set": {"eventStatus":  "disapproved"}
+        "$set": {"eventStatus":  "approved"}
     })
     if not result:
         print("Disapprove event {} fails in disapprove_event".format(id))
+    else:
+        if result.get("platformEventId"):
+            find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                "$set": {"submitType": "put"}})
 
 
 def get_event(objectId):

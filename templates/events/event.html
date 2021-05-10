@@ -68,7 +68,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">
-          Delete event
+          Pending event
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -91,7 +91,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">
-          Delete event
+          Publish event
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -626,6 +626,49 @@
                     }
                 });
               }
+            });
+          });
+
+      {%  else %}
+          $(document).on("click", "#publish-modal-btn-yes", function () {
+            let url = "{{ url_for('event.approveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
+            });
+          });
+
+
+          $(document).on("click", "#pending-modal-btn-yes", function () {
+              debugger
+            let url = "{{ url_for('event.disapproveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
             });
           });
       {% endif %}
