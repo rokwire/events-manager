@@ -56,18 +56,25 @@
 
   <div class="row row-content mt-3 mb-3">
       <div class="form-check form-check-inline"><h4>Show</h4></div>
+
+      <div class="form-check form-check-inline">
+          <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
+          <label class="form-check-label" for="materialInline3">
+              <span class="badge badge-pill badge-success">Published </span>
+          </label>
+      </div>
+
       <div class="form-check form-check-inline">
         <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
-        <label class="form-check-label" for="materialInline1">Pending</label>
+        <label class="form-check-label bage-warning" for="materialInline1">
+            <span class="badge badge-pill badge-warning">Published </span>
+        </label>
       </div>
 {#      <div class="form-check form-check-inline">#}
 {#          <input type="checkbox" class="form-check-input" id="materialInline2" {% if "disapproved" in select_status %}checked{%endif%}>#}
 {#          <label class="form-check-label" for="materialInline2">Disapproved</label>#}
 {#      </div>#}
-      <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
-          <label class="form-check-label" for="materialInline3">Published</label>
-      </div>
+
 {#      <div class="form-check form-check-inline">#}
 {#          <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>#}
 {#          <label class="form-check-label" for="materialInline4">Pending</label>#}
