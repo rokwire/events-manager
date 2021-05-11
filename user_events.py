@@ -46,7 +46,7 @@ def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
     else:
-        select_status = ['pending']
+        select_status = ['approved']
         session['select_status'] = select_status
 
     if request.method == 'POST':

@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add deletion button to delete campus events. [#618](https://github.com/rokwire/events-manager/issues/618)
 - Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
 - Show the message box to tell the user the failure of deletion on campus event.[#623](https://github.com/rokwire/events-manager/issues/623)
+- Add pending button on campus event page if this event is published.[#630](https://github.com/rokwire/events-manager/issues/630)
 
 ### Changed
 - Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
-
 ### Fixed
 - Issue with download scheduler (when using manual calendar events download) blocking the web app and resulting in internal server error. [#620](https://github.com/rokwire/events-manager/issues/620).
 - Fix updated scheduling download time data does not refresh on the setting page.[#625](https://github.com/rokwire/events-manager/issues/625)
