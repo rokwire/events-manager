@@ -45,13 +45,13 @@
 
 <div class="container-fluid">
   <div class="row mt-3 mb-3">
-    <div class="col text-center">
-      {% if calendarStatus == "approved" %}
-      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove All Events In Calendar</button>
-      {% else %}
-      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve All Events In Calendar</button>
-      {% endif %}
-    </div>
+{#    <div class="col text-center">#}
+{#      {% if calendarStatus == "approved" %}#}
+{#      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove All Events In Calendar</button>#}
+{#      {% else %}#}
+{#      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve All Events In Calendar</button>#}
+{#      {% endif %}#}
+{#    </div>#}
   </div>
 
   <div class="row row-content mt-3 mb-3">
@@ -80,9 +80,9 @@
 {#          <label class="form-check-label" for="materialInline4">Pending</label>#}
 {#      </div>#}
     <!--  checkbox group -->
-    <div class="col-6 float-right">
-      {{ searchbox(eventTypeValues, "calendar", calendarId) }}
-    </div>
+{#    <div class="col-6 float-right">#}
+{#      {{ searchbox(eventTypeValues, "calendar", calendarId) }}#}
+{#    </div>#}
 
   </div>
 

@@ -280,8 +280,11 @@ def disapprove_event(id):
         print("Disapprove event {} fails in disapprove_event".format(id))
     else:
         if result.get("platformEventId"):
+            objectId_list_to_delete = list()
+            objectId_list_to_delete.append(ObjectId(id))
+            delete_events_in_building_block(objectId_list_to_delete)
             find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-                "$set": {"submitType": "put"}})
+                "$set": {"submitType": "post", "platformEventId": None}})
 
 
 def get_event(objectId):

@@ -49,11 +49,11 @@ def source(sourceId):
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
-    if 'select_status' in session:
-        select_status = session['select_status']
+    if 'campus_select_status' in session:
+        select_status = session['campus_select_status']
     else:
-        select_status = ['pending']
-        session['select_status'] = select_status
+        select_status = ['published']
+        session['campus_select_status'] = select_status
     # find source of current calendar
     sourceId = '0'
     sourcetitle = "error: None"
@@ -133,7 +133,7 @@ def select():
     if request.form.get('pending') == '1':
         select_status.append('pending')
 
-    session["select_status"] = select_status
+    session["campus_select_status"] = select_status
     return "", 200
 
 @bp.route('/approve', methods=('GET', 'POST'))
