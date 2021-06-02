@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
 - Add deletion button to delete campus events. [#618](https://github.com/rokwire/events-manager/issues/618)
 - Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
 - Show the message box to tell the user the failure of deletion on campus event.[#623](https://github.com/rokwire/events-manager/issues/623)
