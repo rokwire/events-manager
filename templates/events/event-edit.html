@@ -92,7 +92,7 @@
         padding: 0;
         position: absolute;
         width: 1px;
-      } 
+      }
     </style>
 {% endblock %}
 
@@ -168,7 +168,7 @@
                 <h5>Event URL </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" />
+                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" placeholder="Link to additional event information"/>
               </div>
             </div>
           {% else %}
@@ -177,7 +177,7 @@
               <h5>Event URL </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
             </div>
           </div>
           {% endif %}
@@ -980,14 +980,14 @@
         console.log($startDate.val())
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         $startDate.val(startDate.format("YYYY-MM-DD"));
         $endDate.val(endDate.format("YYYY-MM-DD"));
@@ -1006,14 +1006,14 @@
         $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
         if ($startDate.val() != ""){
@@ -1059,7 +1059,7 @@
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
+    $('.delete-image').click(function() {
       console.log("click the image delete button")
       $("#form").find(':submit, input[type="image"]').prop('disabled', false);
       $('.delete-image').prop('disabled', true);
@@ -1074,14 +1074,14 @@
     // set the min value of startDate to be current time as the default behavior
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; 
+    var mm = today.getMonth()+1;
     var yyyy = today.getFullYear();
     if(dd<10){
       dd='0'+dd
-    } 
+    }
     if(mm<10){
       mm='0'+mm
-    } 
+    }
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
 
@@ -1092,4 +1092,3 @@
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
-
