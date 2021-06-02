@@ -338,6 +338,9 @@ def user_an_event_edit(id):
     # GET method
     elif request.method == 'GET':
 
+        headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+        tags = requests.get(Config.TAGS_URL, headers=headers)
+
         all_day_event = False
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
             all_day_event = True
@@ -381,7 +384,8 @@ def user_an_event_edit(id):
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                image = image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
-                               timezones=Config.TIMEZONES)
+                               timezones=Config.TIMEZONES,
+                               tags=tags.json())
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -450,12 +454,20 @@ def time_range():
 @userbp.route('/event/add', methods=['GET', 'POST'])
 @role_required("user")
 def add_new_event():
+    headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+    req = requests.get(Config.TAGS_URL, headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
                 update_super_event_id(subEvent['id'], new_event_id)
+        if new_event['tags']:
+            new_event['tags'] = new_event['tags'][0].split(',')
+            for i in range(1, len(new_event['tags'])):
+                new_event['tags'][i] = new_event['tags'][i].lstrip()
+                if new_event['tags'][i] == '':
+                    del new_event['tags'][i]
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -474,7 +486,8 @@ def add_new_event():
                                 targetAudienceMap=targetAudienceMap,
                                 extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                 size_limit=Config.IMAGE_SIZE_LIMIT,
-                                timezones=Config.TIMEZONES)
+                                timezones=Config.TIMEZONES,
+                                tags=req.json())
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")

@@ -235,12 +235,13 @@
           </div>
 
           <!-- tags -->
+          <meta id="availableTags" data-tags="{{tags}}">
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-                <div class="col-sm-3">
-                    <input id="tags" name="tags" class="form-control" placeholder="Tags" type="text"/>
+                <div class="col-sm-9">
+                    <input id="tags" name="tags" class="form-control" type="text">
                 </div>
           </div>
 
@@ -622,7 +623,44 @@
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
     document.getElementById("endDate").setAttribute("min", dateTime);
-    
+
+    const availableTags = (new Function("return " + $('#availableTags').data("tags") + ";")());
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
+    $( "#tags" ).on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
    </script>
 {% endblock %}
 
