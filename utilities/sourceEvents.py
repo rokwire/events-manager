@@ -151,8 +151,11 @@ def parse(content, gmaps):
         entry['allDay'] = False
 
         if 'costFree' in pe:
-            entry['isEventFree'] = pe.get('costFree')
-            
+            if pe.get('costFree') == "true":
+                entry['isEventFree'] = True
+            if pe.get('costFree') == "false":
+                entry['isEventFree'] = False
+
         # find geographical location
         skip_google_geoservice = False
         if not pe.get('location'):
