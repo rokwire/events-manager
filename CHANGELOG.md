@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show the message box to tell the user the failure of deletion on campus event.[#623](https://github.com/rokwire/events-manager/issues/623)
 - Add pending button on campus event page if this event is published.[#630](https://github.com/rokwire/events-manager/issues/630)
 - Map event type Religious/Cultural to Community.[#615](https://github.com/rokwire/events-manager/issues/615)
+- Add isEventFree field in the event if costFree field in WebTools event.[#645](https://github.com/rokwire/events-manager/issues/645)
 
 ### Changed
 - Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
