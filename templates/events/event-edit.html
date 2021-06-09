@@ -324,6 +324,18 @@
             </div>
           {% endif %}
 
+          <!-- Script to handle changing header -->
+          <script>
+            function selectionChanged(element) {
+              if (element.checked) {
+                document.getElementById('L2').innerHTML = 'Virtual Event URL';
+              }
+              else {
+                document.getElementById('L2').innerHTML = 'Location Address';
+              }
+            }
+          </script>
+
           <!-- isVirtual -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -331,9 +343,9 @@
             </div>
             <div class="col-sm-1">
                {% if post.isVirtual == True %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked/> Yes
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked onchange="selectionChanged(this)"/> Yes
                {% else %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
                {% endif %}
             </div>
           </div>
@@ -342,7 +354,7 @@
             {% if post.location and post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location Address</h5>
+                  <h5 id="L1">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
@@ -351,13 +363,14 @@
             {% else %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location Address</h5>
+                  <h5 id="L2">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
+
 
           <!-- target audience -->
 <!--          <div class="form-group row ">-->
