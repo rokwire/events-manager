@@ -153,7 +153,12 @@ def user_an_event_edit(id):
     if request.method == 'POST':
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
-        post_by_id['tags'] = get_tags(request.form)
+        if request.form['tags']:
+            post_by_id['tags'] = request.form['tags'].split(',')
+            for i in range(1, len(post_by_id['tags'])):
+                post_by_id['tags'][i] = post_by_id['tags'][i].lstrip()
+                if post_by_id['tags'][i] == '':
+                    del post_by_id['tags'][i]
         post_by_id['targetAudience'] = get_target_audience(request.form)
         image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:

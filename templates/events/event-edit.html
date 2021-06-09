@@ -1097,6 +1097,21 @@
           return false;
         }
       });
+    $( "#form" ).on( "submit", function(event) {
+      let tags = split(document.getElementById('tags').value);
+      for (let i = 0; i < tags.length - 1; i++) {
+          if (!availableTags.includes(tags[i])){
+            alert("Tags must be selected from list.");
+            event.preventDefault();
+          }
+      }
+      if (tags[tags.length - 1] !== "") {
+          if (!availableTags.includes(tags[tags.length - 1])){
+            alert("Tags must be selected from list.");
+            event.preventDefault();
+          }
+      }
+    })
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
