@@ -344,7 +344,7 @@ def user_an_event_edit(id):
     elif request.method == 'GET':
 
         headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
-        tags = requests.get(Config.TAGS_URL, headers=headers)
+        tags = requests.get(Config.EVENT_BUILDING_BLOCK_URL+"/tags", headers=headers)
 
         all_day_event = False
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
@@ -460,7 +460,7 @@ def time_range():
 @role_required("user")
 def add_new_event():
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
-    req = requests.get(Config.TAGS_URL, headers=headers)
+    req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
