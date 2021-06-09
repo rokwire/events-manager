@@ -27,6 +27,10 @@
 
 {% if post.eventStatus == "approved" %}
 {{ confirmation("disapproveEvent", post.title) }}
+{% elif not isUser %}
+{% if post.eventStatus == "published" %}
+ {{ confirmation("pending", post.title) }}
+{% endif %}
 {% else %}
 {{ confirmation("approveEvent", post.title) }}
 {% endif %}
@@ -53,6 +57,52 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary ml-1" id="deletion-modal-btn-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- pending Confirmation form -->
+<div class="modal fade" id="PendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Pending event
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You are about to set the following event <b>{{post.title}}</b> to pending state.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary ml-1" id="pending-modal-btn-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- publish Confirmation form -->
+<div class="modal fade" id="PublishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Publish event
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You are about to publish the following event <b>{{post.title}}</b>.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary ml-1" id="publish-modal-btn-yes">Confirm</button>
       </div>
     </div>
   </div>
@@ -92,13 +142,17 @@
               <p class="col-sm-9">
                 {% if post.eventStatus == "approved" %}
                     <!-- temporily change to published -->
-                  <span class="badge badge-pill badge-success"> published </span>
+                    {% if isUser %}
+                        <span class="badge badge-pill badge-success"> published </span>
+                    {% else %}
+                        <span class="badge badge-pill badge-warning"> pending </span>
+                    {% endif %}
                 {% elif post.eventStatus == "disapproved"%}
                   <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
                 {% elif post.eventStatus == "pending"%}
                   <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
                 {% else %}
-                  <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
+                  <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
                 {% endif %}
               </p>
   
@@ -426,6 +480,7 @@
     </article>
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+    {% if isUser %}
       <div class="btn-group mr-2" role="group" aria-label="First group">
 
         {% if post.eventStatus == "approved" %}
@@ -437,6 +492,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Publish</button>
         {% endif %}
       </div>
+    {% endif %}
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
@@ -454,6 +510,24 @@
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
               </div>
           {% endif %}
+       {% else %}
+          {% if post.eventStatus == "published" %}
+              <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#PendingModal">Pending</button>
+              </div>
+              {%  else %}
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#PublishModal">Publish</button>
+              </div>
+          {% endif %}
+
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+
+            <button class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </button>
+          </div>
       {% endif %}
     </div>
   </div>
@@ -554,6 +628,49 @@
               }
             });
           });
+
+      {%  else %}
+          $(document).on("click", "#publish-modal-btn-yes", function () {
+            let url = "{{ url_for('event.approveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
+            });
+          });
+
+
+          $(document).on("click", "#pending-modal-btn-yes", function () {
+              debugger
+            let url = "{{ url_for('event.disapproveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
+            });
+          });
       {% endif %}
 
       $("#approvebutton").click(function() {
@@ -586,15 +703,25 @@
 
       $("#deletion-modal-btn-yes").click(function() {
           {% if isUser %}
-            let url = "{{ url_for('user_events.userevent_delete', id=post._id) }}"
-          {% endif %}
             $.ajax({
-                url: url,
+                url: "{{ url_for('user_events.userevent_delete', id=post._id) }}",
                 type: 'DELETE',
                 success: function(data){
                     location.href = "{{ url_for('user_events.user_events') }}"
                 }
             });
+          {% else %}
+            $.ajax({
+                url: "{{ url_for('event.event_delete', id=post._id) }}",
+                type: 'DELETE',
+                success: function(data){
+                    location.href = "{{ url_for('event.calendar', calendarId=post.calendarId) }}"
+                },
+                error: function(data) {
+                    alert("event failed to delete")
+                },
+            });
+          {% endif %}
       });
 
 

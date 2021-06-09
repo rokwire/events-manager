@@ -274,10 +274,17 @@ def approve_event(id):
 def disapprove_event(id):
     print("{} is going to be disapproved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-        "$set": {"eventStatus":  "disapproved"}
+        "$set": {"eventStatus":  "approved"}
     })
     if not result:
         print("Disapprove event {} fails in disapprove_event".format(id))
+    else:
+        if result.get("platformEventId"):
+            objectId_list_to_delete = list()
+            objectId_list_to_delete.append(ObjectId(id))
+            delete_events_in_building_block(objectId_list_to_delete)
+            find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
+                "$set": {"submitType": "post", "platformEventId": None}})
 
 
 def get_event(objectId):
@@ -286,6 +293,18 @@ def get_event(objectId):
     filter_online_location(event)
     return event
 
+def get_download_schedule_time():
+    schedule_time = find_one('schedule_time', condition={ "time": { '$exists': True }})
+    return schedule_time.get('time')
+
+def update_download_schedule_time(schedule_time):
+    update_time = {"time": schedule_time}
+    update_one('schedule_time', condition={ "time": { '$exists': True }}, update={
+                                  "$set": update_time
+                              })
+
+def init_download_schedule_time(schedule_time):
+    insert_one('schedule_time', document={"time": schedule_time})
 
 def update_event(objectId, update):
     try:
@@ -421,3 +440,9 @@ def filter_online_location(event):
                     event["location"]["longitude"] = None
                     return event
     return event
+
+# Find the approval status for one event
+def event_status(objectId):
+    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)})
+    event_status = event['eventStatus']
+    return event_status

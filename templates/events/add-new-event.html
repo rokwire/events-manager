@@ -72,7 +72,7 @@
               <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
             </div>
           </div>
           <!-- event category -->
@@ -456,7 +456,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-    
+
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
     $(".search-id").autocomplete(
@@ -521,14 +521,14 @@
         console.log($startDate.val())
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         $startDate.val(startDate.format("YYYY-MM-DD"));
         $endDate.val(endDate.format("YYYY-MM-DD"));
@@ -547,14 +547,14 @@
         $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
         if ($startDate.val() != ""){
@@ -601,7 +601,7 @@
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
+    $('.delete-image').click(function() {
       console.log("click the image delete button")
       document.getElementById("image-display").style.display = "none";
       $('.custom-file-label').html('');
@@ -612,14 +612,14 @@
     // set the min value of startDate and endDate to be current time as the default behavior
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; 
+    var mm = today.getMonth()+1;
     var yyyy = today.getFullYear();
     if(dd<10){
       dd='0'+dd
-    } 
+    }
     if(mm<10){
       mm='0'+mm
-    } 
+    }
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
     document.getElementById("endDate").setAttribute("min", dateTime);
@@ -718,6 +718,6 @@
   padding: 0;
   position: absolute;
   width: 1px;
-} 
+}
 </style>
 {% endblock %}

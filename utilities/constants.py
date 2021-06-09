@@ -47,6 +47,7 @@ eventTypeMap = {
     "Meeting":                  "Academic",
     "Reception/Open House":     "Academic",
     "Seminar/Symposium":        "Academic",
+    "Religious/Cultural":       "Community",
     "Ceremony/Service":         "Community",
     "Community Service":        "Community",
     "Social/Informal Event":    "Community",

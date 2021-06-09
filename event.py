@@ -34,6 +34,7 @@ from .config import Config
 
 bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
+
 @bp.route('/source/<sourceId>')
 @role_required("source")
 def source(sourceId):
@@ -48,11 +49,11 @@ def source(sourceId):
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
-    if 'select_status' in session:
-        select_status = session['select_status']
+    if 'campus_select_status' in session:
+        select_status = session['campus_select_status']
     else:
-        select_status = ['pending']
-        session['select_status'] = select_status
+        select_status = ['published']
+        session['campus_select_status'] = select_status
     # find source of current calendar
     sourceId = '0'
     sourcetitle = "error: None"
@@ -109,7 +110,7 @@ def setting():
                             isUser=False,
                             sources=INT2SRC, 
                             allstatus=calendar_status, 
-                            url_prefix=calendar_prefix)
+                            url_prefix=calendar_prefix, schedule_time=get_download_schedule_time())
 
 @bp.route('/download', methods=['POST'])
 @role_required("source")
@@ -132,7 +133,7 @@ def select():
     if request.form.get('pending') == '1':
         select_status.append('pending')
 
-    session["select_status"] = select_status
+    session["campus_select_status"] = select_status
     return "", 200
 
 @bp.route('/approve', methods=('GET', 'POST'))
@@ -247,15 +248,11 @@ def searchresult():
 @role_required("source")
 def schedule():
     time = request.form.get('time')
+    update_download_schedule_time(time)
     targets = json.loads(request.form.get('targets'))
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
-    if time < present:
-        time = present
-        print("incorrect time")
-        return redirect('event.setting')
-    # scheduler function
     print(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
@@ -293,3 +290,21 @@ def search():
     if request.method == "GET":
         return jsonify(["test1", "test2", "test3", "test4", "test5"])
     return jsonify([]), 200
+
+@bp.route('/event/<id>/delete', methods=['DELETE'])
+@role_required("source")
+def event_delete(id):
+    print("delete event id: %s" % id)
+    event = get_event(id)
+    calendar_id = event.get('calendarId')
+    objectId_list_to_delete = list()
+    objectId_list_to_delete.append(ObjectId(id))
+    deleted_events = list()
+    if event_status(id) == "published":
+        deleted_events = delete_events(objectId_list_to_delete)
+    else: # just delete from local
+        deleted_events = delete_events_in_list(current_app.config['EVENT_COLLECTION'], objectId_list_to_delete)
+    # expect one event deletion
+    if len(deleted_events) != 1:
+        return "", 500
+    return calendar_id, 200
