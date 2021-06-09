@@ -232,6 +232,10 @@ def user_an_event_edit(id):
             all_day_event = True
         else:
             post_by_id['allDay'] = False
+        if 'isEventFree' in request.form and request.form.get('isEventFree') == 'on':
+            post_by_id['isEventFree'] = True
+        else:
+            post_by_id['isEventFree'] = False
 
         if 'isVirtual' in request.form and request.form.get('isVirtual') == 'on':
             post_by_id['isVirtual'] = True
