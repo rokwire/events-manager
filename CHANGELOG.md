@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
+- Add Free Event checkbox and add database entry. [#635](https://github.com/rokwire/events-manager/issues/635)
 - Add tag autocomplete and change the style to comma separate. [#637](https://github.com/rokwire/events-manager/issues/622)
 - XML12 was changed to XML15 in the config.py template. [#634](https://github.com/rokwire/events-manager/issues/634)
 - Add deletion button to delete campus events. [#618](https://github.com/rokwire/events-manager/issues/618)
