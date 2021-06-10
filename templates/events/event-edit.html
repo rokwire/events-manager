@@ -237,19 +237,7 @@
               </div>
             </div>
           {% endif %}
-          <!-- isVirtual -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
-            </div>
-            <div class="col-sm-1">
-               {% if post.isVirtual == True %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked/> Yes
-               {% else %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
-               {% endif %}
-            </div>
-          </div>
+
           <!-- freeEvent -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -349,11 +337,25 @@
             </div>
           {% endif %}
 
+          <!-- isVirtual -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Virtual Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.isVirtual == True %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked/> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
+               {% endif %}
+            </div>
+          </div>
+
           <!-- location -->
             {% if post.location and post.location.description %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5>Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
@@ -362,7 +364,7 @@
             {% else %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5>Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text"/>
