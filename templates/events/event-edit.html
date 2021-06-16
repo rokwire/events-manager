@@ -237,19 +237,7 @@
               </div>
             </div>
           {% endif %}
-          <!-- isVirtual -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
-            </div>
-            <div class="col-sm-1">
-               {% if post.isVirtual == True %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked/> Yes
-               {% else %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
-               {% endif %}
-            </div>
-          </div>
+
           <!-- freeEvent -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -349,20 +337,77 @@
             </div>
           {% endif %}
 
+          <!-- isVirtual -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Virtual Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.isVirtual == True %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged2(this)" checked /> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
+               {% endif %}
+            </div>
+          </div>
+
+          <!-- Script to handle changing header -->
+          <script>
+            function selectionChanged(element) {
+              if (document.getElementById('Location Header 1')) {
+                if (element.checked) {
+                  document.getElementById('Location Header 1').innerHTML = 'Virtual Event URL';
+                }
+                else {
+                  document.getElementById('Location Header 1').innerHTML = 'Location Address';
+                }
+              }
+              if (document.getElementById('Location Header 2')) {
+                if (element.checked) {
+                  document.getElementById('Location Header 2').innerHTML = 'Virtual Event URL';
+                }
+                else {
+                  document.getElementById('Location Header 2').innerHTML = 'Location Address';
+                }
+              }
+            }
+          </script>
+
+          <!-- Second Script to handle changing header -->
+          <script>
+            function selectionChanged2(element) {
+              if (element.checked) {
+                document.getElementById('Virtual Header').innerHTML = 'Virtual Event URL';
+              }
+              else {
+              document.getElementById('Virtual Header').innerHTML = 'Location Header';
+              }
+            }
+          </script>
+
           <!-- location -->
-            {% if post.location and post.location.description %}
+            {% if post.location and post.location.description and (post.isVirtual == Null or post.isVirtual == False) %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5 id="Location Header 2">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
                 </div>
               </div>
+            {% elif post.location and post.location.description and post.isVirtual == True %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5 id="Virtual Header">Virtual Event URL </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}"/>
+                </div>
+              </div>
             {% else %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5 id="Location Header 1">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
                   <input id="location" name="location" class="form-control" type="text"/>
