@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Dynamic header tag implemented. [#636](https://github.com/rokwire/events-manager/issues/636)
+- Virtual event checkbox moved above location field. Location field renamed. Dynamic header implemented [#636](https://github.com/rokwire/events-manager/issues/636)
 - Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
 - Add Free Event checkbox and add database entry. [#635](https://github.com/rokwire/events-manager/issues/635)
 - Add tag autocomplete and change the style to comma separate. [#637](https://github.com/rokwire/events-manager/issues/622)
