@@ -275,6 +275,7 @@
               </div>
               <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
             </div>
+            </div>
             {% endif %}
 
             <!-- event building block id -->
@@ -390,20 +391,21 @@
               <!-- Virtual Event -->
               {% if post.isVirtual %}
                 <div class="row">
-                  <div class="col-12 col-sm-3">
+                  <div class="col-12 col-sm-2">
                     <h5>Virtual Event</h5>
                   </div>
                       <p class = "col-sm-9">Yes</p>
                 </div>
               {% else %}
                 <div class="row">
-                  <div class="col-12 col-sm-3">
+                  <div class="col-12 col-sm-2">
                     <h5>Virtual Event</h5>
                   </div>
                       <p class = "col-sm-9">No</p>
                 </div>
               {% endif %}
             </div>
+
             <!-- location -->
             {% if post.location %}
               <!-- location.description -->
@@ -440,6 +442,7 @@
                   </div>
                   <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
                 </div>
+
               {% endif %}
               <!-- google map API -->
               <div class="row">
@@ -451,6 +454,7 @@
             </div>
             {% endif %}
 
+            <div>
             <!-- is super event? -->
             {% if post.isSuperEvent %}
               <div class="row">
@@ -466,6 +470,7 @@
                 </div>
                     <p class = "col-sm-9">No</p>
               </div>
+            </div>
             {% endif %}
 
 
