@@ -174,7 +174,7 @@
           <!-- location -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5 id="Location Header">Location Address</h5>
+              <h5 id="Location Header" type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
               <input id="location" name="location" class="form-control" type="text"/>
@@ -186,9 +186,12 @@
             function selectionChanged(element) {
               if (element.checked) {
                 document.getElementById('Location Header').innerHTML = 'Virtual Event URL';
+                document.getElementById('location').type = 'url';
               }
               else {
                 document.getElementById('Location Header').innerHTML = 'Location Address';
+                document.getElementById('location').type = 'text';
+
               }
             }
           </script>

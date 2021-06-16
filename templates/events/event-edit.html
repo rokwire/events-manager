@@ -357,17 +357,24 @@
               if (document.getElementById('Location Header 1')) {
                 if (element.checked) {
                   document.getElementById('Location Header 1').innerHTML = 'Virtual Event URL';
+                  document.getElementById('location 1').type = 'url';
                 }
                 else {
                   document.getElementById('Location Header 1').innerHTML = 'Location Address';
+                  document.getElementById('location 1').type = 'text';
+
                 }
               }
               if (document.getElementById('Location Header 2')) {
                 if (element.checked) {
                   document.getElementById('Location Header 2').innerHTML = 'Virtual Event URL';
+                  document.getElementById('location 3').type = 'url';
+
                 }
                 else {
                   document.getElementById('Location Header 2').innerHTML = 'Location Address';
+                  document.getElementById('location 3').type = 'text';
+
                 }
               }
             }
@@ -378,9 +385,12 @@
             function selectionChanged2(element) {
               if (element.checked) {
                 document.getElementById('Virtual Header').innerHTML = 'Virtual Event URL';
+                document.getElementById('location 2').type = 'url';
               }
               else {
               document.getElementById('Virtual Header').innerHTML = 'Location Address';
+              document.getElementById('location 2').type = 'text';
+
               }
             }
           </script>
@@ -392,7 +402,7 @@
                   <h5 id="Location Header 2">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
-                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
+                  <input id="location 3" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
                 </div>
               </div>
             {% elif post.location and post.location.description and post.isVirtual == True %}
@@ -401,7 +411,7 @@
                   <h5 id="Virtual Header">Virtual Event URL </h5>
                 </div>
                 <div class="col-sm-9">
-                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}"/>
+                  <input id="location 2" name="location" class="form-control" type="text" value= "{{post.location.description}}"/>
                 </div>
               </div>
             {% else %}
@@ -410,7 +420,7 @@
                   <h5 id="Location Header 1">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
-                  <input id="location" name="location" class="form-control" type="text"/>
+                  <input id="location 1" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
