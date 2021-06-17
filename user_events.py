@@ -252,6 +252,10 @@ def user_an_event_edit(id):
                 post_by_id['title'] = request.form[item]
             elif item == 'titleURL':
                 post_by_id['titleURL'] = request.form[item]
+            elif item == 'registrationURL': #Added
+                post_by_id['registrationURL'] = request.form[item] #Added
+            elif item == 'registrationLabel': #Added
+                post_by_id['registrationLabel'] = request.form[item] #Added
             elif item == 'category':
                 post_by_id['category'] = request.form[item]
             elif item == 'cost':
@@ -341,7 +345,7 @@ def user_an_event_edit(id):
             success = put_user_event(id)
             if not success:
                 return "fail", 200
-        
+
         return redirect(url_for('user_events.user_an_event', id=id))
 
     # GET method
@@ -487,7 +491,7 @@ def add_new_event():
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
-        return render_template("events/add-new-event.html", 
+        return render_template("events/add-new-event.html",
                                 isUser=True,
                                 eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
