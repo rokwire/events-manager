@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
 - Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
 - Add Free Event checkbox and add database entry. [#635](https://github.com/rokwire/events-manager/issues/635)
 - Add tag autocomplete and change the style to comma separate. [#637](https://github.com/rokwire/events-manager/issues/622)
