@@ -155,7 +155,7 @@
                   <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
                 {% endif %}
               </p>
-  
+
             </div>
             {% endif %}
           </div>
@@ -290,7 +290,17 @@
               <div class="col-12 col-sm-2">
                 <h5>Event URL </h5>
               </div>
-              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
+              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{post.titleURL}}</span></a>
+            </div>
+            {% endif %}
+
+            <!-- registration URL -->
+            {% if post.registrationURL%}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Registration URL</h5>
+              </div>
+              <a href="{{ post.registrationURL}}" class="col-sm-9"><span class="s1">{{post.registrationURL}}</span></a>
             </div>
             {% endif %}
 
