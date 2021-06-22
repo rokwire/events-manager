@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 
+- Hide Past event -> Hide Past Events. [#641](https://github.com/rokwire/events-manager/issues/641)
 - Virtual event checkbox moved above location field. Location field renamed. Dynamic header implemented [#636](https://github.com/rokwire/events-manager/issues/636)
 - Registration URL and Registration Label fields added with functionality [#640](https://github.com/rokwire/events-manager/issues/640)
 - Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
