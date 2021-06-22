@@ -113,11 +113,11 @@
                             <span>{{ posts_dic[eventID][0].startDate[:10] }} {{ posts_dic[eventID][0].startDate[11:] }}</span>
                         </div>
                         <div style="display:flex; overflow: hidden">
-                            <h5 style="padding-right: 5px">Ends: </h5>
                             {% if posts_dic[eventID][0].endDate %}
+                                <h5 style="padding-right: 5px">Ends: </h5>
                                 <span>{{ posts_dic[eventID][0].endDate[:10] }} {{ posts_dic[eventID][0].endDate[11:] }}</span>
                             {% else %}
-                                <span>Not Available</span>
+                            <!-- Not Available tag removed -->
                             {% endif %}
                         </div>
                     </div>
