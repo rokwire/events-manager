@@ -660,6 +660,47 @@
             </div>
           </div> -->
 
+          <!-- registration url -->
+          {% if post.registrationURL%}
+            <div class="form-group row ">
+              <label class="col-12 col-sm-2 form-control-label">
+                <h5>Registration URL</h5>
+              </label>
+              <div class="col-sm-9">
+                <input class="form-control" type="url" id="registrationURL" name="registrationURL" value="{{post.registrationURL}}" placeholder="Link to the event registration page"/>
+              </div>
+            </div>
+          {% else %}
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration URL</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- registration label -->
+          {% if post.registrationLabel%}
+            <div class="form-group row ">
+              <label class="col-12 col-sm-2 form-control-label">
+                <h5>Registration Label</h5>
+              </label>
+              <div class="col-sm-9">
+                <input class="form-control" id="registrationLabel" name="registrationLabel" value="{{post.registrationLabel}}" placeholder="Register Here!"/>
+              </div>
+            </div>
+          {% else %}
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration Label</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+            </div>
+          </div>
+          {% endif %}
 
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
