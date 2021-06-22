@@ -1,12 +1,9 @@
 <!------------------------------------------------------------------------
   Copyright 2020 Board of Trustees of the University of Illinois.
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
       http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -155,7 +152,7 @@
                   <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
                 {% endif %}
               </p>
-  
+
             </div>
             {% endif %}
           </div>
@@ -182,24 +179,7 @@
             {% endif %}
           </div>
 
-          <div class="item3" style="grid-area: auto / left;">
-            <!-- Virtual Event -->
-            {% if post.isVirtual %}
-              <div class="row">
-                <div class="col-12 col-sm-3">
-                  <h5>Virtual Event</h5>
-                </div>
-                    <p class = "col-sm-9">Yes</p>
-              </div>
-            {% else %}
-              <div class="row">
-                <div class="col-12 col-sm-3">
-                  <h5>Virtual Event</h5>
-                </div>
-                    <p class = "col-sm-9">No</p>
-              </div>
-            {% endif %}
-          </div>
+          
           <div class="item4" style="grid-area: auto / left;">
             <!-- Free Event -->
             {% if post.isEventFree %}
@@ -290,7 +270,17 @@
               <div class="col-12 col-sm-2">
                 <h5>Event URL </h5>
               </div>
-              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
+              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{post.titleURL}}</span></a>
+            </div>
+            {% endif %}
+
+            <!-- registration URL -->
+            {% if post.registrationURL%}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Registration URL</h5>
+              </div>
+              <a href="{{ post.registrationURL}}" class="col-sm-9"><span class="s1">{{post.registrationURL}}</span></a>
             </div>
             {% endif %}
 
@@ -403,15 +393,41 @@
             </div>
             {% endif %}
 
+            <!-- Virtual Event -->
+              {% if post.isVirtual %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Virtual Event</h5>
+                  </div>
+                      <p class = "col-sm-9">Yes</p>
+                </div>
+              {% else %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Virtual Event</h5>
+                  </div>
+                      <p class = "col-sm-9">No</p>
+                </div>
+              {% endif %}
+
             <!-- location -->
             {% if post.location %}
               <!-- location.description -->
-              {% if post.location.description %}
+              {% if post.location.description and (post.isVirtual == Null or post.isVirtual == False) %}
                 <div class="row">
                   <div class="col-12 col-sm-2" id="longDes">
-                    <h5>Location </h5>
+                    <h5>Location Address</h5>
                   </div>
                   <p class="col-12 col-sm-9">{{post.location.description}}</p>
+                </div>
+              {% endif %}
+              <!-- virtual event URL -->
+              {% if post.location.description and post.isVirtual == True %}
+                <div class="row">
+                  <div class="col-12 col-sm-2" id="longDes">
+                    <h5>Virtual Event URL</h5>
+                  </div>
+                  <p class="col-12 col-sm-9"><a href="{{post.location.description}}">{{post.location.description}}</a></p>
                 </div>
               {% endif %}
               <!-- location.address -->

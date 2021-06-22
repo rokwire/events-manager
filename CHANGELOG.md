@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
+- Virtual event checkbox moved above location field. Location field renamed. Dynamic header implemented [#636](https://github.com/rokwire/events-manager/issues/636)
+- Registration URL and Registration Label fields added with functionality [#640](https://github.com/rokwire/events-manager/issues/640)
 - Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
 - Add Free Event checkbox and add database entry. [#635](https://github.com/rokwire/events-manager/issues/635)
 - Add tag autocomplete and change the style to comma separate. [#637](https://github.com/rokwire/events-manager/issues/622)
@@ -166,7 +168,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - optimize the google geolocation service usage
 - fix UTC time conversion outside of central timezone.
 - required fields bug in the add event page.
-- validation for optional end date field. 
+- validation for optional end date field.
 - fixed a few issues related to editing an event.
 - check before deleting field.
 
