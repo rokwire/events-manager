@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2021-06-22
+### Added
+- Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
+- Virtual event checkbox moved above location field. Location field renamed. Dynamic header implemented [#636](https://github.com/rokwire/events-manager/issues/636)
+- Registration URL and Registration Label fields added with functionality [#640](https://github.com/rokwire/events-manager/issues/640)
+- Placeholder text added to Event URL field. [#637](https://github.com/rokwire/events-manager/issues/637)
+- Add Free Event checkbox and add database entry. [#635](https://github.com/rokwire/events-manager/issues/635)
+- Add tag autocomplete and change the style to comma separate. [#637](https://github.com/rokwire/events-manager/issues/622)
+- XML12 was changed to XML15 in the config.py template. [#634](https://github.com/rokwire/events-manager/issues/634)
+- Add deletion button to delete campus events. [#618](https://github.com/rokwire/events-manager/issues/618)
+- Refresh setting page after adding a new calendar. [#605](https://github.com/rokwire/events-manager/issues/605)
+- Show the message box to tell the user the failure of deletion on campus event.[#623](https://github.com/rokwire/events-manager/issues/623)
+- Add pending button on campus event page if this event is published.[#630](https://github.com/rokwire/events-manager/issues/630)
+- Map event type Religious/Cultural to Community.[#615](https://github.com/rokwire/events-manager/issues/615)
+- Add isEventFree field in the event if costFree field in WebTools event.[#645](https://github.com/rokwire/events-manager/issues/645)
+
+### Changed
+- Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
+### Fixed
+- Issue with download scheduler (when using manual calendar events download) blocking the web app and resulting in internal server error. [#620](https://github.com/rokwire/events-manager/issues/620).
+- Fix updated scheduling download time data does not refresh on the setting page.[#625](https://github.com/rokwire/events-manager/issues/625)
+
 ## [2.3.1] - 2021-03-22
 ### Security
 - Bump pillow from 8.0.0 to 8.1.1.(https://github.com/rokwire/events-manager/pull/610)
@@ -20,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributor guidelines. [#574](https://github.com/rokwire/events-manager/issues/574)
 - A pull request template. [#575](https://github.com/rokwire/events-manager/issues/575)
 - Add detect-secrets.yaml. [#591](https://github.com/rokwire/events-manager/issues/591)
+- Allow user to select events per pages. [#586](https://github.com/rokwire/events-manager/issues/586)
 
 ### Changed
 - Read version from git tag [#376](https://github.com/rokwire/events-manager/issues/376)
@@ -147,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - optimize the google geolocation service usage
 - fix UTC time conversion outside of central timezone.
 - required fields bug in the add event page.
-- validation for optional end date field. 
+- validation for optional end date field.
 - fixed a few issues related to editing an event.
 - check before deleting field.
 
@@ -214,7 +237,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.3.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.0...HEAD
+[2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1
 [2.3.0]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.0
 [2.2.0]: https://github.com/rokwire/events-manager/compare/2.1.6...2.2.0

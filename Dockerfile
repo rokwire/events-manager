@@ -40,4 +40,4 @@ RUN chmod -R 755 /app/images /app/temp
 
 USER nobody
 
-CMD ["gunicorn", "events-manager:create_app()", "--config", "/app/events-manager/gunicorn.config.py", "--timeout", "7200"]
+CMD ["gunicorn", "events-manager:create_app()", "--config", "/app/events-manager/gunicorn.config.py", "--timeout", "7200", "--preload"]

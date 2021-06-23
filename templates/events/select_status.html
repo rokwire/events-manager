@@ -64,4 +64,16 @@
 
     $("#from, #to").on('change', reselect_time_range)
     $("#time-range-reset").on('click', reselect_time_range)
+    $("#per_page").on('change', function () {
+        $.ajax({
+            url: "{{ url_for('user_events.user_events') }}",
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                per_page: document.getElementById('per_page').value,
+            },
+        }).always(function () {
+            location.reload(true);
+        });
+    })
 </script>

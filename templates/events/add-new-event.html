@@ -72,7 +72,7 @@
               <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
             </div>
           </div>
           <!-- event category -->
@@ -105,13 +105,16 @@
               </div>
             </div>
           </div>
-          <!-- isVirtual -->
+
+
+
+          <!-- freeEvent -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
+              <h5>Free Event</h5>
             </div>
             <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
+              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
             </div>
           </div>
           <!-- allDay -->
@@ -123,7 +126,6 @@
               <input class="form_control" type="checkbox" id="allDay" name="allDay"/> Yes
             </div>
           </div>
-
           <!-- timezones -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -157,15 +159,41 @@
               <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
             </div>
           </div>
+
+          <!-- isVirtual -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Virtual Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
+            </div>
+          </div>
+
           <!-- location -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Location </h5>
+              <h5 id="Location Header" type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
               <input id="location" name="location" class="form-control" type="text"/>
             </div>
           </div>
+
+          <!-- Script to handle changing header -->
+          <script>
+            function selectionChanged(element) {
+              if (element.checked) {
+                document.getElementById('Location Header').innerHTML = 'Virtual Event URL';
+                document.getElementById('location').type = 'url';
+              }
+              else {
+                document.getElementById('Location Header').innerHTML = 'Location Address';
+                document.getElementById('location').type = 'text';
+
+              }
+            }
+          </script>
           <!-- target audience -->
 <!--          <div class="form-group row ">-->
 <!--            <div class="col-12 col-sm-2">-->
@@ -184,7 +212,7 @@
           <!-- cost -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Cost </h5>
+              <h5>Cost Description</h5>
             </div>
             <div class="col-sm-9">
               <input class="form-control" type="text" name="cost"/>
@@ -235,30 +263,15 @@
           </div>
 
           <!-- tags -->
+          <meta id="availableTags" data-tags="{{tags}}">
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-            <div class="col-sm-9">
-              <span role="button" name="add_tag" class="add-tag btn btn-outline-primary">+ Add A Tag</span>
-            </div>
+                <div class="col-sm-9">
+                    <input id="tags" name="tags" class="form-control" type="text">
+                </div>
           </div>
-
-           <div id="tagList" class="tag-group dynamic-element-tags" style="display:none">
-            <div class = "form-group row">
-                <div class="col-sm-3 offset-sm-2">
-                    <input id="tags" name="tags" class="form-control" placeholder="Tag Name" type="text"/>
-                </div>
-                <div class="col-md-1">
-                    <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
-                </div>
-            </div>
-           </div>
-
-           <div class="dynamic-stuff-tags">
-              <!-- existing tags-->
-              <!-- none -->
-           </div>
 
           <!-- sponsor -->
           <div class="form-group row ">
@@ -304,6 +317,26 @@
           <div class="col-sm-9">
             <img id = "preview-image" src = "" style = "max-width: 600px; max-height: 337px;"/>
           </div>
+          </div>
+
+          <!-- registration url -->
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration URL</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+            </div>
+          </div>
+
+          <!-- registration label -->
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration Label</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+            </div>
           </div>
 
           <!-- super event check box -->
@@ -471,7 +504,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-    
+
    //Attach functionality to sub-event-id search
    function attach_sub_search() {
     $(".search-id").autocomplete(
@@ -503,6 +536,7 @@
    }
 
     //Clone the hidden element and shows it for tags
+   /*
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
      attach_delete_tags();
@@ -520,7 +554,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-
+   */
    // Handle all-day event
     $("#allDay").change(function () {
       let $startDate = $("#startDate");
@@ -535,14 +569,14 @@
         console.log($startDate.val())
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         $startDate.val(startDate.format("YYYY-MM-DD"));
         $endDate.val(endDate.format("YYYY-MM-DD"));
@@ -561,14 +595,14 @@
         $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
         if ($startDate.val() != ""){
@@ -615,7 +649,7 @@
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
+    $('.delete-image').click(function() {
       console.log("click the image delete button")
       document.getElementById("image-display").style.display = "none";
       $('.custom-file-label').html('');
@@ -626,18 +660,55 @@
     // set the min value of startDate and endDate to be current time as the default behavior
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; 
+    var mm = today.getMonth()+1;
     var yyyy = today.getFullYear();
     if(dd<10){
       dd='0'+dd
-    } 
+    }
     if(mm<10){
       mm='0'+mm
-    } 
+    }
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
     document.getElementById("endDate").setAttribute("min", dateTime);
-    
+
+    const availableTags = (new Function("return " + $('#availableTags').data("tags") + ";")());
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
+    $( "#tags" ).on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
    </script>
 {% endblock %}
 
@@ -695,6 +766,6 @@
   padding: 0;
   position: absolute;
   width: 1px;
-} 
+}
 </style>
 {% endblock %}

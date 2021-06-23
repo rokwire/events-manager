@@ -1,12 +1,9 @@
 <!------------------------------------------------------------------------
   Copyright 2020 Board of Trustees of the University of Illinois.
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
       http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +24,10 @@
 
 {% if post.eventStatus == "approved" %}
 {{ confirmation("disapproveEvent", post.title) }}
+{% elif not isUser %}
+{% if post.eventStatus == "published" %}
+ {{ confirmation("pending", post.title) }}
+{% endif %}
 {% else %}
 {{ confirmation("approveEvent", post.title) }}
 {% endif %}
@@ -53,6 +54,52 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary ml-1" id="deletion-modal-btn-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- pending Confirmation form -->
+<div class="modal fade" id="PendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Pending event
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You are about to set the following event <b>{{post.title}}</b> to pending state.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary ml-1" id="pending-modal-btn-yes">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- publish Confirmation form -->
+<div class="modal fade" id="PublishModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Publish event
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You are about to publish the following event <b>{{post.title}}</b>.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary ml-1" id="publish-modal-btn-yes">Confirm</button>
       </div>
     </div>
   </div>
@@ -92,16 +139,20 @@
               <p class="col-sm-9">
                 {% if post.eventStatus == "approved" %}
                     <!-- temporily change to published -->
-                  <span class="badge badge-pill badge-success"> published </span>
+                    {% if isUser %}
+                        <span class="badge badge-pill badge-success"> published </span>
+                    {% else %}
+                        <span class="badge badge-pill badge-warning"> pending </span>
+                    {% endif %}
                 {% elif post.eventStatus == "disapproved"%}
                   <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
                 {% elif post.eventStatus == "pending"%}
                   <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
                 {% else %}
-                  <span class="badge badge-pill badge-info">{{ post.eventStatus }} </span>
+                  <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
                 {% endif %}
               </p>
-  
+
             </div>
             {% endif %}
           </div>
@@ -128,26 +179,27 @@
             {% endif %}
           </div>
 
-          <div class="item3" style="grid-area: auto / left;">
-            <!-- Virtual Event -->
-            {% if post.isVirtual %}
+          
+          <div class="item4" style="grid-area: auto / left;">
+            <!-- Free Event -->
+            {% if post.isEventFree %}
               <div class="row">
                 <div class="col-12 col-sm-3">
-                  <h5>Virtual Event</h5>
+                  <h5>Free Event</h5>
                 </div>
                     <p class = "col-sm-9">Yes</p>
               </div>
             {% else %}
               <div class="row">
                 <div class="col-12 col-sm-3">
-                  <h5>Virtual Event</h5>
+                  <h5>Free Event</h5>
                 </div>
                     <p class = "col-sm-9">No</p>
               </div>
             {% endif %}
           </div>
 
-          <div class="item4" style="grid-area: auto / left;">
+          <div class="item5" style="grid-area: auto / left;">
             <!-- All Day Event -->
             {% if post.allDay %}
               <div class="row">
@@ -166,7 +218,7 @@
             {% endif %}
           </div>
 
-          <div class="item5" style="grid-area: auto / left;">
+          <div class="item6" style="grid-area: auto / left;">
             <!-- timezone -->
             {% if post.timezone %}
               <div class="row">
@@ -201,7 +253,7 @@
             {% endif %}
           </div>
 
-          <div class="item6" style="grid-row: 1 / span 6; display: flex; justify-content: flex-end; align-items: baseline;">
+          <div class="item7" style="grid-row: 1 / span 6; display: flex; justify-content: flex-end; align-items: baseline;">
             <!-- image -->
             {% if post.image %}
               <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" alt="event image" style="max-width: 423px; max-height: 160px;">
@@ -211,14 +263,24 @@
 
         <div class="grid container"
         style="display: grid; grid-auto-rows: auto; grid-template-columns: auto;">
-          <div class="item7">
+          <div class="item8">
             <!-- event url -->
             {% if post.titleURL%}
             <div class="row">
               <div class="col-12 col-sm-2">
                 <h5>Event URL </h5>
               </div>
-              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{ post.titleURL}}</span></a>
+              <a href="{{ post.titleURL}}" class="col-sm-9"><span class="s1">{{post.titleURL}}</span></a>
+            </div>
+            {% endif %}
+
+            <!-- registration URL -->
+            {% if post.registrationURL%}
+            <div class="row">
+              <div class="col-12 col-sm-2">
+                <h5>Registration URL</h5>
+              </div>
+              <a href="{{ post.registrationURL}}" class="col-sm-9"><span class="s1">{{post.registrationURL}}</span></a>
             </div>
             {% endif %}
 
@@ -254,7 +316,7 @@
             {% if post.cost%}
               <div class="row">
                 <div class="col-12 col-sm-2">
-                  <h5>Cost </h5>
+                  <h5>Cost Description</h5>
                 </div>
                 <p class="col-sm-9">{{ post.cost}}</p>
               </div>
@@ -331,15 +393,41 @@
             </div>
             {% endif %}
 
+            <!-- Virtual Event -->
+              {% if post.isVirtual %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Virtual Event</h5>
+                  </div>
+                      <p class = "col-sm-9">Yes</p>
+                </div>
+              {% else %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>Virtual Event</h5>
+                  </div>
+                      <p class = "col-sm-9">No</p>
+                </div>
+              {% endif %}
+
             <!-- location -->
             {% if post.location %}
               <!-- location.description -->
-              {% if post.location.description %}
+              {% if post.location.description and (post.isVirtual == Null or post.isVirtual == False) %}
                 <div class="row">
                   <div class="col-12 col-sm-2" id="longDes">
-                    <h5>Location </h5>
+                    <h5>Location Address</h5>
                   </div>
                   <p class="col-12 col-sm-9">{{post.location.description}}</p>
+                </div>
+              {% endif %}
+              <!-- virtual event URL -->
+              {% if post.location.description and post.isVirtual == True %}
+                <div class="row">
+                  <div class="col-12 col-sm-2" id="longDes">
+                    <h5>Virtual Event URL</h5>
+                  </div>
+                  <p class="col-12 col-sm-9"><a href="{{post.location.description}}">{{post.location.description}}</a></p>
                 </div>
               {% endif %}
               <!-- location.address -->
@@ -426,6 +514,7 @@
     </article>
   <div class="row justify-content-center">
     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+    {% if isUser %}
       <div class="btn-group mr-2" role="group" aria-label="First group">
 
         {% if post.eventStatus == "approved" %}
@@ -437,6 +526,7 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Publish</button>
         {% endif %}
       </div>
+    {% endif %}
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
         <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
@@ -454,6 +544,24 @@
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
               </div>
           {% endif %}
+       {% else %}
+          {% if post.eventStatus == "published" %}
+              <div class="btn-group mr-2" role="group" aria-label="Third group">
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#PendingModal">Pending</button>
+              </div>
+              {%  else %}
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#PublishModal">Publish</button>
+              </div>
+          {% endif %}
+
+          <div class="btn-group mr-2" role="group" aria-label="Third group">
+
+            <button class="btn btn-block nav-link btn-dark"
+              data-toggle="modal" data-html="true" data-target="#DeleteModal">
+                Delete
+            </button>
+          </div>
       {% endif %}
     </div>
   </div>
@@ -554,6 +662,49 @@
               }
             });
           });
+
+      {%  else %}
+          $(document).on("click", "#publish-modal-btn-yes", function () {
+            let url = "{{ url_for('event.approveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
+            });
+          });
+
+
+          $(document).on("click", "#pending-modal-btn-yes", function () {
+              debugger
+            let url = "{{ url_for('event.disapproveEvent', id=post._id) }}";
+            $.ajax({
+                url: url,
+                type: 'GET',
+                async: false,
+                cache: false,
+                timeout: 30000,
+                error: function(){
+                return true;
+                },
+                success: function(data){
+                  if (data == "failed") {
+                    alert("failed on events published")
+                  }
+                  location.reload();
+                }
+            });
+          });
       {% endif %}
 
       $("#approvebutton").click(function() {
@@ -586,15 +737,25 @@
 
       $("#deletion-modal-btn-yes").click(function() {
           {% if isUser %}
-            let url = "{{ url_for('user_events.userevent_delete', id=post._id) }}"
-          {% endif %}
             $.ajax({
-                url: url,
+                url: "{{ url_for('user_events.userevent_delete', id=post._id) }}",
                 type: 'DELETE',
                 success: function(data){
                     location.href = "{{ url_for('user_events.user_events') }}"
                 }
             });
+          {% else %}
+            $.ajax({
+                url: "{{ url_for('event.event_delete', id=post._id) }}",
+                type: 'DELETE',
+                success: function(data){
+                    location.href = "{{ url_for('event.calendar', calendarId=post.calendarId) }}"
+                },
+                error: function(data) {
+                    alert("event failed to delete")
+                },
+            });
+          {% endif %}
       });
 
 

@@ -46,27 +46,35 @@ def user_events():
     if 'select_status' in session:
         select_status = session['select_status']
     else:
-        select_status = ['pending']
+        select_status = ['approved']
         session['select_status'] = select_status
 
     if request.method == 'POST':
 		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
-        searchInput = request.form['searchInput']
-        query_dic = {}
-        search_list = searchInput.split('&')
-        for search in search_list:
-            params = search.split('=')
-            if params and len(params) == 2:
-                key = params[0]
-                value = params[1]
-                query_dic[key] = value
-        posts = get_searched_user_events(query_dic, select_status)
+        if 'searchInput' in request.form:
+            searchInput = request.form['searchInput']
+            query_dic = {}
+            search_list = searchInput.split('&')
+            for search in search_list:
+                params = search.split('=')
+                if params and len(params) == 2:
+                    key = params[0]
+                    value = params[1]
+                    query_dic[key] = value
+            posts = get_searched_user_events(query_dic, select_status)
+        if 'per_page' in request.form:
+            session["per_page"] = int(request.form.get('per_page'))
+            return "", 200
     else:
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         except ValueError:
             page = 1
-        per_page = current_app.config['PER_PAGE']
+        if 'per_page' in session:
+            per_page = session['per_page']
+        else:
+            per_page = Config.PER_PAGE
+            session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
             total = get_all_user_events_count(select_status, start, end)
@@ -79,13 +87,28 @@ def user_events():
             posts_dic = get_all_user_events_pagination(select_status, offset, per_page, start, end)
         else:
             posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
+        for list in posts_dic.values():
+            post = list[0]
+            if 'timezone' in post:
+                post['startDate'] = utc_to_time_zone(post.get('timezone'), post['startDate'], post['allDay'])
+                post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+            else:
+                post['startDate'] = get_datetime_in_local(post.get('location'), post['startDate'], post['allDay'])
+                post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+            if 'endDate' in post:
+                if 'timezone' in post:
+                    post['endDate'] = utc_to_time_zone(post.get('timezone'), post['endDate'], post['allDay'])
+                    post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+                else:
+                    post['endDate'] = get_datetime_in_local(post.get('location'), post['endDate'], post['allDay'])
+                    post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
                             per_page=per_page, pagination=pagination,
-                            isUser=True, start=start, end=end)
+                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE)
 
 @userbp.route('/event/<id>',  methods=['GET'])
 @role_required("user")
@@ -145,7 +168,12 @@ def user_an_event_edit(id):
     if request.method == 'POST':
         super_event_checked = False
         post_by_id['contacts'] = get_contact_list(request.form)
-        post_by_id['tags'] = get_tags(request.form)
+        if request.form['tags']:
+            post_by_id['tags'] = request.form['tags'].split(',')
+            for i in range(1, len(post_by_id['tags'])):
+                post_by_id['tags'][i] = post_by_id['tags'][i].lstrip()
+                if post_by_id['tags'][i] == '':
+                    del post_by_id['tags'][i]
         post_by_id['targetAudience'] = get_target_audience(request.form)
         image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
         if 'file' in request.files:
@@ -224,6 +252,10 @@ def user_an_event_edit(id):
             all_day_event = True
         else:
             post_by_id['allDay'] = False
+        if 'isEventFree' in request.form and request.form.get('isEventFree') == 'on':
+            post_by_id['isEventFree'] = True
+        else:
+            post_by_id['isEventFree'] = False
 
         if 'isVirtual' in request.form and request.form.get('isVirtual') == 'on':
             post_by_id['isVirtual'] = True
@@ -235,6 +267,10 @@ def user_an_event_edit(id):
                 post_by_id['title'] = request.form[item]
             elif item == 'titleURL':
                 post_by_id['titleURL'] = request.form[item]
+            elif item == 'registrationURL': #Added
+                post_by_id['registrationURL'] = request.form[item] #Added
+            elif item == 'registrationLabel': #Added
+                post_by_id['registrationLabel'] = request.form[item] #Added
             elif item == 'category':
                 post_by_id['category'] = request.form[item]
             elif item == 'cost':
@@ -324,11 +360,14 @@ def user_an_event_edit(id):
             success = put_user_event(id)
             if not success:
                 return "fail", 200
-        
+
         return redirect(url_for('user_events.user_an_event', id=id))
 
     # GET method
     elif request.method == 'GET':
+
+        headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+        tags = requests.get(Config.EVENT_BUILDING_BLOCK_URL+"/tags", headers=headers)
 
         all_day_event = False
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
@@ -373,7 +412,8 @@ def user_an_event_edit(id):
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                image = image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
-                               timezones=Config.TIMEZONES)
+                               timezones=Config.TIMEZONES,
+                               tags=tags.json())
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -438,15 +478,24 @@ def time_range():
     session["to"] = request.form.get('to')
     return "", 200
 
+
 @userbp.route('/event/add', methods=['GET', 'POST'])
 @role_required("user")
 def add_new_event():
+    headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+    req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
                 update_super_event_id(subEvent['id'], new_event_id)
+        if new_event['tags']:
+            new_event['tags'] = new_event['tags'][0].split(',')
+            for i in range(1, len(new_event['tags'])):
+                new_event['tags'][i] = new_event['tags'][i].lstrip()
+                if new_event['tags'][i] == '':
+                    del new_event['tags'][i]
         if 'file' in request.files and request.files['file'].filename != '':
             file = request.files['file']
             filename = secure_filename(file.filename)
@@ -457,7 +506,7 @@ def add_new_event():
                 abort(400)  #TODO: Error page
         return redirect(url_for('user_events.user_an_event', id=new_event_id))
     else:
-        return render_template("events/add-new-event.html", 
+        return render_template("events/add-new-event.html",
                                 isUser=True,
                                 eventTypeMap=eventTypeMap,
                                 eventTypeValues=eventTypeValues,
@@ -465,7 +514,8 @@ def add_new_event():
                                 targetAudienceMap=targetAudienceMap,
                                 extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                 size_limit=Config.IMAGE_SIZE_LIMIT,
-                                timezones=Config.TIMEZONES)
+                                timezones=Config.TIMEZONES,
+                                tags=req.json())
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
@@ -489,7 +539,7 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     print("delete user event id: %s" % id)
-    sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['subEvents']
+    sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
         for sub_event in sub_events:
             update_super_event_id(sub_event['id'], '')

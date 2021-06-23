@@ -39,7 +39,6 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     init_db(app)
-
     try:
         os.mkdir(app.config['WEBTOOL_IMAGE_MOUNT_POINT'])
     except OSError:
@@ -56,6 +55,9 @@ def create_app(config_class=Config):
 
     with app.app_context():
         source_utilities.load_calendar_into_db()
+        schedule_time = source_utilities.get_download_schedule_time()
+        if not schedule_time:
+            source_utilities.init_download_schedule_time("23:00")
 
     @app.route('/')
     @check_login

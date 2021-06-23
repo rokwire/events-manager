@@ -92,7 +92,7 @@
         padding: 0;
         position: absolute;
         width: 1px;
-      } 
+      }
     </style>
 {% endblock %}
 
@@ -168,7 +168,7 @@
                 <h5>Event URL </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" />
+                <input class="form-control" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" placeholder="Link to additional event information"/>
               </div>
             </div>
           {% else %}
@@ -177,7 +177,7 @@
               <h5>Event URL </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL"/>
+              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
             </div>
           </div>
           {% endif %}
@@ -237,16 +237,17 @@
               </div>
             </div>
           {% endif %}
-          <!-- isVirtual -->
+
+          <!-- freeEvent -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
+              <h5>Free Event</h5>
             </div>
             <div class="col-sm-1">
-               {% if post.isVirtual == True %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" checked/> Yes
+               {% if post.isEventFree == True %}
+                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree" checked/> Yes
                {% else %}
-                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual"/> Yes
+                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
                {% endif %}
             </div>
           </div>
@@ -336,23 +337,90 @@
             </div>
           {% endif %}
 
+          <!-- isVirtual -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Virtual Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.isVirtual == True %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged2(this)" checked /> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
+               {% endif %}
+            </div>
+          </div>
+
+          <!-- Script to handle changing header -->
+          <script>
+            function selectionChanged(element) {
+              if (document.getElementById('Location Header 1')) {
+                if (element.checked) {
+                  document.getElementById('Location Header 1').innerHTML = 'Virtual Event URL';
+                  document.getElementById('location 1').type = 'url';
+                }
+                else {
+                  document.getElementById('Location Header 1').innerHTML = 'Location Address';
+                  document.getElementById('location 1').type = 'text';
+
+                }
+              }
+              if (document.getElementById('Location Header 2')) {
+                if (element.checked) {
+                  document.getElementById('Location Header 2').innerHTML = 'Virtual Event URL';
+                  document.getElementById('location 3').type = 'url';
+
+                }
+                else {
+                  document.getElementById('Location Header 2').innerHTML = 'Location Address';
+                  document.getElementById('location 3').type = 'text';
+
+                }
+              }
+            }
+          </script>
+
+          <!-- Second Script to handle changing header -->
+          <script>
+            function selectionChanged2(element) {
+              if (element.checked) {
+                document.getElementById('Virtual Header').innerHTML = 'Virtual Event URL';
+                document.getElementById('location 2').type = 'url';
+              }
+              else {
+              document.getElementById('Virtual Header').innerHTML = 'Location Address';
+              document.getElementById('location 2').type = 'text';
+
+              }
+            }
+          </script>
+
           <!-- location -->
-            {% if post.location and post.location.description %}
+            {% if post.location and post.location.description and (post.isVirtual == Null or post.isVirtual == False) %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5 id="Location Header 2">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
-                  <input id="location" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
+                  <input id="location 3" name="location" class="form-control" type="text" value= "{{post.location.description}}" />
+                </div>
+              </div>
+            {% elif post.location and post.location.description and post.isVirtual == True %}
+              <div class="form-group row ">
+                <div class="col-12 col-sm-2">
+                  <h5 id="Virtual Header">Virtual Event URL </h5>
+                </div>
+                <div class="col-sm-9">
+                  <input id="location 2" name="location" class="form-control" type="url" value= "{{post.location.description}}"/>
                 </div>
               </div>
             {% else %}
               <div class="form-group row ">
                 <div class="col-12 col-sm-2">
-                  <h5>Location </h5>
+                  <h5 id="Location Header 1">Location Address</h5>
                 </div>
                 <div class="col-sm-9">
-                  <input id="location" name="location" class="form-control" type="text"/>
+                  <input id="location 1" name="location" class="form-control" type="text"/>
                 </div>
               </div>
             {% endif %}
@@ -381,7 +449,7 @@
           {% if post.cost%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost </h5>
+                <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
@@ -390,7 +458,7 @@
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>Cost </h5>
+                <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
                 <input class="form-control" type="text" name="cost"/>
@@ -492,45 +560,15 @@
           </div>
 
           <!-- tags -->
+          <meta id="availableTags" data-tags="{{tags}}">
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
               <h5>Tags </h5>
             </div>
-            <div class="col-sm-9">
-              <span role="button" name="add_tag" class="add-tag btn btn-outline-primary">+ Add A Tag</span>
-            </div>
+                <div class="col-sm-9">
+                    <input id="tags" name="tags" class="form-control" type="text" value="{{ tags_text }}">
+                </div>
           </div>
-
-           <div id="tagList" class="tag-group dynamic-element-tags" style="display:none">
-            <div class = "form-group row">
-                <div class="col-sm-3 offset-sm-2">
-                    <input id="tags" name="tags" class="form-control" placeholder="Tag Name" type="text"/>
-                </div>
-                <div class="col-md-1">
-                    <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
-                </div>
-            </div>
-           </div>
-
-           <div class="dynamic-stuff-tags">
-              <!-- existing tags-->
-               {% if post.tags %}
-                {% for tag in post.tags %}
-                    <div id="tagList-exist" class="tag-group dynamic-element-tags">
-                        <div class = "form-group row">
-                            <div class="col-sm-3 offset-sm-2">
-                                <input id="tags-exist" name="tags" class="form-control" placeholder="Tag Name" type="text" value ="{{tag}}"/>
-                            </div>
-                            <div class="col-md-1">
-                                <span role="button" class="delete-tag btn btn-outline-dark btn-sm-1">Delete</span>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-               {% endif %}
-              <!-- none -->
-           </div>
-
 
           <!-- sponsor -->
           {% if post.sponsor%}
@@ -622,6 +660,47 @@
             </div>
           </div> -->
 
+          <!-- registration url -->
+          {% if post.registrationURL%}
+            <div class="form-group row ">
+              <label class="col-12 col-sm-2 form-control-label">
+                <h5>Registration URL</h5>
+              </label>
+              <div class="col-sm-9">
+                <input class="form-control" type="url" id="registrationURL" name="registrationURL" value="{{post.registrationURL}}" placeholder="Link to the event registration page"/>
+              </div>
+            </div>
+          {% else %}
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration URL</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- registration label -->
+          {% if post.registrationLabel%}
+            <div class="form-group row ">
+              <label class="col-12 col-sm-2 form-control-label">
+                <h5>Registration Label</h5>
+              </label>
+              <div class="col-sm-9">
+                <input class="form-control" id="registrationLabel" name="registrationLabel" value="{{post.registrationLabel}}" placeholder="Register Here!"/>
+              </div>
+            </div>
+          {% else %}
+          <div class="form-group row ">
+            <label class="col-12 col-sm-2 form-control-label">
+              <h5>Registration Label</h5>
+            </label>
+            <div class="col-sm-9">
+              <input class="form-control" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+            </div>
+          </div>
+          {% endif %}
 
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
@@ -883,6 +962,7 @@
    }
 
    //Clone the hidden element and shows it for tags
+   /*
    $('.add-tag').click(function(){
      $('.dynamic-element-tags').first().clone().appendTo('.dynamic-stuff-tags').show();
      attach_delete_tags();
@@ -900,7 +980,7 @@
        $('#form').find('input:submit, button:submit').prop("disabled", false);
      });
    }
-
+   */
        //Super event checkbox
    function display_super_event_description(){
      var check = document.getElementById("super-event");
@@ -980,14 +1060,14 @@
         console.log($startDate.val())
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         $startDate.val(startDate.format("YYYY-MM-DD"));
         $endDate.val(endDate.format("YYYY-MM-DD"));
@@ -1006,14 +1086,14 @@
         $endDate.val(endDate.hour(23).minute(59).format("YYYY-MM-DDTHH:mm"));
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; 
+        var mm = today.getMonth()+1;
         var yyyy = today.getFullYear();
         if(dd<10){
           dd='0'+dd
-        } 
+        }
         if(mm<10){
           mm='0'+mm
-        } 
+        }
         date = yyyy+'-'+mm+'-'+dd;
         var dateTime = date+'T'+'00:00:00';
         if ($startDate.val() != ""){
@@ -1059,7 +1139,7 @@
     });
 
     // delete button for image upload
-    $('.delete-image').click(function() { 
+    $('.delete-image').click(function() {
       console.log("click the image delete button")
       $("#form").find(':submit, input[type="image"]').prop('disabled', false);
       $('.delete-image').prop('disabled', true);
@@ -1074,14 +1154,14 @@
     // set the min value of startDate to be current time as the default behavior
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; 
+    var mm = today.getMonth()+1;
     var yyyy = today.getFullYear();
     if(dd<10){
       dd='0'+dd
-    } 
+    }
     if(mm<10){
       mm='0'+mm
-    } 
+    }
     date = yyyy+'-'+mm+'-'+dd;
     var dateTime = date+'T'+'00:00:00';
 
@@ -1089,7 +1169,58 @@
     var start = $('#startDate').val()
     document.getElementById("endDate").setAttribute("min", start);
 
+    const availableTags = (new Function("return " + $('#availableTags').data("tags") + ";")());
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+
+    $( "#tags" ).on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
+    $( "#form" ).on( "submit", function(event) {
+      let tags = split(document.getElementById('tags').value);
+      for (let i = 0; i < tags.length - 1; i++) {
+          if (!availableTags.includes(tags[i])){
+            alert("Tags must be selected from list.");
+            event.preventDefault();
+          }
+      }
+      if (tags[tags.length - 1] !== "") {
+          if (!availableTags.includes(tags[tags.length - 1])){
+            alert("Tags must be selected from list.");
+            event.preventDefault();
+          }
+      }
+    })
    </script>
    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap"></script>
 {% endblock %}
-

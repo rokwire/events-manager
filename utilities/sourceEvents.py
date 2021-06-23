@@ -150,6 +150,12 @@ def parse(content, gmaps):
         entry['sourceId'] = '0'
         entry['allDay'] = False
 
+        if 'costFree' in pe:
+            if pe.get('costFree') == "true":
+                entry['isEventFree'] = True
+            if pe.get('costFree') == "false":
+                entry['isEventFree'] = False
+
         # find geographical location
         skip_google_geoservice = False
         if not pe.get('location'):
@@ -514,13 +520,26 @@ def start(targets=None):
     previous_eventId_list = find_all_previous_event_ids(current_app.config['EVENT_COLLECTION'], filter={"dataSourceEventId": {'$exists': 'true'}})
     urls = geturls(targets)
     for url in urls:
+        parsedEvents = list()
+        notShareWithMobileList = list()
         try:
-            rawEvents = download(url)
-            if rawEvents is None:
-                print("Invalid content in: {}".format(url))
+            page_number = 0
+            while True:
+                pagination_url = url + "?pageNumber=%d" % page_number
+                rawEvents = download(pagination_url)
+                if rawEvents is None:
+                    print("Invalid content in: {}".format(pagination_url))
+                print("Begin parsing url: {}".format(pagination_url))
+                parsedEvents_iteration, notShareWithMobileList_iteration = parse(rawEvents, gmaps)
+                parsedEvents.extend(parsedEvents_iteration)
+                notShareWithMobileList.extend(notShareWithMobileList_iteration)
+                if not parsedEvents_iteration:
+                    print("Stop downloading and parsing on url: {}".format(pagination_url))
+                    break
+                page_number += 1
+
+            if not parsedEvents:
                 continue
-            print("Begin parsing url: {}".format(url))
-            parsedEvents, notShareWithMobileList = parse(rawEvents, gmaps)
 
             #getting new event id's
             for event_current in parsedEvents:

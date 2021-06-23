@@ -47,7 +47,7 @@ class Config(object):
     # url of notification
     NOTIFICATION_URL = os.getenv("NOTIFICATION_URL", '...')
     # EVENT_URL_* are here for formatting the webtools url that we crawl webtool events from
-    EVENT_URL_PREFIX=os.getenv("EVENT_URL_PREFIX", 'https://xml.calendars.illinois.edu/eventXML12/')
+    EVENT_URL_PREFIX=os.getenv("EVENT_URL_PREFIX", 'https://xml.calendars.illinois.edu/eventXML15/')
     EVENT_URL_SUFFIX='.xml'
 
     # This a mapping between webtools calendars id to name
@@ -422,9 +422,10 @@ class Config(object):
     ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     # Notification Auth Token
     FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")
-    #Pagination Variables
-    PER_PAGE = 4
-
+    # Pagination Variables
+    PER_PAGE = os.getenv("PER_PAGE", 5)
+    # All Pagination Variables Available
+    EVENTS_PER_PAGE = ast.literal_eval(os.getenv('EVENTS_PER_PAGE', "[5, 10, 20]"))
     # LDAP_* are used in NCSA or UIUC LDAP system for authentication access
     LDAP_ON=True
     LDAP_HOSTNAME=""
