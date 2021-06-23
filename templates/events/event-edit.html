@@ -292,8 +292,10 @@
               <div class="col-sm-4">
                   {% if post.allDay == True %}
                   <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00"disabled/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" required/>
                   {% endif %}
               </div>
             </div>
@@ -303,7 +305,8 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="" max="9999-12-31" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" required/>
               </div>
             </div>
           {% endif %}
@@ -317,8 +320,10 @@
               <div class="col-sm-4">
                   {% if post.allDay == True %}
                   <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
+                  <input class="form-control" type="time" id="endTime" name="endTime" value="23:59" disabled/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31"/>
+                  <input class="form-control" type="time" id="endTime" name="endTime" value="{{post['endDate'][11:]}}"/>
                   {% endif %}
               </div>
             </div>
@@ -330,8 +335,10 @@
               <div class="col-sm-4">
                 {% if post.allDay == True %}
                 <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                <input class="form-control" type="time" id="endTime" name="endTime" disabled/>
                 {% else %}
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                <input class="form-control" type="time" id="endTime" name="endTime" />
                 {% endif %}
               </div>
             </div>
@@ -1048,13 +1055,18 @@
 
    // Handle all-day event
    $("#allDay").change(function () {
+      /*
       let $startDate = $("#startDate");
       let $endDate = $("#endDate");
 
       let startDate = moment($startDate.val());
       let endDate = moment($endDate.val());
-
+      */
       if (this.checked) {
+        document.getElementById('startTime').setAttribute("disabled","disabled");
+        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('endTime').setAttribute("disabled","disabled");
+        /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
         console.log($startDate.val())
@@ -1077,9 +1089,12 @@
         } else {
           document.getElementById("endDate").setAttribute("min", date);
         }
-      }
-      else {
-        $startDate.attr("type", "datetime-local");
+      */
+      } else {
+        document.getElementById('startTime').removeAttribute("disabled");
+        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('endTime').removeAttribute("disabled");
+        /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
         $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
@@ -1101,7 +1116,7 @@
 
         } else {
           document.getElementById("endDate").setAttribute("min", date);
-        }
+        }*/
       }
     });
 
@@ -1112,6 +1127,7 @@
       var end = $('#endDate').val()
       if (end < start){
         $('#endDate').val(null)
+        $('#endTime').val(null)
       }
     })
 
