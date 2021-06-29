@@ -6,8 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [2.4.1] - 2021-06-23
 ### Added
 - If End Date not available, tag(alongside Not Available label) will not display. [#641](https://github.com/rokwire/events-manager/issues/641)
+
+### Changed
+- Hide Past event -> Hide Past Events. [#641](https://github.com/rokwire/events-manager/issues/641)
+
+### Fixed
+- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
+
 
 ## [2.4.0] - 2021-06-22
 ### Added
@@ -240,7 +249,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.1...HEAD
+[2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1
 [2.3.0]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.0

@@ -91,17 +91,29 @@ def user_events():
             post = list[0]
             if 'timezone' in post:
                 post['startDate'] = utc_to_time_zone(post.get('timezone'), post['startDate'], post['allDay'])
-                post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+                if post['allDay']:
+                    post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%d').strftime('%m/%d/%Y')
+                else:
+                    post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
             else:
                 post['startDate'] = get_datetime_in_local(post.get('location'), post['startDate'], post['allDay'])
-                post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+                if post['allDay']:
+                    post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%d').strftime('%m/%d/%Y')
+                else:
+                    post['startDate'] = datetime.strptime(post['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
             if 'endDate' in post:
                 if 'timezone' in post:
                     post['endDate'] = utc_to_time_zone(post.get('timezone'), post['endDate'], post['allDay'])
-                    post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+                    if post['allDay']:
+                        post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%d').strftime('%m/%d/%Y')
+                    else:
+                        post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
                 else:
                     post['endDate'] = get_datetime_in_local(post.get('location'), post['endDate'], post['allDay'])
-                    post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+                    if post['allDay']:
+                        post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%d').strftime('%m/%d/%Y')
+                    else:
+                        post['endDate'] = datetime.strptime(post['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
