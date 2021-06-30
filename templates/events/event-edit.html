@@ -289,13 +289,13 @@
               <div class="col-12 col-sm-2">
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00"disabled/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" required/>
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" style="width:170px; float:left" required/>
                   {% endif %}
               </div>
             </div>
@@ -304,9 +304,9 @@
               <div class="col-12 col-sm-2">
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
-              <div class="col-sm-4">
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="" max="9999-12-31" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" required/>
+              <div class="col-sm-6">
+                  <input class="form-control" type="date" id="startDate" name="startDate" value="" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px; float:left" required/>
               </div>
             </div>
           {% endif %}
@@ -317,13 +317,13 @@
               <div class="col-12 col-sm-2">
                 <h5>End Date</h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
-                  <input class="form-control" type="time" id="endTime" name="endTime" value="23:59" disabled/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31"/>
-                  <input class="form-control" type="time" id="endTime" name="endTime" value="{{post['endDate'][11:]}}"/>
+                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
                   {% endif %}
               </div>
             </div>
@@ -332,13 +332,13 @@
               <div class="col-12 col-sm-2">
                 <h5> End Date</h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                 {% if post.allDay == True %}
-                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
-                <input class="form-control" type="time" id="endTime" name="endTime" disabled/>
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
                 {% else %}
-                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
-                <input class="form-control" type="time" id="endTime" name="endTime" />
+                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" id="endTime" name="endTime" style="width:170px; float:left" />
                 {% endif %}
               </div>
             </div>
@@ -1063,9 +1063,9 @@
       let endDate = moment($endDate.val());
       */
       if (this.checked) {
-        document.getElementById('startTime').setAttribute("disabled","disabled");
+        document.getElementById('startTime').setAttribute("hidden","hidden");
         document.getElementById('startTime').setAttribute("required","required");
-        document.getElementById('endTime').setAttribute("disabled","disabled");
+        document.getElementById('endTime').setAttribute("hidden","hidden");
         /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
@@ -1091,9 +1091,9 @@
         }
       */
       } else {
-        document.getElementById('startTime').removeAttribute("disabled");
+        document.getElementById('startTime').removeAttribute("hidden");
         document.getElementById('startTime').removeAttribute("required");
-        document.getElementById('endTime').removeAttribute("disabled");
+        document.getElementById('endTime').removeAttribute("hidden");
         /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
