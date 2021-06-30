@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2021-06-23
+### Fixed
+- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
+
 ## [2.4.0] - 2021-06-22
 ### Added
 - Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
@@ -237,7 +241,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.1...HEAD
+[2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1
 [2.3.0]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.0
