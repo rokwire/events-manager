@@ -125,7 +125,11 @@
                         <span class="date">{{posts_dic[eventID][0].startDate}} </span>
                     </div>
                     <div style="display:flex; overflow: hidden">
+                        {% if posts_dic[eventID][0].allDay %}
+                        <h6 style="padding-right: 5px;margin-left: 58px">Ends: </h6>
+                        {% else %}
                         <h6 style="padding-right: 5px">Ends: </h6>
+                        {% endif %}
                         {% if posts_dic[eventID][0].endDate %}
                             <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
                         {% else %}
