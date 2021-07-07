@@ -27,7 +27,7 @@ from .config import Config
 
 from oic.oic import Client
 from oic.utils.authn.client import CLIENT_AUTHN_METHOD
-from oic.oic.message import AuthorizationResponse
+from oic.oic.message import AuthorizationResponse, ClaimsRequest, Claims
 from oic.oic.message import RegistrationResponse
 from oic import rndstr
 from oic.utils.http_util import Redirect
@@ -132,10 +132,16 @@ def login_shi():
     # session["mode"] = "shibboleth"
     session["state"] = rndstr()
     session["nonce"] = rndstr()
+    claims_request = ClaimsRequest(
+        userinfo=Claims(
+            uiucedu_uin={"essential": True}
+        )
+    )
     args = {
         "client_id": client.client_id,
         "response_type": "code",
         "scope": Config.SCOPES,
+        "claims": claims_request,
         "nonce": session["nonce"],
         "redirect_uri": client.registration_response["redirect_uris"][0],
         "state": session["state"]
