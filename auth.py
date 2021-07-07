@@ -28,7 +28,7 @@ from werkzeug.security import check_password_hash
 from .config import Config
 from .db import find_one
 
-bp = Blueprint('auth', __name__, url_prefix=Config.URL_PREFIX+'/auth')
+bp = Blueprint('auth', __name__, url_prefix=Config.URL_PREFIX + '/auth')
 # current_app.config.from_pyfile('config.py', silent=True)
 # Create OIDC client
 client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
@@ -39,6 +39,7 @@ info = {"client_id": Config.CLIENT_ID, "client_secret": Config.CLIENT_SECRET, "r
 client_reg = RegistrationResponse(**info)
 client.store_registration_info(client_reg)
 
+
 def check_login(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -47,7 +48,9 @@ def check_login(view):
             if Config.ROLE.get(access) is not None:
                 return redirect(Config.ROLE.get(access)[1])
         return view(**kwargs)
+
     return wrapped_view
+
 
 def role_required(role):
     def decorator(view):
@@ -59,11 +62,13 @@ def role_required(role):
             else:
                 if Config.ROLE.get(access) is not None:
                     if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
-                       return redirect(Config.ROLE.get(access)[1])
+                        return redirect(Config.ROLE.get(access)[1])
                 else:
                     return redirect(url_for("auth.login"))
                 return view(**kwargs)
+
         return decorated_function
+
     return decorator
 
 
@@ -82,6 +87,7 @@ def login_db(username, password, error):
 
     flash(error)
     return False
+
 
 def login_ldap(username, password, error):
     ldap_hostname = current_app.config['LDAP_HOSTNAME']
@@ -123,6 +129,7 @@ def login_ldap(username, password, error):
 
     flash(error)
     return False
+
 
 def login_shi():
     # session["mode"] = "shibboleth"
@@ -172,6 +179,7 @@ def login_shi():
     #     return redirect(url_for('user_events.user_events'))
     # return render_template('auth/login.html')
 
+
 # @bp.route('/register', methods=('GET', 'POST'))
 # def register():
 #     if request.method == 'POST':
@@ -202,6 +210,7 @@ def login():
     if Config.LOGIN_MODE == "shibboleth":
         return login_shi()
 
+
 @bp.route('/callback')
 def callback():
     if Config.LOGIN_MODE != "shibboleth":
@@ -223,7 +232,7 @@ def callback():
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     rokwireAuth = list(filter(
-        lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x, 
+        lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
         user_info.to_dict()["uiucedu_is_member_of"]
     ))
     if len(rokwireAuth) == 0:
@@ -233,7 +242,7 @@ def callback():
         session["name"] = user_info.to_dict()["name"]
         session["email"] = user_info.to_dict()["email"]
         # check for corresponding privilege
-        isUserAdmin = False 
+        isUserAdmin = False
         isSourceAdmin = False
         for tag in rokwireAuth:
             if "rokwire em user events admins" in tag:
@@ -263,6 +272,7 @@ def callback():
     #     return redirect(url_for('event.source', sourceId=0))
     # return user_info.to_json()
 
+
 @bp.route('/select-events', methods=['GET', 'POST'])
 @role_required("both")
 def select_events():
@@ -276,6 +286,7 @@ def select_events():
         else:
             return render_template("auth/select-events.html", no_search=True)
     return render_template("auth/select-events.html", no_search=True)
+
 
 @bp.before_app_request
 def load_logged_in_user_info():
@@ -293,11 +304,13 @@ def load_logged_in_user_info():
     # else:
     #     g.user = find_one('user', condition={'_id': user_id})
 
+
 @bp.route('/logout')
 @role_required('either')
 def logout():
     session.clear()
     return redirect(url_for('home.home'))
+
 
 def login_required(view):
     @functools.wraps(view)
