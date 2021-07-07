@@ -6,9 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
 ## [2.4.1] - 2021-06-23
+### Added
+
+### Changed
+- Hide Past event -> Hide Past Events. [#641](https://github.com/rokwire/events-manager/issues/641)
+
 ### Fixed
 - Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
+
 
 ## [2.4.0] - 2021-06-22
 ### Added
