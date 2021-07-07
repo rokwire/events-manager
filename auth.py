@@ -174,39 +174,39 @@ def callback():
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
-    user_info = client.do_user_info_request(state=authentication_response["state"])
+    user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
 
-    if "uiucedu_is_member_of" not in user_info.to_dict():
+    if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
-    rokwireAuth = list(filter(
+    rokwire_auth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
-        user_info.to_dict()["uiucedu_is_member_of"]
+        user_info["uiucedu_is_member_of"]
     ))
-    if len(rokwireAuth) == 0:
+    if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
     else:
         # fill in user information
-        session["name"] = user_info.to_dict()["name"]
-        session["email"] = user_info.to_dict()["email"]
+        session["name"] = user_info["name"]
+        session["email"] = user_info["email"]
         # check for corresponding privilege
-        isUserAdmin = False
-        isSourceAdmin = False
-        for tag in rokwireAuth:
+        is_user_admin = False
+        is_source_admin = False
+        for tag in rokwire_auth:
             if "rokwire em user events admins" in tag:
-                isUserAdmin = True
+                is_user_admin = True
             if "rokwire em calendar events admins" in tag:
-                isSourceAdmin = True
+                is_source_admin = True
         # TODO: we are storing cookie by our own but not by code, may change it later
-        if isUserAdmin and isSourceAdmin:
+        if is_user_admin and is_source_admin:
             session["access"] = "both"
             session.permanent = True
             return redirect(url_for("auth.select_events"))
-        elif isUserAdmin:
+        elif is_user_admin:
             session["access"] = "user"
             session.permanent = True
             return redirect(url_for("user_events.user_events"))
-        elif isSourceAdmin:
+        elif is_source_admin:
             session["access"] = "source"
             session.permanent = True
             return redirect(url_for("event.source", sourceId=0))
@@ -235,9 +235,7 @@ def load_logged_in_user_info():
     if session.get("access") is None:
         g.user = None
     else:
-        g.user = {}
-        g.user["access"] = session["access"]
-        g.user["username"] = session["name"]
+        g.user = {"access": session["access"], "username": session["name"]}
 
 
 @bp.route('/logout')
