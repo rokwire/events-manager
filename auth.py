@@ -29,7 +29,6 @@ from .config import Config
 from .db import find_one
 
 bp = Blueprint('auth', __name__, url_prefix=Config.URL_PREFIX + '/auth')
-# current_app.config.from_pyfile('config.py', silent=True)
 # Create OIDC client
 client = Client(client_authn_method=CLIENT_AUTHN_METHOD)
 # Get authentication provider details by hitting the issuer URL.
@@ -132,7 +131,6 @@ def login_ldap(username, password, error):
 
 
 def login_shi():
-    # session["mode"] = "shibboleth"
     session["state"] = rndstr()
     session["nonce"] = rndstr()
     claims_request = ClaimsRequest(
@@ -152,56 +150,6 @@ def login_shi():
     auth_req = client.construct_AuthorizationRequest(request_args=args)
     login_url = auth_req.request(client.authorization_endpoint)
     return Redirect(login_url)
-
-    # if request.method == 'POST':
-    #     username = request.form['username']
-    #     password = request.form['password']
-    #     error = None
-    #
-    #     if current_app.config['LDAP_ON']: # log in using LDAP
-    #         result = login_ldap(username, password, error)
-    #     else:
-    #         result = login_db(username, password, error)
-    #
-    #     if result: # log in successful
-    #         if 'source-login' in request.form:
-    #             session['mode'] = 'source'
-    #             return redirect(url_for('event.source', sourceId=0))
-    #         if 'user-login' in request.form:
-    #             session['mode'] = 'user'
-    #             return redirect(url_for('user_events.user_events'))
-    #
-    #     flash(error)
-    #
-    # if session.get('mode') == 'source':
-    #     return redirect(url_for('event.source', sourceId=0))
-    # if session.get('mode') == 'user':
-    #     return redirect(url_for('user_events.user_events'))
-    # return render_template('auth/login.html')
-
-
-# @bp.route('/register', methods=('GET', 'POST'))
-# def register():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         error = None
-#
-#         if not username:
-#             error = 'Username is required.'
-#         elif not password:
-#             error = 'Password is required.'
-#         elif find_one('user', condition={"username": username}):
-#             error = 'User {} is already registered.'.format(username)
-#
-#         if error is None:
-#             password_hash = generate_password_hash(password)
-#             insert_one('user', document={"username": username, "password_hash": password_hash})
-#             return redirect(url_for('auth.login'))
-#
-#         flash(error)
-#
-#     return render_template('auth/register.html')
 
 
 @bp.route('/login')
@@ -266,12 +214,6 @@ def callback():
             session.clear()
             return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
 
-    # if "member" in user_info.to_dict()["eduperson_affiliation"]:
-    #     return redirect(url_for('user_events.user_events'))
-    # else:
-    #     return redirect(url_for('event.source', sourceId=0))
-    # return user_info.to_json()
-
 
 @bp.route('/select-events', methods=['GET', 'POST'])
 @role_required("both")
@@ -296,13 +238,6 @@ def load_logged_in_user_info():
         g.user = {}
         g.user["access"] = session["access"]
         g.user["username"] = session["name"]
-
-    # user_id = ObjectId(session.get('user_id'))
-
-    # if user_id is None:
-    #     g.user = None
-    # else:
-    #     g.user = find_one('user', condition={'_id': user_id})
 
 
 @bp.route('/logout')
