@@ -13,24 +13,20 @@
 #  limitations under the License.
 
 import functools
-import ldap
 
+import ldap
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
-from werkzeug.security import check_password_hash, generate_password_hash
-
-from .db import find_one, insert_one
-
-from bson.objectid import ObjectId
-from .config import Config
-
-from oic.oic import Client
-from oic.utils.authn.client import CLIENT_AUTHN_METHOD
-from oic.oic.message import AuthorizationResponse, ClaimsRequest, Claims
-from oic.oic.message import RegistrationResponse
 from oic import rndstr
+from oic.oic import Client
+from oic.oic.message import RegistrationResponse, AuthorizationResponse, ClaimsRequest, Claims
+from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 from oic.utils.http_util import Redirect
+from werkzeug.security import check_password_hash
+
+from .config import Config
+from .db import find_one
 
 bp = Blueprint('auth', __name__, url_prefix=Config.URL_PREFIX+'/auth')
 # current_app.config.from_pyfile('config.py', silent=True)
