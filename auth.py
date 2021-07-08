@@ -59,11 +59,21 @@ def role_required(role):
             if access is None:
                 return redirect(url_for("auth.login"))
             else:
-                if Config.ROLE.get(access) is not None:
-                    if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
-                        return redirect(Config.ROLE.get(access)[1])
-                else:
+                if role == 'user':
+                    if 'user_info' in session:
+                        if 'uiucedu_is_member_of' in session.get('user_info'):
+                            for member in session.get('user_info').get('uiucedu_is_member_of'):
+                                items = member.split( )
+                                if len(items) == 5:
+                                    if items[2] == 'user' and items[4] == 'admins':
+                                        return view(**kwargs)
                     return redirect(url_for("auth.login"))
+                else:
+                    if Config.ROLE.get(access) is not None:
+                        if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
+                            return redirect(Config.ROLE.get(access)[1])
+                    else:
+                        return redirect(url_for("auth.login"))
                 return view(**kwargs)
 
         return decorated_function
@@ -175,7 +185,6 @@ def callback():
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
-
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
@@ -187,6 +196,7 @@ def callback():
         return redirect(url_for("auth.login"))
     else:
         # fill in user information
+        session['user_info'] = user_info
         session["name"] = user_info["name"]
         session["email"] = user_info["email"]
         # check for corresponding privilege

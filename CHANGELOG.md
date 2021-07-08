@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
- - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
+- UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
+- Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
 
 ## [2.4.1] - 2021-06-23
 ### Added
