@@ -115,8 +115,17 @@
               <div class="card-header" role="tab", id = "head">
                 <div class = "col-12 col-md-11" style="overflow: hidden; padding-top: 3px; padding-bottom: 3px">
                   <a href="{{ url_for('user_events.user_an_event', id=posts_dic[eventID][0]['_id']) }}" class="btn btn-default ml-auto float-left" >
-                      <h5 class="mb-0" align="left" style="width: 700px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; ">{{ posts_dic[eventID][0].title }}</h5>
+                      {% if posts_dic[eventID][0].title|length > 76 %}
+                      <h5 class="mb-0" align="left" style="width: 680px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ posts_dic[eventID][0].title }}</h5>
+                      {% else %}
+                      <h5 class="mb-0" align="left" style="overflow:hidden; white-space:nowrap">{{ posts_dic[eventID][0].title }}</h5>
+                      {% endif %}
                   </a>
+                    <div style="margin-top: 11px">
+                        {% if posts_dic[eventID][0].isSuperEvent %}
+                            <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">Super Event</div>
+                        {% endif %}
+                    </div>
                 </div>
                 <div style="height: 17px; padding-left: 27px; display:flex">
 {#                <div style="margin-top: 0.5em; color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">{{ posts_dic[eventID][0].timezone }}</div>#}
@@ -134,11 +143,6 @@
                             <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
                         {% else %}
                             <span class="date">Not Available</span>
-                        {% endif %}
-                    </div>
-                    <div style="display:flex; position:absolute; left: 38%">
-                        {% if posts_dic[eventID][0].isSuperEvent %}
-                            <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">Super Event</div>
                         {% endif %}
                     </div>
                 </div>
