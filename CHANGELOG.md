@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
 
+### Changed
+- Split datetime-local control to date and time to fix compatibility issue with firefox and safari. [#479](https://github.com/rokwire/events-manager/issues/479)
+
 ## [2.4.1] - 2021-06-23
 ### Added
 
