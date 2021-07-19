@@ -63,20 +63,17 @@ def role_required(role):
                     userevent_id = kwargs.get('id')
                     if 'user_info' in session:
                         if 'uiucedu_is_member_of' in session.get('user_info'):
-                            for member in session.get('user_info').get('uiucedu_is_member_of'):
-                                items = member.split( )
-                                if len(items) == 5:
-                                    if items[2] == 'user' and items[4] == 'admins':
-                                        if userevent_id is None:
-                                            return view(**kwargs)
-                                        else:
-                                            event = find_one(current_app.config['EVENT_COLLECTION'],
-                                                             condition={"_id": ObjectId(userevent_id)},
-                                                             projection={'createdByGroupId': 1})
-                                            if 'createdByGroupId' in event:
-                                                for admin_group in session['groups']:
-                                                    if event.get('createdByGroupId') == admin_group.get('id'):
-                                                        return view(**kwargs)
+                            if 'urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access' in session.get('user_info').get('uiucedu_is_member_of'):
+                                if userevent_id is None:
+                                    return view(**kwargs)
+                                else:
+                                    event = find_one(current_app.config['EVENT_COLLECTION'],
+                                                     condition={"_id": ObjectId(userevent_id)},
+                                                     projection={'createdByGroupId': 1})
+                                    if 'createdByGroupId' in event:
+                                        for admin_group in session['groups']:
+                                            if event.get('createdByGroupId') == admin_group.get('id'):
+                                                return view(**kwargs)
                     return redirect(url_for("auth.login"))
                 else:
                     if Config.ROLE.get(access) is not None:
