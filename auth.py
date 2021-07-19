@@ -71,7 +71,7 @@ def role_required(role):
                                                      condition={"_id": ObjectId(userevent_id)},
                                                      projection={'createdByGroupId': 1})
                                     if 'createdByGroupId' in event:
-                                        for admin_group in session['groups']:
+                                        for admin_group in get_admin_groups():#session['groups']:
                                             if event.get('createdByGroupId') == admin_group.get('id'):
                                                 return view(**kwargs)
                     return redirect(url_for("auth.login"))
