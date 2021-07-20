@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
+### Fixed
+- delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)
 
 ### Changed
 - Crop event title at a fixed number of characters. [#667](https://github.com/rokwire/events-manager/issues/667)
