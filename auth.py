@@ -174,7 +174,33 @@ def callback():
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
+
+
+    # Will user_info contain groups information?
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
+    # # Get UIN
+    # uin = user_info["uiucedu_uin"]
+    # ad_group = user_info["uiucedu_is_member_of"]
+    #
+    # # Build Request
+    # url = "%s%s/groups" % (cfg.GROUPS_BUILDING_BLOCK_ENDPOINT, uin)
+    # header = headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": cfg.ROKWIRE_GROUPS_API_KEY}
+    # req = requests.get(url, headers=headers)
+    # group_info = list()
+    #
+    # # Parse Results
+    # if req.status_code == 200:
+    #         req_data = req.json()
+    #         for item in req_data:
+    #             group_info.append(item)
+    #     else:
+    #         session.clear()
+    #         return redirect(url_for("home.home", error="Group information can't be retrieved"))
+    #
+    # # group_info will contain all information as a list of dictionaries.
+    # # Storing in session
+    # session["group_details"] = group_info
+
 
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
@@ -254,3 +280,20 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+def retrieve_groups():
+    user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
+    uin = user_info["uiucedu_uin"]
+    url = "%s%s/groups" % (cfg.GROUPS_BUILDING_BLOCK_ENDPOINT, uin)
+    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": cfg.ROKWIRE_GROUPS_API_KEY}
+    req = requests.get(url, headers=headers)
+    group_info = list()
+    # Parse Results
+    if req.status_code == 200:
+        req_data = req.json()
+        for item in req_data:
+            group_info.append(item)
+        return group_info
+    else:
+        session.clear()
+        return redirect(url_for("home.home", error="Group information can't be retrieved"))
