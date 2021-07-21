@@ -15,6 +15,7 @@
 import functools
 
 import ldap
+import requests
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -257,7 +258,7 @@ def login_required(view):
 
     return wrapped_view
 
-def retrieve_groups():
+def get_admin_groups():
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
     uin = user_info["uiucedu_uin"]
     url = "%s%s/groups" % (cfg.GROUPS_BUILDING_BLOCK_ENDPOINT, uin)
