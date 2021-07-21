@@ -259,8 +259,22 @@ def login_required(view):
     return wrapped_view
 
 def get_admin_groups():
+    # Build user_info request
+    response = request.environ["QUERY_STRING"]
+    authentication_response = client.parse_response(AuthorizationResponse, info=response, sformat="urlencoded")
+    code = authentication_response["code"]
+    try:
+        assert authentication_response["state"] == session["state"]
+    except KeyError:
+        return redirect(url_for("home.home", error="Unexpected Error, please try again"))
+    args = {"code": code}
+    token_response = client.do_access_token_request(state=authentication_response["state"],
+                                                    request_args=args,
+                                                    authn_method="client_secret_basic")
+    # Retrieve UIN from user_info
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
     uin = user_info["uiucedu_uin"]
+    #  Build request
     url = "%s%s/groups" % (cfg.GROUPS_BUILDING_BLOCK_ENDPOINT, uin)
     headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": cfg.ROKWIRE_GROUPS_API_KEY}
     req = requests.get(url, headers=headers)
@@ -270,6 +284,7 @@ def get_admin_groups():
         req_data = req.json()
         for item in req_data:
             group_info.append(item)
+        # Return list of groups for specified UIN
         return group_info
     else:
         session.clear()
