@@ -182,6 +182,7 @@ def callback():
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
+
     rokwire_auth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
         user_info["uiucedu_is_member_of"]
@@ -197,7 +198,7 @@ def callback():
         return redirect(url_for("auth.login"))
     # Condtional check for #638
     elif len(rokwire_auth_new)  == 0:
-        return  edirect(url_for("home.home", error="You don't have permission to login the event manager"))
+        return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     else:
         # fill in user information
         session["name"] = user_info["name"]
