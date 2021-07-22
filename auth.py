@@ -179,9 +179,6 @@ def callback():
 
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
 
-    # For use in groups retrieval
-    session["uin"] = user_info["uiucedu_uin"]
-
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
@@ -205,6 +202,8 @@ def callback():
         # fill in user information
         session["name"] = user_info["name"]
         session["email"] = user_info["email"]
+        # For use in groups retrieval
+        session["uin"] = user_info["uiucedu_uin"]
         # check for corresponding privilege
         is_user_admin = False
         is_source_admin = False
