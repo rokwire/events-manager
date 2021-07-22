@@ -261,23 +261,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
-# Get only groups  user is an admin of
-def get_admin_groups():
-    # Retrieve UIN form session
-    uin = session["uin"]
-    #  Build request
-    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
-    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
-    req = requests.get(url, headers=headers)
-    group_info = list()
-    # Parse Results
-    if req.status_code == 200:
-        req_data = req.json()
-        for item in req_data:
-            if item["membership_status"] == "admin":
-                group_info.append(item)
-        # Return list of groups for specified UIN
-        return group_info
-    else:
-        return group_info, req.status_code
