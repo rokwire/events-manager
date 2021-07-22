@@ -181,8 +181,6 @@ def callback():
     # For use in groups retrieval for admin check below
     session["uin"] = user_info["uiucedu_uin"]
 
-    groups_info = get_admin_groups()
-
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
