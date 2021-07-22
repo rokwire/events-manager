@@ -178,19 +178,10 @@ def callback():
 
 
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
-    # For use in groups retrieval
+    # For use in groups retrieval for admin check below
     session["uin"] = user_info["uiucedu_uin"]
 
     groups_info = get_admin_groups()
-    group_admin_flag = False
-
-    for element in groups_info:
-        if element["membership_status"] == 'admin':
-            group_admin_flag = True
-
-    if group_admin_flag == False:
-        session.clear()
-        return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
 
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
@@ -201,15 +192,8 @@ def callback():
         user_info["uiucedu_is_member_of"]
     ))
 
-    rokwire_auth_new = list(filter(
-        lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access" in x,
-        user_info["uiucedu_is_member_of"]
-    ))
-
     if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
-    elif len(rokwire_auth_new) == 0:
-        return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     else:
         # fill in user information
         session["name"] = user_info["name"]
@@ -280,6 +264,7 @@ def login_required(view):
 
     return wrapped_view
 
+# Get only groups  user is an admin of
 def get_admin_groups():
     # Retrieve UIN form session
     uin = session["uin"]
@@ -292,9 +277,9 @@ def get_admin_groups():
     if req.status_code == 200:
         req_data = req.json()
         for item in req_data:
-            group_info.append(item)
+            if item["membership_status"] == "admin":
+                group_info.append(item)
         # Return list of groups for specified UIN
         return group_info
     else:
-        session.clear()
-        return redirect(url_for("home.home", error="Group information can't be retrieved"))
+        return group_info, req.status_code

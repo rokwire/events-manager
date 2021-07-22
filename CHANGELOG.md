@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
  - Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
- - Authorization restriction for "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access" added [#638](https://github.com/rokwire/events-manager/issues/638)
+
 
 ## [2.4.1] - 2021-06-23
 ### Added
