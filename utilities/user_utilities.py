@@ -22,7 +22,7 @@ import os
 import re
 import tempfile
 import shutil
-from flask import current_app
+from flask import current_app, session
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime, date
@@ -523,14 +523,19 @@ def populate_event_from_form(post_form, email):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
-    start_date = post_form.get('startDate')
-
+    if all_day_event:
+        start_date = post_form.get('startDate')
+    else:
+        start_date = post_form.get('startDate') + 'T' + post_form.get('startTime')
     if 'timezone' in post_form:
         new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), start_date, 'startDate', all_day_event)
     else:
         new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
+    if not all_day_event and end_date != '':
+        end_date = post_form.get('endDate') + 'T' + post_form.get('endTime')
+
     if end_date != '':
         if 'timezone' in post_form:
             new_event['endDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
@@ -989,3 +994,21 @@ def update_super_event_id(sub_event_id, super_event_id):
         traceback.print_exc()
         print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
+
+# Get only groups  user is an admin of
+def get_admin_groups():
+    # Retrieve UIN form session
+    uin = session["uin"]
+    #  Build request
+    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
+    req = requests.get(url, headers=headers)
+    group_info = list()
+    # Parse Results
+    if req.status_code == 200:
+        req_data = req.json()
+        for item in req_data:
+            if item["membership_status"] == "admin":
+                group_info.append(item)
+    # Return list of groups for specified UIN
+    return group_info, req.status_code

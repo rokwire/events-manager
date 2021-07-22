@@ -25,6 +25,7 @@ from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 from oic.utils.http_util import Redirect
 from werkzeug.security import check_password_hash
 
+from .utilities.user_utilities import get_admin_groups
 from .config import Config
 from .db import find_one
 
@@ -63,17 +64,23 @@ def role_required(role):
                     userevent_id = kwargs.get('id')
                     if 'user_info' in session:
                         if 'uiucedu_is_member_of' in session.get('user_info'):
+                            # check the AD group access
                             if 'urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access' in session.get('user_info').get('uiucedu_is_member_of'):
-                                if userevent_id is None:
-                                    return view(**kwargs)
-                                else:
-                                    event = find_one(current_app.config['EVENT_COLLECTION'],
-                                                     condition={"_id": ObjectId(userevent_id)},
-                                                     projection={'createdByGroupId': 1})
-                                    if 'createdByGroupId' in event:
-                                        for admin_group in get_admin_groups():#session['groups']:
-                                            if event.get('createdByGroupId') == admin_group.get('id'):
-                                                return view(**kwargs)
+                                admin_groups, _ = get_admin_groups()
+                                # check the login user must have at least one admin group access.
+                                if len(admin_groups) > 0:
+                                    if userevent_id is None:
+                                        return view(**kwargs)
+                                    else:
+                                        event = find_one(current_app.config['EVENT_COLLECTION'],
+                                                         condition={"_id": ObjectId(userevent_id)},
+                                                         projection={'createdByGroupId': 1})
+                                        if 'createdByGroupId' in event:
+                                            admin_groups, status_code = get_admin_groups()
+                                            if status_code == 200:
+                                                for admin_group in admin_groups:
+                                                    if event.get('createdByGroupId') == admin_group.get('id'):
+                                                        return view(**kwargs)
                     return redirect(url_for("auth.login"))
                 else:
                     if Config.ROLE.get(access) is not None:
@@ -191,14 +198,20 @@ def callback():
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
+
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
+    # For use in groups retrieval for admin check below
+    session["uin"] = user_info["uiucedu_uin"]
+
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
+
     rokwire_auth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
         user_info["uiucedu_is_member_of"]
     ))
+
     if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
     else:
