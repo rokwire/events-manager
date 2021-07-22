@@ -179,6 +179,9 @@ def callback():
 
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
 
+    # For use in groups retrieval
+    session["uin"] = user_info["uiucedu_uin"]
+
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
@@ -186,8 +189,18 @@ def callback():
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
         user_info["uiucedu_is_member_of"]
     ))
+
+    # Conditional mentioned in #638
+    rokwire_auth_new = list(filter(
+        lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access" in x,
+        user_info["uiucedu_is_member_of"]
+    ))
+
     if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
+    # Condtional check for #638
+    elif len(rokwire_auth_new)  == 0:
+        return  edirect(url_for("home.home", error="You don't have permission to login the event manager"))
     else:
         # fill in user information
         session["name"] = user_info["name"]
@@ -259,24 +272,11 @@ def login_required(view):
     return wrapped_view
 
 def get_admin_groups():
-    # Build user_info request
-    response = request.environ["QUERY_STRING"]
-    authentication_response = client.parse_response(AuthorizationResponse, info=response, sformat="urlencoded")
-    code = authentication_response["code"]
-    try:
-        assert authentication_response["state"] == session["state"]
-    except KeyError:
-        return redirect(url_for("home.home", error="Unexpected Error, please try again"))
-    args = {"code": code}
-    token_response = client.do_access_token_request(state=authentication_response["state"],
-                                                    request_args=args,
-                                                    authn_method="client_secret_basic")
-    # Retrieve UIN from user_info
-    user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
-    uin = user_info["uiucedu_uin"]
+    # Retrieve UIN form session
+    uin = session["uin"]
     #  Build request
-    url = "%s%s/groups" % (cfg.GROUPS_BUILDING_BLOCK_ENDPOINT, uin)
-    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": cfg.ROKWIRE_GROUPS_API_KEY}
+    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
     req = requests.get(url, headers=headers)
     group_info = list()
     # Parse Results
