@@ -188,7 +188,7 @@ def callback():
         user_info["uiucedu_is_member_of"]
     ))
 
-    # Conditional mentioned in #638
+
     rokwire_auth_new = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access" in x,
         user_info["uiucedu_is_member_of"]
@@ -196,7 +196,6 @@ def callback():
 
     if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
-    # Condtional check for #638
     elif len(rokwire_auth_new)  == 0:
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
     else:
