@@ -292,7 +292,7 @@
               <div class="col-sm-6">
                   {% if post.allDay == True %}
                   <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>f
+                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>
                   {% else %}
                   <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
                   <input class="form-control" type="time" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" style="width:170px; float:left" required/>
