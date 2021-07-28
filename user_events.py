@@ -77,9 +77,11 @@ def user_events():
             session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
-            total = get_all_user_events_count(select_status, start, end)
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
-            total = get_all_user_events_count(select_status)
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
             page = 1

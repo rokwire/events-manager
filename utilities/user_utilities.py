@@ -61,11 +61,12 @@ def get_all_user_events(select_status):
     #                                                                 "eventStatus": {"$in": select_status}})
 
 
-def get_all_user_events_count(select_status, start=None, end=None):
+def get_all_user_events_count(group_ids, select_status, start=None, end=None):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if start and end and 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}],
@@ -74,27 +75,32 @@ def get_all_user_events_count(select_status, start=None, end=None):
     elif start and end:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}]}))
     elif start != '' and end == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "startDate": {"$gte": start}}))
     elif end != '' and start == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "startDate": {"$lte": end}}))
     elif 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
+                                        "createdByGroupId": {"$in": group_ids},
                                         "eventStatus": {"$in": select_status}}))
 
 
@@ -1018,9 +1024,7 @@ def get_admin_groups():
             if item["membership_status"] == "admin":
                 group_info.append(item)
         # Return list of groups for specified UIN
-        return group_info, req.status_code
-    else:
-        return group_info, req.status_code
+    return group_info, req.status_code
 
 # Get group ids for groups user is an admin of
 def get_admin_group_ids():
