@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
  - Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
+ - Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
+
 
 ### Fixed
 - delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)

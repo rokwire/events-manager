@@ -13,9 +13,8 @@
 #  limitations under the License.
 
 import functools
-
+from bson.objectid import ObjectId
 import ldap
-import requests
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -26,6 +25,7 @@ from oic.utils.authn.client import CLIENT_AUTHN_METHOD
 from oic.utils.http_util import Redirect
 from werkzeug.security import check_password_hash
 
+from .utilities.user_utilities import get_admin_groups
 from .config import Config
 from .db import find_one
 
@@ -60,11 +60,34 @@ def role_required(role):
             if access is None:
                 return redirect(url_for("auth.login"))
             else:
-                if Config.ROLE.get(access) is not None:
-                    if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
-                        return redirect(Config.ROLE.get(access)[1])
-                else:
+                if role == 'user':
+                    userevent_id = kwargs.get('id')
+                    if 'user_info' in session:
+                        if 'uiucedu_is_member_of' in session.get('user_info'):
+                            # check the AD group access
+                            if 'urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access' in session.get('user_info').get('uiucedu_is_member_of'):
+                                admin_groups, _ = get_admin_groups()
+                                # check the login user must have at least one admin group access.
+                                if len(admin_groups) > 0:
+                                    if userevent_id is None:
+                                        return view(**kwargs)
+                                    else:
+                                        event = find_one(current_app.config['EVENT_COLLECTION'],
+                                                         condition={"_id": ObjectId(userevent_id)},
+                                                         projection={'createdByGroupId': 1})
+                                        if 'createdByGroupId' in event:
+                                            admin_groups, status_code = get_admin_groups()
+                                            if status_code == 200:
+                                                for admin_group in admin_groups:
+                                                    if event.get('createdByGroupId') == admin_group.get('id'):
+                                                        return view(**kwargs)
                     return redirect(url_for("auth.login"))
+                else:
+                    if Config.ROLE.get(access) is not None:
+                        if Config.ROLE.get(access)[0] <= Config.ROLE.get(role)[0] and access != role:
+                            return redirect(Config.ROLE.get(access)[1])
+                    else:
+                        return redirect(url_for("auth.login"))
                 return view(**kwargs)
 
         return decorated_function
@@ -176,7 +199,6 @@ def callback():
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
 
-
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
     # For use in groups retrieval for admin check below
     session["uin"] = user_info["uiucedu_uin"]
@@ -194,6 +216,7 @@ def callback():
         return redirect(url_for("auth.login"))
     else:
         # fill in user information
+        session['user_info'] = user_info
         session["name"] = user_info["name"]
         session["email"] = user_info["email"]
         # check for corresponding privilege
