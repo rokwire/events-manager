@@ -411,13 +411,8 @@ def delete_events_in_building_block(objectId_list_to_delete):
         event = find_one(current_app.config['EVENT_COLLECTION'], condition= _id)
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
         result = requests.delete(url, headers=headers)
-<<<<<<< HEAD
-        if result.status_code != 202:
-            print("Event {} deletion fails".format(_id) + ", result.status_code: %d" % result.status_code)
-=======
         if result.status_code != 202 and result.status_code != 404:
             print("Event {} deletion fails".format(_id))
->>>>>>> bb1ddcc21fdee742eb71b3f68cbee6728698a691
             fail_count +=1
         else:
             delete_success_list.append(_id)
