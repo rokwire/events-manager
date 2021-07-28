@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+ - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
  - Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
 
