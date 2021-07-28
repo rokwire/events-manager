@@ -61,7 +61,7 @@ def get_all_user_events(select_status):
     #                                                                 "eventStatus": {"$in": select_status}})
 
 
-def get_all_user_events_count(group_ids, select_status, start=None, end=None):
+def get_all_user_events_count(select_status, start=None, end=None):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if start and end and 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
