@@ -150,6 +150,26 @@
           <h2><a class="article-title">Edit Event</a></h2>
           <hr class="divider"/>
 
+          <!-- event group -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Group<span style="color: red">*</span> </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required>
+                  {% for group in groups %}
+                      {% if post.createdByGroupId == group['id'] %}
+                      <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
+                      {% else %}
+                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                      {% endif %}
+                  {% endfor %}
+                  </select>
+              </div>
+            </div>
+          </div>
+
            <!-- event title -->
            <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
@@ -237,24 +257,6 @@
               </div>
             </div>
           {% endif %}
-
-          <!-- event group -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Group<span style="color: red">*</span> </h5>
-            </div>
-            <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="group" id = "group" class="selectpicker" title="Group..." required >
-{#                                  {% for id, name in group %}#}
-{#                                      <option value="{{name}}" id={{id}}>{{name}}</option>#}
-{#                                  {% endfor %}#}
-                  <option value="Group1" id=1>Group1</option>
-                  <option value="Group2" id=2>Group2</option>
-                  </select>
-              </div>
-            </div>
-          </div>
 
           <!-- freeEvent -->
           <div class="form-group row ">
