@@ -132,7 +132,7 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
-    groups = get_admin_groups()
+    groups, _ = get_admin_groups()
     for group in groups:
         if group['id'] == post['createdByGroupId']:
             groupName = group['title']
@@ -436,16 +436,17 @@ def user_an_event_edit(id):
                 image = True
             else:
                 image = False
+        groups, _ = get_admin_groups()
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               image = image,
+                               image=image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
                                timezones=Config.TIMEZONES,
                                tags=tags.json(),
-                               groups=get_admin_groups())
+                               groups=groups)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -515,7 +516,7 @@ def time_range():
 @role_required("user")
 def add_new_event():
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
-    groups = get_admin_groups()
+    groups, _ = get_admin_groups()
     req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
