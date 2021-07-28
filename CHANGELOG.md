@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
 - Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
 
+### Fixed
+- delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)
+
 ### Changed
 - Crop event title at a fixed number of characters. [#667](https://github.com/rokwire/events-manager/issues/667)
 - Move dates under a second row below the title and move badges to the right of the title. [#666](https://github.com/rokwire/events-manager/issues/666)
