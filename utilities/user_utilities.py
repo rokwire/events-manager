@@ -1030,20 +1030,8 @@ def get_admin_groups():
 
 # Get group ids for groups user is an admin of
 def get_admin_group_ids():
-    # Retrieve UIN form session
-    uin = session["uin"]
-    #  Build request
-    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
-    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
-    req = requests.get(url, headers=headers)
+    group_info = get_admin_groups()
     group_ids = list()
-    # Parse Results
-    if req.status_code == 200:
-        req_data = req.json()
-        for item in req_data:
-            if item["membership_status"] == "admin":
-                group_ids.append(item["id"])
-        # Return list of groups ids for specified UIN and  admin status
-        return group_ids
-    else:
-        return group_ids
+    for group in group_info:
+        group_ids.append(group["id"])
+    return group_ids
