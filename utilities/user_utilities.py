@@ -98,12 +98,13 @@ def get_all_user_events_count(select_status, start=None, end=None):
                                         "eventStatus": {"$in": select_status}}))
 
 
-def get_all_user_events_pagination(select_status, skip, limit, startDate=None, endDate=None):
+def get_all_user_events_pagination(select_status, skip, limit, startDate=None, endDate=None, group_ids):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if startDate and endDate and 'hide_past' in select_status:
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": startDate}},
                                                      {"startDate": {"$lte": endDate}}],
                                             "$or": [{"endDate": {"$gte": today}},
@@ -114,6 +115,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": startDate}},
                                                      {"startDate": {"$lte": endDate}}]},
                                  skip=skip,
@@ -122,6 +124,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$gte": startDate}},
                                  skip=skip,
                                  limit=limit)
@@ -129,6 +132,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$lte": endDate}},
                                  skip=skip,
                                  limit=limit)
@@ -136,6 +140,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]},
                                  skip=skip,
@@ -143,7 +148,9 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
     else:
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status}},
+
                                  skip=skip,
                                  limit=limit)
     begin = skip
@@ -1014,3 +1021,23 @@ def get_admin_groups():
         return group_info
     else:
         return group_info, req.status_code
+
+# Get group ids for groups user is an admin of
+def get_admin_group_ids():
+    # Retrieve UIN form session
+    uin = session["uin"]
+    #  Build request
+    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
+    req = requests.get(url, headers=headers)
+    group_ids = list()
+    # Parse Results
+    if req.status_code == 200:
+        req_data = req.json()
+        for item in req_data:
+            if item["membership_status"] == "admin":
+                group_ids.append(item["id"])
+        # Return list of groups ids for specified UIN and  admin status
+        return group_ids
+    else:
+        return group_ids, req.status_code
