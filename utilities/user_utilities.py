@@ -1024,14 +1024,17 @@ def get_admin_groups():
             if item["membership_status"] == "admin":
                 group_info.append(item)
         # Return list of groups for specified UIN
-        return group_info
+        return group_info, req.status_code
     else:
         return group_info, req.status_code
 
 # Get group ids for groups user is an admin of
 def get_admin_group_ids():
-    group_info = get_admin_groups()
-    group_ids = list()
-    for group in group_info:
-        group_ids.append(group["id"])
-    return group_ids
+    group_info, status_code = get_admin_groups()
+    if (status_code == 200):
+        group_ids = list()
+        for group in group_info:
+            group_ids.append(group["id"])
+            return group_ids
+    else:
+        print("Groups not retrievable")
