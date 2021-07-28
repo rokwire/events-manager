@@ -77,16 +77,24 @@ def user_events():
             session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
-            total = get_all_user_events_count(select_status, start, end)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
-            total = get_all_user_events_count(select_status)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
             page = 1
         if 'from' in session:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page, start, end)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
         else:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
             post = list[0]
             if 'timezone' in post:
