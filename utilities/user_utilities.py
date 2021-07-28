@@ -67,7 +67,6 @@ def get_all_user_events_count(group_ids, select_status, start=None, end=None):
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}],
                                             "$or": [{"endDate": {"$gte": today}},
@@ -76,31 +75,26 @@ def get_all_user_events_count(group_ids, select_status, start=None, end=None):
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}]}))
     elif start != '' and end == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$gte": start}}))
     elif end != '' and start == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$lte": end}}))
     elif 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
-                                            "createdByGroupId": {"$in": group_ids},
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
-                                        "createdByGroupId": {"$in": group_ids},
                                         "eventStatus": {"$in": select_status}}))
 
 
