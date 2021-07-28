@@ -298,12 +298,18 @@ def user_an_event_edit(id):
                 else:
                     post_by_id['isSuperEvent'] = False
             elif item == 'startDate':
-                if 'timezone' in request.form:
-                    post_by_id['startDate'] = time_zone_to_utc(request.form.get('timezone'), request.form.get('startDate'), 'startDate', all_day_event)
+                if all_day_event:
+                    post_by_id['startDate'] = request.form.get('startDate')
                 else:
-                    post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), request.form.get('startDate'), 'startDate', all_day_event)
+                    post_by_id['startDate'] = request.form.get('startDate') + 'T' + request.form.get('startTime')
+                if 'timezone' in request.form:
+                    post_by_id['startDate'] = time_zone_to_utc(request.form.get('timezone'), post_by_id['startDate'], 'startDate', all_day_event)
+                else:
+                    post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), post_by_id['startDate'], 'startDate', all_day_event)
             elif item == 'endDate':
                 end_date = request.form.get('endDate')
+                if end_date != "" and not all_day_event:
+                    end_date = request.form.get('endDate') + 'T' + request.form.get('endTime')
                 if end_date != '':
                     if 'timezone' in request.form:
                         post_by_id['endDate'] = time_zone_to_utc(request.form.get('timezone'), end_date, 'endDate', all_day_event)

@@ -164,8 +164,9 @@
             <div class="col-12 col-sm-2">
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
-            <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
+            <div class="col-sm-6">
+              <input class="form-control" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -173,8 +174,9 @@
             <div class="col-12 col-sm-2">
               <h5>End Date</h5>
             </div>
-            <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+            <div class="col-sm-6">
+              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left"/>
             </div>
           </div>
 
@@ -575,13 +577,18 @@
    */
    // Handle all-day event
     $("#allDay").change(function () {
+      /*
       let $startDate = $("#startDate");
       let $endDate = $("#endDate");
 
       let startDate = moment($startDate.val());
       let endDate = moment($endDate.val());
-
+      */
       if (this.checked) {
+        document.getElementById('startTime').setAttribute("hidden","hidden");
+        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('endTime').setAttribute("hidden","hidden");
+        /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
         console.log($startDate.val())
@@ -604,9 +611,12 @@
         } else {
           document.getElementById("endDate").setAttribute("min", date);
         }
-      }
-      else {
-        $startDate.attr("type", "datetime-local");
+      */
+      } else {
+        document.getElementById('startTime').removeAttribute("hidden");
+        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('endTime').removeAttribute("hidden");
+        /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
         $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
@@ -628,7 +638,7 @@
 
         } else {
           document.getElementById("endDate").setAttribute("min", date);
-        }
+        }*/
       }
     });
 

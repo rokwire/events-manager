@@ -15,6 +15,7 @@
 import functools
 
 import ldap
+import requests
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
 )
@@ -174,15 +175,21 @@ def callback():
     token_response = client.do_access_token_request(state=authentication_response["state"],
                                                     request_args=args,
                                                     authn_method="client_secret_basic")
+
+
     user_info = client.do_user_info_request(state=authentication_response["state"]).to_dict()
+    # For use in groups retrieval for admin check below
+    session["uin"] = user_info["uiucedu_uin"]
 
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
+
     rokwire_auth = list(filter(
         lambda x: "urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-" in x,
         user_info["uiucedu_is_member_of"]
     ))
+
     if len(rokwire_auth) == 0:
         return redirect(url_for("auth.login"))
     else:
