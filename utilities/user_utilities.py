@@ -1023,12 +1023,9 @@ def get_admin_groups():
         for item in req_data:
             if item["membership_status"] == "admin":
                 group_info.append(item)
-<<<<<<< HEAD
     # Return list of groups for specified UIN
     return group_info, req.status_code
-=======
-        # Return list of groups for specified UIN
-    return group_info, req.status_code
+
 
 # Get group ids for groups user is an admin of
 def get_admin_group_ids():
