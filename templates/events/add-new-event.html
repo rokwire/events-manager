@@ -57,6 +57,21 @@
        <div class="media-body">
           <h2><a class="article-title">Add A New Event</a></h2>
           <hr class="divider"/>
+          <!-- event group -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Group<span style="color: red">*</span> </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required >
+                  {% for group in groups %}
+                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                  {% endfor %}
+                  </select>
+              </div>
+            </div>
+          </div>
           <!-- event title -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
