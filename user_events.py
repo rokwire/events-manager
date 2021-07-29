@@ -77,16 +77,22 @@ def user_events():
             session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
-            total = get_all_user_events_count(select_status, start, end)
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
-            total = get_all_user_events_count(select_status)
+            group_ids = get_admin_group_ids()
+            total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
             page = 1
         if 'from' in session:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page, start, end)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
         else:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
             post = list[0]
             if 'timezone' in post:
@@ -126,6 +132,10 @@ def user_events():
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    groups, _ = get_admin_groups()
+    for group in groups:
+        if group['id'] == post['createdByGroupId']:
+            groupName = group['title']
     if 'allDay' not in post:
         post['allDay'] = None
     if 'timezone' in post:
@@ -157,7 +167,8 @@ def user_an_event(id):
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                            timestamp=datetime.now().timestamp(),
-                           timezones=Config.TIMEZONES)
+                           timezones=Config.TIMEZONES,
+                           groupName=groupName)
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 @role_required("user")
@@ -275,6 +286,8 @@ def user_an_event_edit(id):
             post_by_id['isVirtual'] = False
 
         for item in request.form:
+            if item == 'createdByGroupId':
+                post_by_id['createdByGroupId'] = request.form[item]
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
             elif item == 'titleURL':
@@ -423,15 +436,17 @@ def user_an_event_edit(id):
                 image = True
             else:
                 image = False
+        groups, _ = get_admin_groups()
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               image = image,
+                               image=image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
                                timezones=Config.TIMEZONES,
-                               tags=tags.json())
+                               tags=tags.json(),
+                               groups=groups)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -501,9 +516,11 @@ def time_range():
 @role_required("user")
 def add_new_event():
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+    groups, _ = get_admin_groups()
     req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
+        new_event['isGroupPrivate'] = False
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
@@ -533,7 +550,8 @@ def add_new_event():
                                 extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                 size_limit=Config.IMAGE_SIZE_LIMIT,
                                 timezones=Config.TIMEZONES,
-                                tags=req.json())
+                                tags=req.json(),
+                                groups=groups)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
