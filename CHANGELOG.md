@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Fixed
+- End dates can't be deleted. [#691](https://github.com/rokwire/events-manager/issues/690)
+- All-day events not working. [#690](https://github.com/rokwire/events-manager/issues/691)
 - delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)
 
 ### Changed
