@@ -190,6 +190,7 @@ def user_an_event_edit(id):
     # POST Method
     if request.method == 'POST':
         super_event_checked = False
+        deleteEndDate = False
         post_by_id['contacts'] = get_contact_list(request.form)
         if request.form['tags']:
             post_by_id['tags'] = request.form['tags'].split(',')
@@ -330,6 +331,7 @@ def user_an_event_edit(id):
                         post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
+                    deleteEndDate = True
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
@@ -383,8 +385,10 @@ def user_an_event_edit(id):
 
         if 'timezone' in request.form:
             post_by_id['timezone'] = request.form['timezone']
-        update_user_event(id, post_by_id, None)
-
+        if deleteEndDate:
+            update_user_event(id, post_by_id, {'endDate': ""})
+        else:
+            update_user_event(id, post_by_id, None)
         # Check for event status
         event_status = get_user_event_status(id)
         if event_status == "approved":
