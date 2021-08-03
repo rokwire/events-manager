@@ -81,6 +81,9 @@ def role_required(role):
                                                 for admin_group in admin_groups:
                                                     if event.get('createdByGroupId') == admin_group.get('id'):
                                                         return view(**kwargs)
+                                else:
+                                    return redirect(url_for("home.home",
+                                                     error="You don't belong to any of the user groups."))
                     return redirect(url_for("auth.login"))
                 else:
                     if Config.ROLE.get(access) is not None:
