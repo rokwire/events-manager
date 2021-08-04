@@ -28,6 +28,7 @@
 {% block content %}
     <div>
     <select name="group" id="group" class="selectpicker float-left" title="Group...">
+          <option value="all" {% if not selected_group %}selected{% endif %}>All Groups</option>
       {% for group in groups %}
           <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>
       {% endfor %}

@@ -81,12 +81,12 @@ def user_events():
         offset = (page - 1) * per_page
         if 'from' in session:
             group_ids = get_admin_group_ids()
-            if "group" in session:
+            if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
             group_ids = get_admin_group_ids()
-            if "group" in session:
+            if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
@@ -95,13 +95,13 @@ def user_events():
         if 'from' in session:
             #Modifications
             group_ids = get_admin_group_ids()
-            if "group" in session:
+            if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
         else:
             #Modifications
             group_ids = get_admin_group_ids()
-            if "group" in session:
+            if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
