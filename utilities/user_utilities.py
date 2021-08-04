@@ -1034,7 +1034,7 @@ def get_admin_group_ids():
         group_ids = list()
         for group in group_info:
             group_ids.append(group["id"])
-            return group_ids
+        return group_ids
     else:
         print("Groups not retrievable")
         return []
