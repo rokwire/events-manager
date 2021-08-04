@@ -238,7 +238,7 @@ def find_user_all_object_events(eventId):
 def delete_user_event_in_building_block(objectId_list):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
     delete_success_list = []
     fail_count = 0
@@ -317,7 +317,7 @@ def approve_user_event(objectId):
 def publish_user_event(eventId):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
 
     try:
@@ -396,7 +396,7 @@ def publish_user_event(eventId):
 def put_user_event(eventId):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
     try:
         # Put event in object, but exclude ID and status

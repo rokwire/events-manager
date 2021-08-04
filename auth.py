@@ -206,6 +206,12 @@ def callback():
     # For use in groups retrieval for admin check below
     session["uin"] = user_info["uiucedu_uin"]
 
+    if token_response.get("id_token") and token_response.get("id_token").jwt:
+        session["id_token"] = token_response.get("id_token").jwt
+    else:
+        session.clear()
+        return redirect(url_for("home.home", error="Login error, please try again later."))
+
     if "uiucedu_is_member_of" not in user_info:
         session.clear()
         return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
