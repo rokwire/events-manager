@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Not available tag removed. [#641](https://github.com/rokwire/events-manager/issues/641)
  - Log status code when failed to download campus events. [#688](https://github.com/rokwire/events-manager/issues/688)
  - Event filtering by groups on event listing page [#676](https://github.com/rokwire/events-manager/issues/676)
-
+ - Add "All Groups" on event listing page [#702](https://github.com/rokwire/events-manager/issues/702)
 ### Fixed
 - End dates can't be deleted. [#691](https://github.com/rokwire/events-manager/issues/690)
 - All-day events not working. [#690](https://github.com/rokwire/events-manager/issues/691)
