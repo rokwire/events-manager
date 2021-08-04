@@ -203,6 +203,7 @@ def user_an_event_edit(id):
     # POST Method
     if request.method == 'POST':
         super_event_checked = False
+        deleteEndDate = False
         post_by_id['contacts'] = get_contact_list(request.form)
         if request.form['tags']:
             post_by_id['tags'] = request.form['tags'].split(',')
@@ -343,10 +344,11 @@ def user_an_event_edit(id):
                         post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
+                    deleteEndDate = True
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
-                    post_by_id['location'] = get_location_details(location)
+                    post_by_id['location'] = get_location_details(location, post_by_id.get('isVirtual'))
                 else:
                     post_by_id['location'] = None
 
@@ -396,8 +398,10 @@ def user_an_event_edit(id):
 
         if 'timezone' in request.form:
             post_by_id['timezone'] = request.form['timezone']
-        update_user_event(id, post_by_id, None)
-
+        if deleteEndDate:
+            update_user_event(id, post_by_id, {'endDate': ""})
+        else:
+            update_user_event(id, post_by_id, None)
         # Check for event status
         event_status = get_user_event_status(id)
         if event_status == "approved":
@@ -534,6 +538,8 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event['isGroupPrivate'] = False
+        if new_event.get('isEventFree') == 'on':
+            new_event['isEventFree'] = True
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:

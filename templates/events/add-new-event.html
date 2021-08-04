@@ -121,17 +121,6 @@
             </div>
           </div>
 
-
-
-          <!-- freeEvent -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Free Event</h5>
-            </div>
-            <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
-            </div>
-          </div>
           <!-- allDay -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -226,6 +215,17 @@
 <!--              </div>-->
 <!--            </div>-->
 <!--          </div>-->
+
+          <!-- freeEvent -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Free Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
+            </div>
+          </div>
+       
           <!-- cost -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -583,7 +583,7 @@
       */
       if (this.checked) {
         document.getElementById('startTime').setAttribute("hidden","hidden");
-        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
         /*
         $endDate.attr("type", "date");
