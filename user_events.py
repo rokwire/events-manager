@@ -64,8 +64,11 @@ def user_events():
             posts = get_searched_user_events(query_dic, select_status)
         if 'per_page' in request.form:
             session["per_page"] = int(request.form.get('per_page'))
+        if 'group' in request.form:
+            session["group"] = str(request.form.get('group'))
             return "", 200
     else:
+        groups, _ = get_admin_groups()
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         except ValueError:
@@ -78,9 +81,13 @@ def user_events():
         offset = (page - 1) * per_page
         if 'from' in session:
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
@@ -88,10 +95,14 @@ def user_events():
         if 'from' in session:
             #Modifications
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
         else:
             #Modifications
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
             post = list[0]
@@ -126,7 +137,9 @@ def user_events():
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
                             per_page=per_page, pagination=pagination,
-                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE)
+                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE,
+                            groups=groups,
+                            selected_group=session.get('group'))
 
 @userbp.route('/event/<id>',  methods=['GET'])
 @role_required("user")
