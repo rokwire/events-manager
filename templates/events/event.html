@@ -157,6 +157,17 @@
             {% endif %}
           </div>
 
+
+          <div class="item3" style="grid-area: auto / left;">
+            <!-- event group -->
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Group </h5>
+                </div>
+                <p class="col-sm-9">{{groupName}}</p>
+              </div>
+          </div>
+
           <div class="item2" style="grid-area: auto / left;">
             <!-- event category -->
             {% if post.category %}
@@ -178,17 +189,6 @@
               </div>
             {% endif %}
           </div>
-
-          <div class="item3" style="grid-area: auto / left;">
-            <!-- event group -->
-              <div class="row">
-                <div class="col-12 col-sm-3">
-                  <h5>Group </h5>
-                </div>
-                <p class="col-sm-9">{{groupName}}</p>
-              </div>
-          </div>
-
           <div class="item5" style="grid-area: auto / left;">
             <!-- All Day Event -->
             {% if post.allDay %}
@@ -313,7 +313,7 @@
               </div>
             {% else %}
               <div class="row">
-                <div class="col-12 col-sm-3">
+                <div class="col-12 col-sm-2">
                   <h5>Free Event</h5>
                 </div>
                     <p class = "col-sm-9">No</p>
