@@ -521,6 +521,8 @@ def add_new_event():
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
         new_event['isGroupPrivate'] = False
+        if new_event.get('isEventFree') == 'on':
+            new_event['isEventFree'] = True
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:

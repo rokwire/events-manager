@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - User doesn't belong to any group will trigger a redirect loop upon login. [#695](https://github.com/rokwire/events-manager/issues/695)
 - delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)
+- fix the failure pubish of user event with free event. [#697](https://github.com/rokwire/events-manager/issues/697)
 
 ### Changed
 - Crop event title at a fixed number of characters. [#667](https://github.com/rokwire/events-manager/issues/667)
