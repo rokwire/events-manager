@@ -6,7 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
- - Event filtering by groups on event listing page [#676](https://github.com/rokwire/events-manager/issues/676)
  - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
  - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
  - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
@@ -14,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
  - Not available tag removed. [#641](https://github.com/rokwire/events-manager/issues/641)
  - Log status code when failed to download campus events. [#688](https://github.com/rokwire/events-manager/issues/688)
+ - Event filtering by groups on event listing page [#676](https://github.com/rokwire/events-manager/issues/676)
 
 ### Fixed
 - User doesn't belong to any group will trigger a redirect loop upon login. [#695](https://github.com/rokwire/events-manager/issues/695)
