@@ -583,7 +583,7 @@
       */
       if (this.checked) {
         document.getElementById('startTime').setAttribute("hidden","hidden");
-        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
         /*
         $endDate.attr("type", "date");

@@ -64,8 +64,11 @@ def user_events():
             posts = get_searched_user_events(query_dic, select_status)
         if 'per_page' in request.form:
             session["per_page"] = int(request.form.get('per_page'))
+        if 'group' in request.form:
+            session["group"] = str(request.form.get('group'))
             return "", 200
     else:
+        groups, _ = get_admin_groups()
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         except ValueError:
@@ -78,9 +81,13 @@ def user_events():
         offset = (page - 1) * per_page
         if 'from' in session:
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status, start, end)
         else:
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
@@ -88,10 +95,14 @@ def user_events():
         if 'from' in session:
             #Modifications
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
         else:
             #Modifications
             group_ids = get_admin_group_ids()
+            if "group" in session:
+                group_ids = [session["group"]]
             posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
             post = list[0]
@@ -126,7 +137,9 @@ def user_events():
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
                             per_page=per_page, pagination=pagination,
-                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE)
+                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE,
+                            groups=groups,
+                            selected_group=session.get('group'))
 
 @userbp.route('/event/<id>',  methods=['GET'])
 @role_required("user")
@@ -190,6 +203,7 @@ def user_an_event_edit(id):
     # POST Method
     if request.method == 'POST':
         super_event_checked = False
+        deleteEndDate = False
         post_by_id['contacts'] = get_contact_list(request.form)
         if request.form['tags']:
             post_by_id['tags'] = request.form['tags'].split(',')
@@ -330,6 +344,7 @@ def user_an_event_edit(id):
                         post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
+                    deleteEndDate = True
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
@@ -383,8 +398,10 @@ def user_an_event_edit(id):
 
         if 'timezone' in request.form:
             post_by_id['timezone'] = request.form['timezone']
-        update_user_event(id, post_by_id, None)
-
+        if deleteEndDate:
+            update_user_event(id, post_by_id, {'endDate': ""})
+        else:
+            update_user_event(id, post_by_id, None)
         # Check for event status
         event_status = get_user_event_status(id)
         if event_status == "approved":
