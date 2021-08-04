@@ -134,15 +134,15 @@
                         <span class="date">{{posts_dic[eventID][0].startDate}} </span>
                     </div>
                     <div style="display:flex; overflow: hidden">
-                        {% if posts_dic[eventID][0].allDay %}
-                        <h6 style="padding-right: 5px;margin-left: 58px">Ends: </h6>
-                        {% else %}
-                        <h6 style="padding-right: 5px">Ends: </h6>
+                        {% if posts_dic[eventID][0].allDay and posts_dic[eventID][0].endDate %}
+                            <h6 style="padding-right: 5px;margin-left: 58px">Ends: </h6>
+                            <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
                         {% endif %}
-                        {% if posts_dic[eventID][0].endDate %}
+                        {% if posts_dic[eventID][0].endDate and posts_dic[eventID][0].allDay == false %}
+                            <h6 style="padding-right: 5px">Ends: </h6>
                             <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
                         {% else %}
-                            <span class="date">Not Available</span>
+                            <!-- <span class="date">Not Available</span> -->
                         {% endif %}
                     </div>
                 </div>
