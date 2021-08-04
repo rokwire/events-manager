@@ -22,19 +22,19 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event for</a>
-  <select name="group" id = "group" class="selectpicker" title="Group..." required >
-{#                  {% for id, name in group %}#}
-{#                      <option value="{{name}}" id={{id}}>{{name}}</option>#}
-{#                  {% endfor %}#}
-  <option value="Group1" id=1>Group1</option>
-  <option value="Group2" id=2>Group2</option>
-  </select>
+  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
   {% endif %}
 {% endblock %}
 {% block content %}
-    <div class="row justify-content-center">
+    <div>
+    <select name="group" id="group" class="selectpicker float-left" title="Group...">
+      {% for group in groups %}
+          <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>
+      {% endfor %}
+    </select>
+    <div class="row justify-content-center" style="margin-right:300px">
       <h1>User Events</h1>&nbsp
+    </div>
     </div>
     <!-- filter and select operations -->
     <div class="row justify-content-around">

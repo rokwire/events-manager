@@ -76,4 +76,16 @@
             location.reload(true);
         });
     })
+    $("#group").on('change', function () {
+        $.ajax({
+            url: "{{ url_for('user_events.user_events') }}",
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                group: document.getElementById('group').value,
+            },
+        }).always(function () {
+            location.reload(true);
+        });
+    })
 </script>
