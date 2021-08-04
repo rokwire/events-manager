@@ -557,7 +557,7 @@ def populate_event_from_form(post_form, email):
 
     location = post_form.get('location')
     if location != '':
-        new_event['location'] = get_location_details(location)
+        new_event['location'] = get_location_details(location, new_event.get('isVirtual'))
     else:
         new_event['location'] = None
 
@@ -566,8 +566,12 @@ def populate_event_from_form(post_form, email):
     return new_event
 
 
-def get_location_details(location_description):
+def get_location_details(location_description, is_virtual_event):
     location_obj = dict()
+    if is_virtual_event:
+        location_obj['description'] = location_description
+        return location_obj
+
     for excluded_location in Config.EXCLUDED_LOCATION:
         if excluded_location.lower() in location_description.lower():
             location_obj['description'] = location_description
