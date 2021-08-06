@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - delete events from events manager in local if the events are not in events building blocks.[#684](https://github.com/rokwire/events-manager/issues/684)
 - get_admin_group_ids() will only return first group ID.[#699](https://github.com/rokwire/events-manager/issues/699)
 - Fix failure to publish a free user event. [#697](https://github.com/rokwire/events-manager/issues/697)
+- Fix the same day date filter search. [#705](https://github.com/rokwire/events-manager/issues/705)
 
 ### Changed
 - Crop event title at a fixed number of characters. [#667](https://github.com/rokwire/events-manager/issues/667)

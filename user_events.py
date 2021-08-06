@@ -16,6 +16,7 @@ import shutil
 import traceback
 import requests
 import json
+from datetime import datetime, timedelta
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
@@ -40,6 +41,12 @@ def user_events():
     if 'from' in session:
         start = session['from']
         end = session['to']
+        start_date_filter = start
+        end_date_filter = end
+        if start:
+            start_date_filter = datetime.strptime(start, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S')
+        if end:
+            end_date_filter = (datetime.strptime(end, '%Y-%m-%d')+timedelta(hours=23,minutes=59, seconds=59)).strftime('%Y-%m-%dT%H:%M:%S')
     else:
         start = ""
         end = ""
@@ -83,7 +90,7 @@ def user_events():
             group_ids = get_admin_group_ids()
             if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
-            total = get_all_user_events_count(group_ids, select_status, start, end)
+            total = get_all_user_events_count(group_ids, select_status, start_date_filter, end_date_filter)
         else:
             group_ids = get_admin_group_ids()
             if "group" in session and session["group"] != 'all':
@@ -97,7 +104,7 @@ def user_events():
             group_ids = get_admin_group_ids()
             if "group" in session and session["group"] != 'all':
                 group_ids = [session["group"]]
-            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start, end)
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start_date_filter, end_date_filter)
         else:
             #Modifications
             group_ids = get_admin_group_ids()
