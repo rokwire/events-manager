@@ -71,7 +71,7 @@ def download(url):
 
     response = requests.get(url)
     if response.status_code != 200:
-        print("Invalid URL link: {}".format(url))
+        print("Invalid URL link: {}".format(url) + ", response.status_code: %d" % response.status_code)
 
     # content = response.text.replace("&gt;", ">").replace("&lt;", "<")
     content = response.text

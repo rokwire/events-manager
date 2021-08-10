@@ -16,6 +16,7 @@ import shutil
 import traceback
 import requests
 import json
+from datetime import datetime, timedelta
 from .utilities import source_utilities, notification
 
 from flask import Flask, render_template, url_for, flash, redirect, Blueprint, request, session, current_app, \
@@ -40,6 +41,12 @@ def user_events():
     if 'from' in session:
         start = session['from']
         end = session['to']
+        start_date_filter = start
+        end_date_filter = end
+        if start:
+            start_date_filter = datetime.strptime(start, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S')
+        if end:
+            end_date_filter = (datetime.strptime(end, '%Y-%m-%d')+timedelta(hours=23,minutes=59, seconds=59)).strftime('%Y-%m-%dT%H:%M:%S')
     else:
         start = ""
         end = ""
@@ -64,8 +71,11 @@ def user_events():
             posts = get_searched_user_events(query_dic, select_status)
         if 'per_page' in request.form:
             session["per_page"] = int(request.form.get('per_page'))
+        if 'group' in request.form:
+            session["group"] = str(request.form.get('group'))
             return "", 200
     else:
+        groups, _ = get_admin_groups()
         try:
             page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
         except ValueError:
@@ -77,16 +87,30 @@ def user_events():
             session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:
-            total = get_all_user_events_count(select_status, start, end)
+            group_ids = get_admin_group_ids()
+            if "group" in session and session["group"] != 'all':
+                group_ids = [session["group"]]
+            total = get_all_user_events_count(group_ids, select_status, start_date_filter, end_date_filter)
         else:
-            total = get_all_user_events_count(select_status)
+            group_ids = get_admin_group_ids()
+            if "group" in session and session["group"] != 'all':
+                group_ids = [session["group"]]
+            total = get_all_user_events_count(group_ids, select_status)
         if page <= 0 or offset >= total:
             offset = 0
             page = 1
         if 'from' in session:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page, start, end)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            if "group" in session and session["group"] != 'all':
+                group_ids = [session["group"]]
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page, start_date_filter, end_date_filter)
         else:
-            posts_dic = get_all_user_events_pagination(select_status, offset, per_page)
+            #Modifications
+            group_ids = get_admin_group_ids()
+            if "group" in session and session["group"] != 'all':
+                group_ids = [session["group"]]
+            posts_dic = get_all_user_events_pagination(group_ids, select_status, offset, per_page)
         for list in posts_dic.values():
             post = list[0]
             if 'timezone' in post:
@@ -120,12 +144,18 @@ def user_events():
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
                             per_page=per_page, pagination=pagination,
-                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE)
+                            isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE,
+                            groups=groups,
+                            selected_group=session.get('group'))
 
 @userbp.route('/event/<id>',  methods=['GET'])
 @role_required("user")
 def user_an_event(id):
     post = find_user_event(id)
+    groups, _ = get_admin_groups()
+    for group in groups:
+        if group['id'] == post['createdByGroupId']:
+            groupName = group['title']
     if 'allDay' not in post:
         post['allDay'] = None
     if 'timezone' in post:
@@ -157,7 +187,8 @@ def user_an_event(id):
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                            timestamp=datetime.now().timestamp(),
-                           timezones=Config.TIMEZONES)
+                           timezones=Config.TIMEZONES,
+                           groupName=groupName)
 
 @userbp.route('/event/<id>/edit', methods=['GET', 'POST'])
 @role_required("user")
@@ -179,6 +210,7 @@ def user_an_event_edit(id):
     # POST Method
     if request.method == 'POST':
         super_event_checked = False
+        deleteEndDate = False
         post_by_id['contacts'] = get_contact_list(request.form)
         if request.form['tags']:
             post_by_id['tags'] = request.form['tags'].split(',')
@@ -275,6 +307,8 @@ def user_an_event_edit(id):
             post_by_id['isVirtual'] = False
 
         for item in request.form:
+            if item == 'createdByGroupId':
+                post_by_id['createdByGroupId'] = request.form[item]
             if item == 'title'and item != None:
                 post_by_id['title'] = request.form[item]
             elif item == 'titleURL':
@@ -298,12 +332,18 @@ def user_an_event_edit(id):
                 else:
                     post_by_id['isSuperEvent'] = False
             elif item == 'startDate':
-                if 'timezone' in request.form:
-                    post_by_id['startDate'] = time_zone_to_utc(request.form.get('timezone'), request.form.get('startDate'), 'startDate', all_day_event)
+                if all_day_event:
+                    post_by_id['startDate'] = request.form.get('startDate')
                 else:
-                    post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), request.form.get('startDate'), 'startDate', all_day_event)
+                    post_by_id['startDate'] = request.form.get('startDate') + 'T' + request.form.get('startTime')
+                if 'timezone' in request.form:
+                    post_by_id['startDate'] = time_zone_to_utc(request.form.get('timezone'), post_by_id['startDate'], 'startDate', all_day_event)
+                else:
+                    post_by_id['startDate'] = get_datetime_in_utc(request.form.get('location'), post_by_id['startDate'], 'startDate', all_day_event)
             elif item == 'endDate':
                 end_date = request.form.get('endDate')
+                if end_date != "" and not all_day_event:
+                    end_date = request.form.get('endDate') + 'T' + request.form.get('endTime')
                 if end_date != '':
                     if 'timezone' in request.form:
                         post_by_id['endDate'] = time_zone_to_utc(request.form.get('timezone'), end_date, 'endDate', all_day_event)
@@ -311,10 +351,11 @@ def user_an_event_edit(id):
                         post_by_id['endDate'] = get_datetime_in_utc(request.form.get('location'), end_date, 'endDate', all_day_event)
                 elif 'endDate' in post_by_id:
                     del post_by_id['endDate']
+                    deleteEndDate = True
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
-                    post_by_id['location'] = get_location_details(location)
+                    post_by_id['location'] = get_location_details(location, post_by_id.get('isVirtual'))
                 else:
                     post_by_id['location'] = None
 
@@ -364,8 +405,10 @@ def user_an_event_edit(id):
 
         if 'timezone' in request.form:
             post_by_id['timezone'] = request.form['timezone']
-        update_user_event(id, post_by_id, None)
-
+        if deleteEndDate:
+            update_user_event(id, post_by_id, {'endDate': ""})
+        else:
+            update_user_event(id, post_by_id, None)
         # Check for event status
         event_status = get_user_event_status(id)
         if event_status == "approved":
@@ -417,15 +460,17 @@ def user_an_event_edit(id):
                 image = True
             else:
                 image = False
+        groups, _ = get_admin_groups()
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
                                audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
-                               image = image,
+                               image=image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
                                timezones=Config.TIMEZONES,
-                               tags=tags.json())
+                               tags=tags.json(),
+                               groups=groups)
 
 
 @userbp.route('/event/<id>/approve', methods=['POST'])
@@ -495,9 +540,13 @@ def time_range():
 @role_required("user")
 def add_new_event():
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
+    groups, _ = get_admin_groups()
     req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
+        new_event['isGroupPrivate'] = False
+        if new_event.get('isEventFree') == 'on':
+            new_event['isEventFree'] = True
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
@@ -527,7 +576,8 @@ def add_new_event():
                                 extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                 size_limit=Config.IMAGE_SIZE_LIMIT,
                                 timezones=Config.TIMEZONES,
-                                tags=req.json())
+                                tags=req.json(),
+                                groups=groups)
 
 @userbp.route('/event/<id>/notification', methods=['POST'])
 @role_required("user")
