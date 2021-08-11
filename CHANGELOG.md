@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2021-08-11
+
 ### Fixed
 - Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
@@ -244,7 +246,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.2...HEAD
+[2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1
