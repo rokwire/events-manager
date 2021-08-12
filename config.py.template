@@ -421,7 +421,6 @@ class Config(object):
     AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
     # ROKWIRE API KEY
     ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
-    ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     # Notification Auth Token
     FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")
     # Pagination Variables
