@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.4.2] - 2021-08-11
+
+### Fixed
+- Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
+
+## [2.4.1] - 2021-06-23
+### Fixed
+- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
+
+## [2.4.0] - 2021-06-22
 ### Added
  - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
  - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
@@ -270,7 +281,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.2...HEAD
+[2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/rokwire/events-manager/compare/2.2.0...2.3.1

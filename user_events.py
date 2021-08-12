@@ -220,60 +220,60 @@ def user_an_event_edit(id):
                     del post_by_id['tags'][i]
         post_by_id['targetAudience'] = get_target_audience(request.form)
         image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
-        if 'file' in request.files:
-            if request.files['file'].filename != '':
-                for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
-                    remove(existed_file)
-                file = request.files['file']
-                filename = secure_filename(file.filename)
-                if image_record and image_record.get('status') == 'new' or image_record.get('status') == 'replaced':
-                    file.save(
-                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
-                    success = s3_delete_reupload(id, image_record.get("_id"))
-                    if success:
-                        print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
-                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                                     condition={'eventId': id},
-                                                     update={"$set": {'status': 'replaced',
-                                                                      'eventId': id}}, upsert=True)
-                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
-                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                            print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
-                    else:
-                        print("reuploading image for event:{} failed in event edit page".format(id))
-                elif get_user_event_status(id) == "approved":
-                    if image_record and image_record.get('status') == 'deleted':
-                        updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                                  condition={'eventId': id},
-                                                  update={"$set": {'status': 'new',
-                                                                   'eventId': id}}, upsert=True)
-                        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                            print("Failed to mark image record as new of event: {} in event edit page".format(
-                                id))
-                    else:
-                        insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
-                            'eventId': id,
-                            'status': 'new',
-                        })
-                        image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
-                        if not insertResult.inserted_id:
-                            print("Failed to mark image record as new of event: {} in event edit page".format(id))
-                    file.save(
-                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
-                    success = s3_image_upload(id, image_record.get("_id"))
-                    if success:
-                        print("{}, s3: s3_image_upload()".format(image_record.get('status')))
-                        post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
-                    else:
-                        print("initial image upload for event:{} failed in event edit page".format(id))
-                elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
-                    file.save(
-                        path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+        if 'file' in request.files and request.files['file'].filename != '':
+            for existed_file in glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*')):
+                remove(existed_file)
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            if image_record and image_record.get('status') == 'new' or image_record.get('status') == 'replaced':
+                file.save(
+                    path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+
+                success = s3_delete_reupload(id, post_by_id.get('platformEventId'),image_record.get("_id"))
+                if success:
+                    print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                                 condition={'eventId': id},
+                                                 update={"$set": {'status': 'replaced',
+                                                                  'eventId': id}}, upsert=True)
+                    post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(post_by_id.get('platformEventId'), image_record.get("_id"))
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                 else:
-                    abort(400)  # TODO: Error page
+                    print("reuploading image for event:{} failed in event edit page".format(id))
+            elif get_user_event_status(id) == "approved":
+                if image_record and image_record.get('status') == 'deleted':
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': id},
+                                              update={"$set": {'status': 'new',
+                                                               'eventId': id}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Failed to mark image record as new of event: {} in event edit page".format(
+                            id))
+                else:
+                    insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                        'eventId': id,
+                        'status': 'new',
+                    })
+                    image_record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+                    if not insertResult.inserted_id:
+                        print("Failed to mark image record as new of event: {} in event edit page".format(id))
+                file.save(
+                    path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+                success = s3_image_upload(id, post_by_id.get("platformEventId"), image_record.get("_id"))
+                if success:
+                    print("{}, s3: s3_image_upload()".format(image_record.get('status')))
+                    post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
+                else:
+                    print("initial image upload for event:{} failed in event edit page".format(id))
+            elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:
+                file.save(
+                    path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
+            else:
+                abort(400)  # TODO: Error page
         elif request.form['delete-image'] == '1':
             if image_record:
-                success = s3_image_delete(id, image_record.get("_id"))
+                success = s3_image_delete(id, post_by_id.get("platformEventId"), image_record.get("_id"))
                 if success:
                     print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                     updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
@@ -600,6 +600,7 @@ def get_devicetokens(id):
 @userbp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("user")
 def userevent_delete(id):
+    userEvent = find_user_event(id)
     print("delete user event id: %s" % id)
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
@@ -637,7 +638,7 @@ def userevent_delete(id):
             print("delete event:{} image failed".format(id))
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     if record:
-        success = s3_image_delete(id, record.get("_id"))
+        success = s3_image_delete(id, userEvent.get("platformEventId"), record.get("_id"))
         if success:
             print("{}, s3: s3_image_delete()".format(record.get('status')))
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
@@ -673,8 +674,9 @@ def searchsub():
 @role_required("user")
 def view_image(id):
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
+    event = find_user_event(id)
     if record:
-        success = s3_image_download(id, record.get("_id"))
+        success = s3_image_download(id, event.get("platformEventId"), record.get("_id"))
         if success:
             try:
                 print("{}, s3: s3_image_download()".format(record.get('status')))

@@ -324,14 +324,6 @@ def publish_user_event(eventId):
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                          projection={'_id': 0, 'eventStatus': 0})
-
-        # Should upload user images
-        s3_client = boto3.client('s3')
-        imageId = s3_publish_image(eventId, s3_client)
-        if imageId:
-            print("User image upload successful for event {}".format(eventId))
-            event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(eventId, imageId)
-
         if event:
             # Formatting Date and time for json dump
             if event.get('startDate'):
@@ -382,10 +374,18 @@ def publish_user_event(eventId):
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
+                # Should upload user images
+                s3_client = boto3.client('s3')
+                imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
+                updates = {"eventStatus": "approved", "platformEventId": platform_event_id}
+                if imageId:
+                    print("User image upload successful for event {}".format(eventId))
+                    event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
+                    updates["imageURL"] = event['imageURL']
+                    put_user_event(eventId)
+
                 updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={
-                                              "$set": {"eventStatus": "approved", "platformEventId": platform_event_id}
-                                          })
+                                          update={"$set": updates})
                 return True
 
     except Exception:
@@ -843,21 +843,21 @@ def clickable_utility(platformEventId):
 client = boto3.client('s3')
 
 
-def s3_image_delete(eventId, imageId):
+def s3_image_delete(localId, eventId, imageId):
     try:
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
-            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, eventId))
+            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, localId))
             return True
         else:
-            print('Event: {} does not exist'.format(eventId))
+            print('Event: {} does not exist'.format(localId))
             return False
 
     except Exception:
         traceback.print_exc()
-        print("Image: {} for event: {} deletion failed".format(imageId, eventId))
+        print("Image: {} for event: {} deletion failed".format(imageId, localId))
         return False
 
 
@@ -886,22 +886,22 @@ def size_check(eventID):
         return False
 
 
-def s3_image_upload(eventId, imageId):
+def s3_image_upload(localId, eventId, imageId):
     image_location = ''
     success = False
     try:
         for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
-            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)):
-                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId, extension)
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId, extension)
                 break
         if image_location == '':
-            raise FileNotFoundError("Image for event {} not found".format(eventId))
+            raise FileNotFoundError("Image for event {} not found".format(localId))
         # convert to jpg and save it
         with Image.open(image_location) as im:
-            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
                                    quality=95)
         client.upload_file(
-            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId),
+            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
             current_app.config['BUCKET'],
             '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
             ExtraArgs={
@@ -912,34 +912,34 @@ def s3_image_upload(eventId, imageId):
 
     except Exception:
         traceback.print_exc()
-        print("Upload image: {} for event {} failed".format(imageId, eventId))
+        print("Upload image: {} for event {} failed".format(imageId, localId))
         success = False
     finally:
         if os.path.exists(image_location):
             os.remove(image_location)
 
-        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId)):
-            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], eventId))
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId))
 
         return success
 
 
-def s3_image_download(eventId, imageId):
+def s3_image_download(localId, eventId, imageId):
     try:
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             tmpfolder = 'temp'
             if not os.path.isdir(tmpfolder):
                 os.mkdir(tmpfolder)
-            tmpfile = os.path.join(tmpfolder, eventId + ".jpg")
+            tmpfile = os.path.join(tmpfolder, localId + ".jpg")
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
                 print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
                 return True
 
         else:
-            print('Event: {} does not exist'.format(eventId))
+            print('Event: {} does not exist'.format(localId))
             return False
 
     except Exception:
@@ -958,15 +958,15 @@ def deletefile(tmpfile):
         pass
 
 
-def s3_delete_reupload(eventId, imageId):
+def s3_delete_reupload(localId, eventId, imageId):
     try:
-        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": eventId})
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
-            s3_image_delete(eventId, imageId)
-            s3_image_upload(eventId, imageId)
+            s3_image_delete(localId, eventId, imageId)
+            s3_image_upload(localId, eventId, imageId)
             return True
         else:
-            print('Event: {} does not exist'.format(eventId))
+            print('Event: {} does not exist'.format(localId))
             return False
 
     except Exception:
@@ -1012,6 +1012,58 @@ def update_super_event_id(sub_event_id, super_event_id):
         print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
+def s3_publish_user_image(id, eventId, client):
+    image_location = ''
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
+        for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id, extension)
+                break
+        if image_location == '':
+            raise FileNotFoundError("Image for event {} not found".format(id))
+        # convert to jpg and save it
+        with Image.open(image_location) as im:
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+                                    quality=95)
+
+
+        # if there is no record before, insert it to get the id
+        if not record:
+            insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
+                'eventId': id
+            })
+            if insertResult.inserted_id:
+                imageId = str(insertResult.inserted_id)
+            else:
+                return None
+        else:
+            imageId = str(record['_id'])
+
+
+        client.upload_file(
+            '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+            current_app.config['BUCKET'],
+            '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
+            ExtraArgs={
+                'ACL': 'bucket-owner-full-control'
+            }
+        )
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image for event {} failed".format(id))
+        return None
+
+    finally:
+        if os.path.exists(image_location):
+            os.remove(image_location)
+
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+
+    return imageId
+
 # Get only groups  user is an admin of
 def get_admin_groups():
     # Retrieve UIN form session
@@ -1042,3 +1094,4 @@ def get_admin_group_ids():
     else:
         print("Groups not retrievable")
         return []
+
