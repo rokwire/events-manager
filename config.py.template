@@ -215,7 +215,6 @@ class Config(object):
        # {"3671":"ILC I-Programs"},
        # {"3687":"BFAPA"},
        # {"3706":"ILC Certificate"},
-       # {"3706":"ILC Certificate"},
        # {"3708":"ILC General Events"},
        # {"3721":"Bioengineering calendar"},
        # {"3724":"Department of the Classics"},
