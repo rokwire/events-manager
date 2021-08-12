@@ -215,6 +215,7 @@ class Config(object):
        # {"3671":"ILC I-Programs"},
        # {"3687":"BFAPA"},
        # {"3706":"ILC Certificate"},
+       # {"3706":"ILC Certificate"},
        # {"3708":"ILC General Events"},
        # {"3721":"Bioengineering calendar"},
        # {"3724":"Department of the Classics"},
@@ -419,6 +420,7 @@ class Config(object):
     # Authentication ID Token - Request to event building block
     AUTHENTICATION_TOKEN  = os.getenv("AUTHENTICATION_TOKEN", "...")
     # ROKWIRE API KEY
+    ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     ROKWIRE_API_KEY = os.getenv("ROKWIRE_API_KEY", "...")
     # Notification Auth Token
     FCM_SERVER_API_KEY = os.getenv("FCM_SERVER_API_KEY", "...")

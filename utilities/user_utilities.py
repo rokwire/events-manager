@@ -22,7 +22,7 @@ import os
 import re
 import tempfile
 import shutil
-from flask import current_app
+from flask import current_app, session
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime, date
@@ -61,11 +61,12 @@ def get_all_user_events(select_status):
     #                                                                 "eventStatus": {"$in": select_status}})
 
 
-def get_all_user_events_count(select_status, start=None, end=None):
+def get_all_user_events_count(group_ids, select_status, start=None, end=None):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if start and end and 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}],
@@ -74,36 +75,42 @@ def get_all_user_events_count(select_status, start=None, end=None):
     elif start and end:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$and": [{"startDate": {"$gte": start}},
                                                      {"startDate": {"$lte": end}}]}))
     elif start != '' and end == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "startDate": {"$gte": start}}))
     elif end != '' and start == '':
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "startDate": {"$lte": end}}))
     elif 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]}))
     return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                              condition={"sourceId": {"$exists": False},
+                                        "createdByGroupId": {"$in": group_ids},
                                         "eventStatus": {"$in": select_status}}))
 
 
-def get_all_user_events_pagination(select_status, skip, limit, startDate=None, endDate=None):
+def get_all_user_events_pagination(group_ids, select_status, skip, limit, startDate=None, endDate=None):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if startDate and endDate and 'hide_past' in select_status:
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": startDate}},
                                                      {"startDate": {"$lte": endDate}}],
                                             "$or": [{"endDate": {"$gte": today}},
@@ -114,6 +121,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$and": [{"startDate": {"$gte": startDate}},
                                                      {"startDate": {"$lte": endDate}}]},
                                  skip=skip,
@@ -122,6 +130,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$gte": startDate}},
                                  skip=skip,
                                  limit=limit)
@@ -129,6 +138,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "startDate": {"$lte": endDate}},
                                  skip=skip,
                                  limit=limit)
@@ -136,6 +146,7 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]},
                                  skip=skip,
@@ -143,7 +154,9 @@ def get_all_user_events_pagination(select_status, skip, limit, startDate=None, e
     else:
         eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
+                                            "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status}},
+
                                  skip=skip,
                                  limit=limit)
     begin = skip
@@ -225,7 +238,7 @@ def find_user_all_object_events(eventId):
 def delete_user_event_in_building_block(objectId_list):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
     delete_success_list = []
     fail_count = 0
@@ -304,7 +317,7 @@ def approve_user_event(objectId):
 def publish_user_event(eventId):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
 
     try:
@@ -383,7 +396,7 @@ def publish_user_event(eventId):
 def put_user_event(eventId):
     headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        'Authorization': 'Bearer ' + session["id_token"]
     }
     try:
         # Put event in object, but exclude ID and status
@@ -523,14 +536,19 @@ def populate_event_from_form(post_form, email):
 
     new_event['targetAudience'] = get_target_audience(post_form)
 
-    start_date = post_form.get('startDate')
-
+    if all_day_event:
+        start_date = post_form.get('startDate')
+    else:
+        start_date = post_form.get('startDate') + 'T' + post_form.get('startTime')
     if 'timezone' in post_form:
         new_event['startDate'] = time_zone_to_utc(post_form.get('timezone'), start_date, 'startDate', all_day_event)
     else:
         new_event['startDate'] = get_datetime_in_utc(post_form.get('location'), start_date, 'startDate', all_day_event)
 
     end_date = post_form.get('endDate')
+    if not all_day_event and end_date != '':
+        end_date = post_form.get('endDate') + 'T' + post_form.get('endTime')
+
     if end_date != '':
         if 'timezone' in post_form:
             new_event['endDate'] = time_zone_to_utc(post_form.get('timezone'), end_date, 'endDate', all_day_event)
@@ -539,7 +557,7 @@ def populate_event_from_form(post_form, email):
 
     location = post_form.get('location')
     if location != '':
-        new_event['location'] = get_location_details(location)
+        new_event['location'] = get_location_details(location, new_event.get('isVirtual'))
     else:
         new_event['location'] = None
 
@@ -548,8 +566,12 @@ def populate_event_from_form(post_form, email):
     return new_event
 
 
-def get_location_details(location_description):
+def get_location_details(location_description, is_virtual_event):
     location_obj = dict()
+    if is_virtual_event:
+        location_obj['description'] = location_description
+        return location_obj
+
     for excluded_location in Config.EXCLUDED_LOCATION:
         if excluded_location.lower() in location_description.lower():
             location_obj['description'] = location_description
@@ -1041,3 +1063,35 @@ def s3_publish_user_image(id, eventId, client):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
 
     return imageId
+
+# Get only groups  user is an admin of
+def get_admin_groups():
+    # Retrieve UIN form session
+    uin = session["uin"]
+    #  Build request
+    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
+    req = requests.get(url, headers=headers)
+    group_info = list()
+    # Parse Results
+    if req.status_code == 200:
+        req_data = req.json()
+        for item in req_data:
+            if item["membership_status"] == "admin":
+                group_info.append(item)
+    # Return list of groups for specified UIN
+    return group_info, req.status_code
+
+
+# Get group ids for groups user is an admin of
+def get_admin_group_ids():
+    group_info, status_code = get_admin_groups()
+    if (status_code == 200):
+        group_ids = list()
+        for group in group_info:
+            group_ids.append(group["id"])
+        return group_ids
+    else:
+        print("Groups not retrievable")
+        return []
+

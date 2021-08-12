@@ -21,18 +21,22 @@
 {% endblock %}
 
 {% block create_event %}
-  {% if g.user["access"] == "both" %}
-  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
-  {% elif g.user["access"] == "user" %}
-  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
-  {% elif g.user["access"] == "source" %}
+  {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
   <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
   {% endif %}
-</div>
 {% endblock %}
 {% block content %}
-    <div class="row justify-content-center">
+    <div>
+    <h5 style="float:left;margin-top: 13px;margin-left: 5px;padding-right: 18px">Group</h5>
+    <select name="group" id="group" class="selectpicker float-left mt-2" data-style="btn-outline-primary" title="Group...">
+          <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>
+      {% for group in groups %}
+          <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>
+      {% endfor %}
+    </select>
+    <div class="row justify-content-center" style="margin-right:300px">
       <h1>User Events</h1>&nbsp
+    </div>
     </div>
     <!-- filter and select operations -->
     <div class="row justify-content-around">
@@ -72,7 +76,7 @@
         <div class="form-check form-check-inline col-sm-3">
           <input type="checkbox" class="form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline5">
-            <span class="badge badge-pill badge-secondary">Hide Past Event </span>
+            <span class="badge badge-pill badge-secondary">Hide Past Events </span>
           </label>
         </div>
       </div>
@@ -114,28 +118,36 @@
             <div class="card">
               <div class="card-header" role="tab", id = "head">
                 <div class = "col-12 col-md-11" style="overflow: hidden; padding-top: 3px; padding-bottom: 3px">
-                  <a href="{{ url_for('user_events.user_an_event', id=posts_dic[eventID][0]['_id']) }}" class="btn btn-default ml-auto float-left">
-                      <h5 class="mb-0" align="left">{{ posts_dic[eventID][0].title }}</h5>
+                  <a href="{{ url_for('user_events.user_an_event', id=posts_dic[eventID][0]['_id']) }}" class="btn btn-default ml-auto float-left" >
+                      {% if posts_dic[eventID][0].title|length > 76 %}
+                      <h5 class="mb-0" align="left" style="width: 680px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ posts_dic[eventID][0].title }}</h5>
+                      {% else %}
+                      <h5 class="mb-0" align="left" style="overflow:hidden; white-space:nowrap">{{ posts_dic[eventID][0].title }}</h5>
+                      {% endif %}
                   </a>
+                    <div style="margin-top: 11px">
+                        {% if posts_dic[eventID][0].isSuperEvent %}
+                            <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">Super Event</div>
+                        {% endif %}
+                    </div>
                 </div>
-                <div style="height: 17px; padding-left: 27px">
+                <div style="height: 17px; padding-left: 27px; display:flex">
 {#                <div style="margin-top: 0.5em; color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">{{ posts_dic[eventID][0].timezone }}</div>#}
-                {% if posts_dic[eventID][0].isSuperEvent %}
-                    <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">Super Event</div>
-                {% endif %}
-                    <div style="display:flex; position:absolute; left: 53%">
-                        <div style="display:flex; overflow: hidden; padding-right: 10px">
-                            <h6 style="padding-right: 5px">Starts:</h6>
-                            <span class="date">{{posts_dic[eventID][0].startDate}} </span>
-                        </div>
-                        <div style="display:flex; overflow: hidden">
+                    <div style="display:flex; overflow: hidden; padding-right: 10px">
+                        <h6 style="padding-right: 5px">Starts:</h6>
+                        <span class="date">{{posts_dic[eventID][0].startDate}} </span>
+                    </div>
+                    <div style="display:flex; overflow: hidden">
+                        {% if posts_dic[eventID][0].allDay and posts_dic[eventID][0].endDate %}
+                            <h6 style="padding-right: 5px;margin-left: 58px">Ends: </h6>
+                            <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
+                        {% endif %}
+                        {% if posts_dic[eventID][0].endDate and posts_dic[eventID][0].allDay == false %}
                             <h6 style="padding-right: 5px">Ends: </h6>
-                            {% if posts_dic[eventID][0].endDate %}
-                                <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
-                            {% else %}
-                                <span class="date">Not Available</span>
-                            {% endif %}
-                        </div>
+                            <span class="date">{{ posts_dic[eventID][0].endDate}}</span>
+                        {% else %}
+                            <!-- <span class="date">Not Available</span> -->
+                        {% endif %}
                     </div>
                 </div>
                 <!-- comment out dropdown history

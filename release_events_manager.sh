@@ -15,6 +15,8 @@
 #  limitations under the License.
 
 source release_base_script.sh
+PROJECT_NAME="rokwire"
+VERSION="develop"
 
 ###### EVENTS MANAGER ######
 docker build --pull -t ${PROJECT_NAME}/events-manager:${VERSION} .

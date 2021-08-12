@@ -57,6 +57,21 @@
        <div class="media-body">
           <h2><a class="article-title">Add A New Event</a></h2>
           <hr class="divider"/>
+          <!-- event group -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Group<span style="color: red">*</span> </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required >
+                  {% for group in groups %}
+                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                  {% endfor %}
+                  </select>
+              </div>
+            </div>
+          </div>
           <!-- event title -->
           <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
@@ -106,17 +121,6 @@
             </div>
           </div>
 
-
-
-          <!-- freeEvent -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Free Event</h5>
-            </div>
-            <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
-            </div>
-          </div>
           <!-- allDay -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -146,8 +150,9 @@
             <div class="col-12 col-sm-2">
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
-            <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
+            <div class="col-sm-6">
+              <input class="form-control" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -155,8 +160,9 @@
             <div class="col-12 col-sm-2">
               <h5>End Date</h5>
             </div>
-            <div class="col-sm-4">
-              <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+            <div class="col-sm-6">
+              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left"/>
             </div>
           </div>
 
@@ -209,6 +215,17 @@
 <!--              </div>-->
 <!--            </div>-->
 <!--          </div>-->
+
+          <!-- freeEvent -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Free Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
+            </div>
+          </div>
+       
           <!-- cost -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -557,13 +574,18 @@
    */
    // Handle all-day event
     $("#allDay").change(function () {
+      /*
       let $startDate = $("#startDate");
       let $endDate = $("#endDate");
 
       let startDate = moment($startDate.val());
       let endDate = moment($endDate.val());
-
+      */
       if (this.checked) {
+        document.getElementById('startTime').setAttribute("hidden","hidden");
+        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('endTime').setAttribute("hidden","hidden");
+        /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
         console.log($startDate.val())
@@ -586,9 +608,12 @@
         } else {
           document.getElementById("endDate").setAttribute("min", date);
         }
-      }
-      else {
-        $startDate.attr("type", "datetime-local");
+      */
+      } else {
+        document.getElementById('startTime').removeAttribute("hidden");
+        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('endTime').removeAttribute("hidden");
+        /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
         $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
@@ -610,7 +635,7 @@
 
         } else {
           document.getElementById("endDate").setAttribute("min", date);
-        }
+        }*/
       }
     });
 
