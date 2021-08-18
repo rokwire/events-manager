@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+
 ## [2.4.2] - 2021-08-11
 
 ### Fixed
