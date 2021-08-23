@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix campus calendar id to download campus event image. [#715](https://github.com/rokwire/events-manager/issues/715)
+
 ## [2.4.2] - 2021-08-11
 
 ### Fixed
