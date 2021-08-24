@@ -457,12 +457,12 @@ def store(documents):
                 imageId = None
                 if downloadImage(result['originatingCalendarId'], result['dataSourceEventId'], result['eventId']):
                     image_download += 1
-                    imageId = s3_publish_image(result['eventId'], s3_client)
+
+                event_upload_success, imageId = publish_event(result['eventId'])
+                if event_upload_success:
                     if imageId:
                         image_upload += 1
 
-                event_upload_success = publish_event(result['eventId'], imageId)
-                if event_upload_success:
                     if result['submitType'] == 'post':
                         post += 1
                     elif result['submitType'] == 'put':
