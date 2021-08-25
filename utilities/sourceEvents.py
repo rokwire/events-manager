@@ -121,7 +121,8 @@ def parse(content, gmaps):
         # decide not to skip if location not exist or empty.
         # if not pe.get('location'):
         #     continue
-
+        entry = dict()
+        entry['originatingCalendarId'] = pe['originatingCalendarId']
         if pe.get("shareWithIllinoisMobileApp", "false") == "false":
             dataSourceEventId = pe.get("eventId", "")
             result = find_one(
@@ -132,10 +133,9 @@ def parse(content, gmaps):
                 notSharedWithMobileList.append(result["_id"])
             continue
 
-        entry = dict()
+
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
-
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -455,7 +455,7 @@ def store(documents):
                 # for image accessing here, we first attempt to download image and if there is indeed an
                 # image in existence. We, then, try to upload the image.
                 imageId = None
-                if downloadImage(result['calendarId'], result['dataSourceEventId'], result['eventId']):
+                if downloadImage(result['originatingCalendarId'], result['dataSourceEventId'], result['eventId']):
                     image_download += 1
                     imageId = s3_publish_image(result['eventId'], s3_client)
                     if imageId:

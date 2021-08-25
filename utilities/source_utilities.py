@@ -306,7 +306,7 @@ def approve_event(id):
         print("Approve event {} fails in approve_event".format(id))
 
     download_image_result = downloadImage(
-        result['calendarId'],
+        result['originatingCalendarId'],
         result['dataSourceEventId'],
         id
     )
