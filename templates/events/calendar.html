@@ -80,19 +80,22 @@
 {#          <label class="form-check-label" for="materialInline4">Pending</label>#}
 {#      </div>#}
 
-        <div class="form-check form-check-inline col-sm-5">
+        <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline5">
             <span class="badge badge-pill badge-secondary">Hide Past Events </span>
           </label>
         </div>
 
-        <select id="per_page" class="selectpicker w-auto">
-            {% for key in page_config %}
-                <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
-            {% endfor %}
-        </select>
-        <span style="margin-top: 5px">Events Per Page</span>
+        <div style=" margin-left: 375px" >
+          <select id="per_page" class="selectpicker w-auto">
+              {% for key in page_config %}
+                  <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+              {% endfor %}
+          </select>
+          <span style="margin-top: 5px">Events Per Page</span>
+        </div>
+
 
     <!--  checkbox group -->
 {#    <div class="col-6 float-right">#}
