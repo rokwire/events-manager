@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- 'Hide Past Events' checkbox. [#712](https://github.com/rokwire/events-manager/issues/712)
+- Drop down menu to select events per page on campus events browsing page [#713](https://github.com/rokwire/events-manager/issues/713)
+
 ### Fixed
 - Fix campus calendar id to download campus event image. [#715](https://github.com/rokwire/events-manager/issues/715)
 
