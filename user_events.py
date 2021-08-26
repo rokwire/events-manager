@@ -464,7 +464,7 @@ def user_an_event_edit(id):
         return render_template("events/event-edit.html", post=post_by_id, eventTypeMap=eventTypeMap,
                                eventTypeValues=eventTypeValues, subcategoriesMap=subcategoriesMap,
                                targetAudienceMap=targetAudienceMap, isUser=True, tags_text=tags_text,
-                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VI_KEY'],
+                               audience_dic=audience_dic, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                                extensions=",".join("." + extension for extension in Config.ALLOWED_IMAGE_EXTENSIONS),
                                image=image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
