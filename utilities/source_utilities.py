@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import os
+import os.path
+from os import path
 import json
 import boto3
 import datetime
@@ -170,7 +172,15 @@ def publish_image(id, platformId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
 
         submit_type = 'post'
-        image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        image = None
+        imagePath = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        if path.exists(imagePath):
+            with Image.open(imagePath) as im:
+                im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+                                       quality=95)
+            image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        else:
+            return None
         url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
 
         # if there is record shows image has been submit before then change post to put
@@ -206,7 +216,8 @@ def publish_image(id, platformId):
     finally:
         if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
             os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
-
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
     return imageId
 
 def s3_publish_image(id, client):

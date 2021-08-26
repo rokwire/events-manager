@@ -537,6 +537,7 @@ def start(targets=None):
                     print("Stop downloading and parsing on url: {}".format(pagination_url))
                     break
                 page_number += 1
+                break
 
             if not parsedEvents:
                 continue
