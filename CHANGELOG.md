@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add "Created by" field in event detail page. [#718](https://github.com/rokwire/events-manager/issues/718)
+
 ### Fixed
 - Fix campus calendar id to download campus event image. [#715](https://github.com/rokwire/events-manager/issues/715)
 - Fix campus event image url. [#716](https://github.com/rokwire/events-manager/issues/716)
