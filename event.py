@@ -165,7 +165,10 @@ def disapproveEvent(id):
 @bp.route('/detail/<eventId>')
 @role_required("source")
 def detail(eventId):
+    showImage = False
     event = get_event(eventId)
+    if event.get('imageURL'):
+        showImage = True
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
@@ -175,7 +178,7 @@ def detail(eventId):
     return render_template("events/event.html", 
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap=eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
-                            sourceImage=True, timestamp=datetime.now().timestamp())
+                            sourceImage=showImage, timestamp=datetime.now().timestamp())
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
@@ -315,7 +318,25 @@ def event_delete(id):
 @role_required("source")
 def download_image(id):
     try:
-        image_name = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        image_name = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
         return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
     except Exception:
-        abort(404)
+        try:
+            result = find_one(current_app.config['EVENT_COLLECTION'], condition={'_id': ObjectId(id)})
+            downloadImage(
+                result['originatingCalendarId'],
+                result['dataSourceEventId'],
+                id, "./temp"
+            )
+            path_to_tmp_image = os.path.join(os.getcwd(), 'temp', id + ".jpg")
+
+            def get_image():
+                with open(path_to_tmp_image, 'rb') as f:
+                    yield from f
+                os.remove(path_to_tmp_image)
+
+            response = current_app.response_class(get_image(), mimetype='image/jpg')
+            return response
+            # return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+        except Exception:
+            abort(404)
