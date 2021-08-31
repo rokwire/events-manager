@@ -69,7 +69,11 @@ def calendar(calendarId):
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
         page = 1
-    per_page = current_app.config['PER_PAGE']
+    if 'per_page' in session:
+        per_page = session['per_page']
+    else:
+        per_page = current_app.config['PER_PAGE']
+        session['per_page'] = per_page
     offset = (page - 1) * per_page
     total = get_calendar_events_count(sourceId, calendarId, select_status)
     if offset >= total or page <= 0:
@@ -82,8 +86,8 @@ def calendar(calendarId):
     calendarStatus = get_calendar_status(calendarId)
     return render_template('events/calendar.html',
                             title=title, source=(sourceId, sourcetitle),
-                            posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,
-                            select_status=select_status, calendarStatus=calendarStatus,
+                            posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,page=page,
+                            per_page=per_page, select_status=select_status, calendarStatus=calendarStatus,
                             pagination=pagination, eventTypeValues=eventTypeValues)
 
 @bp.route('/setting', methods=('GET', 'POST'))
