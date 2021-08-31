@@ -87,7 +87,7 @@
           </label>
         </div>
 
-        <div style=" margin-left: 375px" >
+        <div style=" margin-left: 450px" >
           <select id="per_page" class="selectpicker w-auto">
               {% for key in page_config %}
                   <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
@@ -96,6 +96,7 @@
           <span style="margin-top: 5px">Events Per Page</span>
         </div>
 
+        <hr class="divider"/>
 
     <!--  checkbox group -->
 {#    <div class="col-6 float-right">#}
