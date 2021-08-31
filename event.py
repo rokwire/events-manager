@@ -132,6 +132,8 @@ def select():
         select_status.append('published')
     if request.form.get('pending') == '1':
         select_status.append('pending')
+    if request.form.get('hide_past') == '1':
+        select_status.append('hide_past')
 
     session["campus_select_status"] = select_status
     return "", 200
