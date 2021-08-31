@@ -41,9 +41,9 @@ def source(sourceId):
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', 
-                            allsources=allsources, sourceId=sourceId, 
-                            title=title, calendars=calendars, total=0, 
+    return render_template('events/source-events.html',
+                            allsources=allsources, sourceId=sourceId,
+                            title=title, calendars=calendars, total=0,
                             eventTypeValues=eventTypeValues, isUser=False)
 
 @bp.route('/calendar/<calendarId>')
@@ -80,9 +80,9 @@ def calendar(calendarId):
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
-    return render_template('events/calendar.html', 
-                            title=title, source=(sourceId, sourcetitle), 
-                            posts=events, calendarId=calendarId,isUser=False,
+    return render_template('events/calendar.html',
+                            title=title, source=(sourceId, sourcetitle),
+                            posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,
                             select_status=select_status, calendarStatus=calendarStatus,
                             pagination=pagination, eventTypeValues=eventTypeValues)
 
@@ -106,10 +106,10 @@ def setting():
         '1': ('EMS', []),
     }
     calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
-    return render_template('events/setting.html', 
+    return render_template('events/setting.html',
                             isUser=False,
-                            sources=INT2SRC, 
-                            allstatus=calendar_status, 
+                            sources=INT2SRC,
+                            allstatus=calendar_status,
                             url_prefix=calendar_prefix, schedule_time=get_download_schedule_time())
 
 @bp.route('/download', methods=['POST'])
@@ -172,7 +172,7 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", 
+    return render_template("events/event.html",
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
 
@@ -199,9 +199,9 @@ def edit(eventId):
     for dict in source[1]:
         if post_by_id['calendarId'] in dict:
             calendarName = dict[post_by_id['calendarId']]
-    return render_template("events/event-edit.html", 
-                            post = post_by_id, eventTypeMap = eventTypeMap, 
-                            eventTypeValues=eventTypeValues, isUser=False, 
+    return render_template("events/event-edit.html",
+                            post = post_by_id, eventTypeMap = eventTypeMap,
+                            eventTypeValues=eventTypeValues, isUser=False,
                             sourceName=sourceName, calendarName=calendarName)
 
 @bp.route('/searchresult', methods=['GET'])
@@ -238,8 +238,8 @@ def searchresult():
     source = request.args.get('source')
     id = request.args.get('id')
     print("{},{},{}".format(page, per_page, offset))
-    return render_template("events/searchresult.html", 
-                            eventTypeValues=eventTypeValues, source=source, id=id, 
+    return render_template("events/searchresult.html",
+                            eventTypeValues=eventTypeValues, source=source, id=id,
                             eventId=eventId, category=category, isUser=False,
                             posts=events, pagination=pagination, select_status=select_status
     )
