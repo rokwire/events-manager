@@ -16,7 +16,7 @@ import json
 import datetime
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify, send_from_directory
 )
 from werkzeug.exceptions import abort
 
@@ -174,7 +174,8 @@ def detail(eventId):
             calendarName = dict[event['calendarId']]
     return render_template("events/event.html", 
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
-                            eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+                            eventTypeMap=eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                            sourceImage=True, timestamp=datetime.now().timestamp())
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
@@ -308,3 +309,13 @@ def event_delete(id):
     if len(deleted_events) != 1:
         return "", 500
     return calendar_id, 200
+
+
+@bp.route('/event/<id>/image', methods=['GET'])
+@role_required("source")
+def download_image(id):
+    try:
+        image_name = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+    except Exception:
+        abort(404)
