@@ -111,9 +111,7 @@ def get_all_user_events_pagination(group_ids, select_status, skip, limit, startD
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
                                             "createdByGroupId": {"$in": group_ids},
-                                            "$and": [{"
-                                                      
-                                                      ": {"$gte": startDate}},
+                                            "$and": [{"startDate": {"$gte": startDate}},
                                                      {"endDate": {"$lte": endDate}}],
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]},
