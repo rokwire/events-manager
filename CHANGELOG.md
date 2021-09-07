@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-09-07
+
 ### Added
 - Add "Created by" field in event detail page. [#718](https://github.com/rokwire/events-manager/issues/718)
 
@@ -289,7 +291,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.2...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.0...HEAD
+[3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
