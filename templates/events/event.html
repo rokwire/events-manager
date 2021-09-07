@@ -257,6 +257,9 @@
             {% if post.image %}
               <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" alt="event image" style="max-width: 423px; max-height: 160px;">
             {% endif %}
+            {% if sourceImage %}
+              <img src="{{ url_for('event.download_image', id=post['_id']) }}" alt="event image" style="max-width: 423px; max-height: 160px;">
+            {% endif %}
           </div>
         </div>
 
