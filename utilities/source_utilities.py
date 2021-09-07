@@ -34,15 +34,8 @@ from ..config import Config
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
 
-    if ("hide_past" in select_status):
-        return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
-                                                                        "calendarId": calendarId,
-                                                                        "eventStatus": {"$in": select_status}},
-                                                                condition={"$or": [{"endDate": {"$gte": today}},
-                                                                                {"endDate": {"$exists": False}}]})
-    else:
-        print(select_status)
-        return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
+    print(select_status)
+    return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} })
 
