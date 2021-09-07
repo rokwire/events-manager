@@ -34,8 +34,15 @@ from ..config import Config
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
 
-    print(select_status)
-    return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
+    if ("hide_past" in select_status):
+        return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
+                                                                        "calendarId": calendarId,
+                                                                        "eventStatus": {"$in": select_status}},
+                                                                        condition={"$or": [{"endDate": {"$gte": today}},
+                                                                                {"endDate": {"$exists": False}}]})
+    else:
+        print(select_status)
+        return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} })
 
@@ -409,7 +416,7 @@ def get_search_events(conditions, select_status, skip, limit):
         conditions['sourceId'] = {"$exists": True}
         events = find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
-        
+
         # temporary solution for online event location display
         for event in events:
             filter_online_location(event)
