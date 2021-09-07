@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
 
 ## [2.4.0] - 2021-06-22
+<<<<<<< HEAD
 ### Added
  - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
  - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
@@ -61,6 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [2.4.0] - 2021-06-22
+=======
+>>>>>>> 767109d20ca7149637a9a3f9e70f45d062da4a52
 ### Added
 - Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
 - Virtual event checkbox moved above location field. Location field renamed. Dynamic header implemented [#636](https://github.com/rokwire/events-manager/issues/636)
@@ -291,8 +294,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
+<<<<<<< HEAD
 [Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.0...HEAD
 [3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
+=======
+[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.2...HEAD
+>>>>>>> 767109d20ca7149637a9a3f9e70f45d062da4a52
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0
