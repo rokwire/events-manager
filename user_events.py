@@ -239,7 +239,6 @@ def user_an_event_edit(id):
                     post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(post_by_id.get('platformEventId'), image_record.get("_id"))
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
-<<<<<<< HEAD
                 else:
                     print("reuploading image for event:{} failed in event edit page".format(id))
             elif get_user_event_status(id) == "approved":
@@ -252,20 +251,6 @@ def user_an_event_edit(id):
                         print("Failed to mark image record as new of event: {} in event edit page".format(
                             id))
                 else:
-=======
-                else:
-                    print("reuploading image for event:{} failed in event edit page".format(id))
-            elif get_user_event_status(id) == "approved":
-                if image_record and image_record.get('status') == 'deleted':
-                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                              condition={'eventId': id},
-                                              update={"$set": {'status': 'new',
-                                                               'eventId': id}}, upsert=True)
-                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                        print("Failed to mark image record as new of event: {} in event edit page".format(
-                            id))
-                else:
->>>>>>> 767109d20ca7149637a9a3f9e70f45d062da4a52
                     insertResult = insert_one(current_app.config['IMAGE_COLLECTION'], document={
                         'eventId': id,
                         'status': 'new',
