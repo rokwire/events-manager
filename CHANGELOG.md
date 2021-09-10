@@ -39,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Split datetime-local control to date and time to fix compatibility issue with firefox and safari. [#479](https://github.com/rokwire/events-manager/issues/479)
 - Move Free Event above Cost Description. [#661](https://github.com/rokwire/events-manager/issues/661)
 
+### Removed
+- User events that are not associated with groups from being viewable. [#678](https://github.com/rokwire/events-manager/issues/678)
 ## [2.4.2] - 2021-08-11
 
 ### Fixed
