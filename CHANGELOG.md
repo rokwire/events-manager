@@ -48,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
 
-
 ## [2.4.0] - 2021-06-22
 ### Added
 - Various UI update [#654](https://github.com/rokwire/events-manager/issues/654) [#653](https://github.com/rokwire/events-manager/issues/653) [#652](https://github.com/rokwire/events-manager/issues/652) [#651](https://github.com/rokwire/events-manager/issues/651)
