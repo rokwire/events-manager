@@ -16,7 +16,7 @@ import json
 import datetime
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify, send_from_directory
 )
 from werkzeug.exceptions import abort
 
@@ -165,7 +165,10 @@ def disapproveEvent(id):
 @bp.route('/detail/<eventId>')
 @role_required("source")
 def detail(eventId):
+    showImage = False
     event = get_event(eventId)
+    if event.get('imageURL'):
+        showImage = True
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
@@ -174,7 +177,8 @@ def detail(eventId):
             calendarName = dict[event['calendarId']]
     return render_template("events/event.html", 
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
-                            eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+                            eventTypeMap=eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                            sourceImage=showImage, timestamp=datetime.now().timestamp())
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
@@ -308,3 +312,31 @@ def event_delete(id):
     if len(deleted_events) != 1:
         return "", 500
     return calendar_id, 200
+
+
+@bp.route('/event/<id>/image', methods=['GET'])
+@role_required("source")
+def download_image(id):
+    try:
+        image_name = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+    except Exception:
+        try:
+            result = find_one(current_app.config['EVENT_COLLECTION'], condition={'_id': ObjectId(id)})
+            downloadImage(
+                result['originatingCalendarId'],
+                result['dataSourceEventId'],
+                id, "./temp"
+            )
+            path_to_tmp_image = os.path.join(os.getcwd(), 'temp', id + ".jpg")
+
+            def get_image():
+                with open(path_to_tmp_image, 'rb') as f:
+                    yield from f
+                os.remove(path_to_tmp_image)
+
+            response = current_app.response_class(get_image(), mimetype='image/jpg')
+            return response
+            # return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+        except Exception:
+            abort(404)

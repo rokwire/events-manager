@@ -150,6 +150,26 @@
           <h2><a class="article-title">Edit Event</a></h2>
           <hr class="divider"/>
 
+          <!-- event group -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Group<span style="color: red">*</span> </h5>
+            </div>
+            <div class="col-sm-9">
+              <div class="form-group">
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required>
+                  {% for group in groups %}
+                      {% if post.createdByGroupId == group['id'] %}
+                      <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
+                      {% else %}
+                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                      {% endif %}
+                  {% endfor %}
+                  </select>
+              </div>
+            </div>
+          </div>
+
            <!-- event title -->
            <div class="form-group row ">
             <label class="col-12 col-sm-2 form-control-label">
@@ -238,19 +258,6 @@
             </div>
           {% endif %}
 
-          <!-- freeEvent -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Free Event</h5>
-            </div>
-            <div class="col-sm-1">
-               {% if post.isEventFree == True %}
-                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree" checked/> Yes
-               {% else %}
-                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
-               {% endif %}
-            </div>
-          </div>
           <!-- allDay -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -289,11 +296,13 @@
               <div class="col-12 col-sm-2">
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" required/>
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31T23:59:59" required/>
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" style="width:170px; float:left" required/>
                   {% endif %}
               </div>
             </div>
@@ -302,8 +311,9 @@
               <div class="col-12 col-sm-2">
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
-              <div class="col-sm-4">
-                <input class="form-control" type="datetime-local" id="startDate" name="startDate" max="9999-12-31T23:59:59" required/>
+              <div class="col-sm-6">
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="00:00" style="width:170px; float:left" required/>
               </div>
             </div>
           {% endif %}
@@ -314,11 +324,13 @@
               <div class="col-12 col-sm-2">
                 <h5>End Date</h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
                   {% else %}
-                  <input class="form-control" type="datetime-local" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31T23:59:59"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
                   {% endif %}
               </div>
             </div>
@@ -327,11 +339,13 @@
               <div class="col-12 col-sm-2">
                 <h5> End Date</h5>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                 {% if post.allDay == True %}
-                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31"/>
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
                 {% else %}
-                <input class="form-control" type="datetime-local" id="endDate" name="endDate" max="9999-12-31T23:59:59"/>
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" />
                 {% endif %}
               </div>
             </div>
@@ -444,6 +458,20 @@
 <!--              </div>-->
 <!--            </div>-->
 <!--          </div>-->
+
+          <!-- freeEvent -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Free Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.isEventFree == True %}
+                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree" checked/> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
+               {% endif %}
+            </div>
+          </div>
 
           <!-- cost -->
           {% if post.cost%}
@@ -1048,13 +1076,18 @@
 
    // Handle all-day event
    $("#allDay").change(function () {
+      /*
       let $startDate = $("#startDate");
       let $endDate = $("#endDate");
 
       let startDate = moment($startDate.val());
       let endDate = moment($endDate.val());
-
+      */
       if (this.checked) {
+        document.getElementById('startTime').setAttribute("hidden","hidden");
+        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('endTime').setAttribute("hidden","hidden");
+        /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
         console.log($startDate.val())
@@ -1077,9 +1110,12 @@
         } else {
           document.getElementById("endDate").setAttribute("min", date);
         }
-      }
-      else {
-        $startDate.attr("type", "datetime-local");
+      */
+      } else {
+        document.getElementById('startTime').removeAttribute("hidden");
+        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('endTime').removeAttribute("hidden");
+        /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
         $startDate.val(startDate.format("YYYY-MM-DDTHH:mm"));
@@ -1101,7 +1137,7 @@
 
         } else {
           document.getElementById("endDate").setAttribute("min", date);
-        }
+        }*/
       }
     });
 
@@ -1112,6 +1148,7 @@
       var end = $('#endDate').val()
       if (end < start){
         $('#endDate').val(null)
+        $('#endTime').val(null)
       }
     })
 

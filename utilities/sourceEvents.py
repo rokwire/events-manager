@@ -71,7 +71,7 @@ def download(url):
 
     response = requests.get(url)
     if response.status_code != 200:
-        print("Invalid URL link: {}".format(url))
+        print("Invalid URL link: {}".format(url) + ", response.status_code: %d" % response.status_code)
 
     # content = response.text.replace("&gt;", ">").replace("&lt;", "<")
     content = response.text
@@ -121,7 +121,8 @@ def parse(content, gmaps):
         # decide not to skip if location not exist or empty.
         # if not pe.get('location'):
         #     continue
-
+        entry = dict()
+        entry['originatingCalendarId'] = pe['originatingCalendarId']
         if pe.get("shareWithIllinoisMobileApp", "false") == "false":
             dataSourceEventId = pe.get("eventId", "")
             result = find_one(
@@ -132,10 +133,9 @@ def parse(content, gmaps):
                 notSharedWithMobileList.append(result["_id"])
             continue
 
-        entry = dict()
+
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
-
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -455,14 +455,14 @@ def store(documents):
                 # for image accessing here, we first attempt to download image and if there is indeed an
                 # image in existence. We, then, try to upload the image.
                 imageId = None
-                if downloadImage(result['calendarId'], result['dataSourceEventId'], result['eventId']):
+                if downloadImage(result['originatingCalendarId'], result['dataSourceEventId'], result['eventId']):
                     image_download += 1
-                    imageId = s3_publish_image(result['eventId'], s3_client)
+
+                event_upload_success, imageId = publish_event(result['eventId'])
+                if event_upload_success:
                     if imageId:
                         image_upload += 1
 
-                event_upload_success = publish_event(result['eventId'], imageId)
-                if event_upload_success:
                     if result['submitType'] == 'post':
                         post += 1
                     elif result['submitType'] == 'put':

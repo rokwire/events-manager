@@ -157,6 +157,26 @@
             {% endif %}
           </div>
 
+
+          <div class="item3" style="grid-area: auto / left;">
+            <!-- event group -->
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Group </h5>
+                </div>
+                <p class="col-sm-9">{{groupName}}</p>
+              </div>
+          </div>
+          <div style="grid-area: auto / left;">
+            <!-- event group -->
+              <div class="row">
+                <div class="col-12 col-sm-3">
+                  <h5>Created By </h5>
+                </div>
+                <p class="col-sm-9">{{post.createdBy}}</p>
+              </div>
+          </div>
+
           <div class="item2" style="grid-area: auto / left;">
             <!-- event category -->
             {% if post.category %}
@@ -178,27 +198,6 @@
               </div>
             {% endif %}
           </div>
-
-          
-          <div class="item4" style="grid-area: auto / left;">
-            <!-- Free Event -->
-            {% if post.isEventFree %}
-              <div class="row">
-                <div class="col-12 col-sm-3">
-                  <h5>Free Event</h5>
-                </div>
-                    <p class = "col-sm-9">Yes</p>
-              </div>
-            {% else %}
-              <div class="row">
-                <div class="col-12 col-sm-3">
-                  <h5>Free Event</h5>
-                </div>
-                    <p class = "col-sm-9">No</p>
-              </div>
-            {% endif %}
-          </div>
-
           <div class="item5" style="grid-area: auto / left;">
             <!-- All Day Event -->
             {% if post.allDay %}
@@ -258,6 +257,9 @@
             {% if post.image %}
               <img src="{{ url_for('user_events.view_image', id=post['_id']) }}?t={{ timestamp }}" alt="event image" style="max-width: 423px; max-height: 160px;">
             {% endif %}
+            {% if sourceImage %}
+              <img src="{{ url_for('event.download_image', id=post['_id']) }}" alt="event image" style="max-width: 423px; max-height: 160px;">
+            {% endif %}
           </div>
         </div>
 
@@ -311,6 +313,25 @@
   <!--            </div>-->
   <!--          </div>-->
   <!--        {% endif %}-->
+
+          <div class="item4" style="grid-area: auto / left;">
+            <!-- Free Event -->
+            {% if post.isEventFree %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Free Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Free Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
 
             <!-- cost -->
             {% if post.cost%}
