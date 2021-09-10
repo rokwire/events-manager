@@ -46,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
 ## [2.4.1] - 2021-06-23
-
 ### Fixed
 - Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
 
