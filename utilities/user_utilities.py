@@ -1094,4 +1094,3 @@ def get_admin_group_ids():
     else:
         print("Groups not retrievable")
         return []
-
