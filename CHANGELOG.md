@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [3.0.0] - 2021-09-07
-
 ### Added
 - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
 - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
