@@ -45,13 +45,13 @@ def get_calendar_events_count(sourceId, calendarId, select_status, startDate=Non
                           "calendarId": calendarId,
                           "eventStatus": {"$in": select_status},
                           "$and": [{"startDate": {"$gte": startDate}},
-                                   {"startDate": {"$lte": endDate}}]})
+                                   {"endDate": {"$lte": endDate}}]})
     elif startDate != '' and endDate == '':
         return get_count(current_app.config['EVENT_COLLECTION'],
                          {"sourceId": sourceId ,
                           "calendarId": calendarId,
                           "eventStatus": {"$in": select_status},
-                          "startDate": {"$gte": startDate}})
+                          "endDate": {"$gte": startDate}})
 
     elif endDate != '' and startDate == '':
         return get_count(current_app.config['EVENT_COLLECTION'],
@@ -75,7 +75,7 @@ def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, li
                             "calendarId": calendarId,
                             "eventStatus": {"$in": select_status},
                             "$and": [{"startDate": {"$gte": startDate}},
-                                     {"startDate": {"$lte": endDate}}]
+                                     {"endDate": {"$lte": endDate}}]
                             }, skip=skip, limit=limit)
     elif startDate != '' and endDate == '':
         return find_all(current_app.config['EVENT_COLLECTION'],
