@@ -20,19 +20,21 @@ import boto3
 import datetime
 import requests
 import traceback
+from datetime import datetime, date
 
 from PIL import Image
 from flask import current_app
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 
-from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one, delete_events_in_list
+from ..db import find_all, find_one, update_one, update_many, find_one_and_update, get_count, insert_one, delete_events_in_list, find_distinct
 from .downloadImage import downloadImage
 
 from ..config import Config
 
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
+
 
     print(select_status)
     return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
@@ -41,7 +43,14 @@ def get_calendar_events(sourceId, calendarId, select_status):
 
 # find the count of events in a calendar with selected status
 def get_calendar_events_count(sourceId, calendarId, select_status):
-
+    today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+    if 'hide_past' in select_status:
+        return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": sourceId,
+                                            "calendarId": calendarId,
+                                            "eventStatus": {"$in": select_status},
+                                            "$or": [{"endDate": {"$gte": today}},
+                                                    {"endDate": {"$exists": False}}]}))
     return get_count(current_app.config['EVENT_COLLECTION'],
                      {"sourceId": sourceId ,
                       "calendarId": calendarId,
@@ -49,14 +58,24 @@ def get_calendar_events_count(sourceId, calendarId, select_status):
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-
-    events = find_all(current_app.config['EVENT_COLLECTION'],
-                        filter={
-                        "sourceId": sourceId,
-                        "calendarId": calendarId,
-                        "eventStatus": {"$in": select_status}
-                        }, skip=skip, limit=limit)
-    return events
+    today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
+    if 'hide_past' in select_status:
+        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+                                 condition={"sourceId": sourceId,
+                                            "calendarId": calendarId,
+                                            "eventStatus": {"$in": select_status},
+                                            "$or": [{"endDate": {"$gte": today}},
+                                                    {"endDate": {"$exists": False}}]},
+                                 skip=skip,
+                                 limit=limit)
+    else:
+        events = find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status}
+                            }, skip=skip, limit=limit)
+        return events
 
 
 # Approve events from a calendar

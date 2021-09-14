@@ -90,7 +90,7 @@ def get_all_user_events_count(group_ids, select_status, start=None, end=None):
                                  condition={"sourceId": {"$exists": False},
                                             "createdByGroupId": {"$in": group_ids},
                                             "eventStatus": {"$in": select_status},
-                                            "endDate": {"$lte": end}}))
+                                            "startDate": {"$lte": end}}))
     elif 'hide_past' in select_status:
         return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
                                  condition={"sourceId": {"$exists": False},
@@ -111,9 +111,7 @@ def get_all_user_events_pagination(group_ids, select_status, skip, limit, startD
                                  condition={"sourceId": {"$exists": False},
                                             "eventStatus": {"$in": select_status},
                                             "createdByGroupId": {"$in": group_ids},
-                                            "$and": [{"
-                                                      
-                                                      ": {"$gte": startDate}},
+                                            "$and": [{"startDate": {"$gte": startDate}},
                                                      {"endDate": {"$lte": endDate}}],
                                             "$or": [{"endDate": {"$gte": today}},
                                                     {"endDate": {"$exists": False}}]},
@@ -1096,4 +1094,3 @@ def get_admin_group_ids():
     else:
         print("Groups not retrievable")
         return []
-
