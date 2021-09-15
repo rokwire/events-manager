@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+
 ### [3.0.1] - 2021-09-13
 ### Added
 - Add group environment variables in config.py.template.
