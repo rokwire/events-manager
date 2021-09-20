@@ -45,7 +45,7 @@ def get_calendar_events(sourceId, calendarId, select_status):
 def get_calendar_events_count(sourceId, calendarId, select_status):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if 'hide_past' in select_status:
-        return len(find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+        return len(find_distinct(current_app.config['EVENT_COLLECTION'],
                                  condition={"sourceId": sourceId,
                                             "calendarId": calendarId,
                                             "eventStatus": {"$in": select_status},
@@ -54,13 +54,13 @@ def get_calendar_events_count(sourceId, calendarId, select_status):
     return get_count(current_app.config['EVENT_COLLECTION'],
                      {"sourceId": sourceId ,
                       "calendarId": calendarId,
-                     "eventStatus": {"$in": select_status}})
+                      "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
 def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
     today = date.today().strftime("%Y-%m-%dT%H:%M:%S")
     if 'hide_past' in select_status:
-        eventIds = find_distinct(current_app.config['EVENT_COLLECTION'], key="eventId",
+        events = find_distinct(current_app.config['EVENT_COLLECTION'],
                                  condition={"sourceId": sourceId,
                                             "calendarId": calendarId,
                                             "eventStatus": {"$in": select_status},
@@ -75,7 +75,7 @@ def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, li
                             "calendarId": calendarId,
                             "eventStatus": {"$in": select_status}
                             }, skip=skip, limit=limit)
-        return events
+    return events
 
 
 # Approve events from a calendar
