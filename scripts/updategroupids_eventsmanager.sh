@@ -13,6 +13,6 @@ do
     echo "$eventid, $platformid, $groupid"
     update=$(mongo $MONGO_URI --quiet --eval "db.$DBNAME.update({_id: ObjectId('"$eventid"')}, {\$set: {createdByGroupId: '"$groupid"', "isGroupPrivate": false}})")
     echo $eventid $update
-done < ./prod.csv
+done < ./prod.tsv
 
 unset IFS
