@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+-  Added checbox to hide past events. [#712](https://github.com/rokwire/events-manager/issues/712)
 
 ### [3.0.1] - 2021-09-13
 ### Added
