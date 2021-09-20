@@ -79,6 +79,16 @@
 {#          <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>#}
 {#          <label class="form-check-label" for="materialInline4">Pending</label>#}
 {#      </div>#}
+
+        <div style=" margin-left: 475px" >
+        <select id="per_page" class="selectpicker w-auto">
+            {% for key in page_config %}
+                <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+            {% endfor %}
+        </select>
+        <span style="margin-top: 5px">Events Per Page</span>
+        </div>
+        
     <!--  checkbox group -->
 {#    <div class="col-6 float-right">#}
 {#      {{ searchbox(eventTypeValues, "calendar", calendarId) }}#}

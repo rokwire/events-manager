@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [3.0.1] - 2021-09-13
 ### Added
 - Add group environment variables in config.py.template.
+- Drop down menu to select events per page on campus events [#713](https://github.com/rokwire/events-manager/issues/713)
 ### Changed
 - Change APScheduler version.
 
