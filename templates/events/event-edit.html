@@ -298,11 +298,11 @@
               </div>
               <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="{{post['startDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="00:00" style="width:170px" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" style="width:170px; float:left" required/>
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="{{post['startDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="{{post['startDate'][11:]}}" style="width:170px; float:left" required/>
                   {% endif %}
               </div>
             </div>
@@ -312,8 +312,8 @@
                 <h5> Start Date<span style="color: red">*</span> </h5>
               </div>
               <div class="col-sm-6">
-                  <input class="form-control" type="date" id="startDate" name="startDate" value="" max="9999-12-31" style="width:170px; float:left" required/>
-                  <input class="form-control" type="time" id="startTime" name="startTime" value="00:00" style="width:170px; float:left" required/>
+                  <input class="form-control" type="date" onkeydown="return false" id="startDate" name="startDate" value="" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="startTime" name="startTime" value="00:00" style="width:170px; float:left" required/>
               </div>
             </div>
           {% endif %}
@@ -326,11 +326,11 @@
               </div>
               <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
-                  <input class="form-control" type="time" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
-                  <input class="form-control" type="time" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
                   {% endif %}
               </div>
             </div>
@@ -341,11 +341,11 @@
               </div>
               <div class="col-sm-6">
                 {% if post.allDay == True %}
-                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-                <input class="form-control" type="time" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
                 {% else %}
-                <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-                <input class="form-control" type="time" id="endTime" name="endTime" style="width:170px; float:left" />
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" />
                 {% endif %}
               </div>
             </div>
