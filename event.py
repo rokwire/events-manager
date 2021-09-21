@@ -28,7 +28,7 @@ from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from .config import Config
 
 
@@ -49,6 +49,18 @@ def source(sourceId):
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
+    if 'from' in session:
+        start = session['from']
+        end = session['to']
+        start_date_filter = start
+        end_date_filter = end
+        if start:
+            start_date_filter = datetime.strptime(start, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S')
+        if end:
+            end_date_filter = (datetime.strptime(end, '%Y-%m-%d')+timedelta(hours=23,minutes=59, seconds=59)).strftime('%Y-%m-%dT%H:%M:%S')
+    else:
+        start = ""
+        end = ""
     if 'campus_select_status' in session:
         select_status = session['campus_select_status']
     else:
@@ -71,11 +83,17 @@ def calendar(calendarId):
         page = 1
     per_page = current_app.config['PER_PAGE']
     offset = (page - 1) * per_page
-    total = get_calendar_events_count(sourceId, calendarId, select_status)
+    if 'from' in session:
+        total = get_calendar_events_count(sourceId, calendarId, select_status, start_date_filter, end_date_filter)
+    else:
+        total = get_calendar_events_count(sourceId, calendarId, select_status)
     if offset >= total or page <= 0:
         page = 1
         offset = 0
-    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    if 'from' in session:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page, start_date_filter, end_date_filter)
+    else:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
@@ -84,7 +102,7 @@ def calendar(calendarId):
                             title=title, source=(sourceId, sourcetitle), 
                             posts=events, calendarId=calendarId,isUser=False,
                             select_status=select_status, calendarStatus=calendarStatus,
-                            pagination=pagination, eventTypeValues=eventTypeValues)
+                            pagination=pagination, eventTypeValues=eventTypeValues,start=start,end=end)
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @role_required("source")
@@ -313,6 +331,12 @@ def event_delete(id):
         return "", 500
     return calendar_id, 200
 
+@bp.route('/time_range', methods=['POST'])
+@role_required("source")
+def time_range():
+    session["from"] = request.form.get('from')
+    session["to"] = request.form.get('to')
+    return "", 200
 
 @bp.route('/event/<id>/image', methods=['GET'])
 @role_required("source")
