@@ -43,8 +43,8 @@
 {{ confirmation("approve", title) }}
 {% endif %}
 
-<div class="container-fluid">
-  <div class="row mt-3 mb-3">
+<div class="row justify-content-around">
+{#  <div class="row mt-3 mb-3">#}
 {#    <div class="col text-center">#}
 {#      {% if calendarStatus == "approved" %}#}
 {#      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#confirmModal">Disapprove All Events In Calendar</button>#}
@@ -52,9 +52,9 @@
 {#      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Approve All Events In Calendar</button>#}
 {#      {% endif %}#}
 {#    </div>#}
-  </div>
+{#  </div>#}
 
-  <div class="row row-content mt-3 mb-3">
+  <div class="col form-check mt-3 mb-3">
       <div class="form-check form-check-inline"><h4>Show</h4></div>
 
       <div class="form-check form-check-inline">
@@ -96,8 +96,17 @@
 
   </div>
 
-</div>
+      <div class="form-check form-check-inline row justify-content-end" style="float: right">
+        <div style="margin-right: 2px">
+            <span>From</span>
+          <input type="date" id="from" value="{{start}}" max="9999-12-31"/>
+            <span>to</span>
+          <input type="date" id="to" value="{{end}}" max="9999-12-31"/>
+            <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
+        </div>
 
+</div>
+</div>
 <div id = "accordion">
   {% for post in posts %}
       <div class="card">
@@ -118,10 +127,9 @@
               </p>
             </div>
         </div>
-    </div class = "card">
+    </div>
   {% endfor %}
-</div class = "accordion">
-<br>
+</div>
 
 <div class="d-flex justify-content-center">
 {{ pagination.links }}
@@ -156,5 +164,26 @@
         }
       });
     });
+    function reselect_time_range() {
+        let from = moment(document.getElementById('from').value).utc();
+        let to = moment(document.getElementById('to').value).utc();
+        let from_string = from.format('YYYY-MM-DD');
+        let to_string = to.format('YYYY-MM-DD');
+        if (document.getElementById('from').value === "") from_string = "";
+        if (document.getElementById('to').value === "") to_string = "";
+        $.ajax({
+            url: "{{ url_for('event.time_range') }}",
+            dataType: 'json',
+            type: 'POST',
+            data: {
+                from: from_string,
+                to: to_string,
+            },
+        }).always(function () {
+            location.reload(true);
+        });
+    }
+    $("#from, #to").on('change', reselect_time_range)
+    $("#time-range-reset").on('click', reselect_time_range)
   </script>
 {% endblock %}
