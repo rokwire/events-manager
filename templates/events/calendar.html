@@ -80,15 +80,6 @@
 {#          <label class="form-check-label" for="materialInline4">Pending</label>#}
 {#      </div>#}
 
-        <div style=" margin-left: 475px" >
-        <select id="per_page" class="selectpicker w-auto">
-            {% for key in page_config %}
-                <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
-            {% endfor %}
-        </select>
-        <span style="margin-top: 5px">Events Per Page</span>
-        </div>
-        
     <!--  checkbox group -->
 {#    <div class="col-6 float-right">#}
 {#      {{ searchbox(eventTypeValues, "calendar", calendarId) }}#}
@@ -96,7 +87,7 @@
 
   </div>
 
-      <div class="form-check form-check-inline row justify-content-end" style="float: right">
+      <div class="form-check form-check-inline row justify-content-end" style=" margin-right: 20px">
         <div style="margin-right: 2px">
             <span>From</span>
           <input type="date" id="from" value="{{start}}" max="9999-12-31"/>
@@ -106,6 +97,16 @@
         </div>
 
 </div>
+
+<div class="form-check form-check-inline row justify-content-end" >
+<select id="per_page" class="selectpicker w-auto">
+    {% for key in page_config %}
+        <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+    {% endfor %}
+</select>
+<span style="margin-top: 5px">Events Per Page</span>
+</div>
+
 </div>
 <div id = "accordion">
   {% for post in posts %}
