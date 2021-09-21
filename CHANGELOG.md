@@ -5,30 +5,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-### Fixed
-- Fix campus calendar id to download campus event image. [#715](https://github.com/rokwire/events-manager/issues/715)
-
-## [2.4.2] - 2021-08-11
-
-### Fixed
-- Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
-
-## [2.4.1] - 2021-06-23
-### Fixed
-- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
-
-## [2.4.0] - 2021-06-22
 ### Added
- - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
- - Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
- - UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
- - Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
- - Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
- - Not available tag removed. [#641](https://github.com/rokwire/events-manager/issues/641)
- - Log status code when failed to download campus events. [#688](https://github.com/rokwire/events-manager/issues/688)
- - Event filtering by groups on event listing page [#676](https://github.com/rokwire/events-manager/issues/676)
- - Add "All Groups" on event listing page [#702](https://github.com/rokwire/events-manager/issues/702)
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+
+
+### [3.0.1] - 2021-09-13
+### Added
+- Add group environment variables in config.py.template.
+### Changed
+- Change APScheduler version.
+
+## [3.0.0] - 2021-09-07
+### Added
+- Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
+- Groups for user to select in event create/edit page. [#674](https://github.com/rokwire/events-manager/issues/674)
+- UIN in requested claims. [#672](https://github.com/rokwire/events-manager/issues/672)
+- Get_admin_groups to retrieve admin_groups whenever required. [#671](https://github.com/rokwire/events-manager/issues/671)
+- Add group admin privileges to access user events. [#678](https://github.com/rokwire/events-manager/issues/678)
+- Not available tag removed. [#641](https://github.com/rokwire/events-manager/issues/641)
+- Log status code when failed to download campus events. [#688](https://github.com/rokwire/events-manager/issues/688)
+- Event filtering by groups on event listing page [#676](https://github.com/rokwire/events-manager/issues/676)
+- Add "All Groups" on event listing page [#702](https://github.com/rokwire/events-manager/issues/702)
+- Add "Created by" field in event detail page. [#718](https://github.com/rokwire/events-manager/issues/718)
+
 ### Fixed
 - End dates can't be deleted. [#691](https://github.com/rokwire/events-manager/issues/690)
 - All-day events not working. [#690](https://github.com/rokwire/events-manager/issues/691)
@@ -37,21 +38,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - get_admin_group_ids() will only return first group ID.[#699](https://github.com/rokwire/events-manager/issues/699)
 - Fix failure to publish a free user event. [#697](https://github.com/rokwire/events-manager/issues/697)
 - Fix the same day date filter search. [#705](https://github.com/rokwire/events-manager/issues/705)
+- Fix campus calendar id to download campus event image. [#715](https://github.com/rokwire/events-manager/issues/715)
+- Fix campus event image url. [#716](https://github.com/rokwire/events-manager/issues/716)
+- Fix date filters in user event. [#728](https://github.com/rokwire/events-manager/issues/728)
+- Fix the wrong format of user input datetime.[#740](https://github.com/rokwire/events-manager/issues/740)
 
 ### Changed
+- Hide Past event -> Hide Past Events. [#641](https://github.com/rokwire/events-manager/issues/641)
 - Crop event title at a fixed number of characters. [#667](https://github.com/rokwire/events-manager/issues/667)
 - Move dates under a second row below the title and move badges to the right of the title. [#666](https://github.com/rokwire/events-manager/issues/666)
 - Split datetime-local control to date and time to fix compatibility issue with firefox and safari. [#479](https://github.com/rokwire/events-manager/issues/479)
 - Move Free Event above Cost Description. [#661](https://github.com/rokwire/events-manager/issues/661)
-## [2.4.1] - 2021-06-23
-### Added
 
-### Changed
-- Hide Past event -> Hide Past Events. [#641](https://github.com/rokwire/events-manager/issues/641)
+### Removed
+- User events that are not associated with groups from being viewable. [#678](https://github.com/rokwire/events-manager/issues/678)
+## [2.4.2] - 2021-08-11
 
 ### Fixed
-- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
+- Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
+## [2.4.1] - 2021-06-23
+### Fixed
+- Fix compatibility issue with the all-day event in the current UI. [#662](https://github.com/rokwire/events-manager/issues/662)
 
 ## [2.4.0] - 2021-06-22
 ### Added
@@ -71,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Do pagination downloading on campus events from webtool endpoint.[#607](https://github.com/rokwire/events-manager/issues/607).
+
 ### Fixed
 - Issue with download scheduler (when using manual calendar events download) blocking the web app and resulting in internal server error. [#620](https://github.com/rokwire/events-manager/issues/620).
 - Fix updated scheduling download time data does not refresh on the setting page.[#625](https://github.com/rokwire/events-manager/issues/625)
@@ -284,7 +293,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/2.4.2...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.1...HEAD
+[3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1
+[3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/rokwire/events-manager/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/rokwire/events-manager/compare/2.3.1...2.4.0

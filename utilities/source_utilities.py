@@ -13,6 +13,8 @@
 #  limitations under the License.
 
 import os
+import os.path
+from os import path
 import json
 import boto3
 import datetime
@@ -38,23 +40,69 @@ def get_calendar_events(sourceId, calendarId, select_status):
                                                                     "eventStatus": {"$in": select_status} })
 
 # find the count of events in a calendar with selected status
-def get_calendar_events_count(sourceId, calendarId, select_status):
+def get_calendar_events_count(sourceId, calendarId, select_status, startDate=None, endDate=None):
+    if startDate and endDate:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "$and": [{"startDate": {"$gte": startDate}},
+                                   {"endDate": {"$lte": endDate}}]})
+    elif startDate != '' and endDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "endDate": {"$gte": startDate}})
 
-    return get_count(current_app.config['EVENT_COLLECTION'],
-                     {"sourceId": sourceId ,
-                      "calendarId": calendarId,
-                     "eventStatus": {"$in": select_status}})
+    elif endDate != '' and startDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "startDate": {"$lte": endDate}})
+
+    else:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
-def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-
-    events = find_all(current_app.config['EVENT_COLLECTION'],
-                        filter={
-                        "sourceId": sourceId,
-                        "calendarId": calendarId,
-                        "eventStatus": {"$in": select_status}
-                        }, skip=skip, limit=limit)
-    return events
+def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit, startDate=None, endDate=None):
+    if startDate and endDate:
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "$and": [{"startDate": {"$gte": startDate}},
+                                     {"endDate": {"$lte": endDate}}]
+                            }, skip=skip, limit=limit)
+    elif startDate != '' and endDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$gte": startDate}
+                            }, skip=skip, limit=limit)
+    elif endDate != '' and startDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$lte": endDate}
+                            }, skip=skip, limit=limit)
+    else:
+        events = find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status}
+                            }, skip=skip, limit=limit)
+        return events
 
 
 # Approve events from a calendar
@@ -70,16 +118,16 @@ def disapprove_calendar_events(calendarId):
     })
 
 
-def publish_event(id, imageId):
+def publish_event(id):
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
+    platform_event_id = None
     try:
-        platform_event_id = None
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                          projection={'_id': 0, 'eventStatus': 0})
-
+        platform_event_id = event.get('platformEventId')
         if event:
             print("event {} submit method: {}".format(id, event['submitType']))
             if event.get('startDate'):
@@ -92,9 +140,6 @@ def publish_event(id, imageId):
                     event['endDate'] = event['endDate'].isoformat()
                 event['endDate'] = datetime.datetime.strptime(event['endDate'], "%Y-%m-%dT%H:%M:%S")
                 event['endDate'] = event['endDate'].strftime("%Y/%m/%dT%H:%M:%S")
-
-            if imageId:
-                event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, imageId)
 
             submit_type = event['submitType']
             del event['submitType']
@@ -121,64 +166,89 @@ def publish_event(id, imageId):
 
             if result.status_code not in (200, 201):
                 print("Event {} submission fails".format(id))
-                return False
+                return False, None
             else:
+                imageId = publish_image(id, platform_event_id)
                 if submit_type == 'post':
+                    if imageId:
+                        updates = {"eventStatus": "published", 'platformEventId': platform_event_id, "imageURL": current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)}
+                    else:
+                        updates = {"eventStatus": "published", 'platformEventId': platform_event_id}
                     updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
-                        "$set": {"eventStatus": "published", 'platformEventId': platform_event_id}
+                        "$set": updates
                     })
                 else:
+                    if imageId:
+                        updates = {"eventStatus": "published", "imageURL": current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)}
+                    else:
+                        updates = {"eventStatus": "published"}
                     updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)},
                                               update={
-                                                  "$set": {"eventStatus": "published"}
+                                                  "$set": updates
                                               })
+                if imageId:
+                    event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
+                    url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + platform_event_id
+                    # Remove platform event ID from request
+                    if "platformEventId" in event:
+                        del event["platformEventId"]
+                    result = requests.put(url, headers=headers,
+                                          data=json.dumps(event))
+                    if result.status_code not in (200, 201):
+                        print("Event {} submission fails".format(id))
+                        return False, None
+
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                     print("Publish event {} fails in publish_event".format(id))
 
-                return True
+                return True, imageId
 
 
     except Exception:
         traceback.print_exc()
-        return False
+        return False, None
 
 
-def publish_image(id):
+def publish_image(id, platformId):
+    imageId = None
     headers = {
-        'Content-Type': 'image/png',
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
     try:
-
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
 
         submit_type = 'post'
-        image = open('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
-        url = "{}/{}".format(current_app.config['ROKWIRE_IMAGE_LINK_PREFIX'], id)
+        image = None
+        imagePath = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        if path.exists(imagePath):
+            with Image.open(imagePath) as im:
+                im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
+                                       quality=95)
+            image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        else:
+            return None
+        url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
 
         # if there is record shows image has been submit before then change post to put
         if record:
             if record.get('submitBefore'):
                 submit_type = 'put'
-
+        file = {'file': image}
         if submit_type == 'post':
-            response = requests.post(url, data=image.read(), headers=headers)
+            response = requests.post(url, files=file, headers=headers)
         elif submit_type == 'put':
-            response = requests.put(url, data=image.read(), headers=headers)
-
+            response = requests.put(url, files=file, headers=headers)
         image.close()
 
 
         if response.status_code in (200, 201):
+            imageId = response.json()['id']
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                       condition={'eventId': id},
                                       update={"$set": { 'submitBefore': True,
                                                         'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                 print("Update {} fails in update_user_event".format(id))
-
-            return True
-
         else:
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                             condition={'eventId': id},
@@ -186,18 +256,15 @@ def publish_image(id):
                                               'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                 print("Update {} fails in update_user_event".format(id))
-
-            return False
-
     except Exception:
         traceback.print_exc()
-        return False
 
     finally:
         if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
             os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
-
-    return True
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
+    return imageId
 
 def s3_publish_image(id, client):
     image_location = ''
@@ -259,16 +326,12 @@ def approve_event(id):
     if not result:
         print("Approve event {} fails in approve_event".format(id))
 
-    download_image_result = downloadImage(
+    downloadImage(
         result['originatingCalendarId'],
         result['dataSourceEventId'],
         id
     )
-
-    upload_image_result = False
-    if download_image_result:
-        upload_image_result = publish_image(id)
-    publish_event(id, upload_image_result)
+    publish_event(id)
 
 # disapprove a calendar event
 def disapprove_event(id):
@@ -392,7 +455,7 @@ def get_search_events(conditions, select_status, skip, limit):
         conditions['sourceId'] = {"$exists": True}
         events = find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
-        
+
         # temporary solution for online event location display
         for event in events:
             filter_online_location(event)

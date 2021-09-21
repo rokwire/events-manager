@@ -16,7 +16,7 @@ import json
 import datetime
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, current_app, session, Request, jsonify, send_from_directory
 )
 from werkzeug.exceptions import abort
 
@@ -28,7 +28,7 @@ from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from .config import Config
 
 
@@ -41,14 +41,26 @@ def source(sourceId):
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', 
-                            allsources=allsources, sourceId=sourceId, 
-                            title=title, calendars=calendars, total=0, 
+    return render_template('events/source-events.html',
+                            allsources=allsources, sourceId=sourceId,
+                            title=title, calendars=calendars, total=0,
                             eventTypeValues=eventTypeValues, isUser=False)
 
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
+    if 'from' in session:
+        start = session['from']
+        end = session['to']
+        start_date_filter = start
+        end_date_filter = end
+        if start:
+            start_date_filter = datetime.strptime(start, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S')
+        if end:
+            end_date_filter = (datetime.strptime(end, '%Y-%m-%d')+timedelta(hours=23,minutes=59, seconds=59)).strftime('%Y-%m-%dT%H:%M:%S')
+    else:
+        start = ""
+        end = ""
     if 'campus_select_status' in session:
         select_status = session['campus_select_status']
     else:
@@ -69,22 +81,32 @@ def calendar(calendarId):
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
         page = 1
-    per_page = current_app.config['EVENTS_PER_PAGE'][0]
+    if 'per_page' in session:
+        per_page = session['per_page']
+    else:
+        per_page = current_app.config['EVENTS_PER_PAGE'][0]
+        session['per_page'] = per_page
     offset = (page - 1) * per_page
-    total = get_calendar_events_count(sourceId, calendarId, select_status)
+    if 'from' in session:
+        total = get_calendar_events_count(sourceId, calendarId, select_status, start_date_filter, end_date_filter)
+    else:
+        total = get_calendar_events_count(sourceId, calendarId, select_status)
     if offset >= total or page <= 0:
         page = 1
         offset = 0
-    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    if 'from' in session:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page, start_date_filter, end_date_filter)
+    else:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
-    return render_template('events/calendar.html', 
-                            title=title, source=(sourceId, sourcetitle), 
-                            posts=events, calendarId=calendarId,isUser=False,
-                            select_status=select_status, calendarStatus=calendarStatus,
-                            pagination=pagination, eventTypeValues=eventTypeValues)
+    return render_template('events/calendar.html',
+                            title=title, source=(sourceId, sourcetitle),
+                            posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,page=page,
+                            per_page=per_page, select_status=select_status, calendarStatus=calendarStatus,
+                            pagination=pagination, eventTypeValues=eventTypeValues,start=start,end=end)
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @role_required("source")
@@ -106,10 +128,10 @@ def setting():
         '1': ('EMS', []),
     }
     calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
-    return render_template('events/setting.html', 
+    return render_template('events/setting.html',
                             isUser=False,
-                            sources=INT2SRC, 
-                            allstatus=calendar_status, 
+                            sources=INT2SRC,
+                            allstatus=calendar_status,
                             url_prefix=calendar_prefix, schedule_time=get_download_schedule_time())
 
 @bp.route('/download', methods=['POST'])
@@ -165,16 +187,20 @@ def disapproveEvent(id):
 @bp.route('/detail/<eventId>')
 @role_required("source")
 def detail(eventId):
+    showImage = False
     event = get_event(eventId)
+    if event.get('imageURL'):
+        showImage = True
     source = current_app.config['INT2SRC'][event['sourceId']]
     sourceName = source[0]
     calendarName = ''
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", 
+    return render_template("events/event.html",
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
-                            eventTypeMap = eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'])
+                            eventTypeMap=eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
+                            sourceImage=showImage, timestamp=datetime.now().timestamp())
 
 
 @bp.route('/edit/<eventId>', methods=('GET', 'POST'))
@@ -199,9 +225,9 @@ def edit(eventId):
     for dict in source[1]:
         if post_by_id['calendarId'] in dict:
             calendarName = dict[post_by_id['calendarId']]
-    return render_template("events/event-edit.html", 
-                            post = post_by_id, eventTypeMap = eventTypeMap, 
-                            eventTypeValues=eventTypeValues, isUser=False, 
+    return render_template("events/event-edit.html",
+                            post = post_by_id, eventTypeMap = eventTypeMap,
+                            eventTypeValues=eventTypeValues, isUser=False,
                             sourceName=sourceName, calendarName=calendarName)
 
 @bp.route('/searchresult', methods=['GET'])
@@ -238,8 +264,8 @@ def searchresult():
     source = request.args.get('source')
     id = request.args.get('id')
     print("{},{},{}".format(page, per_page, offset))
-    return render_template("events/searchresult.html", 
-                            eventTypeValues=eventTypeValues, source=source, id=id, 
+    return render_template("events/searchresult.html",
+                            eventTypeValues=eventTypeValues, source=source, id=id,
                             eventId=eventId, category=category, isUser=False,
                             posts=events, pagination=pagination, select_status=select_status
     )
@@ -308,3 +334,37 @@ def event_delete(id):
     if len(deleted_events) != 1:
         return "", 500
     return calendar_id, 200
+
+@bp.route('/time_range', methods=['POST'])
+@role_required("source")
+def time_range():
+    session["from"] = request.form.get('from')
+    session["to"] = request.form.get('to')
+    return "", 200
+
+@bp.route('/event/<id>/image', methods=['GET'])
+@role_required("source")
+def download_image(id):
+    try:
+        image_name = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+    except Exception:
+        try:
+            result = find_one(current_app.config['EVENT_COLLECTION'], condition={'_id': ObjectId(id)})
+            downloadImage(
+                result['originatingCalendarId'],
+                result['dataSourceEventId'],
+                id, "./temp"
+            )
+            path_to_tmp_image = os.path.join(os.getcwd(), 'temp', id + ".jpg")
+
+            def get_image():
+                with open(path_to_tmp_image, 'rb') as f:
+                    yield from f
+                os.remove(path_to_tmp_image)
+
+            response = current_app.response_class(get_image(), mimetype='image/jpg')
+            return response
+            # return send_from_directory(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], image_name)
+        except Exception:
+            abort(404)

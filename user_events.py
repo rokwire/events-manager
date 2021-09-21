@@ -73,7 +73,7 @@ def user_events():
             session["per_page"] = int(request.form.get('per_page'))
         if 'group' in request.form:
             session["group"] = str(request.form.get('group'))
-            return "", 200
+        return "", 200
     else:
         groups, _ = get_admin_groups()
         try:
