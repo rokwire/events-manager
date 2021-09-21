@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Added tooltips instead of placeholder[#732](https://github.com/rokwire/events-manager/issues/732).
 
 ### [3.0.1] - 2021-09-13
 ### Added
