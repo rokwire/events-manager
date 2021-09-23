@@ -300,6 +300,10 @@ def user_an_event_edit(id):
             post_by_id['isEventFree'] = True
         else:
             post_by_id['isEventFree'] = False
+        if 'displayOnlyWithSuperEvent' in request.form and request.form.get('displayOnlyWithSuperEvent') == 'on':
+            post_by_id['displayOnlyWithSuperEvent'] = True
+        else:
+            post_by_id['displayOnlyWithSuperEvent'] = False
 
         if 'isVirtual' in request.form and request.form.get('isVirtual') == 'on':
             post_by_id['isVirtual'] = True
@@ -547,6 +551,8 @@ def add_new_event():
         new_event['isGroupPrivate'] = False
         if new_event.get('isEventFree') == 'on':
             new_event['isEventFree'] = True
+        if new_event.get('displayOnlyWithSuperEvent') == 'on':
+            new_event['displayOnlyWithSuperEvent'] = True
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
