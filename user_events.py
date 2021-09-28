@@ -260,7 +260,8 @@ def user_an_event_edit(id):
                         print("Failed to mark image record as new of event: {} in event edit page".format(id))
                 file.save(
                     path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
-                success = s3_image_upload(id, post_by_id.get("platformEventId"), image_record.get("_id"))
+                # success = s3_image_upload(id, post_by_id.get("platformEventId"), image_record.get("_id"))
+                success = content_service_image_upload(id, post_by_id.get("platformEventId"), image_record.get("_id"))
                 if success:
                     print("{}, s3: s3_image_upload()".format(image_record.get('status')))
                     post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
