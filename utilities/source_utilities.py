@@ -40,23 +40,69 @@ def get_calendar_events(sourceId, calendarId, select_status):
                                                                     "eventStatus": {"$in": select_status} })
 
 # find the count of events in a calendar with selected status
-def get_calendar_events_count(sourceId, calendarId, select_status):
+def get_calendar_events_count(sourceId, calendarId, select_status, startDate=None, endDate=None):
+    if startDate and endDate:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "$and": [{"startDate": {"$gte": startDate}},
+                                   {"endDate": {"$lte": endDate}}]})
+    elif startDate != '' and endDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "endDate": {"$gte": startDate}})
 
-    return get_count(current_app.config['EVENT_COLLECTION'],
-                     {"sourceId": sourceId ,
-                      "calendarId": calendarId,
-                     "eventStatus": {"$in": select_status}})
+    elif endDate != '' and startDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "startDate": {"$lte": endDate}})
+
+    else:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
-def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-
-    events = find_all(current_app.config['EVENT_COLLECTION'],
-                        filter={
-                        "sourceId": sourceId,
-                        "calendarId": calendarId,
-                        "eventStatus": {"$in": select_status}
-                        }, skip=skip, limit=limit)
-    return events
+def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit, startDate=None, endDate=None):
+    if startDate and endDate:
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "$and": [{"startDate": {"$gte": startDate}},
+                                     {"endDate": {"$lte": endDate}}]
+                            }, skip=skip, limit=limit)
+    elif startDate != '' and endDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$gte": startDate}
+                            }, skip=skip, limit=limit)
+    elif endDate != '' and startDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$lte": endDate}
+                            }, skip=skip, limit=limit)
+    else:
+        events = find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status}
+                            }, skip=skip, limit=limit)
+        return events
 
 
 # Approve events from a calendar
@@ -409,7 +455,7 @@ def get_search_events(conditions, select_status, skip, limit):
         conditions['sourceId'] = {"$exists": True}
         events = find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
-        
+
         # temporary solution for online event location display
         for event in events:
             filter_online_location(event)

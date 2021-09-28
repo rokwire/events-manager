@@ -478,6 +478,23 @@
             </div>
             {% endif %}
 
+            <!-- displayOnlyWithSuperEvent -->
+            {% if post.displayOnlyWithSuperEvent %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Display Only with Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Display Only with Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+
             <!-- is super event? -->
             {% if post.isSuperEvent %}
               <div class="row">
