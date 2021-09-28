@@ -297,12 +297,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-<<<<<<< HEAD
 [Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.2...HEAD
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
-=======
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.1...HEAD
->>>>>>> 6c4a14ec85c825b555a095dba265d670dc0be0f0
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
