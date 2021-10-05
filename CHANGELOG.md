@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add simple logging in __init__.py [#748](https://github.com/rokwire/events-manager/issues/748)
 - Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
 - Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
