@@ -308,26 +308,33 @@ def delete_events_in_list(co_or_ta, objectId_list_to_delete, **kwargs):
         except Exception:
             return []
 
+def filterOutKeys(event):
+    keysWanted = ["title", "platformEventId", "category", "startDate"]
+    return {key: event[key] for key in keysWanted}
+    
 # Parameters: collection name, string to look for
 def text_index_search(co_or_ta, search_string, **kwargs):
     db = get_db()
     dbType = current_app.config['DBTYPE']
-
     if search_string is None or co_or_ta is None:
         return []
-
     if dbType == "mongoDB":
         try:
             collection = db.get_collection(co_or_ta)
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and platformEventID
-            result = collection.find({"$text": {"$search": search_string}, "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 0})
-            if not result:
-                return []
-            return result
-
+            search_result = list(collection.find({"$text": {"$search": search_string},
+                                             "eventStatus": "approved"}, {"title": 1, "platformEventId": 1, 
+                                             "category": 1, "startDate": 1, "_id": 0, "isSuperEvent": 1, "subEvents": 1}))                  
+            sub_event_ids = []
+            for event in search_result:
+                if event['isSuperEvent'] and event['subEvents']:
+                    sub_event_ids.extend([sub_event['id'] for sub_event in event['subEvents']])
+            sub_event_id_set = set(sub_event_ids)
+            auto_complete_events = []
+            for event in search_result:
+                if (not event['isSuperEvent']) and (event['platformEventId'] not in sub_event_id_set):
+                    auto_complete_events.append(event)
+            return map(filterOutKeys, auto_complete_events)
         except Exception:
             return []
-
-
-
