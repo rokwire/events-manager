@@ -5,9 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
+- Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+- Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
+
 ### [3.0.2] - 2021-09-28
 ### Fixed
 - Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
+
 ### [3.0.1] - 2021-09-13
 ### Added
 - Add group environment variables in config.py.template.
