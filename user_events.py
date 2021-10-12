@@ -390,10 +390,18 @@ def user_an_event_edit(id):
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
                     update_super_event_id(old_sub_event['id'], '')
+
         if new_sub_events is not None:
+            removed_list = list()
             for new_sub_event in new_sub_events:
-                if old_sub_events is None or new_sub_event not in old_sub_events:
-                    update_super_event_id(new_sub_event['id'], id)
+                try:
+                    if old_sub_events is None or new_sub_event not in old_sub_events:
+                        update_super_event_id(new_sub_event['id'], id)
+                except Exception as ex:
+                    removed_list.append(new_sub_event)
+                    pass
+        for deleted_sub_event in removed_list:
+            new_sub_events.remove(deleted_sub_event)
 
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
