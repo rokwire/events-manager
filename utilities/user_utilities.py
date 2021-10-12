@@ -36,7 +36,7 @@ from ..config import Config
 from .constants import *
 from .event_time_conversion import *
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
-    text_index_search
+    text_index_search, group_text_index_search
 
 GOOGLEKEY = Config.GOOGLE_KEY
 gmaps = googlemaps.Client(key=GOOGLEKEY)
@@ -807,14 +807,29 @@ def item_not_list(item):
     else:
         return False
 
+def group_subevents_search(search_string, admin_group_ids):
+    list_queries = list()
+    try:
+        queries_returned = group_text_index_search(current_app.config['EVENT_COLLECTION'], search_string, admin_group_ids)
+        list_queries = list(queries_returned)
+        for query in list_queries:
+            query['label'] = query.pop('title')
+            query['value'] = query.pop('platformEventId')
+    except:
+        traceback.print_exc()
+    return list_queries
 
 # Uses the implemented text index search to search the queries and modify the search results to JSON
 def beta_search(search_string):
-    queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
-    list_queries = list(queries_returned)
-    for query in list_queries:
-        query['label'] = query.pop('title')
-        query['value'] = query.pop('platformEventId')
+    list_queries = list()
+    try:
+        queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
+        list_queries = list(queries_returned)
+        for query in list_queries:
+            query['label'] = query.pop('title')
+            query['value'] = query.pop('platformEventId')
+    except:
+        traceback.print_exc()
     return list_queries
 
 
