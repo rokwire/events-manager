@@ -28,6 +28,12 @@ import xml.etree.ElementTree as ET
 import googlemaps
 import requests
 import traceback
+import logging
+from time import gmtime
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("sourceEvents.py")
 
 ######################################################################
 ### parsing helper functions
