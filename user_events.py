@@ -681,7 +681,7 @@ def search():
 def searchsub():
     if request.method == "GET":
        search_term = request.values.get("data")
-       return jsonify(beta_search(search_term))
+       return jsonify(group_subevents_search(search_term, get_admin_group_ids()))
     else:
        return jsonify([]), 200
 

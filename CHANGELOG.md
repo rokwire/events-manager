@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
 - Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
 - Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
+### Changed
+- Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
 
 ### [3.0.2] - 2021-09-28
 ### Fixed
