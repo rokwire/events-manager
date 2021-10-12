@@ -30,10 +30,16 @@ from flask_paginate import Pagination, get_page_args
 
 from datetime import datetime, timedelta
 from .config import Config
+import logging
+from time import gmtime
 
 
 bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("event.py")
 
 @bp.route('/source/<sourceId>')
 @role_required("source")
@@ -99,7 +105,7 @@ def calendar(calendarId):
     else:
         events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+    __logger.info("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
     return render_template('events/calendar.html',
@@ -112,7 +118,7 @@ def calendar(calendarId):
 @role_required("source")
 def setting():
     if request.method == 'POST':
-        print(request.form)
+        __logger.info(request.form)
         #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
@@ -247,7 +253,7 @@ def searchresult():
     if category:
         condition['category'] = category
 
-    print(eventId, category)
+    __logger.info(eventId, category)
     try:
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
@@ -263,7 +269,7 @@ def searchresult():
     events = get_search_events(condition, select_status, offset, per_page)
     source = request.args.get('source')
     id = request.args.get('id')
-    print("{},{},{}".format(page, per_page, offset))
+    __logger.info("{},{},{}".format(page, per_page, offset))
     return render_template("events/searchresult.html",
                             eventTypeValues=eventTypeValues, source=source, id=id,
                             eventId=eventId, category=category, isUser=False,
@@ -279,7 +285,7 @@ def schedule():
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
-    print(time)
+    __logger.info(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
 
@@ -287,26 +293,26 @@ def schedule():
 @bp.route('/add-new-calendar', methods=['POST'])
 @role_required("source")
 def add_new_calendar():
-    print(request.form)
+    __logger.info(request.form)
     # new calendars
     calendarID = request.form.get('data[calendarID]')
     calendarName = request.form.get('data[calendarName]')
-    print(calendarID)
-    print(calendarName)
+    __logger.info(calendarID)
+    __logger.info(calendarName)
     if calendarID == '' or calendarName == '':
-        print("should have both ID and Name!")
+        __logger.error("should have both ID and Name!")
         return "invalid", 200
     # all newly added calendar will be default to "disapproved"
     calendar_document = {"calendarId" : calendarID, "calendarName": calendarName, "status": "disapproved"}
     insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
     # insert error condition check
     if insert_result.inserted_id is None:
-        print("Insert calendar " + calendarID +" failed")
+        __logger.error("Insert calendar " + calendarID +" failed")
         return redirect('event.setting')
         return "fail", 400
     else:
-        print(current_app.config['INT2CAL'])
-        print("successfully inserted calendar "+ calendarID)
+        __logger.info(current_app.config['INT2CAL'])
+        __logger.info("successfully inserted calendar "+ calendarID)
         return "success", 200
 
 @bp.route('/search', methods=['GET', 'POST'])
@@ -320,7 +326,7 @@ def search():
 @bp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("source")
 def event_delete(id):
-    print("delete event id: %s" % id)
+    __logger.info("delete event id: %s" % id)
     event = get_event(id)
     calendar_id = event.get('calendarId')
     objectId_list_to_delete = list()

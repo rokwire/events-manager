@@ -8,11 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
 - Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+- Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
 
-### Changed 
+### Fixed
+- Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
+
+### Changed
+- Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
 - remove PER_PAGE and use EVENTS_PER_PAGE only [#719](https://github.com/rokwire/events-manager/issues/719)
 
+
+### [3.0.2] - 2021-09-28
+### Fixed
+- Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
 
 ### [3.0.1] - 2021-09-13
 ### Added
@@ -296,7 +307,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.2...HEAD
+[3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2
