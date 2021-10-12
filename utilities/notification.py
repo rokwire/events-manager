@@ -16,6 +16,12 @@ import requests
 import traceback
 from ..config import Config
 from pyfcm import FCMNotification
+import logging
+from time import gmtime
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("notification.py")
 
 
 push_service = FCMNotification(api_key=Config.FCM_SERVER_API_KEY)
@@ -37,7 +43,7 @@ def send_notification(title, body, data, tokens):
     try:
         result = push_service.notify_multiple_devices(registration_ids=tokens, message_title=title, message_body=body,
                                                       data_message=data)
-        print(result)
+        __logger.info(result)
     except Exception as ex:
-        traceback.print_exc()
+        __logger.exception(ex)
 

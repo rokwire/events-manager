@@ -77,7 +77,7 @@ def download(url):
 
     response = requests.get(url)
     if response.status_code != 200:
-        print("Invalid URL link: {}".format(url) + ", response.status_code: %d" % response.status_code)
+        __logger.error("Invalid URL link: {}".format(url) + ", response.status_code: %d" % response.status_code)
 
     # content = response.text.replace("&gt;", ">").replace("&lt;", "<")
     content = response.text
@@ -88,13 +88,13 @@ def parse(content, gmaps):
     try:
         tree = ET.fromstring(content)
     except ET.ParseError as e:
-        print("Parsing Error: {}".format(e))
+        __logger.error("Parsing Error: {}".format(e))
         return []
 
     XML2JSON=[]
     for publicEvent in tree:
         if publicEvent.tag != "publicEventWS":
-            print("There is a error arrangement in the structure")
+            __logger.error("There is a error arrangement in the structure")
             continue
 
         eventDetail = {}
@@ -118,7 +118,7 @@ def parse(content, gmaps):
                 eventDetail[elem.tag] = elem.text
 
         XML2JSON.append(eventDetail)
-    print("Get {} raw events".format(len(XML2JSON)))
+    __logger.info("Get {} raw events".format(len(XML2JSON)))
 
     xmltoMongoDB = []
     notSharedWithMobileList = []
@@ -147,7 +147,7 @@ def parse(content, gmaps):
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
         entry['category'] = pe['eventType'] if 'eventType' in pe else ""
         if entry['category'] not in eventTypeMap:
-            print("find unknown eventType: {}".format(entry['category']))
+            __logger.warning("find unknown eventType: {}".format(entry['category']))
         else:
             entry['category'] = eventTypeMap[entry['category']]
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
@@ -212,7 +212,7 @@ def parse(content, gmaps):
 
             if location in predefined_locations:
                 entry['location'] = predefined_locations[location]
-                print("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
+                __logger.info("assign predefined geolocation: calendarId: " + str(entry['calendarId']) + ", dataSourceEventId: " + str(entry['dataSourceEventId']))
             elif location:
                 (found, GeoInfo) = search_static_location(calendarName, sponsor, location)
                 if found:
@@ -221,7 +221,7 @@ def parse(content, gmaps):
                     try:
                         GeoResponse = gmaps.geocode(address=location+',Urbana', components={'administrative_area': 'Urbana', 'country': "US"})
                     except googlemaps.exceptions.ApiError as e:
-                        print("API Key Error: {}".format(e))
+                        __logger.error("API Key Error: {}".format(e))
                         entry['location'] = {'description': pe['location']}
                         xmltoMongoDB.append(entry)
                         continue
@@ -237,7 +237,7 @@ def parse(content, gmaps):
                         entry['location'] = GeoInfo
                     else:
                         entry['location'] = {'description': pe['location']}
-                        print("calendarId: %s, dataSourceEventId: %s,  location: %s geolocation not found" %
+                        __logger.error("calendarId: %s, dataSourceEventId: %s,  location: %s geolocation not found" %
                               (entry.get('calendarId'), entry.get('dataSourceEventId'), entry.get('location')))
             else:
                 entry['location'] = {
@@ -361,8 +361,8 @@ def parse(content, gmaps):
         entry['dataModified'] = (dataModifiedObj+timedelta(hours=5)).strftime('%Y-%m-%dT%H:%M:%S')
 
         xmltoMongoDB.append(entry)
-    print("Get {} parsed events".format(len(xmltoMongoDB)))
-    print("Get {} not shareWithIllinoisMobileApp events".format(len(notSharedWithMobileList)))
+    __logger.info("Get {} parsed events".format(len(xmltoMongoDB)))
+    __logger.info("Get {} not shareWithIllinoisMobileApp events".format(len(notSharedWithMobileList)))
     return (xmltoMongoDB, notSharedWithMobileList)
 
 
@@ -407,7 +407,7 @@ def store(documents):
             insert_result = insert_one(current_app.config['EVENT_COLLECTION'], document=document)
             # insert error condition check
             if insert_result.inserted_id is None:
-                print("Insert event {}  of calendar {} failed in start".format(document['dataSourceEventId'], calendarId))
+                __logger.error("Insert event {}  of calendar {} failed in start".format(document['dataSourceEventId'], calendarId))
             else:
                 document['eventId'] = str(insert_result.inserted_id)
                 insert += 1
@@ -439,13 +439,13 @@ def store(documents):
             )
             # insert replace error check
             if replaceResult.modified_count == 0 and replaceResult.matched_count == 0 and replaceResult.upserted_id is None:
-                print("replace event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+                __logger.error("replace event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
         else:
             updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document['dataSourceEventId']},
                     update={'$set': document}, upsert=True)
             # insert update error check
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
+                __logger.error("update event {} of calendar {} fails in start".format(document['dataSourceEventId'], calendarId))
 
     s3_client = boto3.client('s3')
     # upload approved or published events
@@ -480,7 +480,7 @@ def store(documents):
                     else:
                         unknown += 1
         else:
-            print("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
+            __logger.error("find event {} from calendar {} fails in start".format(document['dataSourceEventId'],
                                                                          document['calendarId']))
     return (insert, update, post, put, patch, unknown, image_download, image_upload)
 
@@ -496,7 +496,7 @@ def get_difference_old_new(new_eventId_list, previous_eventId_list):
 def start(targets=None):
 
     if "GOOGLE_KEY" not in current_app.config or current_app.config["GOOGLE_KEY"] is None:
-        print("Google Key does not exist. Cannot perform parsing")
+        __logger.error("Google Key does not exist. Cannot perform parsing")
         return
 
     GOOGLEKEY = current_app.config['GOOGLE_KEY']
@@ -504,7 +504,7 @@ def start(targets=None):
     try:
         gmaps = googlemaps.Client(key=GOOGLEKEY)
     except ValueError as e:
-        print("Error in connecting Google Api: {}".format(e))
+        __logger.error("Error in connecting Google Api: {}".format(e))
 
     parsed_in_total = 0
     update_in_total = 0
@@ -534,13 +534,13 @@ def start(targets=None):
                 pagination_url = url + "?pageNumber=%d" % page_number
                 rawEvents = download(pagination_url)
                 if rawEvents is None:
-                    print("Invalid content in: {}".format(pagination_url))
-                print("Begin parsing url: {}".format(pagination_url))
+                    __logger.error("Invalid content in: {}".format(pagination_url))
+                __logger.info("Begin parsing url: {}".format(pagination_url))
                 parsedEvents_iteration, notShareWithMobileList_iteration = parse(rawEvents, gmaps)
                 parsedEvents.extend(parsedEvents_iteration)
                 notShareWithMobileList.extend(notShareWithMobileList_iteration)
                 if not parsedEvents_iteration:
-                    print("Stop downloading and parsing on url: {}".format(pagination_url))
+                    __logger.error("Stop downloading and parsing on url: {}".format(pagination_url))
                     break
                 page_number += 1
 
@@ -564,27 +564,26 @@ def start(targets=None):
             image_download_total += image_download
             image_upload_total += image_upload
 
-            print(
+            __logger.info(
                 "".join([
                     "EventManager: {} are updated, {} are inserted.\n".format(update, insert),
                     "Event Building Block: {} are posted, {} are put, {} are patch, {} are unknown\n".format(post, put, patch, unknown)
                 ])
             )
-            print("Regarding to images: {} are downloaded, {} are uploaded\n".format(image_download, image_upload))
+            __logger.info("Regarding to images: {} are downloaded, {} are uploaded\n".format(image_download, image_upload))
 
-        except Exception as e:
-            traceback.print_exc()
-            print("There is exception {}, hidden in url: {}".format(e, url))
+        except Exception as ex:
+            __logger.error("There is exception {}, hidden in url: {}".format(ex, url))
             continue
 
     #compare old events in db, new downloads, find difference to delete
-    print("# new_eventId_list: " + str(len(new_eventId_list)))
-    print("# previous_eventId_list: " + str(len(previous_eventId_list)))
+    __logger.info("# new_eventId_list: " + str(len(new_eventId_list)))
+    __logger.info("# previous_eventId_list: " + str(len(previous_eventId_list)))
     previous_events_to_delete = get_difference_old_new(new_eventId_list, previous_eventId_list)
-    print("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
+    __logger.info("# previous_events_to_delete: " + str(len(previous_events_to_delete)))
     deletion = delete_events(previous_events_to_delete)
 
-    print(
+    __logger.info(
         "".join([
             "DateTime: {}, overall parsing result: {} events\n".format(datetime.utcnow(), parsed_in_total),
             "    Updated: {}\n".format(update_in_total),
@@ -596,7 +595,7 @@ def start(targets=None):
             "    Unknown: {}\n".format(unknown_in_total),
         ])
     )
-    print(
+    __logger.info(
         "".join([
             "Total images downloaded are: {}\n".format(image_download_total),
             "Total images uploaded are: {}\n".format(image_upload_total)

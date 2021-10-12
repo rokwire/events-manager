@@ -75,7 +75,7 @@ def create_scheduler(app):
             start()
     
     scheduler.add_job(create_start, trigger='interval', args=[app], days=1, start_date=startDate)
-    print("Schedule at {}:{}".format(app.config['SCHEDULER_HOUR'], app.config['SCHEDULER_MINS']))
+    __logger.info("Schedule at {}:{}".format(app.config['SCHEDULER_HOUR'], app.config['SCHEDULER_MINS']))
     return scheduler
 
 def drop_scheduler(scheduler):
