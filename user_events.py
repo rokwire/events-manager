@@ -443,7 +443,15 @@ def user_an_event_edit(id):
     elif request.method == 'GET':
 
         headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
-        tags = requests.get(Config.EVENT_BUILDING_BLOCK_URL+"/tags", headers=headers)
+        try:
+            response = requests.get(Config.EVENT_BUILDING_BLOCK_URL+"/tags", headers=headers)
+            if response.status_code != 200:
+                tags = []
+                __logger.error("failed to download tags from events building block, response.status_code: %d" % response.status_code)
+            else:
+                tags = response.json()
+        except Exception as ex:
+            __logger.exception(ex)
 
         all_day_event = False
         if 'allDay' in post_by_id and post_by_id['allDay'] is True:
@@ -490,7 +498,7 @@ def user_an_event_edit(id):
                                image=image,
                                size_limit=Config.IMAGE_SIZE_LIMIT,
                                timezones=Config.TIMEZONES,
-                               tags=tags.json(),
+                               tags=tags,
                                groups=groups)
 
 
