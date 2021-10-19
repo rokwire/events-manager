@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### [3.0.3] - 2021-10-19
+### Fixed
+- Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
+
 ### [3.0.2] - 2021-09-28
 ### Fixed
 - Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
@@ -290,7 +295,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.2...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.3...HEAD
+[3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
