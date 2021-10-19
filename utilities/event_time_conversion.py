@@ -14,6 +14,12 @@
 
 import pytz
 from timezonefinder import TimezoneFinder
+import logging
+from time import gmtime
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("event_time_conversion.py")
 
 
 def get_timezone_by_geolocation(latitude, longitude):
@@ -31,7 +37,7 @@ def utctime(datetime_without_tz, latitude, longitude):
         if not tz_name:
             # FIXME need extra service to get timezone for this geolocation
             local_tz = pytz.timezone("US/Central")
-            print("Cannot find timezone for geolocation: latitude=%s, longitude=%s" % (latitude, longitude))
+            __logger.info("Cannot find timezone for geolocation: latitude=%s, longitude=%s" % (latitude, longitude))
         else:
             local_tz = pytz.timezone(tz_name)
     datetime_with_tz = local_tz.localize(datetime_without_tz, is_dst=None)  # No daylight saving time

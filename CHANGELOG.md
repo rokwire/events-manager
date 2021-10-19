@@ -5,6 +5,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Display the publish status of sub-events in event detail page [#772](https://github.com/rokwire/events-manager/issues/772)
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
+- Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+- Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
+
+### Fixed
+- Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
+- Fix the placeholder of subevent id. [#766](https://github.com/rokwire/events-manager/issues/766)
+
+### Changed
+- Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
+
+
+### [3.0.2] - 2021-09-28
+### Fixed
+- Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
+
+### [3.0.1] - 2021-09-13
+### Added
+- Add group environment variables in config.py.template.
+### Changed
+- Change APScheduler version.
 
 ### [3.0.3] - 2021-10-19
 ### Fixed

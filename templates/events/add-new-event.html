@@ -356,6 +356,16 @@
             </div>
           </div>
 
+          <!-- displayOnlyWithSuperEvent  -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Display Only with Super Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="displayOnlyWithSuperEvent" name="displayOnlyWithSuperEvent"/> Yes
+            </div>
+          </div>
+
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
@@ -477,6 +487,11 @@
      attach_delete();
    });
 
+   $("document").ready(function(){
+        if (document.getElementById("super-event").checked === true) {
+          document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        }
+   })
    //Attach functionality to delete buttons
    function attach_delete(){
      $('.delete').off();
@@ -493,9 +508,12 @@
      var sub = document.getElementById("super-des");
      var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
+        document.getElementById('displayOnlyWithSuperEvent').checked = false;
+        document.getElementById('displayOnlyWithSuperEvent').disabled = true;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
+        document.getElementById('displayOnlyWithSuperEvent').disabled = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }

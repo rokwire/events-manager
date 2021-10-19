@@ -31,32 +31,85 @@ from .downloadImage import downloadImage
 
 from ..config import Config
 
+import logging
+from time import gmtime
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("source_utilities.py")
+
 # find many events in a calendar with selected status
 def get_calendar_events(sourceId, calendarId, select_status):
 
-    print(select_status)
+    __logger.info(select_status)
     return find_all(current_app.config['EVENT_COLLECTION'], filter={"sourceId": sourceId,
                                                                     "calendarId": calendarId,
                                                                     "eventStatus": {"$in": select_status} })
 
 # find the count of events in a calendar with selected status
-def get_calendar_events_count(sourceId, calendarId, select_status):
+def get_calendar_events_count(sourceId, calendarId, select_status, startDate=None, endDate=None):
+    if startDate and endDate:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "$and": [{"startDate": {"$gte": startDate}},
+                                   {"endDate": {"$lte": endDate}}]})
+    elif startDate != '' and endDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "endDate": {"$gte": startDate}})
 
-    return get_count(current_app.config['EVENT_COLLECTION'],
-                     {"sourceId": sourceId ,
-                      "calendarId": calendarId,
-                     "eventStatus": {"$in": select_status}})
+    elif endDate != '' and startDate == '':
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status},
+                          "startDate": {"$lte": endDate}})
+
+    else:
+        return get_count(current_app.config['EVENT_COLLECTION'],
+                         {"sourceId": sourceId ,
+                          "calendarId": calendarId,
+                          "eventStatus": {"$in": select_status}})
 
 # find many events in a calendar with selected status with pagination
-def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit):
-
-    events = find_all(current_app.config['EVENT_COLLECTION'],
-                        filter={
-                        "sourceId": sourceId,
-                        "calendarId": calendarId,
-                        "eventStatus": {"$in": select_status}
-                        }, skip=skip, limit=limit)
-    return events
+def get_calendar_events_pagination(sourceId, calendarId, select_status, skip, limit, startDate=None, endDate=None):
+    if startDate and endDate:
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "$and": [{"startDate": {"$gte": startDate}},
+                                     {"endDate": {"$lte": endDate}}]
+                            }, skip=skip, limit=limit)
+    elif startDate != '' and endDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$gte": startDate}
+                            }, skip=skip, limit=limit)
+    elif endDate != '' and startDate == '':
+        return find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status},
+                            "startDate": {"$lte": endDate}
+                            }, skip=skip, limit=limit)
+    else:
+        events = find_all(current_app.config['EVENT_COLLECTION'],
+                            filter={
+                            "sourceId": sourceId,
+                            "calendarId": calendarId,
+                            "eventStatus": {"$in": select_status}
+                            }, skip=skip, limit=limit)
+        return events
 
 
 # Approve events from a calendar
@@ -83,7 +136,7 @@ def publish_event(id):
                          projection={'_id': 0, 'eventStatus': 0})
         platform_event_id = event.get('platformEventId')
         if event:
-            print("event {} submit method: {}".format(id, event['submitType']))
+            __logger.info("event {} submit method: {}".format(id, event['submitType']))
             if event.get('startDate'):
                 if isinstance(event.get('startDate'), datetime.date):
                     event['startDate'] = event['startDate'].isoformat()
@@ -119,7 +172,7 @@ def publish_event(id):
                                         data=json.dumps(event))
 
             if result.status_code not in (200, 201):
-                print("Event {} submission fails".format(id))
+                __logger.error("Event {} submission fails".format(id))
                 return False, None
             else:
                 imageId = publish_image(id, platform_event_id)
@@ -149,17 +202,17 @@ def publish_event(id):
                     result = requests.put(url, headers=headers,
                                           data=json.dumps(event))
                     if result.status_code not in (200, 201):
-                        print("Event {} submission fails".format(id))
+                        __logger.error("Event {} submission fails".format(id))
                         return False, None
 
                 if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                    print("Publish event {} fails in publish_event".format(id))
+                    __logger.error("Publish event {} fails in publish_event".format(id))
 
                 return True, imageId
 
 
-    except Exception:
-        traceback.print_exc()
+    except Exception as ex:
+        __logger.exception(ex)
         return False, None
 
 
@@ -202,16 +255,16 @@ def publish_image(id, platformId):
                                       update={"$set": { 'submitBefore': True,
                                                         'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("Update {} fails in update_user_event".format(id))
+                __logger.error("Update {} fails in update_user_event".format(id))
         else:
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                             condition={'eventId': id},
                             update={"$set": { 'submitBefore': False,
                                               'eventId': id}}, upsert=True)
             if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("Update {} fails in update_user_event".format(id))
-    except Exception:
-        traceback.print_exc()
+                __logger.error("Update {} fails in update_user_event".format(id))
+    except Exception as ex:
+        __logger.exception(ex)
 
     finally:
         if os.path.exists('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
@@ -258,9 +311,9 @@ def s3_publish_image(id, client):
             }
         )
 
-    except Exception:
-        traceback.print_exc()
-        print("Upload image for event {} failed".format(id))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Upload image for event {} failed".format(id))
         return None
 
     finally:
@@ -273,12 +326,12 @@ def s3_publish_image(id, client):
     return imageId
 
 def approve_event(id):
-    print("{} is going to be approved".format(id))
+    __logger.info("{} is going to be approved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "approved"}
     })
     if not result:
-        print("Approve event {} fails in approve_event".format(id))
+        __logger.error("Approve event {} fails in approve_event".format(id))
 
     downloadImage(
         result['originatingCalendarId'],
@@ -289,12 +342,12 @@ def approve_event(id):
 
 # disapprove a calendar event
 def disapprove_event(id):
-    print("{} is going to be disapproved".format(id))
+    __logger.info("{} is going to be disapproved".format(id))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}, update={
         "$set": {"eventStatus":  "approved"}
     })
     if not result:
-        print("Disapprove event {} fails in disapprove_event".format(id))
+        __logger.error("Disapprove event {} fails in disapprove_event".format(id))
     else:
         if result.get("platformEventId"):
             objectId_list_to_delete = list()
@@ -333,7 +386,7 @@ def update_event(objectId, update):
                                   "$set": update
                               })
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails in update_event".format(objectId))
+        __logger.error("Update {} fails in update_event".format(objectId))
 
 # Approve a calendar and relevant events
 def approve_calendar_db(calendarId):
@@ -379,7 +432,7 @@ def load_calendar_into_db():
                 find_one_and_update(current_app.config['CALENDAR_COLLECTION'], condition={"calendarId": calendarId},
                                     update={"$set": {"calendarName": calendarName}})
 
-    print("load calendar into db")
+    __logger.info("load calendar into db")
 
 
 # Update approval status for many calendars (and relevant events)
@@ -409,7 +462,7 @@ def get_search_events(conditions, select_status, skip, limit):
         conditions['sourceId'] = {"$exists": True}
         events = find_all(current_app.config['EVENT_COLLECTION'],
                         filter=conditions, skip=skip, limit=limit)
-        
+
         # temporary solution for online event location display
         for event in events:
             filter_online_location(event)
@@ -429,14 +482,14 @@ def delete_events_in_building_block(objectId_list_to_delete):
         url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + str(event.get('platformEventId'))
         result = requests.delete(url, headers=headers)
         if result.status_code != 202 and result.status_code != 404:
-            print("Event {} deletion fails".format(_id))
+            __logger.error("Event {} deletion fails".format(_id))
             fail_count +=1
         else:
             delete_success_list.append(_id)
     success_count = len(delete_success_list)
 
-    print("failed deleted in building block: " + str(fail_count))
-    print("successful deleted in building block: " + str(success_count))
+    __logger.error("failed deleted in building block: " + str(fail_count))
+    __logger.error("successful deleted in building block: " + str(success_count))
     return delete_success_list
 
 def delete_events(objectId_list_to_delete):
