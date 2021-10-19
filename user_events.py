@@ -192,6 +192,14 @@ def user_an_event(id):
     #             targetAudience_edit_list += [item.capitalize()]
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
+    if post['subEvents']:
+        for subEvent in post['subEvents']:
+            event = find_user_event(clickable_utility(subEvent['id']))
+            if event['eventStatus'] == 'approved':
+                subEvent['isPublished'] = True
+            else:
+                subEvent['isPublished'] = False
+
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                            timestamp=datetime.now().timestamp(),

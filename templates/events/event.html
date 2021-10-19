@@ -525,6 +525,7 @@
                     <th scope="col-sm-2">Sub-Event Title</th>
                     <th scope="col-sm-2">Track</th>
                     <th scope="col-sm-2">Featured Event</th>
+                    <th scope="col-sm-2">Published Event</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -535,6 +536,11 @@
                     </td>
                     <td>{{subevent.track}}</td>
                     {% if subevent.isFeatured%}
+                      <td>Yes</td>
+                    {% else %}
+                      <td>No</td>
+                    {% endif %}
+                    {% if subevent.isPublished%}
                       <td>Yes</td>
                     {% else %}
                       <td>No</td>
