@@ -812,10 +812,13 @@ def item_not_list(item):
 def beta_search(search_string):
     queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
     list_queries = list(queries_returned)
+    results = list()
     for query in list_queries:
-        query['label'] = query.pop('title')
-        query['value'] = query.pop('platformEventId')
-    return list_queries
+        if 'platformEventId' in query:
+            query['label'] = query.pop('title')
+            query['value'] = query.pop('platformEventId')
+            results.append(query)
+    return results
 
 
 def allowed_file(filename):
