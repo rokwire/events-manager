@@ -408,8 +408,8 @@ def user_an_event_edit(id):
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
-        for deleted_sub_event in removed_list:
-            new_sub_events.remove(deleted_sub_event)
+            for deleted_sub_event in removed_list:
+                new_sub_events.remove(deleted_sub_event)
 
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
