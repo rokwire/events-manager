@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
 - Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
 - Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Change the sub-event delete button text to say Unlink and Add buttons to Link [#769](https://github.com/rokwire/events-manager/issues/769)
 
 ### Fixed
 - Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
