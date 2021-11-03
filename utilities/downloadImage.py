@@ -43,3 +43,19 @@ def downloadImage(calendarId, dataSourceEventId, eventId, prefix_path=None):
         traceback.print_exc()
         return False
     return False
+
+def downloadImageFromContentService(imageUrl, eventId, prefix_path=None):
+    image_store_path = current_app.config['WEBTOOL_IMAGE_MOUNT_POINT']
+    if prefix_path:
+        image_store_path = prefix_path
+    try:
+        image_response = requests.get(imageUrl)
+        if image_response.status_code == 200:
+            with open('{}/{}.jpg'.format(image_store_path, eventId), 'wb') as image:
+                for chunk in image_response.iter_content(chunk_size=128):
+                    image.write(chunk)
+            return True
+    except Exception:
+        traceback.print_exc()
+        return False
+    return False

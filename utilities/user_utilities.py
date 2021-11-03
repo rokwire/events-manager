@@ -985,7 +985,8 @@ def s3_delete_reupload(localId, eventId, imageId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
             s3_image_delete(localId, eventId, imageId)
-            s3_image_upload(localId, eventId, imageId)
+            # s3_image_upload(localId, eventId, imageId)
+            content_service_image_upload(localId, eventId, imageId)
             return True
         else:
             __logger.error('Event: {} does not exist'.format(localId))
@@ -1116,3 +1117,74 @@ def get_admin_group_ids():
     else:
         __logger.error("Groups not retrievable")
         return []
+
+def content_service_image_download(localId, eventId, imageId, imageUrl):
+    try:
+        record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
+        if record:
+            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            tmpfolder = 'temp'
+            if not os.path.isdir(tmpfolder):
+                os.mkdir(tmpfolder)
+            tmpfile = os.path.join(tmpfolder, localId + ".jpg")
+            with open(tmpfile, 'wb') as f:
+                client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
+                print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
+                return True
+
+        else:
+            print('Event: {} does not exist'.format(localId))
+            return False
+
+    except Exception:
+        traceback.print_exc()
+        deletefile(tmpfile)
+        print("Image: {} for event: {} download failed".format(imageId, eventId))
+        return False
+
+def content_service_image_upload(localId, eventId, imageId):
+    image_location = ''
+    success = False
+    try:
+        for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
+            if os.path.isfile('{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId, extension)):
+                image_location = '{}/{}.{}'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId, extension)
+                break
+        if image_location == '':
+            raise FileNotFoundError("Image for event {} not found".format(localId))
+        # convert to jpg and save it
+        with Image.open(image_location) as im:
+            im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
+                                   quality=95)
+        image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId), 'rb')
+        file = {'file': image}
+        headers = {
+            'ROKWIRE-API-KEY': current_app.config['ROKWIRE_API_KEY'],
+            'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+        }
+        response = requests.post(current_app.config['ROKWIRE_CONTENT_SERVICE_IMAGE_URL'], files=file, headers=headers)
+        if response.status_code in (200, 201):
+            imageId = response.json()['id']
+
+        # client.upload_file(
+        #     '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
+        #     current_app.config['BUCKET'],
+        #     '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
+        #     ExtraArgs={
+        #         'ACL': 'bucket-owner-full-control'
+        #     }
+        # )
+        success = True
+
+    except Exception:
+        traceback.print_exc()
+        print("Upload image: {} for event {} failed".format(imageId, localId))
+        success = False
+    finally:
+        if os.path.exists(image_location):
+            os.remove(image_location)
+
+        if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId)):
+            os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId))
+
+        return success
