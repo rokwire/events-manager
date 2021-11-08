@@ -375,12 +375,14 @@ def publish_user_event(eventId):
             else:
                 platform_event_id = result.json()['id']
                 # Should upload user images
-                s3_client = boto3.client('s3')
-                imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
+                success, imageId, ImageContentUrl = content_service_image_upload(eventId)
+                # s3_client = boto3.client('s3')
+                # imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
                 updates = {"eventStatus": "approved", "platformEventId": platform_event_id}
                 if imageId:
                     print("User image upload successful for event {}".format(eventId))
-                    event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
+                    # event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
+                    event['imageURL'] = ImageContentUrl
                     updates["imageURL"] = event['imageURL']
                     put_user_event(eventId)
 
@@ -964,7 +966,7 @@ def s3_delete_reupload(localId, eventId, imageId):
         if record:
             s3_image_delete(localId, eventId, imageId)
             # s3_image_upload(localId, eventId, imageId)
-            content_service_image_upload(localId, eventId, imageId)
+            content_service_image_upload(localId)
             return True
         else:
             print('Event: {} does not exist'.format(localId))
@@ -1120,8 +1122,10 @@ def content_service_image_download(localId, eventId, imageId, imageUrl):
         print("Image: {} for event: {} download failed".format(imageId, eventId))
         return False
 
-def content_service_image_upload(localId, eventId, imageId):
+def content_service_image_upload(localId):
     image_location = ''
+    imageId = None
+    imageUrl = None
     success = False
     try:
         for extension in Config.ALLOWED_IMAGE_EXTENSIONS:
@@ -1135,25 +1139,27 @@ def content_service_image_upload(localId, eventId, imageId):
             im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
                                    quality=95)
         image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId), 'rb')
+        image_path = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId)
         file = {'file': image}
         headers = {
             'ROKWIRE-API-KEY': current_app.config['ROKWIRE_API_KEY'],
-            'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
+            'Authorization': 'Bearer ' + session["id_token"],
         }
-        response = requests.post(current_app.config['ROKWIRE_CONTENT_SERVICE_IMAGE_URL'], files=file, headers=headers)
+        files = [
+            ('fileName', (localId+".jpg", open(image_path, 'rb'), 'image/jpg'))
+        ]
+        # response = requests.post(current_app.config['ROKWIRE_CONTENT_SERVICE_IMAGE_URL'], files=file, headers=headers)
+        data = {'path': '/tmp/tmp_folder',
+                'width': '480',
+                'height': '480',
+                'quality': '80'
+                }
+        response = requests.post(current_app.config['ROKWIRE_CONTENT_SERVICE_IMAGE_URL'], data=data, files=files, headers=headers)
         if response.status_code in (200, 201):
-            imageId = response.json()['id']
-
-        # client.upload_file(
-        #     '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId),
-        #     current_app.config['BUCKET'],
-        #     '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId),
-        #     ExtraArgs={
-        #         'ACL': 'bucket-owner-full-control'
-        #     }
-        # )
-        success = True
-
+            imageId = os.path.basename(response.json()['url']).split('.')[0]
+            imageUrl = response.json()['url']
+            # imageId = response.json()['id']
+            success = True
     except Exception:
         traceback.print_exc()
         print("Upload image: {} for event {} failed".format(imageId, localId))
@@ -1165,4 +1171,4 @@ def content_service_image_upload(localId, eventId, imageId):
         if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId)):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], localId))
 
-        return success
+        return success, imageId, imageUrl
