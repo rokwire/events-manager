@@ -961,21 +961,22 @@ def deletefile(tmpfile):
 
 
 def s3_delete_reupload(localId, eventId, imageId):
+    success = False
+    imageId = None
+    imageUrl = None
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
             s3_image_delete(localId, eventId, imageId)
             # s3_image_upload(localId, eventId, imageId)
-            content_service_image_upload(localId)
-            return True
+            success, imageId, imageUrl = content_service_image_upload(localId)
         else:
             print('Event: {} does not exist'.format(localId))
-            return False
 
     except Exception:
         traceback.print_exc()
         print("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
-        return False
+    return success, imageId, imageUrl
 
 
 def imagedId_from_eventId(eventId):
@@ -1098,19 +1099,23 @@ def get_admin_group_ids():
         print("Groups not retrievable")
         return []
 
-def content_service_image_download(localId, eventId, imageId, imageUrl):
+def content_service_image_download(localId, imageUrl):
+    if imageUrl is None:
+        return False
     try:
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": localId})
         if record:
-            fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
+            headers = {'ROKWIRE-API-KEY': current_app.config['ROKWIRE_API_KEY']}
             tmpfolder = 'temp'
             if not os.path.isdir(tmpfolder):
                 os.mkdir(tmpfolder)
             tmpfile = os.path.join(tmpfolder, localId + ".jpg")
-            with open(tmpfile, 'wb') as f:
-                client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
-                print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
-                return True
+            with requests.get(imageUrl, headers=headers, stream=True) as r:
+                r.raise_for_status()
+                with open(tmpfile, 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
+            return True
 
         else:
             print('Event: {} does not exist'.format(localId))
@@ -1119,7 +1124,7 @@ def content_service_image_download(localId, eventId, imageId, imageUrl):
     except Exception:
         traceback.print_exc()
         deletefile(tmpfile)
-        print("Image: {} for event: {} download failed".format(imageId, eventId))
+        # print("Image: {} for event: {} download failed".format(imageId, eventId))
         return False
 
 def content_service_image_upload(localId):

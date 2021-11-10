@@ -229,14 +229,15 @@ def user_an_event_edit(id):
                 file.save(
                     path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
 
-                success = s3_delete_reupload(id, post_by_id.get('platformEventId'),image_record.get("_id"))
+                success, imageId, imageUrl = s3_delete_reupload(id, post_by_id.get('platformEventId'),image_record.get("_id"))
                 if success:
                     print("{}, s3: s3_delete_reupload()".format(image_record.get('status')))
                     updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
                                                  condition={'eventId': id},
                                                  update={"$set": {'status': 'replaced',
                                                                   'eventId': id}}, upsert=True)
-                    post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(post_by_id.get('platformEventId'), image_record.get("_id"))
+                    # post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(post_by_id.get('platformEventId'), image_record.get("_id"))
+                    post_by_id['imageURL'] = imageUrl
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         print("Failed to mark image record as replaced of event: {} in event edit page".format(id))
                 else:
@@ -685,7 +686,8 @@ def view_image(id):
     record = find_one(Config.IMAGE_COLLECTION, condition={"eventId": id})
     event = find_user_event(id)
     if record:
-        success = s3_image_download(id, event.get("platformEventId"), record.get("_id"))
+        # success = s3_image_download(id, event.get("platformEventId"), record.get("_id"))
+        success = content_service_image_download(id, event.get("imageURL"))
         if success:
             try:
                 print("{}, s3: s3_image_download()".format(record.get('status')))
