@@ -29,7 +29,7 @@
  {{ confirmation("pending", post.title) }}
 {% endif %}
 {% else %}
-{{ confirmation("approveEvent", post.title) }}
+{{ confirmation("approveEvent", post.title, post.isSuperEvent) }}
 {% endif %}
 
 {% if post.eventStatus == "approved" %}
