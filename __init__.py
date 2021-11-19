@@ -14,6 +14,8 @@
 
 import os
 import atexit
+import logging
+from time import gmtime
 
 from flask import Flask, current_app, redirect, url_for, Blueprint, session, render_template
 
@@ -28,6 +30,13 @@ from .user_events import userbp as user_bp
 from .scheduler import create_scheduler, drop_scheduler
 from .utilities import source_utilities
 
+
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("__init__.py")
+
+
 def create_app(config_class=Config):
     if Config is not None and Config.URL_PREFIX is not None:
         prefix = Config.URL_PREFIX
@@ -38,6 +47,7 @@ def create_app(config_class=Config):
     app = Flask(__name__, static_url_path=staticpath)
     app.config.from_object(Config)
 
+    __logger.info("Events Manager starts.")
     init_db(app)
     try:
         os.mkdir(app.config['WEBTOOL_IMAGE_MOUNT_POINT'])

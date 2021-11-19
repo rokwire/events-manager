@@ -232,11 +232,18 @@ def callback():
         is_user_admin = False
         is_source_admin = False
         for tag in rokwire_auth:
-            if "rokwire em user events admins" in tag:
-                is_user_admin = True
             if "rokwire em calendar events admins" in tag:
                 is_source_admin = True
+                break
         # TODO: we are storing cookie by our own but not by code, may change it later
+        if 'uiucedu_is_member_of' in session.get('user_info'):
+            # check the AD group access
+            if 'urn:mace:uiuc.edu:urbana:authman:app-rokwire-service-policy-rokwire groups access' in \
+                    session.get('user_info').get('uiucedu_is_member_of'):
+                admin_groups, _ = get_admin_groups()
+                # check the login user must have at least one admin group access.
+                if len(admin_groups) > 0:
+                    is_user_admin = True
         if is_user_admin and is_source_admin:
             session["access"] = "both"
             session.permanent = True

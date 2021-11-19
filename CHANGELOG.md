@@ -7,8 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Display the publish status of sub-events in event detail page [#772](https://github.com/rokwire/events-manager/issues/772)
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
+- Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+- Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Change the sub-event delete button text to say Unlink and Add buttons to Link [#769](https://github.com/rokwire/events-manager/issues/769)
+- Update modal for publishing indicate that all sub-events will also be published [#782](https://github.com/rokwire/events-manager/issues/782)
 
-### [3.0.1] - 2021-09-13
+### Fixed
+- Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
+- Fix the placeholder of subevent id. [#766](https://github.com/rokwire/events-manager/issues/766)
+- Fix indentation of removal sub events. [#785](https://github.com/rokwire/events-manager/issues/785)
+
+### Changed
+- Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
+
+## [3.0.3] - 2021-10-19
+### Fixed
+- Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
+
+## [3.0.2] - 2021-09-28
+### Fixed
+- Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
+
+## [3.0.1] - 2021-09-13
 ### Added
 - Add group environment variables in config.py.template.
 ### Changed
@@ -49,8 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - User events that are not associated with groups from being viewable. [#678](https://github.com/rokwire/events-manager/issues/678)
-## [2.4.2] - 2021-08-11
 
+## [2.4.2] - 2021-08-11
 ### Fixed
 - Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
@@ -251,7 +276,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - get collection name from config.py
 
-
 ## [1.0.1] - 2019-10-14
 ### Added
 - add SLC predefined geolocation.
@@ -290,7 +314,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.3...HEAD
+[3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
+[3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/rokwire/events-manager/compare/2.4.2...3.0.0
 [2.4.2]: https://github.com/rokwire/events-manager/compare/2.4.1...2.4.2

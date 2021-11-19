@@ -29,7 +29,7 @@
  {{ confirmation("pending", post.title) }}
 {% endif %}
 {% else %}
-{{ confirmation("approveEvent", post.title) }}
+{{ confirmation("approveEvent", post.title, post.isSuperEvent) }}
 {% endif %}
 
 {% if post.eventStatus == "approved" %}
@@ -478,6 +478,23 @@
             </div>
             {% endif %}
 
+            <!-- displayOnlyWithSuperEvent -->
+            {% if post.displayOnlyWithSuperEvent %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Display Only with Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Display Only with Super Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+
             <!-- is super event? -->
             {% if post.isSuperEvent %}
               <div class="row">
@@ -508,6 +525,7 @@
                     <th scope="col-sm-2">Sub-Event Title</th>
                     <th scope="col-sm-2">Track</th>
                     <th scope="col-sm-2">Featured Event</th>
+                    <th scope="col-sm-2">Published Event</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -518,6 +536,11 @@
                     </td>
                     <td>{{subevent.track}}</td>
                     {% if subevent.isFeatured%}
+                      <td>Yes</td>
+                    {% else %}
+                      <td>No</td>
+                    {% endif %}
+                    {% if subevent.isPublished%}
                       <td>Yes</td>
                     {% else %}
                       <td>No</td>
