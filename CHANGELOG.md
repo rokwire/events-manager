@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
 - Display the publish status of sub-events in event detail page [#772](https://github.com/rokwire/events-manager/issues/772)
 - Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
@@ -24,25 +25,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
 
-
-### [3.0.2] - 2021-09-28
-### Fixed
-- Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
-
-### [3.0.1] - 2021-09-13
-### Added
-- Add group environment variables in config.py.template.
-### Changed
-- Change APScheduler version.
-
-### [3.0.3] - 2021-10-19
+## [3.0.3] - 2021-10-19
 ### Fixed
 - Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
 
-### [3.0.2] - 2021-09-28
+## [3.0.2] - 2021-09-28
 ### Fixed
 - Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
-### [3.0.1] - 2021-09-13
+
+## [3.0.1] - 2021-09-13
 ### Added
 - Add group environment variables in config.py.template.
 ### Changed
@@ -83,8 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - User events that are not associated with groups from being viewable. [#678](https://github.com/rokwire/events-manager/issues/678)
-## [2.4.2] - 2021-08-11
 
+## [2.4.2] - 2021-08-11
 ### Fixed
 - Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
@@ -284,7 +275,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2019-10-15
 ### Fixed
 - get collection name from config.py
-
 
 ## [1.0.1] - 2019-10-14
 ### Added
