@@ -137,7 +137,9 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required
+                oninvalid="this.setCustomValidity('Please select a time zone.')"
+                oninput="setCustomValidity('')">
                   {% for key, value in timezones.items() %}
                       <option value = "{{key}}" id = {{key}}>{{value}}</option>
                   {% endfor %}
