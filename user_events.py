@@ -581,7 +581,6 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                # TODO : ask if a subevent is part of only one superevent
                 update_super_event_id(subEvent['id'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
