@@ -1016,8 +1016,6 @@ def update_super_event_id(sub_event_id, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})['_id']
-        # TODO : ask if a subevent is part of only one superevent.
-        # the superevent id is overwritten. shouldnt it be appended, if subevent is part of multiple superevents?
         if super_event_id == "":
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],
                                       condition={'_id': ObjectId(sub_event_id)},

@@ -637,14 +637,10 @@ def userevent_delete(id):
     # find subevents of this event and delete
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
-        # this subevents can be subevents for multiple superevents
-        #subevent_ids_to_delete = []
+        # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # unset each subevent
             update_super_event_id(sub_event['id'], '')
-            # delete each subevent
-            #sub_event_id = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": sub_event_id})['_id']
-            #subevent_ids_to_delete.append(sub_event_id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
@@ -654,11 +650,8 @@ def userevent_delete(id):
                                 projection={"_id": 1, "subEvents": 1})
         platform_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(id)})['platformEventId']
-        # boolean flag if this event is a subevent of a superevent
-        find = False
+
         for super_event in super_events:
-            if find:
-                break
             for sub_event in super_event['subEvents']:
                 if sub_event['id'] == platform_id:
                     # get all subevents, except for the current event
@@ -673,8 +666,7 @@ def userevent_delete(id):
                         success = put_user_event(super_event['_id'])
                         if not success:
                             __logger.error("updating super event in building block failed")
-                    find = True
-                    break
+
     delete_user_event(id)
 
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
