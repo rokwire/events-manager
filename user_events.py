@@ -581,6 +581,7 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
+                # TODO : ask if a subevent is part of only one superevent
                 update_super_event_id(subEvent['id'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
@@ -633,21 +634,27 @@ def get_devicetokens(id):
 def userevent_delete(id):
     userEvent = find_user_event(id)
     __logger.info("delete user event id: %s" % id)
-    # find subevents of this event
+    # find subevents of this event and delete
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
+        # this subevents can be subevents for multiple superevents
+        #subevent_ids_to_delete = []
         for sub_event in sub_events:
             # unset each subevent
             update_super_event_id(sub_event['id'], '')
+            # delete each subevent
+            #sub_event_id = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": sub_event_id})['_id']
+            #subevent_ids_to_delete.append(sub_event_id)
+
     if get_user_event_status(id) == "approved":
-        # check if this event is a subevent for any superevents
-        # get all superevents. check if the event_platformid is same as subevent_id of superevents
+        # if this event is a subevent, need to unset this event from all its superevents
+        # get all superevents which has atleast one subevent. check if the event_platformid is same as subevent_id of superevents
         super_events = find_all(current_app.config['EVENT_COLLECTION'],
                                 filter={"subEvents": {'$type': 'array'}},
                                 projection={"_id": 1, "subEvents": 1})
         platform_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(id)})['platformEventId']
-        # boolean flag if this event if found as a subevent of a superevent
+        # boolean flag if this event is a subevent of a superevent
         find = False
         for super_event in super_events:
             if find:
@@ -668,15 +675,8 @@ def userevent_delete(id):
                             __logger.error("updating super event in building block failed")
                     find = True
                     break
-                """
-                subevent_record = find_one(current_app.config['EVENT_COLLECTION'],
-                                           condition={"platformEventId": sub_event['id']})
-                print(subevent_record)
-                if subevent_record:
-                    delete_user_event(subevent_record.get("_id"))
-                """
-
     delete_user_event(id)
+
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         try:
             remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
