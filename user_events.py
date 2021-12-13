@@ -195,10 +195,11 @@ def user_an_event(id):
     if post['subEvents']:
         for subEvent in post['subEvents']:
             event = find_user_event(clickable_utility(subEvent['id']))
-            if event['eventStatus'] == 'approved':
-                subEvent['isPublished'] = True
-            else:
-                subEvent['isPublished'] = False
+            if event:
+                if event['eventStatus'] == 'approved':
+                    subEvent['isPublished'] = True
+                else:
+                    subEvent['isPublished'] = False
 
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
                            isUser=True, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
