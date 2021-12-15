@@ -1043,7 +1043,7 @@ def remove_super_event_id(sub_event_id, super_event_id):
                                   condition={'_id': ObjectId(sub_event_id)},
                                   update={"$pull": {'superEventID': super_event_id}} )
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            __logger.error("Failed to delete {} as {}'s super event".format(super_event_id, sub_event_id))
             return False
         else:
             return True
@@ -1067,7 +1067,7 @@ def add_super_event_id(sub_event_id, super_event_id):
             return True
     except Exception as ex:
         __logger.exception(ex)
-        __logger.error("Failed to delete {} as {}'s super event".format(super_event_id, sub_event_id))
+        __logger.error("Failed to add {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
 def s3_publish_user_image(id, eventId, client):
