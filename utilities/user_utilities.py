@@ -1013,6 +1013,7 @@ def imagedId_from_eventId(eventId):
 
 
 def update_super_event_id(sub_event_id, super_event_id):
+    # currently not used
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})['_id']
