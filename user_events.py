@@ -392,20 +392,26 @@ def user_an_event_edit(id):
         else:
             post_by_id['subEvents'] = None
 
+        # if there is a change in subevents
         old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['subEvents']
         new_sub_events = post_by_id['subEvents']
         if old_sub_events is not None:
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
-                    update_super_event_id(old_sub_event['id'], '')
+                    # update_super_event_id(old_sub_event['id'], '')
+                    # remove this subevent from this superevent
+                    remove_super_event_id(old_sub_event['id'], id)
 
         if new_sub_events is not None:
             removed_list = list()
             for new_sub_event in new_sub_events:
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
-                        update_super_event_id(new_sub_event['id'], id)
+                        # update_super_event_id(new_sub_event['id'], id)
+                        # add additional superevent
+                        print("supereventid ", id)
+                        add_super_event_id(new_sub_event['id'], id)
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
@@ -582,7 +588,9 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                update_super_event_id(subEvent['id'], new_event_id)
+                # update_super_event_id(subEvent['id'], new_event_id)
+                print("superEvent id ", new_event_id)
+                add_super_event_id(subEvent['id'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
             for i in range(1, len(new_event['tags'])):
@@ -640,7 +648,8 @@ def userevent_delete(id):
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # unset each subevent
-            update_super_event_id(sub_event['id'], '')
+            # update_super_event_id(sub_event['id'], '')
+            remove_super_event_id(subEvent['id'], id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
