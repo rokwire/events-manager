@@ -643,7 +643,7 @@ def userevent_delete(id):
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # remove each subevent
-            remove_super_event_id(subEvent['id'], id)
+            remove_super_event_id(sub_event['id'], id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
