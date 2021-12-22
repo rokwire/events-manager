@@ -1017,38 +1017,22 @@ def update_super_event_id(sub_event_id, super_event_id, action):
         sub_event = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})
         sub_event_id = sub_event['_id']
-        sub_event_superEventID = sub_event['superEventID']
-        print("update_super_event_id")
-        print("sub_event ", sub_event)
-        print("sub_event_id ", sub_event_id)
-        print("sub_event_supereventid ", sub_event_superEventID)
-        if isinstance(sub_event_superEventID, list):
-            # Use pull and addToSet commands
-            if action == 'del':
-                print("pull")
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                          condition={'_id': ObjectId(sub_event_id)},
-                                          update={"$pull": {'superEventID': super_event_id}})
-
-            elif action == 'add':
-                print("addtoset")
-                # action is to add
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                          condition={'_id': ObjectId(sub_event_id)},
-                                          update={"$addToSet": {'superEventID': super_event_id}})
-
+        if action == 'add':
+            # action is to add
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$addToSet": {'superEventID': ObjectId(super_event_id)}})
         elif action == 'del':
-            print("unset")
-            # superEventID is a str. Use set and unset commands. enabling backwards compatibility.
-            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                      condition={'_id': ObjectId(sub_event_id)},
-                                      update={"$unset": {'superEventID': 1}}, upsert=True)
-        elif action == 'add':
-            print("set")
-            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                      condition={'_id': ObjectId(sub_event_id)},
-                                      update={"$set": {'superEventID': super_event_id}}, upsert=True)
-
+            # Enable backwards compatibility. check if superEventID is string or list. Perform pull if list, unset if string field
+            sub_event_superEventID = sub_event['superEventID']
+            if isinstance(sub_event_superEventID, list):
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                        condition={'_id': ObjectId(sub_event_id)},
+                                        update={"$pull": {'superEventID': ObjectId(super_event_id)}})
+            else:
+                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                          condition={'_id': ObjectId(sub_event_id)},
+                                          update={"$unset": {'superEventID': 1}}, upsert=True)
 
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
@@ -1059,50 +1043,6 @@ def update_super_event_id(sub_event_id, super_event_id, action):
     except Exception as ex:
         __logger.exception(ex)
         __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
-        return False
-
-def remove_super_event_id(sub_event_id, super_event_id):
-    # remove superevent from the superEventID list of the subevent
-    try:
-        sub_event = find_one(current_app.config['EVENT_COLLECTION'],
-                                condition={"platformEventId": sub_event_id})
-        sub_event_id = sub_event['_id']
-        print("sub_event ", sub_event)
-        print("sub_event_id ", sub_event_id)
-        print("sub_event_supereventid ", sub_event['superEventID'])
-        updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                  condition={'_id': ObjectId(sub_event_id)},
-                                  update={"$pull": {'superEventID': super_event_id}} )
-        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            __logger.error("Failed to delete {} as {}'s super event".format(super_event_id, sub_event_id))
-            return False
-        else:
-            return True
-    except Exception as ex:
-        __logger.exception(ex)
-        __logger.error("Failed to delete {} as {}'s super event".format(super_event_id, sub_event_id))
-        return False
-
-def add_super_event_id(sub_event_id, super_event_id):
-    # add superevent to the superEventID list of the subevent
-    try:
-        sub_event = find_one(current_app.config['EVENT_COLLECTION'],
-                             condition={"platformEventId": sub_event_id})
-        sub_event_id = sub_event['_id']
-        print("subevent ", sub_event)
-        print("subeventid ", sub_event_id)
-        print("subeventsupereventid ", sub_event['superEventID'])
-        updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                  condition={'_id': ObjectId(sub_event_id)},
-                                  update={"$addToSet": {'superEventID': super_event_id}} )
-        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            __logger.error("Failed to add {} as {}'s super event".format(super_event_id, sub_event_id))
-            return False
-        else:
-            return True
-    except Exception as ex:
-        __logger.exception(ex)
-        __logger.error("Failed to add {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
 def s3_publish_user_image(id, eventId, client):

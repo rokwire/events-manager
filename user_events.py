@@ -400,7 +400,6 @@ def user_an_event_edit(id):
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
                     # remove this subevent from this superevent
-                    # remove_super_event_id(old_sub_event['id'], id)
                     update_super_event_id(old_sub_event['id'], id, 'del')
 
         if new_sub_events is not None:
@@ -409,7 +408,6 @@ def user_an_event_edit(id):
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
                         # add additional superevent
-                        # add_super_event_id(new_sub_event['id'], ObjectId(id))
                         update_super_event_id(new_sub_event['id'], ObjectId(id), 'add')
                 except Exception as ex:
                     removed_list.append(new_sub_event)
@@ -587,7 +585,6 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                # add_super_event_id(subEvent['id'], new_event_id)
                 update_super_event_id(subEvent['id'], new_event_id, 'add')
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
@@ -646,8 +643,6 @@ def userevent_delete(id):
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # remove each subevent
-            # remove_super_event_id(sub_event['id'], id)
-            print("userevent_delete subevent ", sub_event)
             update_super_event_id(sub_event['id'], id, 'del')
 
     if get_user_event_status(id) == "approved":
