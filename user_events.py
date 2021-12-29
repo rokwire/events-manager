@@ -91,7 +91,7 @@ def user_events():
         if 'per_page' in session:
             per_page = session['per_page']
         else:
-            per_page = Config.PER_PAGE
+            per_page = Config.EVENTS_PER_PAGE[0]
             session['per_page'] = per_page
         offset = (page - 1) * per_page
         if 'from' in session:

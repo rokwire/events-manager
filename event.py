@@ -90,7 +90,7 @@ def calendar(calendarId):
     if 'per_page' in session:
         per_page = session['per_page']
     else:
-        per_page = current_app.config['PER_PAGE']
+        per_page = current_app.config['EVENTS_PER_PAGE'][0]
         session['per_page'] = per_page
     offset = (page - 1) * per_page
     if 'from' in session:
@@ -258,7 +258,7 @@ def searchresult():
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
         page = 1
-    per_page = current_app.config['PER_PAGE']
+    per_page = current_app.config['EVENTS_PER_PAGE'][0]
     offset = (page - 1) * per_page
 
     total = get_search_events_count(condition, select_status)

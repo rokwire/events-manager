@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
+- remove PER_PAGE and use EVENTS_PER_PAGE only [#719](https://github.com/rokwire/events-manager/issues/719)
 
 ## [3.0.3] - 2021-10-19
 ### Fixed
