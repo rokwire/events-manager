@@ -173,12 +173,9 @@ def publish_image(id, platformId):
 
         submit_type = 'post'
         image = None
-        imagePath = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        imagePath = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
         if path.exists(imagePath):
-            with Image.open(imagePath) as im:
-                im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
-                                       quality=95)
-            image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+            image = open(imagePath, 'rb')
         else:
             return None
         url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
