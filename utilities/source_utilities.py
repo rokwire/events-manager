@@ -172,41 +172,40 @@ def publish_image(id, platformId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
 
         submit_type = 'post'
-        image = None
         imagePath = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
         if path.exists(imagePath):
-            image = open(imagePath, 'rb')
+            with open(imagePath, 'rb') as image:
+                url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
+
+                # if there is record shows image has been submit before then change post to put
+                if record:
+                    if record.get('submitBefore'):
+                        submit_type = 'put'
+                file = {'file': image}
+                if submit_type == 'post':
+                    response = requests.post(url, files=file, headers=headers)
+                elif submit_type == 'put':
+                    response = requests.put(url, files=file, headers=headers)
+                image.close()
+
+
+                if response.status_code in (200, 201):
+                    imageId = response.json()['id']
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': id},
+                                              update={"$set": { 'submitBefore': True,
+                                                                'eventId': id}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Update {} fails in update_user_event".format(id))
+                else:
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': id},
+                                              update={"$set": { 'submitBefore': False,
+                                                                'eventId': id}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        print("Update {} fails in update_user_event".format(id))
         else:
             return None
-        url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
-
-        # if there is record shows image has been submit before then change post to put
-        if record:
-            if record.get('submitBefore'):
-                submit_type = 'put'
-        file = {'file': image}
-        if submit_type == 'post':
-            response = requests.post(url, files=file, headers=headers)
-        elif submit_type == 'put':
-            response = requests.put(url, files=file, headers=headers)
-        image.close()
-
-
-        if response.status_code in (200, 201):
-            imageId = response.json()['id']
-            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                      condition={'eventId': id},
-                                      update={"$set": { 'submitBefore': True,
-                                                        'eventId': id}}, upsert=True)
-            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("Update {} fails in update_user_event".format(id))
-        else:
-            updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                            condition={'eventId': id},
-                            update={"$set": { 'submitBefore': False,
-                                              'eventId': id}}, upsert=True)
-            if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-                print("Update {} fails in update_user_event".format(id))
     except Exception:
         traceback.print_exc()
 
