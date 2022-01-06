@@ -1012,11 +1012,8 @@ def imagedId_from_eventId(eventId):
         return False
 
 
-def update_super_event_id(sub_event_id, super_event_id, action):
+def update_super_event_id(sub_event, sub_event_id, super_event_id, action):
     try:
-        sub_event = find_one(current_app.config['EVENT_COLLECTION'],
-                                condition={"platformEventId": sub_event_id})
-        sub_event_id = sub_event['_id']
         if action == 'add':
             # action is to add
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],

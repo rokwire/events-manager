@@ -400,7 +400,7 @@ def user_an_event_edit(id):
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
                     # remove this subevent from this superevent
-                    update_super_event_id(old_sub_event['id'], id, 'del')
+                    update_super_event_id(old_sub_event, old_sub_event['id'], id, 'del')
 
         if new_sub_events is not None:
             removed_list = list()
@@ -408,7 +408,7 @@ def user_an_event_edit(id):
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
                         # add additional superevent
-                        update_super_event_id(new_sub_event['id'], ObjectId(id), 'add')
+                        update_super_event_id(new_sub_event, new_sub_event['id'], ObjectId(id), 'add')
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
@@ -585,7 +585,7 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                update_super_event_id(subEvent['id'], new_event_id, 'add')
+                update_super_event_id(subEvent, subEvent['id'], new_event_id, 'add')
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
             for i in range(1, len(new_event['tags'])):
@@ -636,14 +636,19 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     userEvent = find_user_event(id)
-    __logger.info("delete user event id: %s" % id)
     # find subevents of this event and delete
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # remove each subevent
-            update_super_event_id(sub_event['id'], id, 'del')
+            sub_event = find_one(current_app.config['EVENT_COLLECTION'],
+                                 condition={"platformEventId": sub_event['id']})
+            sub_event_id = sub_event['_id']
+            update_super_event_id(sub_event, sub_event_id, id, 'del')
+            # delete subevent
+            __logger.info("delete user event id: %s" % sub_event_id)
+            delete_user_event(sub_event_id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
@@ -670,6 +675,7 @@ def userevent_delete(id):
                         if not success:
                             __logger.error("updating super event in building block failed")
 
+    __logger.info("delete user event id: %s" % id)
     delete_user_event(id)
 
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
