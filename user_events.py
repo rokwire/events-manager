@@ -653,7 +653,7 @@ def userevent_delete(id):
                                 projection={"_id": 1, "subEvents": 1})
         platform_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(id)})['platformEventId']
-
+        # TODO: change this logic to access superEventID field of the subevent to delete the event.
         for super_event in super_events:
             for sub_event in super_event['subEvents']:
                 if sub_event['id'] == platform_id:
