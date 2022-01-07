@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### [3.0.4] - 2022-01-05
+### Fixed
+- Issue with images in WebTool events not getting uploaded to Events BB. [#798](https://github.com/rokwire/events-manager/issues/798)
+
 ### [3.0.3] - 2021-10-19
 ### Fixed
 - Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
