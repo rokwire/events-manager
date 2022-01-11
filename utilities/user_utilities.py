@@ -378,14 +378,16 @@ def publish_user_event(eventId):
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
                 updates = {"eventStatus": "approved", "platformEventId": platform_event_id}
-                if imageId:
-                    print("User image upload successful for event {}".format(eventId))
-                    event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
-                    updates["imageURL"] = event['imageURL']
-                    put_user_event(eventId)
-
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                # write platform id to db
+                update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                                           update={"$set": updates})
+                if imageId:
+                    event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
+                    put_user_event(eventId)
+                    # write image url to db
+                    updates = {"imageURL", event['imageURL']}
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                              update={"$set": updates})
                 return True
 
     except Exception:
