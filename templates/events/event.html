@@ -49,7 +49,7 @@
         </button>
       </div>
       <div class="modal-body">
-        You are about to delete the following event <b>{{post.title}}</b> and its sub-events, if any
+        You are about to delete the following event <b>{{post.title}}</b> {% if post.isSuperEvent %} and its sub-events {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
