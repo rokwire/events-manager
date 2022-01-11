@@ -820,8 +820,11 @@ def group_subevents_search(search_string, admin_group_ids):
         list_queries = list(queries_returned)
         for query in list_queries:
             query['label'] = query.pop('title')
-            # allow to add pending subevents
-            # query['value'] = query.pop('platformEventId')
+            if 'platformEventId' in query:
+                query['value'] = query.pop('platformEventId')
+            if '_id' in query:
+                query['eventid'] = str(query.pop('_id'))
+            query['status'] = query.pop('eventStatus')
     except:
         traceback.print_exc()
     return list_queries
