@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow to add pending subevent. [#756](https://github.com/rokwire/events-manager/issues/756)
 - Security markdown file. [#794](https://github.com/rokwire/events-manager/issues/794)
 - Deleting super events deletes its sub events as well. [#789](https://github.com/rokwire/events-manager/issues/789)
+- Updated popup message on delete confirmation of super event. [#790](https://github.com/rokwire/events-manager/issues/790)
 
 ### Fixed
 - Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
