@@ -315,6 +315,7 @@ def approve_user_event(objectId):
 
 
 def publish_user_event(eventId):
+    put_status = True
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + session["id_token"]
@@ -384,13 +385,14 @@ def publish_user_event(eventId):
                 if imageId:
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
                     updates = {"imageURL": event['imageURL']}
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={"$set": updates})
                     put_status = put_user_event(eventId)
-                    # write image url to db
-                    if put_status:
-                        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                                  update={"$set": updates})
+                    if not put_status:
+                        #TODO: think to notify user failure of upload image url to events building block
+                        print("Event image {} upload fails".format(eventId))
                 return True
-
     except Exception:
         traceback.print_exc()
         return False
