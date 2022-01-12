@@ -383,11 +383,12 @@ def publish_user_event(eventId):
                                           update={"$set": updates})
                 if imageId:
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
-                    put_user_event(eventId)
+                    updates = {"imageURL": event['imageURL']}
+                    put_status = put_user_event(eventId)
                     # write image url to db
-                    updates = {"imageURL", event['imageURL']}
-                    updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                              update={"$set": updates})
+                    if put_status:
+                        updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                                  update={"$set": updates})
                 return True
 
     except Exception:
