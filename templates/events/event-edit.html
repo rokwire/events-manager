@@ -811,6 +811,17 @@
                                         {% if sub.name %}
                                         <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" value="{{sub.name}}" />
                                         <input type="hidden" name="id" value="{{sub.id}}"/>
+                                        {% if sub.eventid %}
+                                        <input type="hidden" name="eventid" value="{{sub.eventid}}"/>
+                                        {% else %}
+                                        <input type="hidden" name="eventid" value=""/>
+                                        {% endif %}
+
+                                {% if sub.status %}
+                                <input type="hidden" name="status" value="{{sub.status}}"/>
+                                {% else %}
+                                <input type="hidden" name="status" value=""/>
+                                {% endif %}
                                         {% else %}
                                         <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
                                         {% endif %}
@@ -1090,6 +1101,7 @@
           selectedItemData = ui.item.data;
           id_input = $(event.target).next('input')
           id_input.val(selectedItemData.value)
+            
         }
       }
     );

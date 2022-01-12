@@ -193,6 +193,11 @@ def user_an_event(id):
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
     if post['subEvents']:
+        # fill in missing fields: eventid, status
+        # for subEvent in post['subEvents']:
+        #     if 'eventid' not in subEvent:
+        #         fill_missing_subevent_fileds_in_superevent(subEvent['id'], id)
+
         for subEvent in post['subEvents']:
             event = find_user_event(clickable_utility(subEvent['id']))
             if event['eventStatus'] == 'approved':

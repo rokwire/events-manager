@@ -733,7 +733,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured' or item == 'status' or item == 'eventid':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -1120,3 +1120,18 @@ def get_admin_group_ids():
     else:
         __logger.error("Groups not retrievable")
         return []
+
+# def fill_missing_subevent_fileds_in_superevent(subevent_platformid, super_eventid):
+#     try:
+#         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"platformEventId": subevent_platformid})
+#         if record:
+#             eventid = record['eventId']
+#             event_status = record['eventStatus']
+#
+#         else:
+#             __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+#
+#     except Exception as ex:
+#         __logger.exception(ex)
+#         __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+#         return False
