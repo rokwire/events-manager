@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
+- Allow to link pending sub events to super event. [#756](https://github.com/rokwire/events-manager/issues/756)
 
 ## [3.0.3] - 2021-10-19
 ### Fixed
