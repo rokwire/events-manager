@@ -199,10 +199,14 @@ def user_an_event(id):
         #         fill_missing_subevent_fileds_in_superevent(subEvent['id'], id)
 
         for subEvent in post['subEvents']:
-            event = find_user_event(clickable_utility(subEvent['id']))
-            if event['eventStatus'] == 'approved':
-                subEvent['isPublished'] = True
+            if 'id' in subEvent:
+                event = find_user_event(clickable_utility(subEvent['id']))
+                if event['eventStatus'] == 'approved':
+                    subEvent['isPublished'] = True
+                else:
+                    subEvent['isPublished'] = False
             else:
+                event = find_user_event(subEvent['eventid'])
                 subEvent['isPublished'] = False
 
     return render_template("events/event.html", post=post, eventTypeMap=eventTypeMap,
@@ -402,7 +406,11 @@ def user_an_event_edit(id):
         if old_sub_events is not None:
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
-                    update_super_event_id(old_sub_event['id'], '')
+                    # unlink between subevent and super event.
+                    if 'id' in old_sub_event:
+                        update_super_event_id(old_sub_event['id'], '')
+                    else:
+                        update_super_event_id_2(old_sub_event['eventid'], '')
 
         if new_sub_events is not None:
             removed_list = list()
@@ -413,9 +421,11 @@ def user_an_event_edit(id):
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
-            for deleted_sub_event in removed_list:
-                new_sub_events.remove(deleted_sub_event)
-
+            # comment out to allow add pending events to super event.
+            # for deleted_sub_event in removed_list:
+            #     new_sub_events.remove(deleted_sub_event)
+            #TODO: for loop removed_list (all pending subevents)
+            store_pending_subevents_to_superevent(removed_list, id)
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
         new_title = post_by_id['title']
@@ -586,7 +596,10 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                update_super_event_id(subEvent['id'], new_event_id)
+                if 'id' in subEvent:
+                    update_super_event_id(subEvent['id'], new_event_id)
+                else:
+                    update_super_event_id_2(subEvent['eventid'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
             for i in range(1, len(new_event['tags'])):
@@ -740,7 +753,7 @@ def view_image(id):
 
 @userbp.route('/event/publish/<platformEventId>',  methods=['GET'])
 @role_required("user")
-def sub_event(platformEventId):
+def sub_event_platform(platformEventId):
     try:
         eventId = clickable_utility(platformEventId)
         return redirect(url_for('user_events.user_an_event', id=eventId))
@@ -748,4 +761,15 @@ def sub_event(platformEventId):
     except Exception as ex:
         __logger.exception(ex)
         __logger.error("Redirect for platformEventId {} failed".format(platformEventId))
+        abort(500)
+
+@userbp.route('/event/platform/<eventId>',  methods=['GET'])
+@role_required("user")
+def sub_event(eventId):
+    try:
+        return redirect(url_for('user_events.user_an_event', id=eventId))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Redirect for eventid {} failed".format(eventId))
         abort(500)
