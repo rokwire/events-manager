@@ -1168,3 +1168,40 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
         __logger.exception(ex)
         __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
         return False
+
+
+def publish_pending_subevents(superEventID):
+    subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
+    for subEvent in subEvents:
+        if subEvent['status'] == 'pending' and 'eventid' in subEvent:
+            try:
+                image = False
+                if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventid'] + '*'))) > 0:
+                    image = True
+                success = publish_user_event(subEvent['eventid'])
+                if success and image:
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': subEvent['eventid']},
+                                              update={"$set": {'status': 'new',
+                                                               'eventId': subEvent['eventid']}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        __logger.error(
+                            "Failed to mark image record as new of event: {} upon event publishing".format(
+                                subEvent['eventid']))
+                    approve_user_event(subEvent['eventid'])
+                if success:
+                    subEvent['id'] = find_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(subEvent['eventid'])})['platformEventId']
+                    subEvent['status'] = 'approved'
+            except Exception as ex:
+                __logger.exception(ex)
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                              condition={"_id": ObjectId(superEventID)},
+                              update={
+                                  "$set": {"subEvents": subEvents}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        __logger.error(
+            "Failed to update sub events list for {}".format(
+                superEventID))
+    return subEvents
