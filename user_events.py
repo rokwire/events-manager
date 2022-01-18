@@ -426,7 +426,6 @@ def user_an_event_edit(id):
             #     new_sub_events.remove(deleted_sub_event)
             #TODO: for loop removed_list (all pending subevents)
             store_pending_subevents_to_superevent(removed_list, id)
-            post_by_id['subEvents'] = publish_pending_subevents(id)
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
         new_title = post_by_id['title']
@@ -521,10 +520,6 @@ def user_an_event_edit(id):
 @userbp.route('/event/<id>/approve', methods=['POST'])
 @role_required("user")
 def user_an_event_approve(id):
-    record = find_one(current_app.config['EVENT_COLLECTION'],
-                                  condition={"_id": ObjectId(id)})
-    if record['isSuperEvent']:
-        publish_pending_subevents(id)
     success = False
     try:
         # So far, we do not have any information about user event image.
