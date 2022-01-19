@@ -1153,9 +1153,10 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
         if record:
             published_subevent_list = list()
             subEvnts = record['subEvents']
-            for subevent in subEvnts:
-                if 'id' in subevent: # published
-                    published_subevent_list.append(subevent)
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent: # published
+                        published_subevent_list.append(subevent)
             subevents_list = published_subevent_list + pending_subevents_list
             result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
                                          update={
