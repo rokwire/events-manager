@@ -411,21 +411,24 @@ def user_an_event_edit(id):
                         update_super_event_id(old_sub_event['id'], '')
                     else:
                         update_super_event_id_2(old_sub_event['eventid'], '')
-
+        new_added_subevents= list()
         if new_sub_events is not None:
             removed_list = list()
             for new_sub_event in new_sub_events:
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
-                        update_super_event_id(new_sub_event['id'], id)
+                        if 'id' in new_sub_event:
+                            update_super_event_id(new_sub_event['id'], id)
+                        else:
+                            update_super_event_id_2(new_sub_event['eventid'], id)
+                        new_added_subevents.append(new_sub_event)
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
             # comment out to allow add pending events to super event.
             # for deleted_sub_event in removed_list:
             #     new_sub_events.remove(deleted_sub_event)
-            #TODO: for loop removed_list (all pending subevents)
-            store_pending_subevents_to_superevent(removed_list, id)
+            store_pending_subevents_to_superevent(new_added_subevents, id)
             post_by_id['subEvents'] = publish_pending_subevents(id)
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']

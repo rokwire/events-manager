@@ -1174,7 +1174,7 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
 def publish_pending_subevents(superEventID):
     subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
     for subEvent in subEvents:
-        if subEvent['status'] == 'pending' and 'eventid' in subEvent:
+        if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
             try:
                 image = False
                 if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventid'] + '*'))) > 0:
