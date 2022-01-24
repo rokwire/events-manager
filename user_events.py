@@ -415,13 +415,24 @@ def user_an_event_edit(id):
         if new_sub_events is not None:
             removed_list = list()
             for new_sub_event in new_sub_events:
+                can_add_pending = False
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
+                        new_added_subevent = None
                         if 'id' in new_sub_event:
-                            update_super_event_id(new_sub_event['id'], id)
+                            new_added_subevent = find_one(current_app.config['EVENT_COLLECTION'],
+                                                          condition={"platformEventId": new_sub_event['id']})
+                            if "superEventID" not in new_added_subevent:
+                                can_add_pending = True
+                                update_super_event_id(new_sub_event['id'], id)
                         else:
-                            update_super_event_id_2(new_sub_event['eventid'], id)
-                        new_added_subevents.append(new_sub_event)
+                            new_added_subevent = find_user_event(new_sub_event['eventid'])
+                            if "superEventID" not in new_added_subevent:
+                                can_add_pending = True
+                                update_super_event_id_2(new_sub_event['eventid'], id)
+
+                        if can_add_pending:
+                            new_added_subevents.append(new_sub_event)
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
