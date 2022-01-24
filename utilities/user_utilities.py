@@ -757,6 +757,8 @@ def get_subevent_list(post_form):
                 a_subevent['eventid'] = sub_eventid
             if sub_status != "":
                 a_subevent['status'] = sub_status
+            if sub_track != "":
+                a_subevent['track'] = sub_track
             if sub_feature != "":
                 if sub_feature == 'Featured':
                     a_subevent['isFeatured'] = True
