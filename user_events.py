@@ -429,7 +429,8 @@ def user_an_event_edit(id):
             # for deleted_sub_event in removed_list:
             #     new_sub_events.remove(deleted_sub_event)
             store_pending_subevents_to_superevent(new_added_subevents, id)
-            post_by_id['subEvents'] = publish_pending_subevents(id)
+            if 'eventStatus' in post_by_id and post_by_id['eventStatus'] == 'approved':
+                post_by_id['subEvents'] = publish_pending_subevents(id)
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
         new_title = post_by_id['title']
