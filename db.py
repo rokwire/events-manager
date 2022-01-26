@@ -349,7 +349,7 @@ def group_text_index_search(co_or_ta, search_string, admin_group_ids):
             # Will return all records with matching regex and is case insensitive for title search
             # There is also a projection limiting the fields returned to only title and platformEventID
             result = collection.find({"$text": {"$search": search_string}, "sourceId": {"$exists": False}, "createdByGroupId":{"$in": admin_group_ids}},
-                                     {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 0,})
+                                     {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 1, "eventStatus": 1})
             if not result:
                 return []
             return result

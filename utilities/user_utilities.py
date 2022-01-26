@@ -733,7 +733,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured' or item == 'status' or item == 'eventid':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -745,12 +745,18 @@ def get_subevent_list(post_form):
             a_subevent = {}
             sub_name = subevent_arrays[0][i]
             sub_id = subevent_arrays[1][i]
-            sub_track = subevent_arrays[2][i]
-            sub_feature = subevent_arrays[3][i]
+            sub_eventid = subevent_arrays[2][i]
+            sub_status = subevent_arrays[3][i]
+            sub_track = subevent_arrays[4][i]
+            sub_feature = subevent_arrays[5][i]
             if sub_name != "":
                 a_subevent['name'] = sub_name
             if sub_id != "":
                 a_subevent['id'] = sub_id
+            if sub_eventid != "":
+                a_subevent['eventid'] = sub_eventid
+            if sub_status != "":
+                a_subevent['status'] = sub_status
             if sub_track != "":
                 a_subevent['track'] = sub_track
             if sub_feature != "":
@@ -820,7 +826,11 @@ def group_subevents_search(search_string, admin_group_ids):
         list_queries = list(queries_returned)
         for query in list_queries:
             query['label'] = query.pop('title')
-            query['value'] = query.pop('platformEventId')
+            if 'platformEventId' in query:
+                query['value'] = query.pop('platformEventId')
+            if '_id' in query:
+                query['eventid'] = str(query.pop('_id'))
+            query['status'] = query.pop('eventStatus')
     except:
         traceback.print_exc()
     return list_queries
@@ -1034,6 +1044,28 @@ def update_super_event_id(sub_event_id, super_event_id):
         __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
+def update_super_event_id_2(sub_eventid, super_event_id):
+    try:
+        sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                condition={"_id": ObjectId(sub_eventid)})['_id']
+        if super_event_id == "":
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$unset": {'superEventID': 1}}, upsert=True)
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$set": {'superEventID': super_event_id}}, upsert=True)
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            return False
+        else:
+            return True
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+        return False
+
 def s3_publish_user_image(id, eventId, client):
     image_location = ''
     try:
@@ -1116,3 +1148,108 @@ def get_admin_group_ids():
     else:
         __logger.error("Groups not retrievable")
         return []
+
+def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            published_subevent_list = list()
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent: # published
+                        published_subevent_list.append(subevent)
+            subevents_list = published_subevent_list + pending_subevents_list
+            result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                         update={
+                                             "$set": {"subEvents": subevents_list}
+                                         })
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def remove_subevent_from_superevent_by_eventid(subevent_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'eventid' in subevent and subevent['eventid'] == subevent_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def remove_subevent_from_superevent_by_paltformid(subevent_platform_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent and subevent['id'] == subevent_platform_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def publish_pending_subevents(superEventID):
+    subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
+    for subEvent in subEvents:
+        if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
+            try:
+                image = False
+                if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventid'] + '*'))) > 0:
+                    image = True
+                success = publish_user_event(subEvent['eventid'])
+                if success and image:
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': subEvent['eventid']},
+                                              update={"$set": {'status': 'new',
+                                                               'eventId': subEvent['eventid']}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        __logger.error(
+                            "Failed to mark image record as new of event: {} upon event publishing".format(
+                                subEvent['eventid']))
+                    approve_user_event(subEvent['eventid'])
+                if success:
+                    subEvent['id'] = find_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(subEvent['eventid'])})['platformEventId']
+                    subEvent['status'] = 'approved'
+            except Exception as ex:
+                __logger.exception(ex)
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                              condition={"_id": ObjectId(superEventID)},
+                              update={
+                                  "$set": {"subEvents": subEvents}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        __logger.error(
+            "Failed to update sub events list for {}".format(
+                superEventID))
+    return subEvents

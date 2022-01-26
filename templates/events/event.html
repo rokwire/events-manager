@@ -532,7 +532,12 @@
                   {% for subevent in post.subEvents %}
                   <tr>
                     <td>
-                      <a href ="{{ url_for('user_events.sub_event', platformEventId=subevent.id) }}">{{subevent.name}}</a>
+                     {% if subevent.id%}
+                      <a href ="{{ url_for('user_events.sub_event_platform', platformEventId=subevent.id) }}">{{subevent.name}}</a>
+                    {% else %}
+                      <a href ="{{ url_for('user_events.sub_event', eventId=subevent.eventid) }}">{{subevent.name}}</a>
+                    {% endif %}
+
                     </td>
                     <td>{{subevent.track}}</td>
                     {% if subevent.isFeatured%}
