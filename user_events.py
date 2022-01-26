@@ -444,6 +444,24 @@ def user_an_event_edit(id):
                 post_by_id['subEvents'] = publish_pending_subevents(id)
         old_title = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['title']
+
+        if old_sub_events:
+            for old_sub_event in old_sub_events:
+                if new_sub_events is not None and old_sub_event not in new_sub_events:
+                    # delete from db
+                    if 'id' in old_sub_event:
+                        remove_subevent_from_superevent_by_paltformid(old_sub_event['id'], id)
+                        for subevent in post_by_id['subEvents']:
+                            if 'id' in subevent and subevent['id'] == old_sub_event['id']:
+                                post_by_id['subEvents'].remove(subevent)
+                                break
+                    else:
+                        remove_subevent_from_superevent_by_eventid(old_sub_event['eventid'], id)
+                        for subevent in post_by_id['subEvents']:
+                            if 'eventid' in subevent and subevent['eventid'] == old_sub_event['eventid']:
+                                post_by_id['subEvents'].remove(subevent)
+                                break
+
         new_title = post_by_id['title']
         # Special case for changing title of sub-events in super-event's page.
         if old_title != new_title:

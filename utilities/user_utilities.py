@@ -1172,6 +1172,51 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
         __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
         return False
 
+def remove_subevent_from_superevent_by_eventid(subevent_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'eventid' in subevent and subevent['eventid'] == subevent_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def remove_subevent_from_superevent_by_paltformid(subevent_platform_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent and subevent['id'] == subevent_platform_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
 
 def publish_pending_subevents(superEventID):
     subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
