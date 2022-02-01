@@ -469,7 +469,10 @@ def user_an_event_edit(id):
                 sub_event_list = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(find_one(
                     current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['superEventID'])})['subEvents']
                 for sub_event in sub_event_list:
-                    if sub_event['id'] == find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['platformEventId']:
+                    # if sub event is not published when added to super event, the 'status' field is missing,
+                    # so we assume a sub event is published if 'status' is missing
+                    if (sub_event.get('status', 'approved') == 'pending' and sub_event['eventid'] == id) \
+                            or (sub_event.get('status', 'approved') == 'approved' and sub_event['id'] == find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['platformEventId']):
                         sub_event['name'] = new_title
                         updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(post_by_id['superEventID'])},
                                                   update={
