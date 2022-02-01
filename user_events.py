@@ -423,6 +423,7 @@ def user_an_event_edit(id):
                         old_sub_events.remove(old_sub_event)
                         print("remove illegal subevent")
         new_added_subevents= list()
+        overwrite_subevents = list()
         if new_sub_events is not None:
             removed_list = list()
             for new_sub_event in new_sub_events:
@@ -431,12 +432,28 @@ def user_an_event_edit(id):
                     if old_sub_events is None or new_sub_event not in old_sub_events:
                         new_added_subevent = None
                         if 'id' in new_sub_event:
+                            found = False
+                            for old_sub_event in old_sub_events:
+                                if 'id' in new_sub_event and 'id' in old_sub_event and old_sub_event["id"] == new_sub_event['id']:
+                                    found = True
+                                    overwrite_subevents.append(new_sub_event)
+                                    break
+                            if found:
+                                continue
                             new_added_subevent = find_one(current_app.config['EVENT_COLLECTION'],
                                                           condition={"platformEventId": new_sub_event['id']})
                             if "superEventID" not in new_added_subevent:
                                 can_add_pending = True
                                 update_super_event_id(new_sub_event['id'], id)
                         elif 'eventid' in new_sub_event:
+                            found = False
+                            for old_sub_event in old_sub_events:
+                                if 'eventid' in new_sub_event and 'eventid' in old_sub_event and old_sub_event["eventid"] == new_sub_event['eventid']:
+                                    found = True
+                                    overwrite_subevents.append(new_sub_event)
+                                    break
+                            if found:
+                                continue
                             new_added_subevent = find_user_event(new_sub_event['eventid'])
                             if "superEventID" not in new_added_subevent:
                                 can_add_pending = True
@@ -451,6 +468,7 @@ def user_an_event_edit(id):
             # comment out to allow add pending events to super event.
             # for deleted_sub_event in removed_list:
             #     new_sub_events.remove(deleted_sub_event)
+            overwrite_subevents_to_superevent(overwrite_subevents, id)
             store_pending_subevents_to_superevent(new_added_subevents, id)
             if 'eventStatus' in post_by_id and post_by_id['eventStatus'] == 'approved':
                 post_by_id['subEvents'] = publish_pending_subevents(id)
@@ -464,14 +482,14 @@ def user_an_event_edit(id):
                     if 'id' in old_sub_event:
                         found = False
                         for new_sub_event in new_sub_events:
-                            if 'id' in new_sub_event and old_sub_event["id"] == new_sub_event['id']:
+                            if 'id' in new_sub_event and 'id' in old_sub_event and old_sub_event["id"] == new_sub_event['id']:
                                 found = True
                                 break
                         if found:
                             continue
                         remove_subevent_from_superevent_by_paltformid(old_sub_event['id'], id)
                         for subevent in post_by_id['subEvents']:
-                            if 'id' in subevent and subevent['id'] == old_sub_event['id']:
+                            if 'id' in subevent and 'id' in old_sub_event and subevent['id'] == old_sub_event['id']:
                                 post_by_id['subEvents'].remove(subevent)
                                 break
                     else:

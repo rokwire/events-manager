@@ -1149,6 +1149,31 @@ def get_admin_group_ids():
         __logger.error("Groups not retrievable")
         return []
 
+def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for overwrite_subevent in overwrite_subevent_list:
+                    for i in range(len(subEvnts)):
+                        subevent = subEvnts[i]
+                        if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
+                            subEvnts[i] = overwrite_subevent
+                        elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
+                            subEvnts[i] = overwrite_subevent
+            result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                         update={
+                                             "$set": {"subEvents": subEvnts}
+                                         })
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
 def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
