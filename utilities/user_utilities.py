@@ -1012,24 +1012,36 @@ def imagedId_from_eventId(eventId):
         return False
 
 
-def update_super_event_id(sub_event, sub_event_id, super_event_id, action):
+def add_super_event_id(sub_event_id, super_event_id):
     try:
-        if action == 'add':
-            # action is to add
-            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+        updateResult = update_one(current_app.config['EVENT_COLLECTION'],
                                       condition={'_id': ObjectId(sub_event_id)},
                                       update={"$addToSet": {'superEventID': ObjectId(super_event_id)}})
-        elif action == 'del':
-            # Enable backwards compatibility. check if superEventID is string or list. Perform pull if list, unset if string field
-            sub_event_superEventID = sub_event['superEventID']
-            if isinstance(sub_event_superEventID, list):
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                        condition={'_id': ObjectId(sub_event_id)},
-                                        update={"$pull": {'superEventID': ObjectId(super_event_id)}})
-            else:
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'],
-                                          condition={'_id': ObjectId(sub_event_id)},
-                                          update={"$unset": {'superEventID': 1}}, upsert=True)
+
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            return False
+        else:
+            return True
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+        return False
+
+
+def delete_super_event_id(sub_event, sub_event_id, super_event_id):
+    try:
+        # Enable backwards compatibility. check if superEventID is string or list. Perform pull if list, unset if string field
+        sub_event_superEventID = sub_event['superEventID']
+        if isinstance(sub_event_superEventID, list):
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                    condition={'_id': ObjectId(sub_event_id)},
+                                    update={"$pull": {'superEventID': ObjectId(super_event_id)}})
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$unset": {'superEventID': 1}}, upsert=True)
 
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))

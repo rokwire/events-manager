@@ -400,7 +400,7 @@ def user_an_event_edit(id):
             for old_sub_event in old_sub_events:
                 if new_sub_events is None or old_sub_event not in new_sub_events:
                     # remove this subevent from this superevent
-                    update_super_event_id(old_sub_event, old_sub_event['id'], id, 'del')
+                    delete_super_event_id(old_sub_event, old_sub_event['id'], id)
 
         if new_sub_events is not None:
             removed_list = list()
@@ -408,7 +408,7 @@ def user_an_event_edit(id):
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
                         # add additional superevent
-                        update_super_event_id(new_sub_event, new_sub_event['id'], ObjectId(id), 'add')
+                        add_super_event_id(new_sub_event['id'], ObjectId(id))
                 except Exception as ex:
                     removed_list.append(new_sub_event)
                     pass
@@ -585,7 +585,7 @@ def add_new_event():
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:
-                update_super_event_id(subEvent, subEvent['id'], new_event_id, 'add')
+                add_super_event_id(subEvent['id'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
             for i in range(1, len(new_event['tags'])):
@@ -645,7 +645,7 @@ def userevent_delete(id):
             sub_event = find_one(current_app.config['EVENT_COLLECTION'],
                                  condition={"platformEventId": sub_event['id']})
             sub_event_id = sub_event['_id']
-            update_super_event_id(sub_event, sub_event_id, id, 'del')
+            delete_super_event_id(sub_event, sub_event_id, id)
             # delete subevent
             __logger.info("delete user event id: %s" % sub_event_id)
             delete_user_event(sub_event_id)
