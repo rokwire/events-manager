@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix indentation of removal sub events. [#785](https://github.com/rokwire/events-manager/issues/785)
 - Fix the error message on required field. [#783](https://github.com/rokwire/events-manager/issues/783)
 
-
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
 
