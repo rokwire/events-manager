@@ -25,8 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the placeholder of subevent id. [#766](https://github.com/rokwire/events-manager/issues/766)
 - Fix indentation of removal sub events. [#785](https://github.com/rokwire/events-manager/issues/785)
 - Fix the error message on required field. [#783](https://github.com/rokwire/events-manager/issues/783)
-- Fixed error message when deleting subevent. [#799](https://github.com/rokwire/events-manager/issues/799)
-- Fixed bug in having multiple superevents for a subevent. [#801](https://github.com/rokwire/events-manager/issues/801)
+
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
