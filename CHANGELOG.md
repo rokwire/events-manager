@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update modal for publishing indicate that all sub-events will also be published [#782](https://github.com/rokwire/events-manager/issues/782)
 - Allow to add pending subevent. [#756](https://github.com/rokwire/events-manager/issues/756)
 - Security markdown file. [#794](https://github.com/rokwire/events-manager/issues/794)
+- Updated popup message on delete confirmation of super event. [#790](https://github.com/rokwire/events-manager/issues/790)
 - When saving a published super-event, unpublished sub-events will be published. [#797](https://github.com/rokwire/events-manager/issues/797)
 - All pending sub-events will be published when a super event is published. [#771](https://github.com/rokwire/events-manager/issues/771)
 
