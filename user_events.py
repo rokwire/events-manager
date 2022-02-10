@@ -692,24 +692,30 @@ def get_devicetokens(id):
 def userevent_delete(id):
     userEvent = find_user_event(id)
     __logger.info("delete user event id: %s" % id)
+    # find subevents of this event and delete
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
+        # this events can be subevents for multiple superevents
         for sub_event in sub_events:
+            # unset each subevent
             update_super_event_id(sub_event['id'], '')
+
     if get_user_event_status(id) == "approved":
+        # if this event is a subevent, need to unset this event from all its superevents
+        # get all superevents which has atleast one subevent. check if the event_platformid is same as subevent_id of superevents
         super_events = find_all(current_app.config['EVENT_COLLECTION'],
                                 filter={"subEvents": {'$type': 'array'}},
                                 projection={"_id": 1, "subEvents": 1})
         platform_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(id)})['platformEventId']
-        find = False
+        # TODO: change this logic to access superEventID field of the subevent to delete the event.
         for super_event in super_events:
-            if find:
-                break
             for sub_event in super_event['subEvents']:
                 if sub_event['id'] == platform_id:
+                    # get all subevents, except for the current event
                     new_sub_events = super_event['subEvents']
                     new_sub_events.remove(sub_event)
+                    # set all events except for the current event
                     update_one(current_app.config['EVENT_COLLECTION'],
                                condition={"_id": ObjectId(super_event['_id'])},
                                update={"$set": {"subEvents": new_sub_events}})
@@ -718,9 +724,9 @@ def userevent_delete(id):
                         success = put_user_event(super_event['_id'])
                         if not success:
                             __logger.error("updating super event in building block failed")
-                    find = True
-                    break
+
     delete_user_event(id)
+
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
         try:
             remove(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))[0])
