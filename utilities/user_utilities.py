@@ -1220,6 +1220,8 @@ def remove_subevent_from_superevent_by_paltformid(subevent_platform_id, super_ev
 
 def publish_pending_subevents(superEventID):
     subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
+    if subEvents == None:
+        return
     for subEvent in subEvents:
         if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
             try:

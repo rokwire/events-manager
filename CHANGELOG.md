@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the error message on required field. [#783](https://github.com/rokwire/events-manager/issues/783)
 - Fixed error message when deleting subevent. [#799](https://github.com/rokwire/events-manager/issues/799)
 - Fix the issue that the sub event title is not updated in the super event. [#813](https://github.com/rokwire/events-manager/issues/813)
+- Fix the issue that publish the super event without sub events. [#827](https://github.com/rokwire/events-manager/issues/827)
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
