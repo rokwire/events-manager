@@ -421,7 +421,7 @@ def user_an_event_edit(id):
                         update_super_event_by_local_id(old_sub_event['eventid'], '')
                     else:
                         old_sub_events.remove(old_sub_event)
-                        print("remove illegal subevent")
+                        _logger.debug("remove illegal subevent")
         new_added_subevents= list()
         overwrite_subevents = list()
         if new_sub_events is not None:
