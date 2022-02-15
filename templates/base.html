@@ -124,7 +124,7 @@
                 source: function(request, response) {
                   console.log(request.term);
                   $.ajax({
-                    url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+                    url: "{{ url_for('user_events.searchsub', id=eventId) }}"+"?data="+request.term,
                     type:"GET",
                     dataType: "json",
                     success: function(data) {
