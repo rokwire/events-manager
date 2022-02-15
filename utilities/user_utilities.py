@@ -1022,7 +1022,7 @@ def imagedId_from_eventId(eventId):
         return False
 
 
-def update_super_event_id(sub_event_id, super_event_id):
+def update_super_event_by_platform_id(sub_event_id, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})['_id']
@@ -1044,7 +1044,7 @@ def update_super_event_id(sub_event_id, super_event_id):
         __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
-def update_super_event_id_2(sub_eventid, super_event_id):
+def update_super_event_by_local_id(sub_eventid, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(sub_eventid)})['_id']
@@ -1153,18 +1153,18 @@ def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
         if record:
-            subEvnts = record['subEvents']
-            if subEvnts:
+            subEvents = record['subEvents']
+            if subEvents:
                 for overwrite_subevent in overwrite_subevent_list:
-                    for i in range(len(subEvnts)):
-                        subevent = subEvnts[i]
+                    for i in range(len(subEvents)):
+                        subevent = subEvents[i]
                         if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
-                            subEvnts[i] = overwrite_subevent
+                            subEvents[i] = overwrite_subevent
                         elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
-                            subEvnts[i] = overwrite_subevent
+                            subEvents[i] = overwrite_subevent
             result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
                                          update={
-                                             "$set": {"subEvents": subEvnts}
+                                             "$set": {"subEvents": subEvents}
                                          })
         else:
             __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
