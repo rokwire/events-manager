@@ -321,6 +321,7 @@ def approve_user_event(objectId):
 
 
 def publish_user_event(eventId):
+    put_status = True
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + session["id_token"]
@@ -384,14 +385,20 @@ def publish_user_event(eventId):
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
                 updates = {"eventStatus": "approved", "platformEventId": platform_event_id}
+                # write platform id to db
+                update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                          update={"$set": updates})
                 if imageId:
                     __logger.info("User image upload successful for event {}".format(eventId))
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
-                    updates["imageURL"] = event['imageURL']
-                    put_user_event(eventId)
-
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={"$set": updates})
+                    updates = {"imageURL": event['imageURL']}
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={"$set": updates})
+                    put_status = put_user_event(eventId)
+                    if not put_status:
+                        #TODO: think to notify user failure of upload image url to events building block
+                        print("Event image {} upload fails".format(eventId))
                 return True
 
     except Exception as ex:
@@ -854,6 +861,7 @@ def beta_search(search_string):
         traceback.print_exc()
     return results
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS
@@ -1026,7 +1034,7 @@ def imagedId_from_eventId(eventId):
         return False
 
 
-def update_super_event_id(sub_event_id, super_event_id):
+def update_super_event_by_platform_id(sub_event_id, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})['_id']
@@ -1048,7 +1056,7 @@ def update_super_event_id(sub_event_id, super_event_id):
         __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
-def update_super_event_id_2(sub_eventid, super_event_id):
+def update_super_event_by_local_id(sub_eventid, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(sub_eventid)})['_id']
@@ -1153,6 +1161,34 @@ def get_admin_group_ids():
         __logger.error("Groups not retrievable")
         return []
 
+# update part of the existing subevents in the given super event with the overwrite_subevent_list
+def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvents = record['subEvents']
+            if subEvents:
+                for overwrite_subevent in overwrite_subevent_list:
+                    for i in range(len(subEvents)):
+                        subevent = subEvents[i]
+                        # published event
+                        if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
+                            subEvents[i] = overwrite_subevent
+                        # pending event
+                        elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
+                            subEvents[i] = overwrite_subevent
+            result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                         update={
+                                             "$set": {"subEvents": subEvents}
+                                         })
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
 def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
@@ -1224,6 +1260,8 @@ def remove_subevent_from_superevent_by_paltformid(subevent_platform_id, super_ev
 
 def publish_pending_subevents(superEventID):
     subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
+    if subEvents == None:
+        return
     for subEvent in subEvents:
         if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
             try:
