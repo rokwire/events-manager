@@ -296,7 +296,7 @@ def user_an_event_edit(id):
                 success = s3_image_upload(id, post_by_id.get("platformEventId"), image_record.get("_id"))
                 if success:
                     __logger.info("{}, s3: s3_image_upload()".format(image_record.get('status')))
-                    post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(id, image_record.get("_id"))
+                    post_by_id['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(post_by_id.get("platformEventId"), image_record.get("_id"))
                 else:
                     __logger.error("initial image upload for event:{} failed in event edit page".format(id))
             elif file and '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_IMAGE_EXTENSIONS:

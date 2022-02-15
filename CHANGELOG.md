@@ -38,6 +38,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow to link pending sub events to super event. [#756](https://github.com/rokwire/events-manager/issues/756)
 - Release script to use the latest AWS CLI login commands. [#816](https://github.com/rokwire/events-manager/issues/816)
 
+## [3.0.5] - 2022-01-12
+### Fixed
+- Fix user image upload to Events Building Block. [#806](https://github.com/rokwire/events-manager/pull/809)
+
+## [3.0.4] - 2022-01-05
+### Fixed
+- Issue with images in WebTool events not getting uploaded to Events BB. [#798](https://github.com/rokwire/events-manager/issues/798)
+
 ## [3.0.3] - 2021-10-19
 ### Fixed
 - Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
@@ -327,7 +335,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.3...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.5...HEAD
+[3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1

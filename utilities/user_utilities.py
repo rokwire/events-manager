@@ -321,6 +321,7 @@ def approve_user_event(objectId):
 
 
 def publish_user_event(eventId):
+    put_status = True
     headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + session["id_token"]
@@ -384,14 +385,20 @@ def publish_user_event(eventId):
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
                 updates = {"eventStatus": "approved", "platformEventId": platform_event_id}
+                # write platform id to db
+                update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                                          update={"$set": updates})
                 if imageId:
                     __logger.info("User image upload successful for event {}".format(eventId))
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
-                    updates["imageURL"] = event['imageURL']
-                    put_user_event(eventId)
-
-                updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
-                                          update={"$set": updates})
+                    updates = {"imageURL": event['imageURL']}
+                    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(eventId)},
+                                              update={"$set": updates})
+                    put_status = put_user_event(eventId)
+                    if not put_status:
+                        #TODO: think to notify user failure of upload image url to events building block
+                        print("Event image {} upload fails".format(eventId))
                 return True
 
     except Exception as ex:
@@ -849,6 +856,7 @@ def beta_search(search_string):
     except:
         traceback.print_exc()
     return results
+
 
 def allowed_file(filename):
     return '.' in filename and \
