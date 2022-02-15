@@ -36,7 +36,13 @@ from ..config import Config
 from .constants import *
 from .event_time_conversion import *
 from ..db import find_all, find_one, update_one, find_distinct, insert_one, find_one_and_update, delete_events_in_list, \
-    text_index_search
+    text_index_search, group_text_index_search
+import logging
+from time import gmtime
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("user_utilities.py")
 
 GOOGLEKEY = Config.GOOGLE_KEY
 gmaps = googlemaps.Client(key=GOOGLEKEY)
@@ -224,11 +230,11 @@ def update_user_event(objectId, update, delete_field=None):
                                   })
 
     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-        print("Update {} fails in update_user_event".format(objectId))
+        __logger.error("Update {} fails in update_user_event".format(objectId))
 
 
 def find_user_all_object_events(eventId):
-    print(eventId)
+    __logger.info(eventId)
     result_events = find_all(current_app.config['EVENT_COLLECTION'], filter={"eventId": eventId})
     if result_events is None:
         return []
@@ -248,17 +254,17 @@ def delete_user_event_in_building_block(objectId_list):
         try:
             result = requests.delete(url, headers=headers)
             if result.status_code != 202:
-                print("Event {} deletion fails".format(_id))
+                __logger.error("Event {} deletion fails".format(_id))
                 fail_count += 1
             else:
                 delete_success_list.append(_id)
         except requests.exceptions.RequestException as err:
-            print("Unexpected network error when deleting user event {}:".format(_id), err)
+            __logger.error("Unexpected network error when deleting user event {}:".format(_id), err)
             fail_count += 1
     success_count = len(delete_success_list)
 
-    print("failed deleted in building block: " + str(fail_count))
-    print("successfully deleted in building block: " + str(success_count))
+    __logger.info("failed deleted in building block: " + str(fail_count))
+    __logger.info("successfully deleted in building block: " + str(success_count))
     return delete_success_list
 
 
@@ -274,10 +280,10 @@ def delete_user_event(eventId):
         local_delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], local_delete_list)
         local_delete_count = len(local_delete_event_local)
         if local_delete_count < 1:
-            print("Local event {} deletion failed".format(eventId))
+            __logger.error("Local event {} deletion failed".format(eventId))
             return
         else:
-            print("Local event {} deletion successful".format(eventId))
+            __logger.info("Local event {} deletion successful".format(eventId))
             return local_delete_event_local[0]
 
     # Deleting 'published' events off of the building block and then the local db
@@ -290,11 +296,11 @@ def delete_user_event(eventId):
         # Since we're only dealing with deleting a singular item at a time
         # if delete_count < 1, the item wasn't successfully deleted off of the events building block
         if delete_count < 1:
-            print("Local and remote event {} deletion failed".format(eventId))
+            __logger.error("Local and remote event {} deletion failed".format(eventId))
             return
         else:
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
-            print("Local and remote event {} deletion successful".format(eventId))
+            __logger.info("Local and remote event {} deletion successful".format(eventId))
             return delete_event_local[0]
 
 
@@ -306,12 +312,12 @@ def get_user_event_status(objectId):
 
 
 def approve_user_event(objectId):
-    print("{} is going to be approved".format(objectId))
+    __logger.info("{} is going to be approved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus": "approved"}
     })
     if not result:
-        print("Approve event {} fails in approve_event".format(id))
+        __logger.error("Approve event {} fails in approve_event".format(id))
 
 
 def publish_user_event(eventId):
@@ -366,7 +372,7 @@ def publish_user_event(eventId):
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
-                print("Event {} submission fails".format(eventId))
+                __logger.error("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
@@ -383,6 +389,7 @@ def publish_user_event(eventId):
                 update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                                           update={"$set": updates})
                 if imageId:
+                    __logger.info("User image upload successful for event {}".format(eventId))
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
                     updates = {"imageURL": event['imageURL']}
                     updateResult = update_one(current_app.config['EVENT_COLLECTION'],
@@ -393,8 +400,9 @@ def publish_user_event(eventId):
                         #TODO: think to notify user failure of upload image url to events building block
                         print("Event image {} upload fails".format(eventId))
                 return True
-    except Exception:
-        traceback.print_exc()
+
+    except Exception as ex:
+        __logger.exception(ex)
         return False
 
 
@@ -460,7 +468,7 @@ def put_user_event(eventId):
 
             # If PUT request fails, print that out and change status back to pending
             if result.status_code != 200:
-                print("Event {} submission fails".format(eventId))
+                __logger.error("Event {} submission fails".format(eventId))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
@@ -477,18 +485,18 @@ def put_user_event(eventId):
 
                 return True
 
-    except Exception:
-        traceback.print_exc()
+    except Exception as ex:
+        __logger.exception(ex)
         return False
 
 
 def disapprove_user_event(objectId):
-    print("{} is going to be disapproved".format(objectId))
+    __logger.info("{} is going to be disapproved".format(objectId))
     result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(objectId)}, update={
         "$set": {"eventStatus": "pending"}
     })
     if not result:
-        print("Disapprove event {} fails in disapprove_event".format(objectId))
+        __logger.error("Disapprove event {} fails in disapprove_event".format(objectId))
 
 
 def create_new_user_event(new_user_event):
@@ -505,7 +513,7 @@ def create_new_user_event(new_user_event):
                                        "$set": update
                                    })
     if update_result is None or update_result.modified_count == 0 and update_result.matched_count == 0 and update_result.upserted_id is None:
-        print("create_new_user_event {} failed")
+        __logger.error("create_new_user_event {} failed")
     return result.inserted_id
 
 
@@ -597,17 +605,17 @@ def get_location_details(location_description, is_virtual_event):
         else:
             location_obj['description'] = location_description
     except ValueError as e:
-        print("Error in connecting to Google Geocoding API: {}".format(e))
+        __logger.error("Error in connecting to Google Geocoding API: {}".format(e))
         location_obj['description'] = location_description
     except googlemaps.exceptions.ApiError as e:
-        print("API Key Error: {}".format(e))
+        __logger.error("API Key Error: {}".format(e))
         location_obj['description'] = location_description
 
     return location_obj
 
 
 def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
-    print("str_local_date", str_local_date)
+    __logger.info("str_local_date", str_local_date)
     if is_all_day_event:
         datetime_obj = datetime.strptime(str_local_date, "%Y-%m-%d")
         # Set time to match the
@@ -634,7 +642,7 @@ def get_datetime_in_utc(location, str_local_date, date_field, is_all_day_event):
                     latitude = GeoResponse[0]['geometry']['location']['lat']
                     longitude = GeoResponse[0]['geometry']['location']['lng']
             except googlemaps.exceptions.ApiError as e:
-                print("API Key Error: {}".format(e))
+                __logger.error("API Key Error: {}".format(e))
         return utctime(datetime_obj, latitude, longitude)
     local_tz = pytz.timezone("US/Central")
     datetime_with_tz = local_tz.localize(datetime_obj, is_dst=None)  # No daylight saving time
@@ -732,7 +740,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured' or item == 'status' or item == 'eventid':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -744,12 +752,18 @@ def get_subevent_list(post_form):
             a_subevent = {}
             sub_name = subevent_arrays[0][i]
             sub_id = subevent_arrays[1][i]
-            sub_track = subevent_arrays[2][i]
-            sub_feature = subevent_arrays[3][i]
+            sub_eventid = subevent_arrays[2][i]
+            sub_status = subevent_arrays[3][i]
+            sub_track = subevent_arrays[4][i]
+            sub_feature = subevent_arrays[5][i]
             if sub_name != "":
                 a_subevent['name'] = sub_name
             if sub_id != "":
                 a_subevent['id'] = sub_id
+            if sub_eventid != "":
+                a_subevent['eventid'] = sub_eventid
+            if sub_status != "":
+                a_subevent['status'] = sub_status
             if sub_track != "":
                 a_subevent['track'] = sub_track
             if sub_feature != "":
@@ -812,17 +826,35 @@ def item_not_list(item):
     else:
         return False
 
+def group_subevents_search(search_string, admin_group_ids):
+    list_queries = list()
+    try:
+        queries_returned = group_text_index_search(current_app.config['EVENT_COLLECTION'], search_string, admin_group_ids)
+        list_queries = list(queries_returned)
+        for query in list_queries:
+            query['label'] = query.pop('title')
+            if 'platformEventId' in query:
+                query['value'] = query.pop('platformEventId')
+            if '_id' in query:
+                query['eventid'] = str(query.pop('_id'))
+            query['status'] = query.pop('eventStatus')
+    except:
+        traceback.print_exc()
+    return list_queries
 
 # Uses the implemented text index search to search the queries and modify the search results to JSON
 def beta_search(search_string):
-    queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
-    list_queries = list(queries_returned)
     results = list()
-    for query in list_queries:
-        if 'platformEventId' in query:
-            query['label'] = query.pop('title')
-            query['value'] = query.pop('platformEventId')
-            results.append(query)
+    try:
+        queries_returned = text_index_search(current_app.config['EVENT_COLLECTION'], search_string)
+        list_queries = list(queries_returned)
+        for query in list_queries:
+            if 'platformEventId' in query:
+                query['label'] = query.pop('title')
+                query['value'] = query.pop('platformEventId')
+                results.append(query)
+    except:
+        traceback.print_exc()
     return results
 
 
@@ -837,11 +869,11 @@ def clickable_utility(platformEventId):
         if record:
             return record['eventId']
         else:
-            print("Record with platformEventId:{} does not exist".format(platformEventId))
+            __logger.error("Record with platformEventId:{} does not exist".format(platformEventId))
 
-    except Exception:
-        traceback.print_exc()
-        print("Record with platformEventId:{} does not exist".format(platformEventId))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(platformEventId))
         return False
 
 
@@ -857,15 +889,15 @@ def s3_image_delete(localId, eventId, imageId):
         if record:
             fileobj = '{}/{}/{}.jpg'.format(current_app.config['AWS_IMAGE_FOLDER_PREFIX'], eventId, imageId)
             client.delete_object(Bucket=current_app.config['BUCKET'], Key=fileobj)
-            print('Image: {} for event {} deletion off of s3 successful'.format(imageId, localId))
+            __logger.info('Image: {} for event {} deletion off of s3 successful'.format(imageId, localId))
             return True
         else:
-            print('Event: {} does not exist'.format(localId))
+            __logger.error('Event: {} does not exist'.format(localId))
             return False
 
-    except Exception:
-        traceback.print_exc()
-        print("Image: {} for event: {} deletion failed".format(imageId, localId))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Image: {} for event: {} deletion failed".format(imageId, localId))
         return False
 
 
@@ -886,11 +918,11 @@ def size_check(eventID):
             file_information = os.stat(image_path)
             return file_information.st_size
         else:
-            print('Image associated with event: {} does not exist'.format(eventID))
+            __logger.error('Image associated with event: {} does not exist'.format(eventID))
 
-    except Exception:
-        traceback.print_exc()
-        print('Unknown Error occurred')
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error('Unknown Error occurred')
         return False
 
 
@@ -918,9 +950,9 @@ def s3_image_upload(localId, eventId, imageId):
         )
         success = True
 
-    except Exception:
-        traceback.print_exc()
-        print("Upload image: {} for event {} failed".format(imageId, localId))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Upload image: {} for event {} failed".format(imageId, localId))
         success = False
     finally:
         if os.path.exists(image_location):
@@ -943,17 +975,17 @@ def s3_image_download(localId, eventId, imageId):
             tmpfile = os.path.join(tmpfolder, localId + ".jpg")
             with open(tmpfile, 'wb') as f:
                 client.download_fileobj(current_app.config['BUCKET'], fileobj, f)
-                print('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
+                __logger.info('Image: {} for event {} download off of s3 successful'.format(imageId, eventId))
                 return True
 
         else:
-            print('Event: {} does not exist'.format(localId))
+            __logger.error('Event: {} does not exist'.format(localId))
             return False
 
-    except Exception:
-        traceback.print_exc()
+    except Exception as ex:
+        __logger.exception(ex)
         deletefile(tmpfile)
-        print("Image: {} for event: {} download failed".format(imageId, eventId))
+        __logger.error("Image: {} for event: {} download failed".format(imageId, eventId))
         return False
 
 
@@ -974,12 +1006,12 @@ def s3_delete_reupload(localId, eventId, imageId):
             s3_image_upload(localId, eventId, imageId)
             return True
         else:
-            print('Event: {} does not exist'.format(localId))
+            __logger.error('Event: {} does not exist'.format(localId))
             return False
 
-    except Exception:
-        traceback.print_exc()
-        print("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Image: {} for event: {} reupload edit failed".format(imageId, eventId))
         return False
 
 
@@ -989,16 +1021,16 @@ def imagedId_from_eventId(eventId):
         if record:
             return record['eventId']
         else:
-            print('Event: {} does not have associated image'.format(eventId))
+            __logger.error('Event: {} does not have associated image'.format(eventId))
             return False
 
-    except Exception:
-        traceback.print_exc()
-        print("imageId retrieval for event: {} failed".format(eventId))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("imageId retrieval for event: {} failed".format(eventId))
         return False
 
 
-def update_super_event_id(sub_event_id, super_event_id):
+def update_super_event_by_platform_id(sub_event_id, super_event_id):
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": sub_event_id})['_id']
@@ -1011,13 +1043,35 @@ def update_super_event_id(sub_event_id, super_event_id):
                                       condition={'_id': ObjectId(sub_event_id)},
                                       update={"$set": {'superEventID': super_event_id}}, upsert=True)
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
-            print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
             return False
         else:
             return True
-    except Exception:
-        traceback.print_exc()
-        print("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+        return False
+
+def update_super_event_by_local_id(sub_eventid, super_event_id):
+    try:
+        sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                condition={"_id": ObjectId(sub_eventid)})['_id']
+        if super_event_id == "":
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$unset": {'superEventID': 1}}, upsert=True)
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$set": {'superEventID': super_event_id}}, upsert=True)
+        if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+            __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
+            return False
+        else:
+            return True
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
         return False
 
 def s3_publish_user_image(id, eventId, client):
@@ -1058,9 +1112,9 @@ def s3_publish_user_image(id, eventId, client):
             }
         )
 
-    except Exception:
-        traceback.print_exc()
-        print("Upload image for event {} failed".format(id))
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Upload image for event {} failed".format(id))
         return None
 
     finally:
@@ -1100,5 +1154,140 @@ def get_admin_group_ids():
             group_ids.append(group["id"])
         return group_ids
     else:
-        print("Groups not retrievable")
+        __logger.error("Groups not retrievable")
         return []
+
+# update part of the existing subevents in the given super event with the overwrite_subevent_list
+def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvents = record['subEvents']
+            if subEvents:
+                for overwrite_subevent in overwrite_subevent_list:
+                    for i in range(len(subEvents)):
+                        subevent = subEvents[i]
+                        # published event
+                        if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
+                            subEvents[i] = overwrite_subevent
+                        # pending event
+                        elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
+                            subEvents[i] = overwrite_subevent
+            result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                         update={
+                                             "$set": {"subEvents": subEvents}
+                                         })
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            published_subevent_list = list()
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent: # published
+                        published_subevent_list.append(subevent)
+            subevents_list = published_subevent_list + pending_subevents_list
+            result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                         update={
+                                             "$set": {"subEvents": subevents_list}
+                                         })
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def remove_subevent_from_superevent_by_eventid(subevent_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'eventid' in subevent and subevent['eventid'] == subevent_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def remove_subevent_from_superevent_by_paltformid(subevent_platform_id, super_eventid):
+    try:
+        record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
+        if record:
+            subEvnts = record['subEvents']
+            if subEvnts:
+                for subevent in subEvnts:
+                    if 'id' in subevent and subevent['id'] == subevent_platform_id:
+                        # remove it
+                        subEvnts.remove(subevent)
+                        result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
+                                                     update={
+                                                         "$set": {"subEvents": subEvnts}
+                                                     })
+                        break
+        else:
+            __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+
+    except Exception as ex:
+        __logger.exception(ex)
+        __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
+        return False
+
+def publish_pending_subevents(superEventID):
+    subEvents = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})['subEvents']
+    if subEvents == None:
+        return
+    for subEvent in subEvents:
+        if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
+            try:
+                image = False
+                if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventid'] + '*'))) > 0:
+                    image = True
+                success = publish_user_event(subEvent['eventid'])
+                if success and image:
+                    updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
+                                              condition={'eventId': subEvent['eventid']},
+                                              update={"$set": {'status': 'new',
+                                                               'eventId': subEvent['eventid']}}, upsert=True)
+                    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+                        __logger.error(
+                            "Failed to mark image record as new of event: {} upon event publishing".format(
+                                subEvent['eventid']))
+                    approve_user_event(subEvent['eventid'])
+                if success:
+                    subEvent['id'] = find_one(current_app.config['EVENT_COLLECTION'],
+                                              condition={"_id": ObjectId(subEvent['eventid'])})['platformEventId']
+                    subEvent['status'] = 'approved'
+            except Exception as ex:
+                __logger.exception(ex)
+    updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                              condition={"_id": ObjectId(superEventID)},
+                              update={
+                                  "$set": {"subEvents": subEvents}
+                              })
+    if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
+        __logger.error(
+            "Failed to update sub events list for {}".format(
+                superEventID))
+    return subEvents

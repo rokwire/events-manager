@@ -137,7 +137,9 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required
+                oninvalid="this.setCustomValidity('Please select a time zone.')"
+                oninput="setCustomValidity('')">
                   {% for key, value in timezones.items() %}
                       <option value = "{{key}}" id = {{key}}>{{value}}</option>
                   {% endfor %}
@@ -356,6 +358,16 @@
             </div>
           </div>
 
+          <!-- displayOnlyWithSuperEvent  -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Display Only with Super Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="displayOnlyWithSuperEvent" name="displayOnlyWithSuperEvent"/> Yes
+            </div>
+          </div>
+
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
@@ -374,7 +386,7 @@
               </div>
 
               <div class="col-sm-9">
-                <span role="button" class="add-sub btn btn-outline-primary">+ Add a Sub-Event</span>
+                <span role="button" class="add-sub btn btn-outline-primary">+ Link a Sub-Event</span>
               </div>
             </div>
           </div>
@@ -384,6 +396,8 @@
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control search-id" name="name" type="text" placeholder="Sub-Event Title" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
                       <div class="col-sm-3 form-group" >
                         <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
@@ -397,7 +411,7 @@
                           </div>
                       </div>
                     <div class="offset-sm-1">
-                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
+                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Unlink</span>
                     </div>
                 </div>
             </div>
@@ -477,6 +491,11 @@
      attach_delete();
    });
 
+   $("document").ready(function(){
+        if (document.getElementById("super-event").checked === true) {
+          document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        }
+   })
    //Attach functionality to delete buttons
    function attach_delete(){
      $('.delete').off();
@@ -493,9 +512,12 @@
      var sub = document.getElementById("super-des");
      var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
+        document.getElementById('displayOnlyWithSuperEvent').checked = false;
+        document.getElementById('displayOnlyWithSuperEvent').disabled = true;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
+        document.getElementById('displayOnlyWithSuperEvent').disabled = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }
@@ -547,6 +569,13 @@
           selectedItemData = ui.item.data;
           id_input = $(event.target).next('input')
           id_input.val(selectedItemData.value)
+          if ('status' in selectedItemData)
+            if (selectedItemData.status === 'pending') {
+                eventid_input = id_input.next('input')
+                eventid_input.val(selectedItemData.eventid)
+                status_input = eventid_input.next('input')
+                status_input.val(selectedItemData.status)
+            }
         }
       }
     );
