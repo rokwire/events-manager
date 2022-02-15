@@ -1149,6 +1149,7 @@ def get_admin_group_ids():
         __logger.error("Groups not retrievable")
         return []
 
+# update part of the existing subevents in the given super event with the overwrite_subevent_list
 def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
@@ -1158,8 +1159,10 @@ def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
                 for overwrite_subevent in overwrite_subevent_list:
                     for i in range(len(subEvents)):
                         subevent = subEvents[i]
+                        # published event
                         if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
                             subEvents[i] = overwrite_subevent
+                        # pending event
                         elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
                             subEvents[i] = overwrite_subevent
             result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
