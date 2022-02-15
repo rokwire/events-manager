@@ -431,6 +431,7 @@ def user_an_event_edit(id):
                 try:
                     if old_sub_events is None or new_sub_event not in old_sub_events:
                         new_added_subevent = None
+                        # handle published event
                         if 'id' in new_sub_event:
                             found = False
                             for old_sub_event in old_sub_events:
@@ -445,6 +446,7 @@ def user_an_event_edit(id):
                             if "superEventID" not in new_added_subevent:
                                 can_add_pending = True
                                 update_super_event_by_platform_id(new_sub_event['id'], id)
+                        # handle pending user event.
                         elif 'eventid' in new_sub_event:
                             found = False
                             for old_sub_event in old_sub_events:
