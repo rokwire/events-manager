@@ -820,20 +820,24 @@ def item_not_list(item):
         return False
 
 def group_subevents_search(search_string, admin_group_ids):
+    results = list()
     list_queries = list()
     try:
         queries_returned = group_text_index_search(current_app.config['EVENT_COLLECTION'], search_string, admin_group_ids)
         list_queries = list(queries_returned)
         for query in list_queries:
+            if 'isSuperEvent' in query or 'superEventID' in query:
+                continue
             query['label'] = query.pop('title')
             if 'platformEventId' in query:
                 query['value'] = query.pop('platformEventId')
             if '_id' in query:
                 query['eventid'] = str(query.pop('_id'))
             query['status'] = query.pop('eventStatus')
+            results.append(query)
     except:
         traceback.print_exc()
-    return list_queries
+    return results
 
 # Uses the implemented text index search to search the queries and modify the search results to JSON
 def beta_search(search_string):
