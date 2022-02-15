@@ -22,7 +22,7 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create event</a>
+  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
   {% endif %}
 {% endblock %}
 {% block content %}
