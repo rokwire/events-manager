@@ -826,7 +826,7 @@ def group_subevents_search(search_string, admin_group_ids):
         queries_returned = group_text_index_search(current_app.config['EVENT_COLLECTION'], search_string, admin_group_ids)
         list_queries = list(queries_returned)
         for query in list_queries:
-            if 'isSuperEvent' in query or 'superEventID' in query:
+            if ('isSuperEvent' in query and True == query['isSuperEvent']) or 'superEventID' in query:
                 continue
             query['label'] = query.pop('title')
             if 'platformEventId' in query:
