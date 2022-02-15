@@ -210,7 +210,7 @@ def user_an_event(id):
                 subEvent['isPublished'] = False
             else:
                 post['subEvents'].remove(subEvent)
-                _logger.debug("remove incorrect subevent")
+                __logger.debug("remove incorrect subevent")
                 find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                              condition={"_id": ObjectId(id)}, update={
                         "$set": {"subEvents": post['subEvents']}
@@ -421,7 +421,7 @@ def user_an_event_edit(id):
                         update_super_event_by_local_id(old_sub_event['eventid'], '')
                     else:
                         old_sub_events.remove(old_sub_event)
-                        _logger.debug("remove incorrect subevent")
+                        __logger.debug("remove incorrect subevent")
         new_added_subevents= list()
         overwrite_subevents = list()
         if new_sub_events is not None:
