@@ -805,7 +805,7 @@ def search():
 
 @userbp.route('/searchsub', methods=['GET'])
 @role_required('user')
-def searchsub2():
+def searchsub():
     if request.method == "GET":
        search_term = request.values.get("data")
        results = group_subevents_search(search_term, get_admin_group_ids())
@@ -815,7 +815,7 @@ def searchsub2():
 
 @userbp.route('/searchsub/<id>', methods=['GET'])
 @role_required('user')
-def searchsub(id):
+def searchsub_exclude_itself(id):
     if request.method == "GET":
        search_term = request.values.get("data")
        results = group_subevents_search(search_term, get_admin_group_ids())
