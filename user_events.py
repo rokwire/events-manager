@@ -672,6 +672,7 @@ def time_range():
 def add_new_event():
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
     groups, _ = get_admin_groups()
+    new_event_id = None
     req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
@@ -802,13 +803,26 @@ def search():
     else:
        return jsonify([]), 200
 
-
 @userbp.route('/searchsub', methods=['GET'])
 @role_required('user')
 def searchsub():
     if request.method == "GET":
        search_term = request.values.get("data")
-       return jsonify(group_subevents_search(search_term, get_admin_group_ids()))
+       results = group_subevents_search(search_term, get_admin_group_ids())
+       return jsonify(results)
+    else:
+       return jsonify([]), 200
+
+@userbp.route('/searchsub/<id>', methods=['GET'])
+@role_required('user')
+def searchsub_exclude_itself(id):
+    if request.method == "GET":
+       search_term = request.values.get("data")
+       results = group_subevents_search(search_term, get_admin_group_ids())
+       for result in results:
+           if result['eventid'] == id:
+               results.remove(result)
+       return jsonify(results)
     else:
        return jsonify([]), 200
 

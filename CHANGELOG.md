@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated popup message on delete confirmation of super event. [#790](https://github.com/rokwire/events-manager/issues/790)
 - When saving a published super-event, unpublished sub-events will be published. [#797](https://github.com/rokwire/events-manager/issues/797)
 - All pending sub-events will be published when a super event is published. [#771](https://github.com/rokwire/events-manager/issues/771)
+- Filter superevent or existing subevent to be added as a subevent.[#826](https://github.com/rokwire/events-manager/issues/826)
 - Add create event button on event detail page. [#818](https://github.com/rokwire/events-manager/issues/818)
 
 ### Fixed
