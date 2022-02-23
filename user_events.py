@@ -65,7 +65,7 @@ def user_events():
         session['select_status'] = select_status
 
     if request.method == 'POST':
-		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
+		# format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         if 'searchInput' in request.form:
             searchInput = request.form['searchInput']
             query_dic = {}
@@ -745,7 +745,13 @@ def userevent_delete(id):
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # unset each subevent
-            update_super_event_id(sub_event['id'], '')
+            sub_event = find_one(current_app.config['EVENT_COLLECTION'],
+                                 condition={"platformEventId": sub_event['id']})
+            sub_event_id = sub_event['_id']
+            update_super_event_by_local_id(sub_event_id, '')
+            # delete subevent
+            __logger.info("delete user event id: %s" % sub_event_id)
+            delete_user_event(sub_event_id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents

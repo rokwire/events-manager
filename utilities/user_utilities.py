@@ -1036,7 +1036,12 @@ def imagedId_from_eventId(eventId):
 
 def update_super_event_by_platform_id(sub_event_id, super_event_id):
     try:
-        updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+        if super_event_id == "":
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
+                                      condition={'_id': ObjectId(sub_event_id)},
+                                      update={"$unset": {'superEventID': 1}}, upsert=True)
+        else:
+            updateResult = update_one(current_app.config['EVENT_COLLECTION'],
                                       condition={'_id': ObjectId(sub_event_id)},
                                       update={"$addToSet": {'superEventID': ObjectId(super_event_id)}})
 
