@@ -217,7 +217,7 @@ def publish_event(id):
 
 
 def publish_image(id, platformId):
-    imageId = None
+    image_id = None
     headers = {
         'Authorization': 'Bearer ' + current_app.config['AUTHENTICATION_TOKEN']
     }
@@ -225,13 +225,35 @@ def publish_image(id, platformId):
         record = find_one(current_app.config['IMAGE_COLLECTION'], condition={"eventId": id})
 
         submit_type = 'post'
-        image = None
-        imagePath = '{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
-        if path.exists(imagePath):
-            with Image.open(imagePath) as im:
-                im.convert('RGB').save('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id),
-                                       quality=95)
-            image = open('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id), 'rb')
+        image_path = '{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)
+        if path.exists(image_path):
+            with open(image_path, 'rb') as image:
+                url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
+
+                # if there is record shows image has been submit before then change post to put
+                if record:
+                    if record.get('submitBefore'):
+                        submit_type = 'put'
+                file = {'file': image}
+                if submit_type == 'post':
+                    response = requests.post(url, files=file, headers=headers)
+                elif submit_type == 'put':
+                    response = requests.put(url, files=file, headers=headers)
+                image.close()
+
+                if response.status_code in (200, 201):
+                    image_id = response.json()['id']
+                    update_result = update_one(current_app.config['IMAGE_COLLECTION'], condition={'eventId': id},
+                                               update={"$set": { 'submitBefore': True, 'eventId': id}}, upsert=True)
+                    if update_result.modified_count == 0 and update_result.matched_count == 0 and \
+                            update_result.upserted_id is None:
+                        print("Update {} fails in update_user_event".format(id))
+                else:
+                    update_result = update_one(current_app.config['IMAGE_COLLECTION'], condition={'eventId': id},
+                                               update={"$set": { 'submitBefore': False, 'eventId': id}}, upsert=True)
+                    if update_result.modified_count == 0 and update_result.matched_count == 0 and \
+                            update_result.upserted_id is None:
+                        print("Update {} fails in update_user_event".format(id))
         else:
             return None
         url = "{}/{}/images".format(current_app.config['EVENT_BUILDING_BLOCK_URL'], platformId)
@@ -271,7 +293,7 @@ def publish_image(id, platformId):
             os.remove('{}/{}.png'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
         if os.path.exists('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id)):
             os.remove('{}/{}.jpg'.format(current_app.config['WEBTOOL_IMAGE_MOUNT_POINT'], id))
-    return imageId
+    return image_id
 
 def s3_publish_image(id, client):
     image_location = ''

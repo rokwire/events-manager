@@ -18,19 +18,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update modal for publishing indicate that all sub-events will also be published [#782](https://github.com/rokwire/events-manager/issues/782)
 - Allow to add pending subevent. [#756](https://github.com/rokwire/events-manager/issues/756)
 - Security markdown file. [#794](https://github.com/rokwire/events-manager/issues/794)
+- Updated popup message on delete confirmation of super event. [#790](https://github.com/rokwire/events-manager/issues/790)
 - Deleting super events deletes its sub events as well. [#789](https://github.com/rokwire/events-manager/issues/789)
 - When saving a published super-event, unpublished sub-events will be published. [#797](https://github.com/rokwire/events-manager/issues/797)
 - All pending sub-events will be published when a super event is published. [#771](https://github.com/rokwire/events-manager/issues/771)
+- Filter superevent or existing subevent to be added as a subevent.[#826](https://github.com/rokwire/events-manager/issues/826)
+- Add create event button on event detail page. [#818](https://github.com/rokwire/events-manager/issues/818)
 
 ### Fixed
 - Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
 - Fix the placeholder of subevent id. [#766](https://github.com/rokwire/events-manager/issues/766)
 - Fix indentation of removal sub events. [#785](https://github.com/rokwire/events-manager/issues/785)
 - Fix the error message on required field. [#783](https://github.com/rokwire/events-manager/issues/783)
+- Fix the subevent when the track or isfeature has been updated.[#823](https://github.com/rokwire/events-manager/issues/823)
+- Fixed error message when deleting subevent. [#799](https://github.com/rokwire/events-manager/issues/799)
+- Fix the issue that the sub event title is not updated in the super event. [#813](https://github.com/rokwire/events-manager/issues/813)
+- Fix the issue that publish the super event without sub events. [#827](https://github.com/rokwire/events-manager/issues/827)
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
 - Allow to link pending sub events to super event. [#756](https://github.com/rokwire/events-manager/issues/756)
+- Release script to use the latest AWS CLI login commands. [#816](https://github.com/rokwire/events-manager/issues/816)
+
+## [3.0.5] - 2022-01-12
+### Fixed
+- Fix user image upload to Events Building Block. [#806](https://github.com/rokwire/events-manager/pull/809)
+
+## [3.0.4] - 2022-01-05
+### Fixed
+- Issue with images in WebTool events not getting uploaded to Events BB. [#798](https://github.com/rokwire/events-manager/issues/798)
 
 ## [3.0.3] - 2021-10-19
 ### Fixed
@@ -321,7 +337,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.3...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.5...HEAD
+[3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/rokwire/events-manager/compare/3.0.0...3.0.1

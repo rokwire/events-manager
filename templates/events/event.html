@@ -20,6 +20,12 @@
   {{ post.title }}
 {% endblock %}
 
+{% block create_event %}
+  {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
+  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
+  {% endif %}
+{% endblock %}
+
 {% block modals %}
 
 {% if post.eventStatus == "approved" %}
@@ -49,7 +55,7 @@
         </button>
       </div>
       <div class="modal-body">
-        You are about to delete the following event <b>{{post.title}}</b> and its sub-events, if any
+        You are about to delete the following event <b>{{post.title}}</b> {% if post.isSuperEvent %} and its sub-events {% endif %}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
