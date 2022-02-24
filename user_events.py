@@ -745,9 +745,12 @@ def userevent_delete(id):
         # this events can be subevents for multiple superevents
         for sub_event in sub_events:
             # unset each subevent
+            print("supereventid ", id)
+            print("platform id ", sub_event['id'])
             sub_event = find_one(current_app.config['EVENT_COLLECTION'],
                                  condition={"platformEventId": sub_event['id']})
             sub_event_id = sub_event['_id']
+            print("eventid ",sub_event_id )
             update_super_event_by_local_id(sub_event_id, '')
             # delete subevent
             __logger.info("delete user event id: %s" % sub_event_id)
