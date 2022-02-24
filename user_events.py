@@ -65,7 +65,6 @@ def user_events():
         session['select_status'] = select_status
 
     if request.method == 'POST':
-		#format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         if 'searchInput' in request.form:
             searchInput = request.form['searchInput']
             query_dic = {}
@@ -738,14 +737,24 @@ def get_devicetokens(id):
 @role_required("user")
 def userevent_delete(id):
     userEvent = find_user_event(id)
-    __logger.info("delete user event id: %s" % id)
     # find subevents of this event and delete
     sub_events = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)}).get('subEvents')
     if sub_events is not None:
-        # this events can be subevents for multiple superevents
         for sub_event in sub_events:
-            # unset each subevent
-            update_super_event_id(sub_event['id'], '')
+            # unset each subevent. subevents can be published or pending
+            if 'id' in sub_event:
+                # published subevent
+                update_super_event_by_platform_id(sub_event['id'], '')
+                # call to db to get ObjectId of subevent
+                sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                        condition={"platformEventId": sub_event['id']})['_id']
+            else:
+                # pending subevent
+                update_super_event_by_local_id(sub_event['eventid'], '')
+                sub_event_id = sub_event['eventid']
+            # delete subevent
+            __logger.info("delete user event id: %s" % sub_event_id)
+            delete_user_event(sub_event_id)
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
@@ -771,7 +780,7 @@ def userevent_delete(id):
                         success = put_user_event(super_event['_id'])
                         if not success:
                             __logger.error("updating super event in building block failed")
-
+    __logger.info("delete user event id: %s" % id)
     delete_user_event(id)
 
     if len(glob(path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '*'))) > 0:
