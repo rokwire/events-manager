@@ -65,7 +65,6 @@ def user_events():
         session['select_status'] = select_status
 
     if request.method == 'POST':
-		# format : 'eventId=1234' /'category=Academic'/'eventId=1234&category=Academic'
         if 'searchInput' in request.form:
             searchInput = request.form['searchInput']
             query_dic = {}
