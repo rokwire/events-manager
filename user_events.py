@@ -746,12 +746,13 @@ def userevent_delete(id):
             if 'id' in sub_event:
                 # published subevent
                 update_super_event_by_platform_id(sub_event['id'], '')
-                sub_event_id = sub_event['id']
+                # call to db to get ObjectId of subevent
+                sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                        condition={"platformEventId": sub_event['id']})['_id']
             else:
                 # pending subevent
                 update_super_event_by_local_id(sub_event['eventid'], '')
                 sub_event_id = sub_event['eventid']
-
             # delete subevent
             __logger.info("delete user event id: %s" % sub_event_id)
             delete_user_event(sub_event_id)

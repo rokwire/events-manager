@@ -1036,6 +1036,8 @@ def imagedId_from_eventId(eventId):
 
 def update_super_event_by_platform_id(sub_event_id, super_event_id):
     try:
+        sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
+                                condition={"platformEventId": sub_event_id})['_id']
         if super_event_id == "":
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],
                                       condition={'_id': ObjectId(sub_event_id)},
@@ -1043,7 +1045,7 @@ def update_super_event_by_platform_id(sub_event_id, super_event_id):
         else:
             updateResult = update_one(current_app.config['EVENT_COLLECTION'],
                                       condition={'_id': ObjectId(sub_event_id)},
-                                      update={"$addToSet": {'superEventID': ObjectId(super_event_id)}})
+                                      update={"$set": {'superEventID': super_event_id}}, upsert=True)
 
         if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
             __logger.error("Failed to mark {} as {}'s super event".format(super_event_id, sub_event_id))
