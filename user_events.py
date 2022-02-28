@@ -773,34 +773,37 @@ def userevent_delete(id):
     # delete this subevent from its super and upload its super to event building block
     if 'superEventID' in userEvent:
         remove_subevent_from_superevent_by_eventid(id, userEvent['superEventID'])
-        success = put_user_event(userEvent['superEventID'])
-        if not success:
-            __logger.error("updating super event in building block failed")
+        # If the super event is published, update the super event after removing the sub event.
+        if get_user_event_status(userEvent['superEventID']) == "approved":
+            success = put_user_event(userEvent['superEventID'])
+            if not success:
+                __logger.error("updating super event in building block failed")
 
-    if get_user_event_status(id) == "approved":
-        # if this event is a subevent, need to unset this event from all its superevents
-        # get all superevents which has atleast one subevent. check if the event_platformid is same as subevent_id of superevents
-        super_events = find_all(current_app.config['EVENT_COLLECTION'],
-                                filter={"subEvents": {'$type': 'array'}},
-                                projection={"_id": 1, "subEvents": 1})
-        platform_id = find_one(current_app.config['EVENT_COLLECTION'],
-                                condition={"_id": ObjectId(id)})['platformEventId']
-        # # to delete this subevent from all its super events.
-        # for super_event in super_events:
-        #     for sub_event in super_event['subEvents']:
-        #         if 'id' in sub_event and sub_event['id'] == platform_id:
-        #             # get all subevents, except for the current event
-        #             new_sub_events = super_event['subEvents']
-        #             new_sub_events.remove(sub_event)
-        #             # set all events except for the current event
-        #             update_one(current_app.config['EVENT_COLLECTION'],
-        #                        condition={"_id": ObjectId(super_event['_id'])},
-        #                        update={"$set": {"subEvents": new_sub_events}})
-        #
-        #             if get_user_event_status(super_event['_id']) == "approved":
-        #                 success = put_user_event(super_event['_id'])
-        #                 if not success:
-        #                     __logger.error("updating super event in building block failed")
+    # TODO: Remove commented out after deciding whether one sub event can be linked to multiple super events.
+    # if get_user_event_status(id) == "approved":
+    #     # if this event is a subevent, need to unset this event from all its superevents
+    #     # get all superevents which has atleast one subevent. check if the event_platformid is same as subevent_id of superevents
+    #     super_events = find_all(current_app.config['EVENT_COLLECTION'],
+    #                             filter={"subEvents": {'$type': 'array'}},
+    #                             projection={"_id": 1, "subEvents": 1})
+    #     platform_id = find_one(current_app.config['EVENT_COLLECTION'],
+    #                             condition={"_id": ObjectId(id)})['platformEventId']
+    #     # to delete this subevent from all its super events.
+    #     for super_event in super_events:
+    #         for sub_event in super_event['subEvents']:
+    #             if 'id' in sub_event and sub_event['id'] == platform_id:
+    #                 # get all subevents, except for the current event
+    #                 new_sub_events = super_event['subEvents']
+    #                 new_sub_events.remove(sub_event)
+    #                 # set all events except for the current event
+    #                 update_one(current_app.config['EVENT_COLLECTION'],
+    #                            condition={"_id": ObjectId(super_event['_id'])},
+    #                            update={"$set": {"subEvents": new_sub_events}})
+    #
+    #                 if get_user_event_status(super_event['_id']) == "approved":
+    #                     success = put_user_event(super_event['_id'])
+    #                     if not success:
+    #                         __logger.error("updating super event in building block failed")
 
     __logger.info("delete user event id: %s" % id)
     delete_user_event(id)
