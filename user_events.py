@@ -535,6 +535,21 @@ def user_an_event_edit(id):
             update_user_event(id, post_by_id, {'endDate': ""})
         else:
             update_user_event(id, post_by_id, None)
+        if request.method == 'POST':
+            user_event = find_user_event(id)
+            if 'subEvents' in user_event and user_event['subEvents'] is not None:
+                for subevent in user_event['subEvents']:
+                    event = None
+                    if 'id' in subevent:
+                        event = find_one(current_app.config['EVENT_COLLECTION'],
+                                    condition={"platformEventId": subevent['id']})
+                    else:
+                        event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(subevent['eventid'])})
+                    if event is not None and (not 'superEventID' in event):
+                        update_one(current_app.config['EVENT_COLLECTION'],
+                                   condition={'_id': ObjectId(event['eventId'])},
+                                   update={"$set": {'superEventID': id}}, upsert=True)
+
         # Check for event status
         event_status = get_user_event_status(id)
         if event_status == "approved":
@@ -755,6 +770,9 @@ def userevent_delete(id):
             # delete subevent
             __logger.info("delete user event id: %s" % sub_event_id)
             delete_user_event(sub_event_id)
+
+    if 'superEventID' in userEvent:
+        remove_subevent_from_superevent_by_eventid(id, userEvent['superEventID'])
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
