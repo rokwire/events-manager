@@ -772,7 +772,10 @@ def userevent_delete(id):
 
     # delete this subevent from its super and upload its super to event building block
     if 'superEventID' in userEvent:
+        if 'platformEventId' in userEvent:
+            remove_subevent_from_superevent_by_paltformid(userEvent['platformEventId'], userEvent['superEventID'])
         remove_subevent_from_superevent_by_eventid(id, userEvent['superEventID'])
+
         # If the super event is published, update the super event after removing the sub event.
         if get_user_event_status(userEvent['superEventID']) == "approved":
             success = put_user_event(userEvent['superEventID'])
