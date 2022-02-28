@@ -773,9 +773,10 @@ def userevent_delete(id):
     # delete this subevent from its super and upload its super to event building block
     if 'superEventID' in userEvent:
         remove_subevent_from_superevent_by_eventid(id, userEvent['superEventID'])
-        success = put_user_event(userEvent['superEventID'])
-        if not success:
-            __logger.error("updating super event in building block failed")
+        if get_user_event_status(userEvent['superEventID']) == "approved":
+            success = put_user_event(userEvent['superEventID'])
+            if not success:
+                __logger.error("updating super event in building block failed")
 
     if get_user_event_status(id) == "approved":
         # if this event is a subevent, need to unset this event from all its superevents
