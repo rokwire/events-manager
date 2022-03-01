@@ -1059,6 +1059,7 @@ def update_super_event_by_platform_id(sub_event_id, super_event_id):
         return False
 
 def update_super_event_by_local_id(sub_eventid, super_event_id):
+    sub_event_id = None
     try:
         sub_event_id = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"_id": ObjectId(sub_eventid)})['_id']
