@@ -749,11 +749,13 @@
             <div class="col-12 col-sm-2">
                <h5>Super Event</h5>
             </div>
-                <div class="col-12 col-sm-2">
-                    {% if post.isSuperEvent == true %}
-                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                <div class="col-12 col-sm-8">
+                    {% if post.isSuperEvent == true%}
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                    {% elif 'superEventID' in post %}
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" disabled> This feature is not available for sub-events
                     {% else %}
-                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
                     {% endif %}
                 </div>
           </div>
