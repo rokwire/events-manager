@@ -206,7 +206,10 @@ def user_an_event(id):
                     subEvent['isPublished'] = False
             elif 'eventid' in subEvent:
                 event = find_user_event(subEvent['eventid'])
-                subEvent['isPublished'] = False
+                if event['eventStatus'] == 'approved':
+                    subEvent['isPublished'] = True
+                else:
+                    subEvent['isPublished'] = False
             else:
                 post['subEvents'].remove(subEvent)
                 __logger.debug("remove incorrect subevent")
