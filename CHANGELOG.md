@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the issue that the sub event title is not updated in the super event. [#813](https://github.com/rokwire/events-manager/issues/813)
 - Fix the issue that publish the super event without sub events. [#827](https://github.com/rokwire/events-manager/issues/827)
 - Update superevent when its subevent has been removed. [#838](https://github.com/rokwire/events-manager/issues/838)
+- Fix subevent publish status on its super event detail page. [#840](https://github.com/rokwire/events-manager/issues/840)
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)

@@ -331,6 +331,7 @@ def publish_user_event(eventId):
         # Put event in object, but exclude ID and status
         event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                          projection={'_id': 0, 'eventStatus': 0})
+        superEventID = event.get('superEventID')
         if event:
             # Formatting Date and time for json dump
             if event.get('startDate'):
@@ -388,6 +389,17 @@ def publish_user_event(eventId):
                 # write platform id to db
                 update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
                                           update={"$set": updates})
+                # add platformid to its superevent's subevents
+                if superEventID is not None:
+                    superEvent = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})
+                    if 'subEvents' in superEvent and superEvent['subEvents'] is not None:
+                        for subEvent in superEvent['subEvents']:
+                            if 'eventid' in subEvent and subEvent['eventid'] == eventId:
+                                subEvent['id'] = platform_event_id
+                                overwriteSubeventsList = list()
+                                overwriteSubeventsList.append(subEvent)
+                                overwrite_subevents_to_superevent(overwriteSubeventsList, superEventID)
+                                break
                 if imageId:
                     __logger.info("User image upload successful for event {}".format(eventId))
                     event['imageURL'] = current_app.config['ROKWIRE_IMAGE_LINK_FORMAT'].format(platform_event_id, imageId)
