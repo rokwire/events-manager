@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.1.0] - 2022-03-01
 ### Added
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
 - Display the publish status of sub-events in event detail page [#772](https://github.com/rokwire/events-manager/issues/772)
@@ -340,7 +342,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.5...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.1.0...HEAD
+[3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
+[3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2
