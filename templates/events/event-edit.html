@@ -730,16 +730,32 @@
           </div>
           {% endif %}
 
+          <!-- freeEvent -->
+          <div class="form-group row">
+            <div class="col-12 col-sm-2">
+              <h5>Display Only with Super Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.displayOnlyWithSuperEvent == True %}
+                <input class="form_control" type="checkbox" id="displayOnlyWithSuperEvent" name="displayOnlyWithSuperEvent" checked/> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="displayOnlyWithSuperEvent" name="displayOnlyWithSuperEvent"/> Yes
+               {% endif %}
+            </div>
+          </div>
+
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
                <h5>Super Event</h5>
             </div>
-                <div class="col-12 col-sm-2">
-                    {% if post.isSuperEvent == true %}
-                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                <div class="col-12 col-sm-8">
+                    {% if post.isSuperEvent == true%}
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" checked> Yes
+                    {% elif 'superEventID' in post %}
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event" disabled> This feature is not available for sub-events.
                     {% else %}
-                    <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
+                        <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
                     {% endif %}
                 </div>
           </div>
@@ -756,7 +772,8 @@
               </div>
 
               <div class="col-sm-9">
-                <span role="button" class="add-sub btn btn-outline-primary">+ Add a Sub-Event</span>
+                <span role="button" class="add-sub btn btn-outline-primary" id="addsub">+ Link a Sub-Event</span>
+                <label for="addsub">Enter a keyword of the subevent title, and select this subevent from the dropdown list</label><br><br>
               </div>
             </div>
           </div>
@@ -764,8 +781,10 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" />
+                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
 
                       <div class="col-sm-3 form-group" >
@@ -781,7 +800,7 @@
                           </div>
                       </div>
                     <div class="offset-sm-1">
-                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
+                        <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Unlink</span>
                     </div>
                 </div>
             </div>
@@ -794,10 +813,21 @@
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
                                         {% if sub.name %}
-                                        <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" value="{{sub.name}}" />
-                                        <input type="hidden" name="id" value="{{sub.id}}"/>
+                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" value="{{sub.name}}" />
+                                            <input type="hidden" name="id" value="{{sub.id}}"/>
+                                            {% if sub.eventid %}
+                                            <input type="hidden" name="eventid" value="{{sub.eventid}}"/>
+                                            {% else %}
+                                            <input type="hidden" name="eventid" value=""/>
+                                            {% endif %}
+
+                                            {% if sub.status %}
+                                            <input type="hidden" name="status" value="{{sub.status}}"/>
+                                            {% else %}
+                                            <input type="hidden" name="status" value=""/>
+                                            {% endif %}
                                         {% else %}
-                                        <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Sub-Event ID" />
+                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
                                         {% endif %}
                                   </div>
 
@@ -823,7 +853,7 @@
                                       </div>
                                   </div>
                                 <div class="offset-sm-1">
-                                    <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Delete</span>
+                                    <span role="button" class="delete-sub btn btn-outline-dark form-control btn-sm-1">Unlink</span>
                                 </div>
                             </div>
                         </div>
@@ -922,6 +952,9 @@
 
      //Set the save button disabled in default
       $("document").ready(function(){
+        if (document.getElementById("super-event").checked === true) {
+          document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        }
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         })
@@ -1015,9 +1048,12 @@
      var sub = document.getElementById("super-des");
      var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
+        document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        document.getElementById('displayOnlyWithSuperEvent').checked = false;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
+        document.getElementById('displayOnlyWithSuperEvent').disabled = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }
@@ -1051,7 +1087,7 @@
         minLength: 2,
         source: function(request, response) {
           $.ajax({
-            url: "{{ url_for('user_events.searchsub') }}"+"?data="+request.term,
+            url: "{{ url_for('user_events.searchsub_exclude_itself', id=post['_id']) }}"+"?data="+request.term,
             type:"GET",
             dataType: "json",
             success: function(data) {
@@ -1069,6 +1105,13 @@
           selectedItemData = ui.item.data;
           id_input = $(event.target).next('input')
           id_input.val(selectedItemData.value)
+          if ('status' in selectedItemData)
+            if (selectedItemData.status === 'pending') {
+                eventid_input = id_input.next('input')
+                eventid_input.val(selectedItemData.eventid)
+                status_input = eventid_input.next('input')
+                status_input.val(selectedItemData.status)
+            }
         }
       }
     );

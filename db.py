@@ -19,6 +19,13 @@ from pymongo.results import InsertOneResult, UpdateResult
 from pymongo.mongo_client import MongoClient
 from flask import current_app,g
 from .config import Config
+import logging
+from time import gmtime
+
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("db.py")
 
 ######################################################################
 ### Basic DB creation and access functions
@@ -29,7 +36,7 @@ def get_db():
             try:
                 g.dbclient = pymongo.MongoClient(current_app.config['MONGO_URL'])
             except PyMongoError:
-                print("MongoDB connection failed.")
+                __logger.error("MongoDB connection failed.")
                 if 'dbclient' in g:
                     g.pop('dbclient', None)
                 return None
@@ -73,10 +80,10 @@ def find_one(co_or_ta, condition=None, *args, **kwargs):
                 return {}
             return result
         except TypeError:
-            print("Invalid arguments inserted using find_one")
+            __logger.error("Invalid arguments inserted using find_one")
             return {}
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return {}
 
 
@@ -95,10 +102,10 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
                 return {}
             return result
         except TypeError:
-            print("Invalid arguments inserted using find_one_and_update")
+            __logger.error("Invalid arguments inserted using find_one_and_update")
             return {}
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return {}
 
 
@@ -117,10 +124,10 @@ def find_all(co_or_ta, **kwarg):
                 return []
             return list(result)
         except TypeError:
-            print("Invalid arguments inserted using find_all")
+            __logger.error("Invalid arguments inserted using find_all")
             return []
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return []
 
 def find_all_previous_event_ids(co_or_ta, filter, **kwarg):
@@ -143,10 +150,10 @@ def find_all_previous_event_ids(co_or_ta, filter, **kwarg):
             return ids_object_list
 
         except TypeError:
-            print("Invalid arguments inserted using find_all_event_ids")
+            __logger.error("Invalid arguments inserted using find_all_event_ids")
             return []
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return []
 
 
@@ -172,8 +179,8 @@ def find_all_event_ids(co_or_ta, **kwarg):
 
         except TypeError:
             return []
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return []
 
 
@@ -191,8 +198,8 @@ def insert_one(co_or_ta, document=None, **kwargs):
             if not result:
                 return InsertOneResult()
             return result
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return InsertOneResult()
 
 
@@ -210,8 +217,8 @@ def update_one(co_or_ta, condition=None, update=None, **kwargs):
             if not result:
                 return UpdateResult()
             return result
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return UpdateResult()
 
 def update_many(co_or_ta, condition=None, update=None, **kwargs):
@@ -228,8 +235,8 @@ def update_many(co_or_ta, condition=None, update=None, **kwargs):
             if not result:
                 return UpdateResult()
             return result
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return UpdateResult()
 
 def replace_one(co_or_ta, condition=None, replacement=None, **kwargs):
@@ -246,8 +253,8 @@ def replace_one(co_or_ta, condition=None, replacement=None, **kwargs):
             if not result:
                 return UpdateResult()
             return result
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return UpdateResult()
 
 def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
@@ -264,8 +271,8 @@ def find_distinct(co_or_ta, key=None, condition=None, **kwargs):
             if not result:
                 return []
             return list(result)
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return []
 
 def get_count(co_or_ta, filter, **kwargs):
@@ -282,8 +289,8 @@ def get_count(co_or_ta, filter, **kwargs):
             if not result:
                 return 0
             return result
-        except Exception:
-            traceback.print_exc()
+        except Exception as ex:
+            __logger.exception(ex)
             return 0
 
 # Parameters: collection name, *objectId* list to delete
@@ -329,5 +336,23 @@ def text_index_search(co_or_ta, search_string, **kwargs):
         except Exception:
             return []
 
+def group_text_index_search(co_or_ta, search_string, admin_group_ids):
+    db = get_db()
+    dbType = current_app.config['DBTYPE']
 
+    if search_string is None or co_or_ta is None:
+        return []
 
+    if dbType == "mongoDB":
+        try:
+            collection = db.get_collection(co_or_ta)
+            # Will return all records with matching regex and is case insensitive for title search
+            # There is also a projection limiting the fields returned to only title and platformEventID
+            result = collection.find({"$text": {"$search": search_string}, "sourceId": {"$exists": False}, "createdByGroupId":{"$in": admin_group_ids}},
+                                     {"title": 1, "platformEventId": 1, "category": 1, "startDate": 1, "_id": 1, "eventStatus": 1, "isSuperEvent": 1, "superEventID": 1})
+            if not result:
+                return []
+            return result
+
+        except Exception:
+            return []

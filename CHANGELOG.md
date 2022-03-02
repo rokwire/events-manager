@@ -26,6 +26,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change APScheduler version.
 
+## [3.1.0] - 2022-03-01
+### Added
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Display the publish status of sub-events in event detail page [#772](https://github.com/rokwire/events-manager/issues/772)
+- Event filtering by date added for campus event. [#714](https://github.com/rokwire/events-manager/issues/714)
+- Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
+- Add displayOnlyWithSuperEvent. [#741](https://github.com/rokwire/events-manager/issues/741)
+- Add events per page dropdown[#713](https://github.com/rokwire/events-manager/issues/713).
+- Add simple logging in __init__.py. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Logging instead of printing for all python file. [#748](https://github.com/rokwire/events-manager/issues/748)
+- Change the sub-event delete button text to say Unlink and Add buttons to Link [#769](https://github.com/rokwire/events-manager/issues/769)
+- Update modal for publishing indicate that all sub-events will also be published [#782](https://github.com/rokwire/events-manager/issues/782)
+- Allow to add pending subevent. [#756](https://github.com/rokwire/events-manager/issues/756)
+- Security markdown file. [#794](https://github.com/rokwire/events-manager/issues/794)
+- Updated popup message on delete confirmation of super event. [#790](https://github.com/rokwire/events-manager/issues/790)
+- Deleting super events deletes its sub events as well. [#789](https://github.com/rokwire/events-manager/issues/789)
+- When saving a published super-event, unpublished sub-events will be published. [#797](https://github.com/rokwire/events-manager/issues/797)
+- All pending sub-events will be published when a super event is published. [#771](https://github.com/rokwire/events-manager/issues/771)
+- Filter superevent or existing subevent to be added as a subevent.[#826](https://github.com/rokwire/events-manager/issues/826)
+- Add create event button on event detail page. [#818](https://github.com/rokwire/events-manager/issues/818)
+- Disable super event checkbox for sub events. [#833](https://github.com/rokwire/events-manager/issues/833)
+
+### Fixed
+- Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
+- Fix the placeholder of subevent id. [#766](https://github.com/rokwire/events-manager/issues/766)
+- Fix indentation of removal sub events. [#785](https://github.com/rokwire/events-manager/issues/785)
+- Fix the error message on required field. [#783](https://github.com/rokwire/events-manager/issues/783)
+- Fix the subevent when the track or isfeature has been updated.[#823](https://github.com/rokwire/events-manager/issues/823)
+- Fixed error message when deleting subevent. [#799](https://github.com/rokwire/events-manager/issues/799)
+- Fix the issue that the sub event title is not updated in the super event. [#813](https://github.com/rokwire/events-manager/issues/813)
+- Fix the issue that publish the super event without sub events. [#827](https://github.com/rokwire/events-manager/issues/827)
+- Update superevent when its subevent has been removed. [#838](https://github.com/rokwire/events-manager/issues/838)
+- Fix subevent publish status on its super event detail page. [#840](https://github.com/rokwire/events-manager/issues/840)
+
+### Changed
+- Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)
+- Allow to link pending sub events to super event. [#756](https://github.com/rokwire/events-manager/issues/756)
+- Release script to use the latest AWS CLI login commands. [#816](https://github.com/rokwire/events-manager/issues/816)
+
+## [3.0.5] - 2022-01-12
+### Fixed
+- Fix user image upload to Events Building Block. [#806](https://github.com/rokwire/events-manager/pull/809)
+
+## [3.0.4] - 2022-01-05
+### Fixed
+- Issue with images in WebTool events not getting uploaded to Events BB. [#798](https://github.com/rokwire/events-manager/issues/798)
+
+## [3.0.3] - 2021-10-19
+### Fixed
+- Hotfix to check the platformid of subevent to be added to a superevent [#776](https://github.com/rokwire/events-manager/issues/776)
+
+## [3.0.2] - 2021-09-28
+### Fixed
+- Fix login to use Groups Building Block [#755](https://github.com/rokwire/events-manager/issues/755)
+
+## [3.0.1] - 2021-09-13
+### Added
+- Add group environment variables in config.py.template.
+### Changed
+- Change APScheduler version.
+
 ## [3.0.0] - 2021-09-07
 ### Added
 - Event filtering by group_ids functionality added [#673](https://github.com/rokwire/events-manager/issues/673)
@@ -61,8 +122,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - User events that are not associated with groups from being viewable. [#678](https://github.com/rokwire/events-manager/issues/678)
-## [2.4.2] - 2021-08-11
 
+## [2.4.2] - 2021-08-11
 ### Fixed
 - Fix user event image operation using event id of events building block.[#707](https://github.com/rokwire/events-manager/issues/707)
 
@@ -263,7 +324,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - get collection name from config.py
 
-
 ## [1.0.1] - 2019-10-14
 ### Added
 - add SLC predefined geolocation.
@@ -302,7 +362,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - References to AWS keys and variables.
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.0.5...HEAD
+
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.1.0...HEAD
+[3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
+[3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
 [3.0.3]: https://github.com/rokwire/events-manager/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/rokwire/events-manager/compare/3.0.1...3.0.2

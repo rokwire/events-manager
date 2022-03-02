@@ -28,12 +28,18 @@ from .utilities.sourceEvents import start
 from .utilities.constants import eventTypeMap, eventTypeValues
 from flask_paginate import Pagination, get_page_args
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from .config import Config
+import logging
+from time import gmtime
 
 
 bp = Blueprint('event', __name__, url_prefix=Config.URL_PREFIX+'/event')
 
+logging.Formatter.converter = gmtime
+logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%dT%H:%M:%S',
+                    format='%(asctime)-15s.%(msecs)03dZ %(levelname)-7s [%(threadName)-10s] : %(name)s - %(message)s')
+__logger = logging.getLogger("event.py")
 
 @bp.route('/source/<sourceId>')
 @role_required("source")
@@ -41,14 +47,26 @@ def source(sourceId):
     allsources = current_app.config['INT2SRC']
     title = allsources[sourceId][0]
     calendars = allsources[sourceId][1]
-    return render_template('events/source-events.html', 
-                            allsources=allsources, sourceId=sourceId, 
-                            title=title, calendars=calendars, total=0, 
+    return render_template('events/source-events.html',
+                            allsources=allsources, sourceId=sourceId,
+                            title=title, calendars=calendars, total=0,
                             eventTypeValues=eventTypeValues, isUser=False)
 
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
+    if 'from' in session:
+        start = session['from']
+        end = session['to']
+        start_date_filter = start
+        end_date_filter = end
+        if start:
+            start_date_filter = datetime.strptime(start, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S')
+        if end:
+            end_date_filter = (datetime.strptime(end, '%Y-%m-%d')+timedelta(hours=23,minutes=59, seconds=59)).strftime('%Y-%m-%dT%H:%M:%S')
+    else:
+        start = ""
+        end = ""
     if 'campus_select_status' in session:
         select_status = session['campus_select_status']
     else:
@@ -69,28 +87,38 @@ def calendar(calendarId):
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
         page = 1
-    per_page = current_app.config['PER_PAGE']
+    if 'per_page' in session:
+        per_page = session['per_page']
+    else:
+        per_page = current_app.config['PER_PAGE']
+        session['per_page'] = per_page
     offset = (page - 1) * per_page
-    total = get_calendar_events_count(sourceId, calendarId, select_status)
+    if 'from' in session:
+        total = get_calendar_events_count(sourceId, calendarId, select_status, start_date_filter, end_date_filter)
+    else:
+        total = get_calendar_events_count(sourceId, calendarId, select_status)
     if offset >= total or page <= 0:
         page = 1
         offset = 0
-    events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    if 'from' in session:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page, start_date_filter, end_date_filter)
+    else:
+        events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    print("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
+    __logger.info("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
-    return render_template('events/calendar.html', 
-                            title=title, source=(sourceId, sourcetitle), 
-                            posts=events, calendarId=calendarId,isUser=False,
-                            select_status=select_status, calendarStatus=calendarStatus,
-                            pagination=pagination, eventTypeValues=eventTypeValues)
+    return render_template('events/calendar.html',
+                            title=title, source=(sourceId, sourcetitle),
+                            posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,page=page,
+                            per_page=per_page, select_status=select_status, calendarStatus=calendarStatus,
+                            pagination=pagination, eventTypeValues=eventTypeValues,start=start,end=end)
 
 @bp.route('/setting', methods=('GET', 'POST'))
 @role_required("source")
 def setting():
     if request.method == 'POST':
-        print(request.form)
+        __logger.info(request.form)
         #add update calendars
         allstatus = get_all_calendar_status()
         update_calendars_status(request.form, allstatus)
@@ -106,10 +134,10 @@ def setting():
         '1': ('EMS', []),
     }
     calendar_prefix=current_app.config['WEBTOOL_CALENDAR_LINK_PREFIX']
-    return render_template('events/setting.html', 
+    return render_template('events/setting.html',
                             isUser=False,
-                            sources=INT2SRC, 
-                            allstatus=calendar_status, 
+                            sources=INT2SRC,
+                            allstatus=calendar_status,
                             url_prefix=calendar_prefix, schedule_time=get_download_schedule_time())
 
 @bp.route('/download', methods=['POST'])
@@ -175,7 +203,7 @@ def detail(eventId):
     for dict in source[1]:
         if event['calendarId'] in dict:
             calendarName = dict[event['calendarId']]
-    return render_template("events/event.html", 
+    return render_template("events/event.html",
                             post=event, isUser=False, sourceName=sourceName, calendarName=calendarName,
                             eventTypeMap=eventTypeMap, apiKey=current_app.config['GOOGLE_MAP_VIEW_KEY'],
                             sourceImage=showImage, timestamp=datetime.now().timestamp())
@@ -203,9 +231,9 @@ def edit(eventId):
     for dict in source[1]:
         if post_by_id['calendarId'] in dict:
             calendarName = dict[post_by_id['calendarId']]
-    return render_template("events/event-edit.html", 
-                            post = post_by_id, eventTypeMap = eventTypeMap, 
-                            eventTypeValues=eventTypeValues, isUser=False, 
+    return render_template("events/event-edit.html",
+                            post = post_by_id, eventTypeMap = eventTypeMap,
+                            eventTypeValues=eventTypeValues, isUser=False,
                             sourceName=sourceName, calendarName=calendarName)
 
 @bp.route('/searchresult', methods=['GET'])
@@ -225,7 +253,7 @@ def searchresult():
     if category:
         condition['category'] = category
 
-    print(eventId, category)
+    __logger.info(eventId, category)
     try:
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     except ValueError:
@@ -241,9 +269,9 @@ def searchresult():
     events = get_search_events(condition, select_status, offset, per_page)
     source = request.args.get('source')
     id = request.args.get('id')
-    print("{},{},{}".format(page, per_page, offset))
-    return render_template("events/searchresult.html", 
-                            eventTypeValues=eventTypeValues, source=source, id=id, 
+    __logger.info("{},{},{}".format(page, per_page, offset))
+    return render_template("events/searchresult.html",
+                            eventTypeValues=eventTypeValues, source=source, id=id,
                             eventId=eventId, category=category, isUser=False,
                             posts=events, pagination=pagination, select_status=select_status
     )
@@ -257,7 +285,7 @@ def schedule():
     present = datetime.now()
     d = present.strftime('%Y-%m-%d-')
     time = datetime.strptime("{}{}".format(d, time), '%Y-%m-%d-%H:%M')
-    print(time)
+    __logger.info(time)
     scheduler_add_job(current_app._get_current_object(), current_app.scheduler, start, time, targets=targets)
     return "success", 200
 
@@ -265,26 +293,26 @@ def schedule():
 @bp.route('/add-new-calendar', methods=['POST'])
 @role_required("source")
 def add_new_calendar():
-    print(request.form)
+    __logger.info(request.form)
     # new calendars
     calendarID = request.form.get('data[calendarID]')
     calendarName = request.form.get('data[calendarName]')
-    print(calendarID)
-    print(calendarName)
+    __logger.info(calendarID)
+    __logger.info(calendarName)
     if calendarID == '' or calendarName == '':
-        print("should have both ID and Name!")
+        __logger.error("should have both ID and Name!")
         return "invalid", 200
     # all newly added calendar will be default to "disapproved"
     calendar_document = {"calendarId" : calendarID, "calendarName": calendarName, "status": "disapproved"}
     insert_result = insert_one(current_app.config['CALENDAR_COLLECTION'], document = calendar_document)
     # insert error condition check
     if insert_result.inserted_id is None:
-        print("Insert calendar " + calendarID +" failed")
+        __logger.error("Insert calendar " + calendarID +" failed")
         return redirect('event.setting')
         return "fail", 400
     else:
-        print(current_app.config['INT2CAL'])
-        print("successfully inserted calendar "+ calendarID)
+        __logger.info(current_app.config['INT2CAL'])
+        __logger.info("successfully inserted calendar "+ calendarID)
         return "success", 200
 
 @bp.route('/search', methods=['GET', 'POST'])
@@ -298,7 +326,7 @@ def search():
 @bp.route('/event/<id>/delete', methods=['DELETE'])
 @role_required("source")
 def event_delete(id):
-    print("delete event id: %s" % id)
+    __logger.info("delete event id: %s" % id)
     event = get_event(id)
     calendar_id = event.get('calendarId')
     objectId_list_to_delete = list()
@@ -313,6 +341,12 @@ def event_delete(id):
         return "", 500
     return calendar_id, 200
 
+@bp.route('/time_range', methods=['POST'])
+@role_required("source")
+def time_range():
+    session["from"] = request.form.get('from')
+    session["to"] = request.form.get('to')
+    return "", 200
 
 @bp.route('/event/<id>/image', methods=['GET'])
 @role_required("source")
