@@ -412,7 +412,6 @@ def publish_user_event(eventId):
                         #TODO: think to notify user failure of upload image url to events building block
                         print("Event image {} upload fails".format(eventId))
                 return True
-
     except Exception as ex:
         __logger.exception(ex)
         return False
