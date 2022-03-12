@@ -22,7 +22,7 @@ Werkzeug==0.15.5
 googlemaps==3.0.2
 flask_paginate
 boto3==1.9.188
-Pillow==9.0.0
+Pillow==9.0.1
 gunicorn==19.9.0
 APScheduler>=3.3.0,<4
 python-ldap==3.4.0
