@@ -100,27 +100,27 @@
 
 {% block modals %}
 {{ confirmation("save", post.title) }}
-<div id="SaveModal" class="modal fade" role="dialog">
- <div class="modal-dialog modal-lg" role="content">
-   <!-- Modal content-->
-   <div class="modal-content">
-     <div class="modal-header">
-         <h4 class="modal-title">Confirmation </h4>
-         <button type="button" class="close" data-dismiss="modal">&times;</button>
-     </div>
-     <div class="modal-body">
-         <!-- table form here -->
-         <div class="form-group row">
-             <label class="col-12 col-form-label">You are about to publish the following super event <b>{{title}}</b>. All sub-events of this event will also be published with this action.</label>
-         </div>
-         <div class="col-md-10">
-             <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
-             <button type="submit" class="btn btn-primary btn-sm-1" onclick="document.getElementById('form').submit();">Confirm</button>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
+{#<div id="SaveModal" class="modal fade" role="dialog">#}
+{# <div class="modal-dialog modal-lg" role="content">#}
+{#   <!-- Modal content-->#}
+{#   <div class="modal-content">#}
+{#     <div class="modal-header">#}
+{#         <h4 class="modal-title">Confirmation </h4>#}
+{#         <button type="button" class="close" data-dismiss="modal">&times;</button>#}
+{#     </div>#}
+{#     <div class="modal-body">#}
+{#         <!-- table form here -->#}
+{#         <div class="form-group row">#}
+{#             <label class="col-12 col-form-label">You are about to publish the following super event <b>{{title}}</b>. All sub-events of this event will also be published with this action.</label>#}
+{#         </div>#}
+{#         <div class="col-md-10">#}
+{#             <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>#}
+{#             <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>#}
+{#         </div>#}
+{#       </div>#}
+{#     </div>#}
+{#   </div>#}
+{# </div>#}
 {% endblock %}
 
 
