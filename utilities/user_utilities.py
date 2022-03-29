@@ -452,9 +452,16 @@ def put_user_event(eventId):
                 del event['timezone']
             if event.get('subEvents'):
                 for subEvent in event['subEvents']:
-                    for k in subEvent.keys():
-                        if k != 'id' or k != 'isFeatured' or k != 'track':
-                            del subEvent[k]
+                    id = subEvent.get('id', None)
+                    isFeatured = subEvent.get('isFeatured', None)
+                    track = subEvent.get('track', None)
+                    subEvent.clear()
+                    if id:
+                        subEvent['id'] = id
+                    if isFeatured:
+                        subEvent['isFeatured'] = isFeatured
+                    if track:
+                        subEvent['track'] = track
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
