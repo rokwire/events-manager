@@ -28,6 +28,8 @@
           Publish{% if isSuper == True %} Super{% endif %} Event
           {% elif usage == "disapproveEvent" %}
           Disapprove event
+          {% elif usage == "save" %}
+          Saving Published Super Event
           {% else %}
           Download
           {% endif %}
@@ -37,7 +39,9 @@
         </button>
       </div>
       <div class="modal-body">
-        {% if usage == "approve" %}
+        {% if usage == "save" %}
+        You are about to save the following published super event <b>{{title}}</b>. All sub-events of this event will also be published with this action.
+        {% elif usage == "approve" %}
         Are you sure you want to approve the calendar <b>{{title}}</b> ?
         {% elif usage == "disapprove" %}
         Are you sure you want to disapprove the calendar <b>{{title}}</b> ?
@@ -58,6 +62,10 @@
         id="disapprovebutton"
         {% else %}
         id="download"
+        {% endif %}
+
+        {% if usage == "save" %}
+        onclick="document.getElementById('form').submit();"
         {% endif %}
         >OK</button>
       </div>
