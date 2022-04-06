@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add create event button on event detail page. [#818](https://github.com/rokwire/events-manager/issues/818)
 - Disable super event checkbox for sub events. [#833](https://github.com/rokwire/events-manager/issues/833)
 - Add confirmation modal when saving the published super events. [#819](https://github.com/rokwire/events-manager/issues/819)
+- Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
 
 ### Fixed
 - Remove the wrong subevent added to a superevent. [#764](https://github.com/rokwire/events-manager/issues/764)
