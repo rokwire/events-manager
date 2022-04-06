@@ -197,20 +197,6 @@ def user_an_event(id):
         #     if 'eventid' not in subEvent:
         #         fill_missing_subevent_fileds_in_superevent(subEvent['id'], id)
 
-        # remove duplicates in sub event array
-        uniqueEventIdOfSubEvents = set()
-        uniqueIdOfSubEvents = set()
-        deduplicatedSubEvents = list()
-        for subEvent in post['subEvents']:
-            if 'id' in subEvent:
-                if subEvent['id'] not in uniqueIdOfSubEvents:
-                    deduplicatedSubEvents.append(subEvent)
-                    uniqueIdOfSubEvents.add(subEvent['id'])
-            elif 'eventid' in subEvent:
-                if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
-                    deduplicatedSubEvents.append(subEvent)
-                    uniqueEventIdOfSubEvents.add(subEvent['eventid'])
-        post['subEvents'] = deduplicatedSubEvents
         for subEvent in post['subEvents']:
             if 'id' in subEvent:
                 event = find_user_event(clickable_utility(subEvent['id']))
@@ -423,6 +409,21 @@ def user_an_event_edit(id):
             post_by_id['subEvents'] = get_subevent_list(request.form)
         else:
             post_by_id['subEvents'] = None
+
+        # remove duplicates in sub event array
+        uniqueEventIdOfSubEvents = set()
+        uniqueIdOfSubEvents = set()
+        deduplicatedSubEvents = list()
+        for subEvent in post_by_id['subEvents']:
+            if 'id' in subEvent:
+                if subEvent['id'] not in uniqueIdOfSubEvents:
+                    deduplicatedSubEvents.append(subEvent)
+                    uniqueIdOfSubEvents.add(subEvent['id'])
+            elif 'eventid' in subEvent:
+                if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
+                    deduplicatedSubEvents.append(subEvent)
+                    uniqueEventIdOfSubEvents.add(subEvent['eventid'])
+        post_by_id['subEvents'] = deduplicatedSubEvents
 
         old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['subEvents']
