@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
+
 ## [3.1.0] - 2022-03-01
 ### Added
 - Add script to update group id in database[#739](https://github.com/rokwire/events-manager/issues/739).
