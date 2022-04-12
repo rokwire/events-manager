@@ -354,6 +354,18 @@ def publish_user_event(eventId):
                 del event['superEventID']
             if event.get('timezone'):
                 del event['timezone']
+            if event.get('subEvents'):
+                for subEvent in event['subEvents']:
+                    id = subEvent.get('id', None)
+                    isFeatured = subEvent.get('isFeatured', None)
+                    track = subEvent.get('track', None)
+                    subEvent.clear()
+                    if id:
+                        subEvent['id'] = id
+                    if isFeatured:
+                        subEvent['isFeatured'] = isFeatured
+                    if track:
+                        subEvent['track'] = track
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
