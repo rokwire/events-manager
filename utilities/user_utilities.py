@@ -1309,3 +1309,18 @@ def publish_pending_subevents(superEventID):
             "Failed to update sub events list for {}".format(
                 superEventID))
     return subEvents
+
+def deduplicate_sub_events(subEvents):
+    uniqueEventIdOfSubEvents = set()
+    uniqueIdOfSubEvents = set()
+    deduplicatedSubEvents = list()
+    for subEvent in subEvents:
+        if 'id' in subEvent:
+            if subEvent['id'] not in uniqueIdOfSubEvents:
+                deduplicatedSubEvents.append(subEvent)
+                uniqueIdOfSubEvents.add(subEvent['id'])
+        elif 'eventid' in subEvent:
+            if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
+                deduplicatedSubEvents.append(subEvent)
+                uniqueEventIdOfSubEvents.add(subEvent['eventid'])
+    return deduplicatedSubEvents
