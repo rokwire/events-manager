@@ -412,6 +412,8 @@ def user_an_event_edit(id):
 
         old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['subEvents']
+        if old_sub_events is None:
+            old_sub_events = []
         new_sub_events = post_by_id['subEvents']
         if old_sub_events is not None:
             for old_sub_event in old_sub_events:
