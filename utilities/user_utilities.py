@@ -360,11 +360,11 @@ def publish_user_event(eventId):
                     isFeatured = subEvent.get('isFeatured', None)
                     track = subEvent.get('track', None)
                     subEvent.clear()
-                    if id:
+                    if id is not None:
                         subEvent['id'] = id
-                    if isFeatured:
+                    if isFeatured is not None:
                         subEvent['isFeatured'] = isFeatured
-                    if track:
+                    if track is not None:
                         subEvent['track'] = track
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
@@ -468,11 +468,11 @@ def put_user_event(eventId):
                     isFeatured = subEvent.get('isFeatured', None)
                     track = subEvent.get('track', None)
                     subEvent.clear()
-                    if id:
+                    if id is not None:
                         subEvent['id'] = id
-                    if isFeatured:
+                    if isFeatured is not None:
                         subEvent['isFeatured'] = isFeatured
-                    if track:
+                    if track is not None:
                         subEvent['track'] = track
 
             # Getting rid of all the empty fields for PUT request
