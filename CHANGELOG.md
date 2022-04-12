@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
+- Fix the bug that the sub-event cannot be added to the super event after being unlinked from it. [#859](https://github.com/rokwire/events-manager/issues/859)
 
 ## [3.1.0] - 2022-03-01
 ### Added
