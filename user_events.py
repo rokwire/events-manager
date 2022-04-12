@@ -411,22 +411,25 @@ def user_an_event_edit(id):
             post_by_id['subEvents'] = None
 
         # remove duplicates in sub event array
-        uniqueEventIdOfSubEvents = set()
-        uniqueIdOfSubEvents = set()
-        deduplicatedSubEvents = list()
-        for subEvent in post_by_id['subEvents']:
-            if 'id' in subEvent:
-                if subEvent['id'] not in uniqueIdOfSubEvents:
-                    deduplicatedSubEvents.append(subEvent)
-                    uniqueIdOfSubEvents.add(subEvent['id'])
-            elif 'eventid' in subEvent:
-                if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
-                    deduplicatedSubEvents.append(subEvent)
-                    uniqueEventIdOfSubEvents.add(subEvent['eventid'])
-        post_by_id['subEvents'] = deduplicatedSubEvents
+        if 'subEvents' in post_by_id and post_by_id['subEvents'] is not None:
+            uniqueEventIdOfSubEvents = set()
+            uniqueIdOfSubEvents = set()
+            deduplicatedSubEvents = list()
+            for subEvent in post_by_id['subEvents']:
+                if 'id' in subEvent:
+                    if subEvent['id'] not in uniqueIdOfSubEvents:
+                        deduplicatedSubEvents.append(subEvent)
+                        uniqueIdOfSubEvents.add(subEvent['id'])
+                elif 'eventid' in subEvent:
+                    if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
+                        deduplicatedSubEvents.append(subEvent)
+                        uniqueEventIdOfSubEvents.add(subEvent['eventid'])
+            post_by_id['subEvents'] = deduplicatedSubEvents
 
         old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['subEvents']
+        if old_sub_events is None:
+            old_sub_events = []
         new_sub_events = post_by_id['subEvents']
         if old_sub_events is not None:
             for old_sub_event in old_sub_events:
