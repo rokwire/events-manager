@@ -255,7 +255,7 @@ def publish_image(id, platformId):
                         print("Update {} fails in update_user_event".format(id))
         else:
             return None
-    
+
         if response.status_code in (200, 201):
             imageId = response.json()['id']
             updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
