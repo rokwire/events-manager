@@ -116,9 +116,20 @@
 
   <!-- filter and select operations -->
   {% if isUser %}
-  <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
-  </div>
+      <div>
+          {% if post.superEventID and post.superEventID != '' %}
+              <div class="media" style="float: left; margin-right: 2px">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+              </div>
+              <div class="media">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post.superEventID) }}" role="button">Back To Super Event</a>
+              </div>
+          {% else %}
+              <div class="media">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+              </div>
+          {% endif %}
+      </div>
   {% else %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
