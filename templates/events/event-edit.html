@@ -23,6 +23,9 @@
 
 {% block styles %}
   {{ super()}}
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
   <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -623,7 +626,8 @@
               <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12">{% if post.longDescription %}{{post.longDescription}}{% endif %}</textarea>
+                <div name = "htmlDescription" id="htmlDescription" class="form-control" rows="12"></div>
+                <input type="hidden" name="longDescription" id="longDescription">
             </div>
           </div>
 
@@ -890,11 +894,48 @@
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
    <!-- <script src="https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key={{apiKey}}"></script> -->
 
    <script>
       //change into local time before load
+    var quill = new Quill('#htmlDescription', {
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          {#['image', 'code-block']#}
+        ]
+      },
+      placeholder: 'Compose an epic...',
+      theme: 'snow'  // or 'bubble'
+    });
 
+    {% if post.longDescription %}
+        var txt = document.createElement("textarea");
+        txt.innerHTML = '{{post.longDescription}}';
+        {#console.log('" + {{post.longDescription}} + "')#}
+        {#const delta = quill.clipboard.convert('" + {{post.longDescription}} + "')#}
+        const delta = quill.clipboard.convert(txt.value)
+        quill.setContents(delta, 'silent')
+    {% endif %}
+    quill.on('text-change', function(delta, source) {
+        document.getElementById('submit-data').disabled = false;
+        });
+
+    $('#submit-data').on('click', () => {
+        debugger
+        // Get HTML content
+        var html = quill.root.innerHTML;
+
+        // Copy HTML content in hidden form
+        $('#longDescription').val( html )
+        // Post form
+        document.forms["form"].submit();
+    })
 
       /*
           var start_utc = document.getElementById('startDate').value.replace("T", " ");

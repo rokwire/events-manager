@@ -308,7 +308,8 @@
               <h5>Description </h5>
             </div>
             <div class="col-12 col-sm-9">
-                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
+                <div name = "htmlDescription" id="htmlDescription" class="form-control" rows="12"></div>
+                <input type="hidden" name="longDescription" id="longDescription">
             </div>
           </div>
 
@@ -442,7 +443,35 @@
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
    <script>
+    var quill = new Quill('#htmlDescription', {
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          {#['image', 'code-block']#}
+        ]
+      },
+      placeholder: 'Compose an epic...',
+      theme: 'snow'  // or 'bubble'
+    });
+
+    $('#submit-data').on('click', () => {
+        debugger
+    // Get HTML content
+    var html = quill.root.innerHTML;
+
+    // Copy HTML content in hidden form
+    $('#longDescription').val( html )
+    // Post form
+    document.forms["form"].submit();
+})
+
      //Set the save button disabled in default
      $('#form')
          .each(function(){
@@ -768,6 +797,10 @@
 
 {% block styles %}
 {{ super() }}
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
 <style>
 .ui-autocomplete {
   position: absolute;
