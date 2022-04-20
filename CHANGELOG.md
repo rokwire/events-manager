@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
+
 
 ## [3.1.0] - 2022-03-01
 ### Added
@@ -39,7 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the issue that publish the super event without sub events. [#827](https://github.com/rokwire/events-manager/issues/827)
 - Update superevent when its subevent has been removed. [#838](https://github.com/rokwire/events-manager/issues/838)
 - Fix subevent publish status on its super event detail page. [#840](https://github.com/rokwire/events-manager/issues/840)
-- Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
 
 ### Changed
 - Only allow to select the same group subevents. [#754](https://github.com/rokwire/events-manager/issues/754)

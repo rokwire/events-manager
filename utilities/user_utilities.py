@@ -355,6 +355,7 @@ def publish_user_event(eventId):
             if event.get('timezone'):
                 del event['timezone']
             if event.get('subEvents'):
+                # Remove unnecessary fields in sub-event array
                 for subEvent in event['subEvents']:
                     id = subEvent.get('id', None)
                     isFeatured = subEvent.get('isFeatured', None)
@@ -463,6 +464,7 @@ def put_user_event(eventId):
                 timezone = event['timezone']
                 del event['timezone']
             if event.get('subEvents'):
+                # Remove unnecessary fields in sub-event array
                 for subEvent in event['subEvents']:
                     id = subEvent.get('id', None)
                     isFeatured = subEvent.get('isFeatured', None)
