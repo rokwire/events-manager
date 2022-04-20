@@ -453,11 +453,12 @@
       modules: {
         toolbar: [
           [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
+          ['bold', 'italic', 'underline', 'link'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           {#['image', 'code-block']#}
         ]
       },
-      placeholder: 'Compose an epic...',
+      placeholder: 'Please add a desription...',
       theme: 'snow'  // or 'bubble'
     });
 
