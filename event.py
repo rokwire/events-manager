@@ -55,9 +55,9 @@ def source(sourceId):
 @bp.route('/calendar/<calendarId>')
 @role_required("source")
 def calendar(calendarId):
-    if 'from' in session:
-        start = session['from']
-        end = session['to']
+    if 'from_calendar' in session:
+        start = session['from_calendar']
+        end = session['to_calendar']
         start_date_filter = start
         end_date_filter = end
         if start:
@@ -93,14 +93,14 @@ def calendar(calendarId):
         per_page = current_app.config['PER_PAGE']
         session['per_page'] = per_page
     offset = (page - 1) * per_page
-    if 'from' in session:
+    if 'from_calendar' in session:
         total = get_calendar_events_count(sourceId, calendarId, select_status, start_date_filter, end_date_filter)
     else:
         total = get_calendar_events_count(sourceId, calendarId, select_status)
     if offset >= total or page <= 0:
         page = 1
         offset = 0
-    if 'from' in session:
+    if 'from_calendar' in session:
         events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page, start_date_filter, end_date_filter)
     else:
         events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
@@ -346,6 +346,13 @@ def event_delete(id):
 def time_range():
     session["from"] = request.form.get('from')
     session["to"] = request.form.get('to')
+    return "", 200
+
+@bp.route('/time_range_calendar', methods=['POST'])
+@role_required("source")
+def time_range_calendar():
+    session["from_calendar"] = request.form.get('from')
+    session["to_calendar"] = request.form.get('to')
     return "", 200
 
 @bp.route('/event/<id>/image', methods=['GET'])

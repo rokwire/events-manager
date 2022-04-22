@@ -354,6 +354,19 @@ def publish_user_event(eventId):
                 del event['superEventID']
             if event.get('timezone'):
                 del event['timezone']
+            if event.get('subEvents'):
+                # Remove unnecessary fields in sub-event array
+                for subEvent in event['subEvents']:
+                    id = subEvent.get('id', None)
+                    isFeatured = subEvent.get('isFeatured', None)
+                    track = subEvent.get('track', None)
+                    subEvent.clear()
+                    if id is not None:
+                        subEvent['id'] = id
+                    if isFeatured is not None:
+                        subEvent['isFeatured'] = isFeatured
+                    if track is not None:
+                        subEvent['track'] = track
             # event = {k: v for k, v in event.items() if v}
             if 'subcategory' in event.keys() and event['subcategory'] is None:
                 event['subcategory'] = ''
@@ -451,8 +464,18 @@ def put_user_event(eventId):
                 timezone = event['timezone']
                 del event['timezone']
             if event.get('subEvents'):
+                # Remove unnecessary fields in sub-event array
                 for subEvent in event['subEvents']:
-                    del subEvent['name']
+                    id = subEvent.get('id', None)
+                    isFeatured = subEvent.get('isFeatured', None)
+                    track = subEvent.get('track', None)
+                    subEvent.clear()
+                    if id is not None:
+                        subEvent['id'] = id
+                    if isFeatured is not None:
+                        subEvent['isFeatured'] = isFeatured
+                    if track is not None:
+                        subEvent['track'] = track
 
             # Getting rid of all the empty fields for PUT request
             # event = {k: v for k, v in event.items() if v}
