@@ -7,9 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Fix time filters between campus events and user events. [#846](https://github.com/rokwire/events-manager/issues/846)
-
-### Fixed
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
+- Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
 
 ## [3.1.0] - 2022-03-01
 ### Added
