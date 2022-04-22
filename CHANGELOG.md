@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+- Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
+
 ### Fixed
 - Fix time filters between campus events and user events. [#846](https://github.com/rokwire/events-manager/issues/846)
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
