@@ -5,9 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+- Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
+
 ### Fixed
 - Fix time filters between campus events and user events. [#846](https://github.com/rokwire/events-manager/issues/846)
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
+- Fix timezone validation bug. [#857](https://github.com/rokwire/events-manager/issues/857)
+- Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
 - Fix read of closed file on uploading campus events images. [#860](https://github.com/rokwire/events-manager/issues/860)
 
 ## [3.1.0] - 2022-03-01
