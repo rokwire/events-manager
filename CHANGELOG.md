@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
 - Fix timezone validation bug. [#857](https://github.com/rokwire/events-manager/issues/857)
 - Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
+- Fix read of closed file on uploading campus events images. [#860](https://github.com/rokwire/events-manager/issues/860)
 
 ## [3.1.0] - 2022-03-01
 ### Added
