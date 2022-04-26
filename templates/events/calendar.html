@@ -89,10 +89,10 @@
       <div class="form-check form-check-inline row justify-content-end" style="float: right">
         <div style="margin-right: 20px">
             <span>From</span>
-          <input type="date" id="from" value="{{start}}" max="9999-12-31"/>
+          <input type="date" id="from_calendar" value="{{start}}" max="9999-12-31"/>
             <span>to</span>
-          <input type="date" id="to" value="{{end}}" max="9999-12-31"/>
-            <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
+          <input type="date" id="to_calendar" value="{{end}}" max="9999-12-31"/>
+            <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from_calendar').value='';document.getElementById('to_calendar').value=''">Reset</button>
         </div>
 
         <div class="form-check form-check-inline row justify-content-end" >
@@ -164,14 +164,15 @@
       });
     });
     function reselect_time_range() {
-        let from = moment(document.getElementById('from').value).utc();
-        let to = moment(document.getElementById('to').value).utc();
-        let from_string = from.format('YYYY-MM-DD');
-        let to_string = to.format('YYYY-MM-DD');
-        if (document.getElementById('from').value === "") from_string = "";
-        if (document.getElementById('to').value === "") to_string = "";
+        debugger
+        let from_calendar = moment(document.getElementById('from_calendar').value).utc();
+        let to_calendar = moment(document.getElementById('to_calendar').value).utc();
+        let from_string = from_calendar.format('YYYY-MM-DD');
+        let to_string = to_calendar.format('YYYY-MM-DD');
+        if (document.getElementById('from_calendar').value === "") from_string = "";
+        if (document.getElementById('to_calendar').value === "") to_string = "";
         $.ajax({
-            url: "{{ url_for('event.time_range') }}",
+            url: "{{ url_for('event.time_range_calendar') }}",
             dataType: 'json',
             type: 'POST',
             data: {
@@ -182,7 +183,7 @@
             location.reload(true);
         });
     }
-    $("#from, #to").on('change', reselect_time_range)
+    $("#from_calendar, #to_calendar").on('change', reselect_time_range)
     $("#time-range-reset").on('click', reselect_time_range)
   </script>
 {% endblock %}
