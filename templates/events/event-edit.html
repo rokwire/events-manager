@@ -905,7 +905,7 @@
     var quill = new Quill('#htmlDescription', {
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
+          [{ 'header': [1, 2, false] }],
           ['bold', 'italic', 'underline', 'link'],
             [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           {#['image', 'code-block']#}
@@ -998,11 +998,12 @@
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         })
+            /*
         .on('change input', function(){  // event handler of input change
             $(this).find(':submit, input[type="image"]')
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
-            /* Check if input with type files has changed */
+            // Check if input with type files has changed
             var changedFiles = $( ":file" ).filter(function( index ) {
                 return this.value != this.defaultValue;
             }).length;
@@ -1011,7 +1012,7 @@
                 $(this).find(':submit, input[type="image"]')
                     .prop('disabled', false);
             }
-        })
+        })*/
 
         .find(':submit, input[type="image"]').prop('disabled', true);
 
