@@ -450,10 +450,8 @@
     var quill = new Quill('#htmlDescription', {
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
           ['bold', 'italic', 'underline', 'link'],
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-          {#['image', 'code-block']#}
         ]
       },
       placeholder: 'Please add a desription...',
