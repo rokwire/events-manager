@@ -33,13 +33,13 @@
     <p>
         Main features of Events Manager are as follows:
     </p>
-    <h3>User Events</h3>
+    <h3><a href="{{ url_for('user_events.user_events') }}"> User Events </a></h3>
     <ul>
         <li>View User Events (Approved and Pending)</li>
         <li>Manage User Events (Create, View, Edit, Delete, Approve, Disapprove, etc.)</li>
         <li>Send Notifications</li>
     </ul>
-    <h3>Calendar Events</h3>
+    <h3><a href="{{ url_for('event.source', sourceId=0) }}"> Calendar Events </a></h3>
     <ul>
         <li>View Event Sources</li>
         <li>Manage Individual Calendars (Add, Approve, etc.)</li>
