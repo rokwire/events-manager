@@ -919,8 +919,6 @@
     {% if post.longDescription %}
         var txt = document.createElement("textarea");
         txt.innerHTML = '{{post.longDescription}}';
-        {#console.log('" + {{post.longDescription}} + "')#}
-        {#const delta = quill.clipboard.convert('" + {{post.longDescription}} + "')#}
         const delta = quill.clipboard.convert(txt.value)
         quill.setContents(delta, 'silent')
     {% endif %}
