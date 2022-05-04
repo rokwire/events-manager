@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add rich editor for user event description. [#721](https://github.com/rokwire/events-manager/issues/721)
 
 ### Fixed
-- Fix time filters between campus events and user events. [#846](https://github.com/rokwire/events-manager/issues/846)
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
 - Fix the bug that the sub-event cannot be added to the super event after being unlinked from it. [#859](https://github.com/rokwire/events-manager/issues/859)
 - Fix timezone validation bug. [#857](https://github.com/rokwire/events-manager/issues/857)
