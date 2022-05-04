@@ -928,7 +928,9 @@
         quill.setContents(delta, 'silent')
     {% endif %}
     quill.on('text-change', function(delta, source) {
-        document.getElementById('submit-data').disabled = false;
+        var html = quill.root.innerHTML;
+        // Copy HTML content in hidden form
+        $('#longDescription').val( html );
         });
 
     $('#submit-data').on('click', () => {
@@ -1001,9 +1003,7 @@
         }
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
-        })
-            /*
-        .on('change input', function(){  // event handler of input change
+        }).on('change input', function(){  // event handler of input change
             $(this).find(':submit, input[type="image"]')
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
@@ -1016,11 +1016,8 @@
                 $(this).find(':submit, input[type="image"]')
                     .prop('disabled', false);
             }
-        })*/
-
-        .find(':submit, input[type="image"]').prop('disabled', true);
-
-      })
+        }).find(':submit, input[type="image"]').prop('disabled', true);
+      });
 
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
