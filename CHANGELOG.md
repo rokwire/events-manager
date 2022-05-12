@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove unnecessary fields in sub-event array of super events. [#836](https://github.com/rokwire/events-manager/issues/836)
 - Fix read of closed file on uploading campus events images. [#860](https://github.com/rokwire/events-manager/issues/860)
 - Fix time filters between campus events and user events. [#846](https://github.com/rokwire/events-manager/issues/846)
+- Fix the search on subevent. [#872](https://github.com/rokwire/events-manager/issues/872)
 
 ## [3.1.0] - 2022-03-01
 ### Added
