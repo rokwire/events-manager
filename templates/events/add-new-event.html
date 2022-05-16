@@ -370,7 +370,9 @@
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
-               <h5>Super Event</h5>
+                <div class="mytooltip"><h5>Super Event</h5>
+                    <span class="mytooltiptext">A super event is a large event made up of multiple smaller events. For example, a conference with multiple sessions for presentations, tutorials, workshops, etc., is an excellent example of a super event. In this example, the conference will be the super event, and the individual sessions will be the sub-events.</span>
+                </div>
             </div>
             <div class="col-12 col-sm-2">
                 <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
@@ -381,7 +383,10 @@
           <div id="super-des" class="form-group" style="display:none" >
             <div class="form-group row">
               <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
-                  <h5>Add Sub-Event </h5>
+{#                  <h5>Add Sub-Event </h5>#}
+                <div class="mytooltip"><h5>Add Sub-Event</h5>
+                    <span class="mytooltiptext">A sub-event is a smaller event that's part of a larger super event (e.g., a conference). You can link any existing event created through the Rokwire Events Manager as a sub-event to a super event. The only exceptions are other existing super events and sub-events and the current event. The hierarchy of super events and sub-events go only for one level.</span>
+                </div>
               </div>
 
               <div class="col-sm-9">
@@ -803,6 +808,30 @@
 #htmlDescription {
   font-size: 18px;
   overflow-y: visible;
+}
+
+  .mytooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.mytooltip .mytooltiptext {
+  visibility: hidden;
+  width: 1200px;
+  background-color: black;
+  color: #fff;
+  {#text-align: center;#}
+  border-radius: 6px;
+  padding: 10px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.mytooltip:hover .mytooltiptext {
+  visibility: visible;
 }
 
 .ui-autocomplete {
