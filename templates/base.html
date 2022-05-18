@@ -38,13 +38,12 @@
     <header class="sitebar">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container" style="justify-content: flex-start;">
-          <a class="navbar-brand mr-4" href="{{ url_for('home.home') }}">Events Manager</a>
                   {% if g.user["access"] == "both" %}
-            <div class="col"><a role="button" class="btn btn-light text-nowrap" href="{{ url_for('home.home') }}">Home</a></div>
+            <div ><a role="button" class="btn btn-light text-nowrap" style="margin-left:130px" href="{{ url_for('home.home') }}">Home</a></div>
           {% elif g.user["access"] == "user" %}
-          <div class="col"><a role="button" class="btn btn-light text-nowrap" href="{{ url_for('home.home') }}">Home</a></div>
+          <div class="col"><a role="button" class="btn btn-light text-nowrap" style="margin-left:130px" href="{{ url_for('home.home') }}">Home</a></div>
           {% elif g.user["access"] == "source" %}
-          <div class="col"><a role="button" class="btn btn-light text-nowrap" href="{{ url_for('home.home') }}">Home</a></div>
+          <div class="col"><a role="button" class="btn btn-light text-nowrap" style="margin-left:130px" href="{{ url_for('home.home') }}">Home</a></div>
           {% endif %}
       {% block create_event %}{% endblock %}
         </div>
