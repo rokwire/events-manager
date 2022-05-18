@@ -7,12 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Change user events and campus events link on home page. [#866](https://github.com/rokwire/events-manager/issues/866)
+- Switch Space” button to home and relocate the home button. [#868](https://github.com/rokwire/events-manager/issues/866)
 - Remove old home link. [#870](https://github.com/rokwire/events-manager/issues/870)
 
 ### Added
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
 - Add "Back To Super Event" button for sub events. [#853](https://github.com/rokwire/events-manager/issues/853)
 - Add rich editor for user event description. [#721](https://github.com/rokwire/events-manager/issues/721)
+- Add tooltip on super event and add sub event. [#865](https://github.com/rokwire/events-manager/issues/865)
 
 ### Fixed
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
