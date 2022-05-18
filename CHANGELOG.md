@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [3.2.0] - 2022-05-18
 ### Changed
 - Change user events and campus events link on home page. [#866](https://github.com/rokwire/events-manager/issues/866)
 - Switch Space” button to home and relocate the home button. [#868](https://github.com/rokwire/events-manager/issues/866)
@@ -364,7 +365,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.1.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.2.0...HEAD
+[3.2.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.2.0
 [3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
