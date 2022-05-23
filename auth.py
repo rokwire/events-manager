@@ -58,6 +58,8 @@ def role_required(role):
         def decorated_function(**kwargs):
             access = session.get("access")
             if access is None:
+                session['login'] = False
+                session['entry'] = request.blueprint
                 return redirect(url_for("auth.login"))
             else:
                 if role == 'user':
@@ -247,7 +249,12 @@ def callback():
         if is_user_admin and is_source_admin:
             session["access"] = "both"
             session.permanent = True
-            return redirect(url_for("auth.select_events"))
+            if 'login' not in session:
+                return redirect(url_for("home.home"))
+            elif session['entry'] == 'user_events':
+                return redirect(url_for("user_events.user_events"))
+            elif session['entry'] == 'event':
+                return redirect(url_for("event.source", sourceId=0))
         elif is_user_admin:
             session["access"] = "user"
             session.permanent = True
@@ -261,19 +268,19 @@ def callback():
             return redirect(url_for("home.home", error="You don't have permission to login the event manager"))
 
 
-@bp.route('/select-events', methods=['GET', 'POST'])
-@role_required("both")
-def select_events():
-    if request.method == 'POST':
-        event = request.form.get("event")
-        if event == "user":
-            return redirect(url_for("user_events.user_events"))
-            # return render_template("auth/select-events.html")
-        elif event == "source":
-            return redirect(url_for("event.source", sourceId=0))
-        else:
-            return render_template("auth/select-events.html", no_search=True)
-    return render_template("auth/select-events.html", no_search=True)
+# @bp.route('/select-events', methods=['GET', 'POST'])
+# @role_required("both")
+# def select_events():
+#     if request.method == 'POST':
+#         event = request.form.get("event")
+#         if event == "user":
+#             return redirect(url_for("user_events.user_events"))
+#             # return render_template("auth/select-events.html")
+#         elif event == "source":
+#             return redirect(url_for("event.source", sourceId=0))
+#         else:
+#             return render_template("auth/select-events.html", no_search=True)
+#     return render_template("auth/select-events.html", no_search=True)
 
 
 @bp.before_app_request

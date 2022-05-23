@@ -410,8 +410,15 @@ def user_an_event_edit(id):
         else:
             post_by_id['subEvents'] = None
 
+        # remove duplicates in sub event array
+        if 'subEvents' in post_by_id and post_by_id['subEvents'] is not None:
+            deduplicatedSubEvents = deduplicate_sub_events(post_by_id['subEvents'])
+            post_by_id['subEvents'] = deduplicatedSubEvents
+
         old_sub_events = find_one(current_app.config['EVENT_COLLECTION'],
                                   condition={"_id": ObjectId(id)})['subEvents']
+        if old_sub_events is None:
+            old_sub_events = []
         new_sub_events = post_by_id['subEvents']
         if old_sub_events is not None:
             for old_sub_event in old_sub_events:
@@ -697,6 +704,10 @@ def add_new_event():
             new_event['isEventFree'] = True
         if new_event.get('displayOnlyWithSuperEvent') == 'on':
             new_event['displayOnlyWithSuperEvent'] = True
+        # remove duplicates in sub event array
+        if 'subEvents' in new_event and new_event['subEvents'] is not None:
+            deduplicatedSubEvents = deduplicate_sub_events(new_event['subEvents'])
+            new_event['subEvents'] = deduplicatedSubEvents
         new_event_id = create_new_user_event(new_event)
         if new_event['subEvents'] is not None:
             for subEvent in new_event['subEvents']:

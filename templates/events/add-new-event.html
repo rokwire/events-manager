@@ -137,9 +137,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required
-                oninvalid="this.setCustomValidity('Please select a time zone.')"
-                oninput="setCustomValidity('')">
+                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
                   {% for key, value in timezones.items() %}
                       <option value = "{{key}}" id = {{key}}>{{value}}</option>
                   {% endfor %}
@@ -307,8 +305,9 @@
             <div class="col-12 col-sm-2">
               <h5>Description </h5>
             </div>
-            <div class="col-12 col-sm-9">
-                <textarea name = "longDescription" id="longDescription" class="form-control" rows="12"></textarea>
+            <div class="col-12 col-sm-9" style="margin-bottom: 50px">
+                <div name = "htmlDescription" id="htmlDescription" class="form-control"></div>
+                <input type="hidden" name="longDescription" id="longDescription">
             </div>
           </div>
 
@@ -371,7 +370,9 @@
           <!-- super event check box -->
           <div class="form-group row" id="super-check" onclick="display_super_event_description()">
             <div class="col-12 col-sm-2">
-               <h5>Super Event</h5>
+                <div class="mytooltip"><h5>Super Event</h5>
+                    <span class="mytooltiptext">A super event is a large event made up of multiple smaller events. For example, a conference with multiple sessions for presentations, tutorials, workshops, etc., is an excellent example of a super event. In this example, the conference will be the super event, and the individual sessions will be the sub-events.</span>
+                </div>
             </div>
             <div class="col-12 col-sm-2">
                 <input class="form_control" name="isSuperEvent" type="checkbox" id="super-event"> Yes
@@ -382,7 +383,10 @@
           <div id="super-des" class="form-group" style="display:none" >
             <div class="form-group row">
               <div class="col-12 col-sm-2 form-group"  id="super-des-title"  >
-                  <h5>Add Sub-Event </h5>
+{#                  <h5>Add Sub-Event </h5>#}
+                <div class="mytooltip"><h5>Add Sub-Event</h5>
+                    <span class="mytooltiptext">A sub-event is a smaller event that's part of a larger super event (e.g., a conference). You can link any existing event created through the Rokwire Events Manager as a sub-event to a super event. The only exceptions are other existing super events and sub-events and the current event. The hierarchy of super events and sub-events go only for one level.</span>
+                </div>
               </div>
 
               <div class="col-sm-9">
@@ -442,7 +446,32 @@
 {% block scripts %}
   {{super()}}
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
    <script>
+    var quill = new Quill('#htmlDescription', {
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'link'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ]
+      },
+      placeholder: 'Please add a description...',
+      theme: 'snow'  // or 'bubble'
+    });
+
+    $('#submit-data').on('click', () => {
+    // Get HTML content
+    var html = quill.root.innerHTML;
+
+    // Copy HTML content in hidden form
+    $('#longDescription').val( html )
+    // Post form
+    document.forms["form"].submit();
+})
+
      //Set the save button disabled in default
      $('#form')
          .each(function(){
@@ -768,7 +797,42 @@
 
 {% block styles %}
 {{ super() }}
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
+<link href="cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css" rel="stylesheet">
+<link href="cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
 <style>
+#htmlDescription {
+  font-size: 18px;
+  overflow-y: visible;
+}
+
+  .mytooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.mytooltip .mytooltiptext {
+  visibility: hidden;
+  width: 1200px;
+  background-color: black;
+  color: #343a40;
+  {#text-align: center;#}
+  border-radius: 6px;
+  padding: 10px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.mytooltip:hover .mytooltiptext {
+  visibility: visible;
+}
+
 .ui-autocomplete {
   position: absolute;
   top: 100%;

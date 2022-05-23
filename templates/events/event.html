@@ -22,7 +22,7 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2" style="margin-left:50px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
+  <a class="btn btn-primary mr-2" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
   {% endif %}
 {% endblock %}
 
@@ -116,9 +116,20 @@
 
   <!-- filter and select operations -->
   {% if isUser %}
-  <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
-  </div>
+      <div>
+          {% if post.superEventID and post.superEventID != '' %}
+              <div class="media" style="float: left; margin-right: 10px">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+              </div>
+              <div class="media">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post.superEventID) }}" role="button">Back To Super Event</a>
+              </div>
+          {% else %}
+              <div class="media">
+                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+              </div>
+          {% endif %}
+      </div>
   {% else %}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
