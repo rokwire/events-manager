@@ -366,7 +366,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [Unreleased]: https://github.com/rokwire/events-manager/compare/3.2.0...HEAD
-[3.2.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.2.0
+[3.2.0]: https://github.com/rokwire/events-manager/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5
 [3.0.4]: https://github.com/rokwire/events-manager/compare/3.0.3...3.0.4
