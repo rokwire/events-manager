@@ -27,9 +27,9 @@ __logger = logging.getLogger("notification.py")
 push_service = FCMNotification(api_key=Config.FCM_SERVER_API_KEY)
 
 
-def get_favorite_eventid_information(eventid):
+def get_favorite_eventid_information(eventId):
     data = dict()
-    url = "%s%s" % (Config.FAVORITE_EVENTID_ENDPOINT_PREFIX, eventid)
+    url = "%s%s" % (Config.FAVORITE_EVENTID_ENDPOINT_PREFIX, eventId)
     headers = {"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY}
     req = requests.get(url, headers=headers)
     if req.status_code == 200:
