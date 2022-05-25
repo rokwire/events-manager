@@ -511,7 +511,7 @@ def user_an_event_edit(id):
                                 break
                         if found:
                             continue
-                        remove_subevent_from_superevent_by_eventId(old_sub_event['eventId'], id)
+                        remove_subevent_from_superevent_by_event_id(old_sub_event['eventId'], id)
                         for subevent in post_by_id['subEvents']:
                             if 'eventId' in subevent and subevent['eventId'] == old_sub_event['eventId']:
                                 post_by_id['subEvents'].remove(subevent)
@@ -788,7 +788,7 @@ def userevent_delete(id):
     if 'superEventID' in userEvent:
         if 'platformEventId' in userEvent:
             remove_subevent_from_superevent_by_paltformid(userEvent['platformEventId'], userEvent['superEventID'])
-        remove_subevent_from_superevent_by_eventId(id, userEvent['superEventID'])
+        remove_subevent_from_superevent_by_event_id(id, userEvent['superEventID'])
 
         # If the super event is published, update the super event after removing the sub event.
         if get_user_event_status(userEvent['superEventID']) == "approved":

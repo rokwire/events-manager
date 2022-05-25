@@ -1249,7 +1249,7 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
         __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
         return False
 
-def remove_subevent_from_superevent_by_eventId(subevent_id, super_eventid):
+def remove_subevent_from_superevent_by_event_id(subevent_id, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
         if record:
