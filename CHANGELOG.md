@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switch Space” button to home and relocate the home button. [#868](https://github.com/rokwire/events-manager/issues/866)
 - Remove old home link. [#870](https://github.com/rokwire/events-manager/issues/870)
 - Remove auth select endpoint. [#869](https://github.com/rokwire/events-manager/issues/869)
+- Hide "Display Only With Super Event" when the event is a super event. [#864](https://github.com/rokwire/events-manager/issues/864)
 
 ### Added
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
