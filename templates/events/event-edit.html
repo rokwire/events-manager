@@ -1175,9 +1175,9 @@
           id_input.val(selectedItemData.value)
           if ('status' in selectedItemData)
             if (selectedItemData.status === 'pending') {
-                eventId_input = id_input.next('input')
-                eventId_input.val(selectedItemData.eventId)
-                status_input = eventid_input.next('input')
+                event_id_input = id_input.next('input')
+                event_id_input.val(selectedItemData.eventId)
+                status_input = event_id_input.next('input')
                 status_input.val(selectedItemData.status)
             }
         }
