@@ -960,16 +960,6 @@
         $('#longDescription').val( html );
         });
 
-    $('#submit-data').on('click', () => {
-        // Get HTML content
-        var html = quill.root.innerHTML;
-
-        // Copy HTML content in hidden form
-        $('#longDescription').val( html )
-        // Post form
-        document.forms["form"].submit();
-    })
-
       /*
           var start_utc = document.getElementById('startDate').value.replace("T", " ");
           var end_utc = document.getElementById('endDate').value.replace("T", " ");
@@ -1355,8 +1345,12 @@
         }
       });
     $( "#form" ).on( "submit", function(event) {
+        var html = quill.root.innerHTML;
+        // Copy HTML content in hidden form
+        $('#longDescription').val( html )
       if (document.getElementById("super-event").checked && "{{ post.eventStatus }}" === "approved") {
           event.preventDefault();
+          console.log("event.preventDefault()")
           $('#confirmModal').modal();
       }
       let tags = split(document.getElementById('tags').value);
