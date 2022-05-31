@@ -763,7 +763,7 @@
           {% endif %}
 
           <!-- freeEvent -->
-          <div class="form-group row">
+          <div class="form-group row" id="displayOnlyWithSuperEventBox">
             <div class="col-12 col-sm-2">
               <h5>Display Only with Super Event</h5>
             </div>
@@ -1026,6 +1026,7 @@
       $("document").ready(function(){
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+          document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         }
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
@@ -1117,11 +1118,13 @@
      var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
         document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         document.getElementById('displayOnlyWithSuperEvent').checked = false;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
         document.getElementById('displayOnlyWithSuperEvent').disabled = false;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }

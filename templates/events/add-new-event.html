@@ -523,6 +523,7 @@
    $("document").ready(function(){
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+          document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         }
    })
    //Attach functionality to delete buttons
@@ -543,10 +544,12 @@
      if (check.checked == true){
         document.getElementById('displayOnlyWithSuperEvent').checked = false;
         document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
         document.getElementById('displayOnlyWithSuperEvent').disabled = false;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }
