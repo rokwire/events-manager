@@ -5,13 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Use eventId instead of eventid. [#831](https://github.com/rokwire/events-manager/issues/831)
+
 ## [3.2.0] - 2022-05-18
 ### Changed
 - Change user events and campus events link on home page. [#866](https://github.com/rokwire/events-manager/issues/866)
 - Switch Space” button to home and relocate the home button. [#868](https://github.com/rokwire/events-manager/issues/866)
 - Remove old home link. [#870](https://github.com/rokwire/events-manager/issues/870)
 - Remove auth select endpoint. [#869](https://github.com/rokwire/events-manager/issues/869)
-- Use eventId instead of eventid. [#831](https://github.com/rokwire/events-manager/issues/831)
+- Hide "Display Only With Super Event" when the event is a super event. [#864](https://github.com/rokwire/events-manager/issues/864)
 
 ### Added
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
