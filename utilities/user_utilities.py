@@ -1173,7 +1173,7 @@ def get_admin_groups():
     uin = session["uin"]
     #  Build request
     url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
-    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
+    headers = {"Content-Type": "application/json", "INTERNAL_API_KEY": current_app.config['INTERNAL_API_KEY']}
     req = requests.get(url, headers=headers)
     group_info = list()
     # Parse Results

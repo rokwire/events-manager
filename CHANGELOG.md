@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix the tooltipe color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
 
+### Changed
+- Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
+
 ## [3.2.0] - 2022-05-18
 ### Changed
 - Change user events and campus events link on home page. [#866](https://github.com/rokwire/events-manager/issues/866)
