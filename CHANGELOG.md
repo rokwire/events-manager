@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/865)
+
 ### Fixed
 - Fix the tooltipe color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
 
@@ -21,8 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
 - Add "Back To Super Event" button for sub events. [#853](https://github.com/rokwire/events-manager/issues/853)
 - Add rich editor for user event description. [#721](https://github.com/rokwire/events-manager/issues/721)
-- Add tooltip on super event and add sub event. [#865](https://github.com/rokwire/events-manager/issues/865)
-- Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/883)
+- Add tooltip on super event and add sub event. [#865](https://github.com/rokwire/events-manager/issues/883)
 
 ### Fixed
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
