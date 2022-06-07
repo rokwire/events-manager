@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
 - Add "Back To Super Event" button for sub events. [#853](https://github.com/rokwire/events-manager/issues/853)
 - Add rich editor for user event description. [#721](https://github.com/rokwire/events-manager/issues/721)
-- Add tooltip on super event and add sub event. [#865](https://github.com/rokwire/events-manager/issues/885)
+- Add tooltip on super event and add sub event. [#865](https://github.com/rokwire/events-manager/issues/865)
 
 ### Fixed
 - Fix jinja2 version. [#852](https://github.com/rokwire/events-manager/issues/852)
