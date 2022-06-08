@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix the tooltipe color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
+- Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
