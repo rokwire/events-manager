@@ -42,7 +42,8 @@
 
 .mytooltip .mytooltiptext {
   visibility: hidden;
-  width: 1200px;
+  width: max-content;
+  max-width: 1000px;
   background-color: #343a40;
   color: #fff;
   {#text-align: center;#}
@@ -273,10 +274,12 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Subcategory </h5>
-              </div>
+            <div class="form-group row">
+                <div class="col-12 col-sm-2">
+                    <div class="mytooltip"><h5>Subcategory</h5>
+                        <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
+                    </div>
+                </div>
               <div class="col-sm-9">
                 <div class="form-group">
                   <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
