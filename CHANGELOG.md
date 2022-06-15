@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
+- Change the placeholder value when editing or creating events for clarity. [#897](https://github.com/rokwire/events-manager/issues/897)
 
 ## [3.2.0] - 2022-05-18
 ### Changed

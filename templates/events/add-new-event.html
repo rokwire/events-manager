@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required >
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="fit-content" required >
                   {% for group in groups %}
                       <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
                   {% endfor %}
@@ -97,7 +97,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." required>
+                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." data-width="fit-content" required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -114,7 +114,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                <select name="subcategory" id="subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                   {% for key in subcategoriesMap['Athletics'] %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -139,7 +139,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id="timezone" class="selectpicker" title="Choose the event timezone..." data-width="fit-content" required>
                   {% for key, value in timezones.items() %}
                       <option value = "{{key}}" id = {{key}}>{{value}}</option>
                   {% endfor %}
@@ -490,9 +490,11 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
          $('#subcategory').selectpicker('refresh');
        }else{
          $('#subcategory').prop("disabled", false);
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
          $('#subcategory').selectpicker('refresh');
        }
      })
