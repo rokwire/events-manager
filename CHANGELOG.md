@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
+- Change the description of Events Manager in the home page. [#890](https://github.com/rokwire/events-manager/issues/890)
 - Update SECURITY.md. [#895](https://github.com/rokwire/events-manager/issues/895)
 
 ## [3.2.0] - 2022-05-18
