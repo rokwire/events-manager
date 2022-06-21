@@ -10,13 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](ht3ps://github.com/rokwire/events-manager/issues/865)
 
 ### Fixed
-- Fix the tooltipe color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
+- Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
 - Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
 - Fix that the pop up window to confirm saving the published super event is not working [#880](https://github.com/rokwire/events-manager/issues/880)
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
 - Change the description of Events Manager in the home page. [#890](https://github.com/rokwire/events-manager/issues/890)
+- Update SECURITY.md. [#895](https://github.com/rokwire/events-manager/issues/895)
 
 ## [3.2.0] - 2022-05-18
 ### Changed
