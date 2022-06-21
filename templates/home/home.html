@@ -35,16 +35,17 @@
     </p>
     <h3><a href="{{ url_for('user_events.user_events') }}"> User Events </a></h3>
     <ul>
-        <li>View User Events (Approved and Pending)</li>
-        <li>Manage User Events (Create, View, Edit, Delete, Approve, Disapprove, etc.)</li>
-        <li>Send Notifications</li>
+        <li>View events (published and pending)</li>
+        <li>Manage events (create, view, edit, delete, and publish)</li>
+        <li>Send notifications</li>
     </ul>
     <h3><a href="{{ url_for('event.source', sourceId=0) }}"> Calendar Events </a></h3>
     <ul>
-        <li>View Event Sources</li>
-        <li>Manage Individual Calendars (Add, Approve, etc.)</li>
-        <li>Schedule Daily Downloads</li>
-        <li>Manage Individual Events (Approve, Disapprove, etc.)</li>
+        <li>View event sources</li>
+        <li>View events (published and pending)</li>
+        <li>Manage events (publish, make pending, and delete)</li>
+        <li>Manage calendars (add and approve)</li>
+        <li>Schedule daily downloads</li>
     </ul>
     {% if gitinfo %}
     <div class="navbar container fixed-bottom">
