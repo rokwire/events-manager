@@ -106,7 +106,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# configuration
+# local image files
 .image/*
 
 .DS_Store
