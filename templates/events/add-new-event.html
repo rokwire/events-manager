@@ -491,11 +491,11 @@
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
          $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').val('').selectpicker('refresh');
        }else{
          $('#subcategory').prop("disabled", false);
          $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').val('').selectpicker('refresh');
        }
      })
 
