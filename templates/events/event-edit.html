@@ -42,7 +42,8 @@
 
 .mytooltip .mytooltiptext {
   visibility: hidden;
-  width: 1200px;
+  width: max-content;
+  max-width: 1000px;
   background-color: #343a40;
   color: #fff;
   {#text-align: center;#}
@@ -188,7 +189,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required>
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="auto" required>
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
                       <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
@@ -240,7 +241,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." required >
+                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -260,7 +261,7 @@
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory..." data-width="fit-content">
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
                         <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -273,13 +274,15 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Subcategory </h5>
-              </div>
+            <div class="form-group row">
+                <div class="col-12 col-sm-2">
+                    <div class="mytooltip"><h5>Subcategory</h5>
+                        <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
+                    </div>
+                </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                     {% for key in subcategoriesMap['Athletics'] %}
                       <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endfor %}
@@ -309,7 +312,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id = "timezone" class="selectpicker" title="Choose the event timezone" required>
                   {% for key, value in timezones.items() %}
                       {% if post.timezone == key%}
                           <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
@@ -511,7 +514,7 @@
                 <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
+                <input class="form-control" type="text" name="cost" value="{{post.cost}}" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
               </div>
             </div>
           {% else %}
@@ -520,7 +523,7 @@
                 <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="cost"/>
+                <input class="form-control" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
               </div>
             </div>
           {% endif %}
@@ -966,8 +969,6 @@
 
         // Copy HTML content in hidden form
         $('#longDescription').val( html )
-        // Post form
-        document.forms["form"].submit();
     })
 
       /*
@@ -1050,10 +1051,12 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }
      })
 
