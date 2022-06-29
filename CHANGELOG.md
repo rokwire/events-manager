@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](ht3ps://github.com/rokwire/events-manager/issues/865)
+- Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/883)
+- Default option for timezone is set as central time. [#912](https://github.com/rokwire/events-manager/issues/912)
 
 ### Fixed
 - Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
