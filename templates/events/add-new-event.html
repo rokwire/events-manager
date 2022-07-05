@@ -160,11 +160,11 @@
           <!-- endDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>End Date</h5>
+              <h5>End Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left"/>
+              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
             </div>
           </div>
 
@@ -648,6 +648,7 @@
         document.getElementById('startTime').setAttribute("hidden","hidden");
         document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
+        document.getElementById('endTime').removeAttribute("required");
         /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
@@ -674,8 +675,9 @@
       */
       } else {
         document.getElementById('startTime').removeAttribute("hidden");
-        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('startTime').setAttribute("required", "required");
         document.getElementById('endTime').removeAttribute("hidden");
+        document.getElementById('endTime').setAttribute("required", "required");
         /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
