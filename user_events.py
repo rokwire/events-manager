@@ -192,9 +192,9 @@ def user_an_event(id):
     #     post['targetAudience'] = targetAudience_edit_list
     post['longDescription'] = post['longDescription'].replace("\n", "<br>")
     if post['subEvents']:
-        # fill in missing fields: eventid, status
+        # fill in missing fields: eventId, status
         # for subEvent in post['subEvents']:
-        #     if 'eventid' not in subEvent:
+        #     if 'eventId' not in subEvent:
         #         fill_missing_subevent_fileds_in_superevent(subEvent['id'], id)
 
         for subEvent in post['subEvents']:
@@ -204,8 +204,8 @@ def user_an_event(id):
                     subEvent['isPublished'] = True
                 else:
                     subEvent['isPublished'] = False
-            elif 'eventid' in subEvent:
-                event = find_user_event(subEvent['eventid'])
+            elif 'eventId' in subEvent:
+                event = find_user_event(subEvent['eventId'])
                 if event['eventStatus'] == 'approved':
                     subEvent['isPublished'] = True
                 else:
@@ -426,8 +426,8 @@ def user_an_event_edit(id):
                     # unlink between subevent and super event.
                     if 'id' in old_sub_event:
                         update_super_event_by_platform_id(old_sub_event['id'], '')
-                    elif 'eventid' in old_sub_event:
-                        update_super_event_by_local_id(old_sub_event['eventid'], '')
+                    elif 'eventId' in old_sub_event:
+                        update_super_event_by_local_id(old_sub_event['eventId'], '')
                     else:
                         old_sub_events.remove(old_sub_event)
                         __logger.debug("remove incorrect subevent")
@@ -456,19 +456,19 @@ def user_an_event_edit(id):
                                 can_add_pending = True
                                 update_super_event_by_platform_id(new_sub_event['id'], id)
                         # handle pending user event.
-                        elif 'eventid' in new_sub_event:
+                        elif 'eventId' in new_sub_event:
                             found = False
                             for old_sub_event in old_sub_events:
-                                if 'eventid' in new_sub_event and 'eventid' in old_sub_event and old_sub_event["eventid"] == new_sub_event['eventid']:
+                                if 'eventId' in new_sub_event and 'eventId' in old_sub_event and old_sub_event["eventId"] == new_sub_event['eventId']:
                                     found = True
                                     overwrite_subevents.append(new_sub_event)
                                     break
                             if found:
                                 continue
-                            new_added_subevent = find_user_event(new_sub_event['eventid'])
+                            new_added_subevent = find_user_event(new_sub_event['eventId'])
                             if "superEventID" not in new_added_subevent:
                                 can_add_pending = True
-                                update_super_event_by_local_id(new_sub_event['eventid'], id)
+                                update_super_event_by_local_id(new_sub_event['eventId'], id)
                         else:
                             new_sub_events.remove(new_sub_event)
                         if can_add_pending:
@@ -506,14 +506,14 @@ def user_an_event_edit(id):
                     else:
                         found = False
                         for new_sub_event in new_sub_events:
-                            if 'eventid' in new_sub_event and old_sub_event["eventid"] == new_sub_event['eventid']:
+                            if 'eventId' in new_sub_event and old_sub_event["eventId"] == new_sub_event['eventId']:
                                 found = True
                                 break
                         if found:
                             continue
-                        remove_subevent_from_superevent_by_eventid(old_sub_event['eventid'], id)
+                        remove_subevent_from_superevent_by_event_id(old_sub_event['eventId'], id)
                         for subevent in post_by_id['subEvents']:
-                            if 'eventid' in subevent and subevent['eventid'] == old_sub_event['eventid']:
+                            if 'eventId' in subevent and subevent['eventId'] == old_sub_event['eventId']:
                                 post_by_id['subEvents'].remove(subevent)
                                 break
 
@@ -526,7 +526,7 @@ def user_an_event_edit(id):
                 for sub_event in sub_event_list:
                     # if sub event is not published when added to super event, the 'status' field is missing,
                     # so we assume a sub event is published if 'status' is missing
-                    if (sub_event.get('status', 'approved') == 'pending' and sub_event['eventid'] == id) \
+                    if (sub_event.get('status', 'approved') == 'pending' and sub_event['eventId'] == id) \
                             or (sub_event.get('status', 'approved') == 'approved' and sub_event['id'] == find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(id)})['platformEventId']):
                         sub_event['name'] = new_title
                         updateResult = update_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(post_by_id['superEventID'])},
@@ -553,7 +553,7 @@ def user_an_event_edit(id):
                     event = find_one(current_app.config['EVENT_COLLECTION'],
                                 condition={"platformEventId": subevent['id']})
                 else:
-                    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(subevent['eventid'])})
+                    event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(subevent['eventId'])})
                 if event is not None and (not 'superEventID' in event):
                     update_one(current_app.config['EVENT_COLLECTION'],
                                condition={'_id': ObjectId(event['eventId'])},
@@ -714,7 +714,7 @@ def add_new_event():
                 if 'id' in subEvent:
                     update_super_event_by_platform_id(subEvent['id'], new_event_id)
                 else:
-                    update_super_event_by_local_id(subEvent['eventid'], new_event_id)
+                    update_super_event_by_local_id(subEvent['eventId'], new_event_id)
         if new_event['tags']:
             new_event['tags'] = new_event['tags'][0].split(',')
             for i in range(1, len(new_event['tags'])):
@@ -778,8 +778,8 @@ def userevent_delete(id):
                                         condition={"platformEventId": sub_event['id']})['_id']
             else:
                 # pending subevent
-                update_super_event_by_local_id(sub_event['eventid'], '')
-                sub_event_id = sub_event['eventid']
+                update_super_event_by_local_id(sub_event['eventId'], '')
+                sub_event_id = sub_event['eventId']
             # delete subevent
             __logger.info("delete user event id: %s" % sub_event_id)
             delete_user_event(sub_event_id)
@@ -788,7 +788,7 @@ def userevent_delete(id):
     if 'superEventID' in userEvent:
         if 'platformEventId' in userEvent:
             remove_subevent_from_superevent_by_paltformid(userEvent['platformEventId'], userEvent['superEventID'])
-        remove_subevent_from_superevent_by_eventid(id, userEvent['superEventID'])
+        remove_subevent_from_superevent_by_event_id(id, userEvent['superEventID'])
 
         # If the super event is published, update the super event after removing the sub event.
         if get_user_event_status(userEvent['superEventID']) == "approved":
@@ -871,7 +871,7 @@ def searchsub_exclude_itself(id):
        search_term = request.values.get("data")
        results = group_subevents_search(search_term, get_admin_group_ids())
        for result in results:
-           if result['eventid'] == id:
+           if result['eventId'] == id:
                results.remove(result)
        return jsonify(results)
     else:
@@ -929,5 +929,5 @@ def sub_event(eventId):
 
     except Exception as ex:
         __logger.exception(ex)
-        __logger.error("Redirect for eventid {} failed".format(eventId))
+        __logger.error("Redirect for eventId {} failed".format(eventId))
         abort(500)

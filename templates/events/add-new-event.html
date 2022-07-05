@@ -402,7 +402,7 @@
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control search-id" name="name" type="text" placeholder="Sub-Event Title" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
                             <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
                       <div class="col-sm-3 form-group" >
@@ -605,9 +605,9 @@
           id_input.val(selectedItemData.value)
           if ('status' in selectedItemData)
             if (selectedItemData.status === 'pending') {
-                eventid_input = id_input.next('input')
-                eventid_input.val(selectedItemData.eventid)
-                status_input = eventid_input.next('input')
+                event_id_input = id_input.next('input')
+                event_id_input.val(selectedItemData.eventId)
+                status_input = event_id_input.next('input')
                 status_input.val(selectedItemData.status)
             }
         }

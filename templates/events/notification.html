@@ -14,7 +14,7 @@
   limitations under the License.
   ------------------------------------------------------------------------>
 
-{% macro notification(usage, eventid, eventtitle) %}
+{% macro notification(usage, eventId, eventtitle) %}
 <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -35,11 +35,11 @@
             <textarea class="form-control" id="message-text" onkeyup="success()" placeholder="Enter your Message..."></textarea>
           </div>
           <div class="form-group">
-            <label for="eventid-text" class="col-form-label">Event ID:</label>
-            <b>{{eventid}}</b>
+            <label for="eventId-text" class="col-form-label">Event ID:</label>
+            <b>{{eventId}}</b>
             </div>
           <div class="form-group">
-            <label for="eventid-text" class="col-form-label">Event Title:</label>
+            <label for="eventId-text" class="col-form-label">Event Title:</label>
             <b>{{eventtitle}}</b>
             </div>
           <div class="form-group">
