@@ -335,6 +335,10 @@ def user_an_event_edit(id):
             post_by_id['isEventFree'] = True
         else:
             post_by_id['isEventFree'] = False
+        if 'isGroupPrivate' in request.form and request.form.get('isGroupPrivate') == 'on':
+            post_by_id['isGroupPrivate'] = True
+        else:
+            post_by_id['isGroupPrivate'] = False
         if 'displayOnlyWithSuperEvent' in request.form and request.form.get('displayOnlyWithSuperEvent') == 'on':
             post_by_id['displayOnlyWithSuperEvent'] = True
         else:
@@ -699,9 +703,10 @@ def add_new_event():
     req = requests.get(Config.EVENT_BUILDING_BLOCK_URL + "/tags", headers=headers)
     if request.method == 'POST':
         new_event = populate_event_from_form(request.form, session["email"])
-        new_event['isGroupPrivate'] = False
         if new_event.get('isEventFree') == 'on':
             new_event['isEventFree'] = True
+        if new_event.get('isGroupPrivate') == 'on':
+            new_event['isGroupPrivate'] = True
         if new_event.get('displayOnlyWithSuperEvent') == 'on':
             new_event['displayOnlyWithSuperEvent'] = True
         # remove duplicates in sub event array
