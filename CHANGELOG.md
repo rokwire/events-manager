@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](ht3ps://github.com/rokwire/events-manager/issues/865)
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
+- Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
 
 ### Fixed
 - Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change the placeholder value when editing or creating events for clarity. [#897](https://github.com/rokwire/events-manager/issues/897)
 - Change the description of Events Manager in the home page. [#890](https://github.com/rokwire/events-manager/issues/890)
 - Update SECURITY.md. [#895](https://github.com/rokwire/events-manager/issues/895)
+- Use eventId instead of eventid. [#831](https://github.com/rokwire/events-manager/issues/831)
 
 ## [3.2.0] - 2022-05-18
 ### Changed
