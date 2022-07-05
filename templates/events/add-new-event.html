@@ -141,7 +141,11 @@
               <div class="form-group">
                 <select name="timezone" id="timezone" class="selectpicker" title="Choose the event timezone..." data-width="fit-content" required>
                   {% for key, value in timezones.items() %}
-                      <option value = "{{key}}" id = {{key}}>{{value}}</option>
+                      {% if key == "US/Central" %}
+                        <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
+                      {% else %}
+                        <option value="{{key}}" id="{{key}}">{{value}}</option>
+                      {% endif %}
                   {% endfor %}
                 </select>
               </div>
@@ -533,6 +537,8 @@
    });
 
    $("document").ready(function(){
+        $('#timezone').selectpicker('val', 'US/Central');
+        $('#timezone').selectpicker('refresh');
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
           document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
