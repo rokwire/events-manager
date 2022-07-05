@@ -356,30 +356,30 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date</h5>
+                <h5>End Date<span style="color: red">*</span></h5>
               </div>
               <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
                   <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
-                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left" required/>
                   {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date</h5>
+                <h5> End Date<span style="color: red">*</span></h5>
               </div>
               <div class="col-sm-6">
                 {% if post.allDay == True %}
-                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
                 <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
                 {% else %}
-                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" />
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" required/>
                 {% endif %}
               </div>
             </div>
@@ -838,7 +838,7 @@
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
                             <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
 
@@ -870,10 +870,10 @@
                                         {% if sub.name %}
                                             <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" value="{{sub.name}}" />
                                             <input type="hidden" name="id" value="{{sub.id}}"/>
-                                            {% if sub.eventid %}
-                                            <input type="hidden" name="eventid" value="{{sub.eventid}}"/>
+                                            {% if sub.eventId %}
+                                            <input type="hidden" name="eventId" value="{{sub.eventId}}"/>
                                             {% else %}
-                                            <input type="hidden" name="eventid" value=""/>
+                                            <input type="hidden" name="eventId" value=""/>
                                             {% endif %}
 
                                             {% if sub.status %}
@@ -1196,9 +1196,9 @@
           id_input.val(selectedItemData.value)
           if ('status' in selectedItemData)
             if (selectedItemData.status === 'pending') {
-                eventid_input = id_input.next('input')
-                eventid_input.val(selectedItemData.eventid)
-                status_input = eventid_input.next('input')
+                event_id_input = id_input.next('input')
+                event_id_input.val(selectedItemData.eventId)
+                status_input = event_id_input.next('input')
                 status_input.val(selectedItemData.status)
             }
         }
@@ -1217,8 +1217,9 @@
       */
       if (this.checked) {
         document.getElementById('startTime').setAttribute("hidden","hidden");
-        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
+        document.getElementById('endTime').removeAttribute("required");
         /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
@@ -1245,8 +1246,9 @@
       */
       } else {
         document.getElementById('startTime').removeAttribute("hidden");
-        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('startTime').setAttribute("required", "required");
         document.getElementById('endTime').removeAttribute("hidden");
+        document.getElementById('endTime').setAttribute("required", "required");
         /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
