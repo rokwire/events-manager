@@ -350,6 +350,25 @@
             {% endif %}
           </div>
 
+          <div class="item5" style="grid-area: auto / left;">
+            <!-- Private Event -->
+            {% if post.isGroupPrivate %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Private Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Private Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
+
             <!-- cost -->
             {% if post.cost%}
               <div class="row">
