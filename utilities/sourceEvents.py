@@ -382,6 +382,13 @@ def store(documents):
     image_upload = 0
 
     for document in documents:
+        if 'virtualEvent' in document:
+            document['isVirtual'] = document['virtualEvent']
+        if 'virtualEventURL' in document:
+            document['virtualEventUrl'] = document['virtualEventURL']
+        if 'inPersonEvent' in  document:
+            document['isInPerson'] = document['inPersonEvent']
+
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
         ]})
