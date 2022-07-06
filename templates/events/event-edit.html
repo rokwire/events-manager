@@ -262,6 +262,7 @@
               <div class="col-sm-9">
                 <div class="form-group">
                   <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory..." data-width="fit-content">
+                    <option value="">None</option>
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
                         <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -1044,6 +1045,18 @@
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
           document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         }
+        $('select').each(function() {
+            $(this).data('selected', $('option:selected', this).val());
+        });
+        $('select').change(function() {
+            if ($(this).val() != $(this).data('selected')) {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', false);
+            } else {
+                $(this).find(':submit, input[type="image"]')
+                    .prop('disabled', true);
+            }
+        })
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         }).on('change input', function(){  // event handler of input change

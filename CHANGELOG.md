@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
 - Fix that the pop up window to confirm saving the published super event is not working [#880](https://github.com/rokwire/events-manager/issues/880)
 - Fix that the subcategory is not emptied after changing the category [#898](https://github.com/rokwire/events-manager/issues/898)
+- Fix that the save button stay disabled after selecting the first option in subcategory. [#910](https://github.com/rokwire/events-manager/issues/910)
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
