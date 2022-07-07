@@ -142,6 +142,10 @@ def parse(content, gmaps):
 
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
+        if 'virtualEventURL' in pe:
+            entry['virtualEventUrl'] = pe['virtualEventURL']
+        if 'inPersonEvent' in  pe:
+            entry['isInPerson'] = pe['inPersonEvent']
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
@@ -382,13 +386,6 @@ def store(documents):
     image_upload = 0
 
     for document in documents:
-        if 'virtualEvent' in document:
-            document['isVirtual'] = document['virtualEvent']
-        if 'virtualEventURL' in document:
-            document['virtualEventUrl'] = document['virtualEventURL']
-        if 'inPersonEvent' in  document:
-            document['isInPerson'] = document['inPersonEvent']
-
         result = find_one(current_app.config['EVENT_COLLECTION'], condition={'dataSourceEventId': document[
             'dataSourceEventId'
         ]})
