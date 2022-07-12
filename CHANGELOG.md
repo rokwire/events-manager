@@ -4,13 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
+
+## [3.3.0] - 2022-07-11
 ### Added
 - Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/883)
 - Default option for timezone is set as central time. [#912](https://github.com/rokwire/events-manager/issues/912)
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
+- Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 
 ### Fixed
 - Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
@@ -386,7 +390,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.3.0...HEAD
+[3.2.0]: https://github.com/rokwire/events-manager/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/rokwire/events-manager/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5

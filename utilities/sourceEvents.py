@@ -142,6 +142,10 @@ def parse(content, gmaps):
 
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
+        if 'virtualEventURL' in pe:
+            entry['virtualEventUrl'] = pe['virtualEventURL']
+        if 'inPersonEvent' in  pe:
+            entry['isInPerson'] = pe['inPersonEvent']
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
