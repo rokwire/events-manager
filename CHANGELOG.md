@@ -4,13 +4,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
+
+## [3.3.0] - 2022-07-11
+### Added
+- Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/883)
+- Default option for timezone is set as central time. [#912](https://github.com/rokwire/events-manager/issues/912)
+- Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
+- Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
+- Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
+- Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
+
+### Fixed
+- Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)
+- Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
+- Fix that the pop up window to confirm saving the published super event is not working [#880](https://github.com/rokwire/events-manager/issues/880)
+- Fix that the subcategory is not emptied after changing the category [#898](https://github.com/rokwire/events-manager/issues/898)
+
+### Changed
+- Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
+- Change the placeholder value when editing or creating events for clarity. [#897](https://github.com/rokwire/events-manager/issues/897)
+- Change the description of Events Manager in the home page. [#890](https://github.com/rokwire/events-manager/issues/890)
+- Update SECURITY.md. [#895](https://github.com/rokwire/events-manager/issues/895)
+- Use eventId instead of eventid. [#831](https://github.com/rokwire/events-manager/issues/831)
+
 ## [3.2.0] - 2022-05-18
 ### Changed
 - Change user events and campus events link on home page. [#866](https://github.com/rokwire/events-manager/issues/866)
 - Switch Space” button to home and relocate the home button. [#868](https://github.com/rokwire/events-manager/issues/866)
 - Remove old home link. [#870](https://github.com/rokwire/events-manager/issues/870)
 - Remove auth select endpoint. [#869](https://github.com/rokwire/events-manager/issues/869)
+- Hide "Display Only With Super Event" when the event is a super event. [#864](https://github.com/rokwire/events-manager/issues/864)
 
 ### Added
 - Remove duplicates in the sub-event array in super events with back end check. [#834](https://github.com/rokwire/events-manager/issues/834)
@@ -365,7 +390,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.2.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.3.0...HEAD
+[3.2.0]: https://github.com/rokwire/events-manager/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/rokwire/events-manager/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/rokwire/events-manager/compare/3.0.5...3.1.0
 [3.0.5]: https://github.com/rokwire/events-manager/compare/3.0.4...3.0.5

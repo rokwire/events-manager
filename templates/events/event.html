@@ -350,6 +350,25 @@
             {% endif %}
           </div>
 
+          <div class="item5" style="grid-area: auto / left;">
+            <!-- Private Event -->
+            {% if post.isGroupPrivate %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Private Event</h5>
+                </div>
+                    <p class = "col-sm-9">Yes</p>
+              </div>
+            {% else %}
+              <div class="row">
+                <div class="col-12 col-sm-2">
+                  <h5>Private Event</h5>
+                </div>
+                    <p class = "col-sm-9">No</p>
+              </div>
+            {% endif %}
+          </div>
+
             <!-- cost -->
             {% if post.cost%}
               <div class="row">
@@ -496,21 +515,23 @@
             {% endif %}
 
             <!-- displayOnlyWithSuperEvent -->
-            {% if post.displayOnlyWithSuperEvent %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Display Only with Super Event</h5>
-                </div>
-                    <p class = "col-sm-9">Yes</p>
-              </div>
-            {% else %}
-              <div class="row">
-                <div class="col-12 col-sm-2">
-                  <h5>Display Only with Super Event</h5>
-                </div>
-                    <p class = "col-sm-9">No</p>
-              </div>
-            {% endif %}
+              {% if not post.isSuperEvent %}
+                {% if post.displayOnlyWithSuperEvent %}
+                  <div class="row">
+                    <div class="col-12 col-sm-2">
+                      <h5>Display Only with Super Event</h5>
+                    </div>
+                        <p class = "col-sm-9">Yes</p>
+                  </div>
+                {% else %}
+                  <div class="row">
+                    <div class="col-12 col-sm-2">
+                      <h5>Display Only with Super Event</h5>
+                    </div>
+                        <p class = "col-sm-9">No</p>
+                  </div>
+                {% endif %}
+              {% endif %}
 
             <!-- is super event? -->
             {% if post.isSuperEvent %}
@@ -552,7 +573,7 @@
                      {% if subevent.id%}
                       <a href ="{{ url_for('user_events.sub_event_platform', platformEventId=subevent.id) }}">{{subevent.name}}</a>
                     {% else %}
-                      <a href ="{{ url_for('user_events.sub_event', eventId=subevent.eventid) }}">{{subevent.name}}</a>
+                      <a href ="{{ url_for('user_events.sub_event', eventId=subevent.eventId) }}">{{subevent.name}}</a>
                     {% endif %}
 
                     </td>

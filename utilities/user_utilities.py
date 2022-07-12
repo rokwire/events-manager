@@ -407,7 +407,7 @@ def publish_user_event(eventId):
                     superEvent = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(superEventID)})
                     if 'subEvents' in superEvent and superEvent['subEvents'] is not None:
                         for subEvent in superEvent['subEvents']:
-                            if 'eventid' in subEvent and subEvent['eventid'] == eventId:
+                            if 'eventId' in subEvent and subEvent['eventId'] == eventId:
                                 subEvent['id'] = platform_event_id
                                 overwriteSubeventsList = list()
                                 overwriteSubeventsList.append(subEvent)
@@ -774,7 +774,7 @@ def get_contact_list(post_form):
 def get_subevent_list(post_form):
     subevent_arrays = []
     for item in post_form:
-        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured' or item == 'status' or item == 'eventid':
+        if item == 'name' or item == 'id' or item == 'track' or item == 'isFeatured' or item == 'status' or item == 'eventId':
             sub_list = post_form.getlist(item)
             if len(sub_list) != 0:
                 sub_list = sub_list[1:]
@@ -795,7 +795,7 @@ def get_subevent_list(post_form):
             if sub_id != "":
                 a_subevent['id'] = sub_id
             if sub_eventid != "":
-                a_subevent['eventid'] = sub_eventid
+                a_subevent['eventId'] = sub_eventid
             if sub_status != "":
                 a_subevent['status'] = sub_status
             if sub_track != "":
@@ -873,7 +873,7 @@ def group_subevents_search(search_string, admin_group_ids):
             if 'platformEventId' in query:
                 query['value'] = query.pop('platformEventId')
             if '_id' in query:
-                query['eventid'] = str(query.pop('_id'))
+                query['eventId'] = str(query.pop('_id'))
             query['status'] = query.pop('eventStatus')
             results.append(query)
     except:
@@ -1173,7 +1173,7 @@ def get_admin_groups():
     uin = session["uin"]
     #  Build request
     url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
-    headers = {"Content-Type": "application/json", "ROKWIRE_GS_API_KEY": current_app.config['ROKWIRE_GROUPS_API_KEY']}
+    headers = {"Content-Type": "application/json", "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']}
     req = requests.get(url, headers=headers)
     group_info = list()
     # Parse Results
@@ -1212,7 +1212,7 @@ def overwrite_subevents_to_superevent(overwrite_subevent_list, super_eventid):
                         if 'id' in subevent and 'id' in  overwrite_subevent and subevent['id'] == overwrite_subevent['id']:
                             subEvents[i] = overwrite_subevent
                         # pending event
-                        elif 'eventid' in subevent and 'eventid' in  overwrite_subevent and subevent['eventid'] == overwrite_subevent['eventid']:
+                        elif 'eventId' in subevent and 'eventId' in  overwrite_subevent and subevent['eventId'] == overwrite_subevent['eventId']:
                             subEvents[i] = overwrite_subevent
             result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
                                          update={
@@ -1249,14 +1249,14 @@ def store_pending_subevents_to_superevent(pending_subevents_list, super_eventid)
         __logger.error("Record with platformEventId:{} does not exist".format(super_eventid))
         return False
 
-def remove_subevent_from_superevent_by_eventid(subevent_id, super_eventid):
+def remove_subevent_from_superevent_by_event_id(subevent_id, super_eventid):
     try:
         record = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)})
         if record:
             subEvnts = record['subEvents']
             if subEvnts:
                 for subevent in subEvnts:
-                    if 'eventid' in subevent and subevent['eventid'] == subevent_id:
+                    if 'eventId' in subevent and subevent['eventId'] == subevent_id:
                         # remove it
                         subEvnts.remove(subevent)
                         result = find_one_and_update(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(super_eventid)},
@@ -1300,25 +1300,25 @@ def publish_pending_subevents(superEventID):
     if subEvents == None:
         return
     for subEvent in subEvents:
-        if subEvent.get('status') == 'pending' and 'eventid' in subEvent:
+        if subEvent.get('status') == 'pending' and 'eventId' in subEvent:
             try:
                 image = False
-                if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventid'] + '*'))) > 0:
+                if len(glob.glob(os.path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, subEvent['eventId'] + '*'))) > 0:
                     image = True
-                success = publish_user_event(subEvent['eventid'])
+                success = publish_user_event(subEvent['eventId'])
                 if success and image:
                     updateResult = update_one(current_app.config['IMAGE_COLLECTION'],
-                                              condition={'eventId': subEvent['eventid']},
+                                              condition={'eventId': subEvent['eventId']},
                                               update={"$set": {'status': 'new',
-                                                               'eventId': subEvent['eventid']}}, upsert=True)
+                                                               'eventId': subEvent['eventId']}}, upsert=True)
                     if updateResult.modified_count == 0 and updateResult.matched_count == 0 and updateResult.upserted_id is None:
                         __logger.error(
                             "Failed to mark image record as new of event: {} upon event publishing".format(
-                                subEvent['eventid']))
-                    approve_user_event(subEvent['eventid'])
+                                subEvent['eventId']))
+                    approve_user_event(subEvent['eventId'])
                 if success:
                     subEvent['id'] = find_one(current_app.config['EVENT_COLLECTION'],
-                                              condition={"_id": ObjectId(subEvent['eventid'])})['platformEventId']
+                                              condition={"_id": ObjectId(subEvent['eventId'])})['platformEventId']
                     subEvent['status'] = 'approved'
             except Exception as ex:
                 __logger.exception(ex)
@@ -1342,8 +1342,8 @@ def deduplicate_sub_events(subEvents):
             if subEvent['id'] not in uniqueIdOfSubEvents:
                 deduplicatedSubEvents.append(subEvent)
                 uniqueIdOfSubEvents.add(subEvent['id'])
-        elif 'eventid' in subEvent:
-            if subEvent['eventid'] not in uniqueEventIdOfSubEvents:
+        elif 'eventId' in subEvent:
+            if subEvent['eventId'] not in uniqueEventIdOfSubEvents:
                 deduplicatedSubEvents.append(subEvent)
-                uniqueEventIdOfSubEvents.add(subEvent['eventid'])
+                uniqueEventIdOfSubEvents.add(subEvent['eventId'])
     return deduplicatedSubEvents

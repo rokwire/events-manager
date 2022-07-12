@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required >
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="fit-content" required >
                   {% for group in groups %}
                       <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
                   {% endfor %}
@@ -97,7 +97,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." required>
+                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." data-width="fit-content" required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -108,11 +108,13 @@
           <!-- subcategory -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Subcategory </h5>
+                <div class="mytooltip"><h5>Subcategory</h5>
+                    <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
+                </div>
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                <select name="subcategory" id="subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                   {% for key in subcategoriesMap['Athletics'] %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -137,9 +139,13 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id="timezone" class="selectpicker" title="Choose the event timezone..." data-width="fit-content" required>
                   {% for key, value in timezones.items() %}
-                      <option value = "{{key}}" id = {{key}}>{{value}}</option>
+                      {% if key == "US/Central" %}
+                        <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
+                      {% else %}
+                        <option value="{{key}}" id="{{key}}">{{value}}</option>
+                      {% endif %}
                   {% endfor %}
                 </select>
               </div>
@@ -158,11 +164,11 @@
           <!-- endDate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>End Date</h5>
+              <h5>End Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left"/>
+              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
             </div>
           </div>
 
@@ -225,6 +231,16 @@
               <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
             </div>
           </div>
+
+          <!-- isGroupPrivate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Private Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isGroupPrivate" name="isGroupPrivate"/> Yes
+            </div>
+          </div>
        
           <!-- cost -->
           <div class="form-group row ">
@@ -232,7 +248,7 @@
               <h5>Cost Description</h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control" type="text" name="cost"/>
+              <input class="form-control" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
             </div>
           </div>
           <!-- contacts -->
@@ -400,7 +416,7 @@
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control search-id" name="name" type="text" placeholder="Sub-Event Title" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
                             <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
                       <div class="col-sm-3 form-group" >
@@ -468,8 +484,6 @@
 
     // Copy HTML content in hidden form
     $('#longDescription').val( html )
-    // Post form
-    document.forms["form"].submit();
 })
 
      //Set the save button disabled in default
@@ -490,10 +504,12 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }
      })
 
@@ -521,8 +537,11 @@
    });
 
    $("document").ready(function(){
+        $('#timezone').selectpicker('val', 'US/Central');
+        $('#timezone').selectpicker('refresh');
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+          document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         }
    })
    //Attach functionality to delete buttons
@@ -543,10 +562,12 @@
      if (check.checked == true){
         document.getElementById('displayOnlyWithSuperEvent').checked = false;
         document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
         document.getElementById('displayOnlyWithSuperEvent').disabled = false;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }
@@ -600,9 +621,9 @@
           id_input.val(selectedItemData.value)
           if ('status' in selectedItemData)
             if (selectedItemData.status === 'pending') {
-                eventid_input = id_input.next('input')
-                eventid_input.val(selectedItemData.eventid)
-                status_input = eventid_input.next('input')
+                event_id_input = id_input.next('input')
+                event_id_input.val(selectedItemData.eventId)
+                status_input = event_id_input.next('input')
                 status_input.val(selectedItemData.status)
             }
         }
@@ -643,6 +664,7 @@
         document.getElementById('startTime').setAttribute("hidden","hidden");
         document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
+        document.getElementById('endTime').removeAttribute("required");
         /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
@@ -669,8 +691,9 @@
       */
       } else {
         document.getElementById('startTime').removeAttribute("hidden");
-        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('startTime').setAttribute("required", "required");
         document.getElementById('endTime').removeAttribute("hidden");
+        document.getElementById('endTime').setAttribute("required", "required");
         /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
@@ -817,9 +840,10 @@
 
 .mytooltip .mytooltiptext {
   visibility: hidden;
-  width: 1200px;
-  background-color: black;
-  color: #343a40;
+  width: max-content;
+  max-width: 1000px;
+  background-color: #343a40;
+  color: #fff;
   {#text-align: center;#}
   border-radius: 6px;
   padding: 10px;

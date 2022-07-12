@@ -42,7 +42,8 @@
 
 .mytooltip .mytooltiptext {
   visibility: hidden;
-  width: 1200px;
+  width: max-content;
+  max-width: 1000px;
   background-color: #343a40;
   color: #fff;
   {#text-align: center;#}
@@ -188,7 +189,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Group..." data-width="auto" required>
+                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="auto" required>
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
                       <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
@@ -240,7 +241,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Category..." required >
+                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -260,7 +261,7 @@
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory">
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory..." data-width="fit-content">
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
                         <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -273,13 +274,15 @@
               </div>
             </div>
           {% else %}
-            <div class="form-group row ">
-              <div class="col-12 col-sm-2">
-                <h5>Subcategory </h5>
-              </div>
+            <div class="form-group row">
+                <div class="col-12 col-sm-2">
+                    <div class="mytooltip"><h5>Subcategory</h5>
+                        <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
+                    </div>
+                </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Subcategory" disabled>
+                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                     {% for key in subcategoriesMap['Athletics'] %}
                       <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endfor %}
@@ -309,7 +312,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Time Zone" required>
+                <select name="timezone" id = "timezone" class="selectpicker" title="Choose the event timezone" required>
                   {% for key, value in timezones.items() %}
                       {% if post.timezone == key%}
                           <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
@@ -353,30 +356,30 @@
           {% if post.endDate%}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5>End Date</h5>
+                <h5>End Date<span style="color: red">*</span></h5>
               </div>
               <div class="col-sm-6">
                   {% if post.allDay == True %}
-                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate']}}" max="9999-12-31" style="width:170px; float:left" required/>
                   <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="23:59" style="width:170px; float:left" hidden/>
                   {% else %}
-                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left"/>
-                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left"/>
+                  <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" value="{{post['endDate'][:10]}}" max="9999-12-31" style="width:170px; float:left" required/>
+                  <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" value="{{post['endDate'][11:]}}" style="width:170px; float:left" required/>
                   {% endif %}
               </div>
             </div>
           {% else %}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
-                <h5> End Date</h5>
+                <h5> End Date<span style="color: red">*</span></h5>
               </div>
               <div class="col-sm-6">
                 {% if post.allDay == True %}
-                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
                 <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" hidden/>
                 {% else %}
-                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left"/>
-                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" />
+                <input class="form-control" type="date" onkeydown="return false" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+                <input class="form-control" type="time" onkeydown="return false" id="endTime" name="endTime" style="width:170px; float:left" required/>
                 {% endif %}
               </div>
             </div>
@@ -504,6 +507,21 @@
             </div>
           </div>
 
+
+          <!-- isGroupPrivate -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Private Event</h5>
+            </div>
+            <div class="col-sm-1">
+               {% if post.isGroupPrivate == True %}
+                <input class="form_control" type="checkbox" id="isGroupPrivate" name="isGroupPrivate" checked/> Yes
+               {% else %}
+                <input class="form_control" type="checkbox" id="isGroupPrivate" name="isGroupPrivate"/> Yes
+               {% endif %}
+            </div>
+          </div>
+
           <!-- cost -->
           {% if post.cost%}
             <div class="form-group row ">
@@ -511,7 +529,7 @@
                 <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="cost" value="{{post.cost}}" />
+                <input class="form-control" type="text" name="cost" value="{{post.cost}}" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
               </div>
             </div>
           {% else %}
@@ -520,7 +538,7 @@
                 <h5>Cost Description</h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control" type="text" name="cost"/>
+                <input class="form-control" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
               </div>
             </div>
           {% endif %}
@@ -763,7 +781,7 @@
           {% endif %}
 
           <!-- freeEvent -->
-          <div class="form-group row">
+          <div class="form-group row" id="displayOnlyWithSuperEventBox">
             <div class="col-12 col-sm-2">
               <h5>Display Only with Super Event</h5>
             </div>
@@ -820,7 +838,7 @@
                       <div class="form-group col-sm-3 offset-sm-2">
                             <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
                             <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventid" placeholder=''>
+                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
                             <input class="form-control" type="hidden" name="status" placeholder=''>
                       </div>
 
@@ -852,10 +870,10 @@
                                         {% if sub.name %}
                                             <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" value="{{sub.name}}" />
                                             <input type="hidden" name="id" value="{{sub.id}}"/>
-                                            {% if sub.eventid %}
-                                            <input type="hidden" name="eventid" value="{{sub.eventid}}"/>
+                                            {% if sub.eventId %}
+                                            <input type="hidden" name="eventId" value="{{sub.eventId}}"/>
                                             {% else %}
-                                            <input type="hidden" name="eventid" value=""/>
+                                            <input type="hidden" name="eventId" value=""/>
                                             {% endif %}
 
                                             {% if sub.status %}
@@ -966,8 +984,6 @@
 
         // Copy HTML content in hidden form
         $('#longDescription').val( html )
-        // Post form
-        document.forms["form"].submit();
     })
 
       /*
@@ -1026,6 +1042,7 @@
       $("document").ready(function(){
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+          document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         }
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
@@ -1049,10 +1066,12 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker('refresh');
+         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
+         $('#subcategory').val('').selectpicker('refresh');
        }
      })
 
@@ -1117,11 +1136,13 @@
      var subCurrent = document.getElementById("sub-current");
      if (check.checked == true){
         document.getElementById('displayOnlyWithSuperEvent').disabled = true;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = true;
         document.getElementById('displayOnlyWithSuperEvent').checked = false;
         sub.style.display = "block";
         subCurrent.style.display = "block";
      } else {
         document.getElementById('displayOnlyWithSuperEvent').disabled = false;
+        document.getElementById('displayOnlyWithSuperEventBox').hidden = false;
         sub.style.display = "none";
         subCurrent.style.display = "none";
      }
@@ -1175,9 +1196,9 @@
           id_input.val(selectedItemData.value)
           if ('status' in selectedItemData)
             if (selectedItemData.status === 'pending') {
-                eventid_input = id_input.next('input')
-                eventid_input.val(selectedItemData.eventid)
-                status_input = eventid_input.next('input')
+                event_id_input = id_input.next('input')
+                event_id_input.val(selectedItemData.eventId)
+                status_input = event_id_input.next('input')
                 status_input.val(selectedItemData.status)
             }
         }
@@ -1196,8 +1217,9 @@
       */
       if (this.checked) {
         document.getElementById('startTime').setAttribute("hidden","hidden");
-        document.getElementById('startTime').setAttribute("required","required");
+        document.getElementById('startTime').removeAttribute("required");
         document.getElementById('endTime').setAttribute("hidden","hidden");
+        document.getElementById('endTime').removeAttribute("required");
         /*
         $endDate.attr("type", "date");
         $startDate.attr("type", "date");
@@ -1224,8 +1246,9 @@
       */
       } else {
         document.getElementById('startTime').removeAttribute("hidden");
-        document.getElementById('startTime').removeAttribute("required");
+        document.getElementById('startTime').setAttribute("required", "required");
         document.getElementById('endTime').removeAttribute("hidden");
+        document.getElementById('endTime').setAttribute("required", "required");
         /*$startDate.attr("type", "datetime-local");
         $endDate.attr("type", "datetime-local");
 
