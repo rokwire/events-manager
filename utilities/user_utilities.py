@@ -606,7 +606,7 @@ def populate_event_from_form(post_form, email):
 
     location = post_form.get('location')
     if location != '':
-        new_event['location'] = get_location_details(location, new_event.get('isVirtual'))
+        new_event['location'] = get_location_details(location, False)
     else:
         new_event['location'] = None
     new_event['virtualEventUrl'] = post_form.get('virtualEventUrl')

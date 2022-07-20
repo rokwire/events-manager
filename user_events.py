@@ -402,7 +402,7 @@ def user_an_event_edit(id):
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
-                    post_by_id['location'] = get_location_details(location, post_by_id.get('isVirtual'))
+                    post_by_id['location'] = get_location_details(location, False)
                 else:
                     post_by_id['location'] = None
             elif item == 'virtualEventUrl':

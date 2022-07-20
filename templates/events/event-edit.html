@@ -485,7 +485,7 @@
           </div>
 
           <!-- Virtual Event URL -->
-          <div class="form-group row" id="Virtual Event URL" hidden>
+          <div class="form-group row" id="Virtual Event URL" {% if not post.isVirtual %}hidden{% endif %}>
             <div class="col-12 col-sm-2">
               <h5 type='text'>Virtual Event URL</h5>
             </div>
@@ -513,7 +513,7 @@
             </div>
             <div class="col-sm-9">
               <input id="location" name="location" class="form-control" type="text"
-              {% if post.isInPerson == True %}value={{ post.location.description }}{% endif %}/>
+              {% if post.isInPerson == True %}value="{{post.location.description}}"{% endif %}/>
             </div>
           </div>
 
