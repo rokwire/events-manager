@@ -175,17 +175,37 @@
           <!-- isVirtual -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
+              <h5>Virtual Location?</h5>
             </div>
             <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
+              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="virtualSelectionChanged(this)"/> Yes
             </div>
           </div>
 
-          <!-- location -->
+          <!-- Virtual Event URL -->
+          <div class="form-group row" id="Virtual Event URL" hidden>
+            <div class="col-12 col-sm-2">
+              <h5 type='text'>Virtual Event URL</h5>
+            </div>
+            <div class="col-sm-9">
+              <input id="virtualEventUrl" name="virtualEventUrl" class="form-control" type="text"/>
+            </div>
+          </div>
+
+          <!-- isInPerson -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5 id="Location Header" type='text'>Location Address</h5>
+              <h5>Physical Location?</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isInPerson" name="isInPerson" onchange="inPersonSelectionChanged(this)" checked/> Yes
+            </div>
+          </div>
+
+          <!-- Location Address -->
+          <div class="form-group row" id="Location Address">
+            <div class="col-12 col-sm-2">
+              <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
               <input id="location" name="location" class="form-control" type="text"/>
@@ -194,15 +214,30 @@
 
           <!-- Script to handle changing header -->
           <script>
-            function selectionChanged(element) {
+            function virtualSelectionChanged(element) {
               if (element.checked) {
-                document.getElementById('Location Header').innerHTML = 'Virtual Event URL';
-                document.getElementById('location').type = 'url';
+                  document.getElementById('Virtual Event URL').hidden = false;
+              } else {
+                  if (document.getElementById('isInPerson').checked === false) {
+                      element.checked = true;
+                      alert("Either one of Physical Location? or Virtual Location? checkboxes need to be checked.")
+                  } else {
+                      document.getElementById('Virtual Event URL').hidden = true;
+                      document.getElementById('virtualEventUrl').value = '';
+                  }
               }
-              else {
-                document.getElementById('Location Header').innerHTML = 'Location Address';
-                document.getElementById('location').type = 'text';
-
+            }
+            function inPersonSelectionChanged(element) {
+              if (element.checked) {
+                  document.getElementById('Location Address').hidden = false;
+              } else {
+                  if (document.getElementById('isVirtual').checked === false) {
+                      element.checked = true;
+                      alert("Either one of Physical Location? or Virtual Location? checkboxes need to be checked.")
+                  } else {
+                    document.getElementById('Location Address').hidden = true;
+                    document.getElementById('location').value = '';
+                  }
               }
             }
           </script>
