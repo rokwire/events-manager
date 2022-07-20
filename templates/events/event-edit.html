@@ -507,7 +507,7 @@
           </div>
 
           <!-- Location Address -->
-          <div class="form-group row" id="Location Address">
+          <div class="form-group row" id="Location Address" {% if not post.isInPerson %}hidden{% endif %}>
             <div class="col-12 col-sm-2">
               <h5 type='text'>Location Address</h5>
             </div>
