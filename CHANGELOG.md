@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fix the isInPerson field in campus events. [#928](https://github.com/rokwire/events-manager/issues/928)
+
 ## [3.3.0] - 2022-07-11
 ### Added
 - Add tooltip for subcategory to indicate that only Athletics Category have subcategories. [#883](https://github.com/rokwire/events-manager/issues/883)
