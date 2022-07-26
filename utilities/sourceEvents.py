@@ -151,6 +151,7 @@ def parse(content, gmaps):
                 entry['isInPerson'] = True
             else:
                 entry['isInPerson'] = False
+
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
