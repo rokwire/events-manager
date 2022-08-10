@@ -95,7 +95,7 @@
               <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
           {% endfor %}
       </select>
-      <span style="margin-top: 5px">Events Per Page</span>
+      <span title="Events Per Page" style="margin-top: 5px">Events Per Page</span>
       </div>
     <!-- comment out search GUI
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
