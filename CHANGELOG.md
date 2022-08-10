@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-
+### Added
+- Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
 
 ## [3.3.1] - 2022-07-25
 ### Fixed
