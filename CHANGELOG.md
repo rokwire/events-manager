@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
+- Add language attribute to HTML tag. [#937](https://github.com/rokwire/events-manager/issues/937)
+- Add space between attribute in base.html [#938](https://github.com/rokwire/events-manager/issues/938)
 
+### Fixed
+- Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
 
 ## [3.3.1] - 2022-07-25
 ### Fixed
