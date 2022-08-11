@@ -395,6 +395,10 @@ def publish_user_event(eventId):
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
+                # post eventid to group building block
+                url = "%sgroup/%s/events" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                result = requests.post(url, headers=headers,
+                                       data=json.dumps({"event_id": platform_event_id}))
                 # Should upload user images
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
@@ -494,9 +498,15 @@ def put_user_event(eventId):
             # Generation of URL via platformEventId
             url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
             # Getting rid of platformEventId from PUT request
+            platform_event_id = event["platformEventId"]
             if "platformEventId" in event:
                 del event["platformEventId"]
 
+            # get previous groupid from events building block
+            result = requests.get(url, headers={"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY})
+            previous_groupid = None
+            if result.status_code != 200:
+                previous_groupid = result.json().get('createdByGroupId')
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
 
@@ -516,6 +526,13 @@ def put_user_event(eventId):
                                           update={
                                               "$set": {"eventStatus": "approved"}
                                           })
+                if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
+                    # post to group bb
+                    # post eventid to group building block
+                    url = "%sgroup/%s/events" % (
+                    current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                    result = requests.post(url, headers=headers,
+                                           data=json.dumps({"event_id": platform_event_id}))
 
                 return True
 
