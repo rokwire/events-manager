@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
+- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 
 ### Fixed
