@@ -90,7 +90,7 @@
             <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
         </div>
 
-      <select id="per_page" class="selectpicker w-auto">
+      <select title="Events Per Page" id="per_page" class="selectpicker w-auto">
           {% for key in page_config %}
               <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
           {% endfor %}
