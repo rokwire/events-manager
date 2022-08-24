@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
+- Send event id to group building block if event is published or group id has been updated. [#935]https://github.com/rokwire/events-manager/issues/935)
 
 ### Fixed
 - Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)

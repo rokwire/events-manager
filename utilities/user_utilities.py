@@ -22,7 +22,7 @@ import os
 import re
 import tempfile
 import shutil
-from flask import current_app, session
+from flask import current_app, session, flash
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime, date
@@ -396,9 +396,14 @@ def publish_user_event(eventId):
             else:
                 platform_event_id = result.json()['id']
                 # post eventid to group building block
-                url = "%sgroup/%s/events" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
-                result = requests.post(url, headers=headers,
-                                       data=json.dumps({"event_id": platform_event_id}))
+                url = "%sint/group/%s/events" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                result = requests.post(url, headers={"Content-Type": "application/json", "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
+                                       data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
+                if result.status_code != 200:
+                    flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                else:
+                    flash('successfully post event id to group building block!')
+
                 # Should upload user images
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
@@ -527,12 +532,23 @@ def put_user_event(eventId):
                                               "$set": {"eventStatus": "approved"}
                                           })
                 if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
+                    # TODO to delete the event from the old group id.
+
                     # post to group bb
                     # post eventid to group building block
-                    url = "%sgroup/%s/events" % (
+                    url = "%sint/group/%s/events" % (
                     current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
-                    result = requests.post(url, headers=headers,
-                                           data=json.dumps({"event_id": platform_event_id}))
+                    result = requests.post(url, headers={"Content-Type": "application/json",
+                                                         "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
+                                           data=json.dumps({"event_id": platform_event_id,
+                                                            "creator": {"email": session['email'],
+                                                                        "name": session['name'],
+                                                                        "user_id": session['uin']}}))
+                    # if failed then messagebox!
+                    if result.status_code != 200:
+                        flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                    else:
+                        flash('successfully post event id to group building block!')
 
                 return True
 
