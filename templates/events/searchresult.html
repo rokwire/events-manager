@@ -47,7 +47,7 @@ role="button">Back</a>
         <div class="form-group">
           <select name="category" id = "category" class="selectpicker" title="Category..." >
             {% for key in eventTypeValues %}
-              <option value = "{{key}}" id = {{key}}
+              <option title="{{key}}" value="{{key}}" id={{key}}
               {% if category and category == key %}
               selected=True
               {% endif %}

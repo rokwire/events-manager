@@ -192,9 +192,9 @@
                   <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="auto" required>
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
-                      <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
+                      <option title="{{group['title']}}" value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
                       {% else %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                      <option title="{{group['title']}}" value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
                       {% endif %}
                   {% endfor %}
                   </select>
@@ -244,9 +244,9 @@
                 <select name="category" id = "category" class="selectpicker" title="Choose an event category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
-                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                      <option title="{{key}}" value="{{key}}" id={{key}} selected>{{key}}</option>
                     {% else %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      <option title="{{key}}" value="{{key}}" id={{key}}>{{key}}</option>
                     {% endif %}
                   {% endfor %}
                 </select>
@@ -265,9 +265,9 @@
                     <option value="">None</option>
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
-                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                        <option title="{{key}}" value="{{key}}" id={{key}} selected>{{key}}</option>
                       {% else %}
-                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                        <option title="{{key}}" value="{{key}}" id={{key}}>{{key}}</option>
                       {% endif %}
                     {% endfor %}
                   </select>
@@ -285,7 +285,7 @@
                 <div class="form-group">
                   <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                     {% for key in subcategoriesMap['Athletics'] %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                      <option title="{{key}}" value="{{key}}" id={{key}}>{{key}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -316,9 +316,9 @@
                 <select name="timezone" id = "timezone" class="selectpicker" title="Choose the event timezone" required>
                   {% for key, value in timezones.items() %}
                       {% if post.timezone == key%}
-                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
+                          <option title="{{value}}" value="{{key}}" id={{key}} selected>{{value}}</option>
                       {% else %}
-                          <option value = "{{key}}" id = {{key}}>{{value}}</option>
+                          <option title="{{value}}" value="{{key}}" id={{key}}>{{value}}</option>
                       {% endif %}
                   {% endfor %}
                 </select>
@@ -923,8 +923,8 @@
                       <div class="form-group dropdown show">
                           <div class="form-group">
                             <select class="form-control offset-sm-2" id="isFeatured" name = "isFeatured">
-                              <option>Featured</option>
-                              <option>Not Featured</option>
+                              <option title="Featured">Featured</option>
+                              <option title="Not Featured">Not Featured</option>
                             </select>
                           </div>
                       </div>
@@ -972,11 +972,11 @@
                                       <div class="form-group">
                                         <select class="form-control offset-sm-2" id="isFeatured" name = "isFeatured">
                                           {% if sub.isFeatured == True %}
-                                          <option>Featured</option>
-                                          <option>Not Featured</option>
+                                              <option title="Featured">Featured</option>
+                                              <option title="Not Featured">Not Featured</option>
                                           {% else %}
-                                          <option>Not Featured</option>
-                                          <option>Featured</option>
+                                              <option title="Not Featured">Not Featured</option>
+                                              <option title="Featured">Featured</option>
                                           {% endif %}
                                         </select>
                                       </div>

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
+- Add title attribute to each drop-down item to enhance accessibility. [#942](https://github.com/rokwire/events-manager/issues/942)
 
 ## [3.3.1] - 2022-07-25
 ### Fixed

@@ -35,7 +35,7 @@
           <div class="form-group">
             <select name="category" id = "form-category" class="selectpicker" title="Category..." >
               {% for key in eventTypeValues %}
-                <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                <option title="{{key}}" value="{{key}}" id={{key}}>{{key}}</option>
               {% endfor %}
             </select>
           </div>
