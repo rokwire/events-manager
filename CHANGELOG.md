@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add language attribute to HTML tag. [#937](https://github.com/rokwire/events-manager/issues/937)
 - Add space between attribute in base.html [#938](https://github.com/rokwire/events-manager/issues/938)
 - Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
+- Add title attribute to delete event image button. [#944](https://github.com/rokwire/events-manager/issues/944)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
