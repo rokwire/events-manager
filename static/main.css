@@ -45,6 +45,10 @@ h2 {
   text-align: left;
 }
 
+.date {
+    font-size: small;
+}
+
 .site-header .navbar-nav .nav-link {
   color: #cbd5db;
 }

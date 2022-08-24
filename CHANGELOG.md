@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
 - Add language attribute to HTML tag. [#937](https://github.com/rokwire/events-manager/issues/937)
 - Add space between attribute in base.html [#938](https://github.com/rokwire/events-manager/issues/938)
+- Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
+- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 
 ### Fixed
@@ -32,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
 - Fix that the pop up window to confirm saving the published super event is not working [#880](https://github.com/rokwire/events-manager/issues/880)
 - Fix that the subcategory is not emptied after changing the category [#898](https://github.com/rokwire/events-manager/issues/898)
+- Fix that the save button stay disabled after selecting the first option in subcategory. [#910](https://github.com/rokwire/events-manager/issues/910)
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
