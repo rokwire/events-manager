@@ -533,22 +533,29 @@ def put_user_event(eventId):
                                           })
                 if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
                     # TODO to delete the event from the old group id.
-
-                    # post to group bb
-                    # post eventid to group building block
-                    url = "%sint/group/%s/events" % (
-                    current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
-                    result = requests.post(url, headers={"Content-Type": "application/json",
-                                                         "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
-                                           data=json.dumps({"event_id": platform_event_id,
-                                                            "creator": {"email": session['email'],
-                                                                        "name": session['name'],
-                                                                        "user_id": session['uin']}}))
+                    url = "%sint/group/%s/events/%S" % (
+                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'], platform_event_id)
+                    result = requests.delete(url, headers={"Content-Type": "application/json",
+                                                         "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']})
                     # if failed then messagebox!
                     if result.status_code != 200:
                         flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                     else:
-                        flash('successfully post event id to group building block!')
+                        # post to group bb
+                        # post eventid to group building block
+                        url = "%sint/group/%s/events" % (
+                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                        result = requests.post(url, headers={"Content-Type": "application/json",
+                                                             "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
+                                               data=json.dumps({"event_id": platform_event_id,
+                                                                "creator": {"email": session['email'],
+                                                                            "name": session['name'],
+                                                                            "user_id": session['uin']}}))
+                        # if failed then messagebox!
+                        if result.status_code != 200:
+                            flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                        else:
+                            flash('successfully post event id to group building block!')
 
                 return True
 
