@@ -104,6 +104,9 @@ def calendar(calendarId):
         events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page, start_date_filter, end_date_filter)
     else:
         events = get_calendar_events_pagination(sourceId, calendarId, select_status, offset, per_page)
+    for event in events:
+        event['startDate'] = datetime.strptime(event['startDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
+        event['endDate'] = datetime.strptime(event['endDate'], '%Y-%m-%dT%H:%M:%S').strftime('%m/%d/%Y %I:%M %p')
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     __logger.info("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 

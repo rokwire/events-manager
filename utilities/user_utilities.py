@@ -605,6 +605,8 @@ def populate_event_from_form(post_form, email):
                 all_day_event = True
             elif item == 'isVirtual' and post_form.get(item) == 'on':
                 new_event['isVirtual'] = True
+            elif item == 'isInPerson' and post_form.get(item) == 'on':
+                new_event['isInPerson'] = True
             else:
                 new_event[item] = post_form.get(item)
     if not super_event:
@@ -644,9 +646,10 @@ def populate_event_from_form(post_form, email):
 
     location = post_form.get('location')
     if location != '':
-        new_event['location'] = get_location_details(location, new_event.get('isVirtual'))
+        new_event['location'] = get_location_details(location, False)
     else:
         new_event['location'] = None
+    new_event['virtualEventUrl'] = post_form.get('virtualEventUrl')
 
     new_event['createdBy'] = email
 

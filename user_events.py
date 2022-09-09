@@ -348,6 +348,10 @@ def user_an_event_edit(id):
             post_by_id['isVirtual'] = True
         else:
             post_by_id['isVirtual'] = False
+        if 'isInPerson' in request.form and request.form.get('isInPerson') == 'on':
+            post_by_id['isInPerson'] = True
+        else:
+            post_by_id['isInPerson'] = False
 
         for item in request.form:
             if item == 'createdByGroupId':
@@ -398,9 +402,11 @@ def user_an_event_edit(id):
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
-                    post_by_id['location'] = get_location_details(location, post_by_id.get('isVirtual'))
+                    post_by_id['location'] = get_location_details(location, False)
                 else:
                     post_by_id['location'] = None
+            elif item == 'virtualEventUrl':
+                post_by_id['virtualEventUrl'] = request.form.get('virtualEventUrl')
 
         if post_by_id['category'] == "Athletics":
             post_by_id['subcategory'] = request.form['subcategory']

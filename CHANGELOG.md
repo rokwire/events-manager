@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-
+### Added
+- Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
 
 ## [3.3.1] - 2022-07-25
 ### Fixed
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
+- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 - Send event id to group building block if event is published or group id has been updated. [#935]https://github.com/rokwire/events-manager/issues/935)
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the required fields are not being checked when submitting form. [#893](https://github.com/rokwire/events-manager/issues/893)
 - Fix that the pop up window to confirm saving the published super event is not working [#880](https://github.com/rokwire/events-manager/issues/880)
 - Fix that the subcategory is not emptied after changing the category [#898](https://github.com/rokwire/events-manager/issues/898)
+- Fix that the save button stay disabled after selecting the first option in subcategory. [#910](https://github.com/rokwire/events-manager/issues/910)
 
 ### Changed
 - Change group api key. [#891](https://github.com/rokwire/events-manager/issues/891)
