@@ -35,12 +35,14 @@ def get_db():
         if current_app.config['DBTYPE'] == 'mongoDB':
             try:
                 g.dbclient = pymongo.MongoClient(current_app.config['MONGO_URL'])
+                g.db = g.dbclient.get_database(name=current_app.config['MONGO_DATABASE'])
             except PyMongoError:
                 __logger.error("MongoDB connection failed.")
                 if 'dbclient' in g:
                     g.pop('dbclient', None)
                 return None
-            g.db = g.dbclient.get_database(name=current_app.config['MONGO_DATABASE'])
+            except Exception as ex:
+                __logger.error(str(ex))
     return g.db
 
 
