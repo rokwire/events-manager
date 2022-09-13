@@ -510,7 +510,7 @@ def put_user_event(eventId):
             # get previous groupid from events building block
             result = requests.get(url, headers={"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY})
             previous_groupid = None
-            if result.status_code != 200:
+            if result.status_code == 200:
                 previous_groupid = result.json().get('createdByGroupId')
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
@@ -533,8 +533,8 @@ def put_user_event(eventId):
                                           })
                 if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
                     # TODO to delete the event from the old group id.
-                    url = "%sint/group/%s/events/%S" % (
-                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'], platform_event_id)
+                    url = "%sint/group/%s/events/%s" % (
+                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], previous_groupid, platform_event_id)
                     result = requests.delete(url, headers={"Content-Type": "application/json",
                                                          "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']})
                     # if failed then messagebox!
@@ -555,6 +555,8 @@ def put_user_event(eventId):
                         if result.status_code != 200:
                             flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                         else:
+                            __logger.info(
+                                'update event: {} groupid from {} to {} successful'.format(platform_event_id, previous_groupid, event['createdByGroupId']))
                             flash('successfully post event id to group building block!')
 
                 return True
