@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
 
 ### Fixed
-- Fix config.py env. [#955] (https://github.com/rokwire/events-manager/issues/955)
+- Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
 
 ## [3.3.1] - 2022-07-25
 
