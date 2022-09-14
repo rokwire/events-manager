@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
+- Fix changelog history. [#954](https://github.com/rokwire/events-manager/issues/954)
 
 ## [3.3.1] - 2022-07-25
 
