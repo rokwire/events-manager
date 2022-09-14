@@ -13,11 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add space between attribute in base.html [#938](https://github.com/rokwire/events-manager/issues/938)
 - Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
 - Add title attribute to delete event image button. [#944](https://github.com/rokwire/events-manager/issues/944)
+- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
+- Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
-- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
-- Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
 - Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
 - Fix changelog history. [#954](https://github.com/rokwire/events-manager/issues/954)
 
