@@ -8,12 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
+- Add language attribute to HTML tag. [#937](https://github.com/rokwire/events-manager/issues/937)
+- Add space between attribute in base.html [#938](https://github.com/rokwire/events-manager/issues/938)
 - Add start date and end date to calendar events page. [#946](https://github.com/rokwire/events-manager/issues/946)
+- Add title attribute to delete event image button. [#944](https://github.com/rokwire/events-manager/issues/944)
+- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
+- Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
 
 ### Fixed
-- Fix config.py env. [#955] (https://github.com/rokwire/events-manager/issues/946)
+- Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
+- Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
+- Fix changelog history. [#954](https://github.com/rokwire/events-manager/issues/954)
 
 ## [3.3.1] - 2022-07-25
+
+### Added
+- Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
+
 ### Fixed
 - Fix the isInPerson field in campus events. [#928](https://github.com/rokwire/events-manager/issues/928)
 
@@ -24,8 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Placeholder text for Cost Description. [#885](https://github.com/rokwire/events-manager/issues/885)
 - Add isGroupPrivate field for user to select. [#913](https://github.com/rokwire/events-manager/issues/913)
 - Make end date a required field. [#911](https://github.com/rokwire/events-manager/issues/911)
-- Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
-- Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 
 ### Fixed
 - Fix the tooltip color on create new user event page. [#886](https://github.com/rokwire/events-manager/issues/886)

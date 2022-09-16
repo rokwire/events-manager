@@ -90,12 +90,12 @@
             <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
         </div>
 
-      <select id="per_page" class="selectpicker w-auto">
+      <select title="Events Per Page" id="per_page" class="selectpicker w-auto">
           {% for key in page_config %}
               <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
           {% endfor %}
       </select>
-      <span style="margin-top: 5px">Events Per Page</span>
+      <span title="Events Per Page" style="margin-top: 5px">Events Per Page</span>
       </div>
     <!-- comment out search GUI
       <form class="form-inline" id ="searchform" action="{{ url_for('user_events.user_events')}}" method="post">
