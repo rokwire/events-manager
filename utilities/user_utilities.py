@@ -299,6 +299,18 @@ def delete_user_event(eventId):
             __logger.error("Local and remote event {} deletion failed".format(eventId))
             return
         else:
+            # delete from group BB
+            event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                             projection={'_id': 0, 'eventStatus': 0})
+            url = "%sint/group/%s/events/%s" % (
+                current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'], event["platformEventId"])
+            result = requests.delete(url, headers={"Content-Type": "application/json",
+                                                   "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']})
+            # if failed then messagebox!
+            if result.status_code != 200:
+                flash(
+                    'An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
             __logger.info("Local and remote event {} deletion successful".format(eventId))
             return delete_event_local[0]
@@ -401,8 +413,8 @@ def publish_user_event(eventId):
                                        data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
                 if result.status_code != 200:
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                else:
-                    flash('successfully post event id to group building block!')
+                # else:
+                #     flash('successfully post event id to group building block!')
 
                 # Should upload user images
                 s3_client = boto3.client('s3')
@@ -557,7 +569,6 @@ def put_user_event(eventId):
                         else:
                             __logger.info(
                                 'update event: {} groupid from {} to {} successful'.format(platform_event_id, previous_groupid, event['createdByGroupId']))
-                            flash('successfully post event id to group building block!')
 
                 return True
 
