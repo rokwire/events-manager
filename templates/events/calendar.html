@@ -96,12 +96,11 @@
         </div>
 
         <div class="form-check form-check-inline row justify-content-end" >
-          <select title="Events Per Page" id="per_page" class="selectpicker w-auto">
+          <select title="Events Per Page" id="per_page" class="w-auto">
             {% for key in page_config %}
-            <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+            <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}} Events Per Page</option>
             {% endfor %}
           </select>
-          <span title="Events Per Page" style="margin-top: 5px">Events Per Page</span>
         </div>
 
 </div>

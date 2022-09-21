@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
 - Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
 - Fix changelog history. [#954](https://github.com/rokwire/events-manager/issues/954)
+- Fix that the screen reader is not able to read the dropdown list in campus event listing page. [#959](https://github.com/rokwire/events-manager/issues/959)
 
 ## [3.3.1] - 2022-07-25
 
