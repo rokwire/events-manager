@@ -69,7 +69,6 @@
     </header>
 
     {% for message in get_flashed_messages() %}
-{#      <div class="flash">{{ message }}</div>#}
         <div class="flash alert alert-primary" role="alert">
   {{ message }}
 </div>
