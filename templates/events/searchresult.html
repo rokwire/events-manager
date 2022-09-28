@@ -45,7 +45,7 @@ role="button">Back</a>
       <div class="col-3">Category</div>
       <div class="col">
         <div class="form-group">
-          <select name="category" id = "category" class="selectpicker" title="Category..." >
+          <select name="category" id = "category" class="form-control w-auto" title="Category..." >
             {% for key in eventTypeValues %}
               <option value = "{{key}}" id = {{key}}
               {% if category and category == key %}

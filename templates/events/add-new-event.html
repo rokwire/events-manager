@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="fit-content" required >
+                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="fit-content" required >
                   {% for group in groups %}
                       <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
                   {% endfor %}
@@ -97,7 +97,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." data-width="fit-content" required>
+                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -114,9 +114,10 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="subcategory" id="subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                <select name="subcategory" id="subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                    <option id="subcategory-placeholder" value="" disabled selected>Choose an event subcategory (disabled) ...</option>
                   {% for key in subcategoriesMap['Athletics'] %}
-                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    <option value="{{key}}" id={{key}} title={{key}}>{{key}}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -139,7 +140,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id="timezone" class="selectpicker" title="Choose the event timezone..." data-width="fit-content" required>
+                <select name="timezone" id="timezone" class="form-control w-auto" title="Choose the event timezone..." required>
                   {% for key, value in timezones.items() %}
                       {% if key == "US/Central" %}
                         <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
@@ -539,12 +540,14 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }
      })
 
@@ -572,8 +575,7 @@
    });
 
    $("document").ready(function(){
-        $('#timezone').selectpicker('val', 'US/Central');
-        $('#timezone').selectpicker('refresh');
+        $('#timezone').prop('value', 'US/Central');
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
           document.getElementById('displayOnlyWithSuperEventBox').hidden = true;

@@ -28,7 +28,7 @@
 {% block content %}
     <div>
     <h5 style="float:left;margin-top: 13px;margin-left: 5px;padding-right: 18px">Group</h5>
-    <select name="group" id="group" class="selectpicker float-left mt-2" data-style="btn-outline-primary" title="Group...">
+    <select name="group" id="group" class="form-control w-auto float-left mt-2" data-style="btn-outline-primary" title="Group...">
           <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>
       {% for group in groups %}
           <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>
@@ -90,7 +90,7 @@
             <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
         </div>
 
-      <select title="Events Per Page" id="per_page" class="selectpicker w-auto">
+      <select title="Events Per Page" id="per_page" class="form-control w-auto">
           {% for key in page_config %}
               <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
           {% endfor %}
