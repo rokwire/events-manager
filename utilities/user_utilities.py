@@ -1228,7 +1228,7 @@ def get_admin_groups():
     # Retrieve UIN form session
     uin = session["uin"]
     #  Build request
-    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    url = "%sint/user/%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], uin)
     headers = {"Content-Type": "application/json", "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']}
     req = requests.get(url, headers=headers)
     group_info = list()
