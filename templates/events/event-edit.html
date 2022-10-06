@@ -189,7 +189,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="auto" required>
+                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="auto" required>
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
                       <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
@@ -241,7 +241,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." required >
+                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -261,13 +261,14 @@
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory..." data-width="fit-content">
+                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory..." data-width="fit-content">
+                    <option id="subcategory-placeholder" value="" disabled></option>
                     <option value="">None</option>
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
-                        <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
+                        <option value="{{key}}" id={{key}} selected>{{key}}</option>
                       {% else %}
-                        <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                        <option value="{{key}}" id={{key}}>{{key}}</option>
                       {% endif %}
                     {% endfor %}
                   </select>
@@ -283,7 +284,7 @@
                 </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                     {% for key in subcategoriesMap['Athletics'] %}
                       <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endfor %}
@@ -313,7 +314,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id = "timezone" class="selectpicker" title="Choose the event timezone" required>
+                <select name="timezone" id = "timezone" class="form-control w-auto" title="Choose the event timezone" required>
                   {% for key, value in timezones.items() %}
                       {% if post.timezone == key%}
                           <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
@@ -1152,12 +1153,14 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }
      })
 
