@@ -520,10 +520,12 @@ def put_user_event(eventId):
                 del event["platformEventId"]
 
             # get previous groupid from events building block
-            result = requests.get(url, headers={"ROKWIRE-API-KEY": Config.ROKWIRE_API_KEY})
+            result = requests.get(url, headers=headers)
             previous_groupid = None
             if result.status_code == 200:
                 previous_groupid = result.json().get('createdByGroupId')
+            else:
+                __logger.error("fail to get groupid {} from events building block".format(eventId))
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
 
@@ -544,7 +546,6 @@ def put_user_event(eventId):
                                               "$set": {"eventStatus": "approved"}
                                           })
                 if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
-                    # TODO to delete the event from the old group id.
                     url = "%sint/group/%s/events/%s" % (
                         current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], previous_groupid, platform_event_id)
                     result = requests.delete(url, headers={"Content-Type": "application/json",
@@ -552,6 +553,7 @@ def put_user_event(eventId):
                     # if failed then messagebox!
                     if result.status_code != 200:
                         flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                        __logger.error("fail to delete user event {}'s group id from group building block".format(eventId))
                     else:
                         # post to group bb
                         # post eventid to group building block
@@ -566,6 +568,8 @@ def put_user_event(eventId):
                         # if failed then messagebox!
                         if result.status_code != 200:
                             flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                            __logger.error("user event {} fail to post to group building block".format(eventId))
+
                         else:
                             __logger.info(
                                 'update event: {} groupid from {} to {} successful'.format(platform_event_id, previous_groupid, event['createdByGroupId']))
