@@ -14,6 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
+/*my test*/
 body {
   background: #fafafa;
   color: #333333;
@@ -25,7 +26,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  margin: 0 0 40px;
+  padding: 32px 36.5px 31.8px 32px;
+  background-color: #13294b;
 }
 
  .divider {
@@ -39,20 +42,6 @@ h1, h2, h3, h4, h5, h6 {
 
 h2 {
   text-align: center;
-}
-
-.User-Events {
-  width: 744px;
-  height: 24px;
-  margin: 16px 140px 8px;
-  font-family: proxima-nova, sans-serif;
-  font-size: 20px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.2;
-  letter-spacing: normal;
-  color: #ff552e;
 }
 
 .home-title {
@@ -163,4 +152,67 @@ main.container {
 
 .ui-autocomplete { 
   z-index:2000; 
+}
+
+.user-events a{
+  color: #ff552e;
+  /*width: 744px;*/
+  /*height: 24px;*/
+  /*margin: 16px 140px 8px;*/
+  font-family: proxima-nova, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+}
+
+.Events-Manager {
+  width: 5000px;
+  /*height: 36px;*/
+  /*margin: 15px 538.5px 13.2px 19.6px;*/
+  font-family: ProximaNova-Extrabld;
+  font-size: 32px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.13;
+  letter-spacing: normal;
+  color: #fff;
+}
+
+.Logout {
+  width: 36px;
+  height: 16px;
+  font-family: ProximaNova;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  text-align: center;
+  color: #002855;
+}
+.Rectangle-Copy-4 {
+  /*width: 114px;*/
+  /*height: 32px;*/
+  margin: 19px 0 13.2px 538.5px;
+  padding: 9px 39px 7px;
+  border-radius: 24px;
+  border: solid 2px #e84a27;
+  background-color: #fff;
+}
+.Hello-username {
+  text-align: left;
+}
+
+.Rectangle-Copy-2 {
+  /*width: 1024px;*/
+  /*height: 192.8px;*/
+  margin: 473px 0 0;
+  padding: 83px 412px 31.9px 411px;
+  transform: rotate(-360deg);
+  background-color: #13294b;
 }
