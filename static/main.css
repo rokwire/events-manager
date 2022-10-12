@@ -31,6 +31,10 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #13294b;
 }
 
+.content-padding {
+  margin: 204px 0 0;
+}
+
  .divider {
    height: 1px;
    width:100%;
@@ -199,6 +203,13 @@ main.container {
   /*width: 114px;*/
   /*height: 32px;*/
   margin: 19px 0 13.2px 538.5px;
+  padding: 9px 39px 7px;
+  border-radius: 24px;
+  border: solid 2px #e84a27;
+  background-color: #fff;
+}
+.Rectangle-Copy-logout {
+  margin: 0 0 0 5px;
   padding: 9px 39px 7px;
   border-radius: 24px;
   border: solid 2px #e84a27;

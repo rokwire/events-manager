@@ -67,7 +67,7 @@
           {% endif %} -->
           <div ><span class="text-light text-nowrap">Hello, {{ g.user["username"] }}</span></div>
 {#          <div class="col"><a role="button" class="btn btn-light" href="{{ url_for('auth.logout') }}">Logout</a></div>#}
-            <div class="Rectangle-Copy-4">
+            <div class="Rectangle-Copy-logout">
                 <a role="button" class="Logout Button-Primary-center" href="{{ url_for('auth.logout') }}">Logout</a>
             </div>
         {% else %}
@@ -87,7 +87,7 @@
     {% block modals %}
     {% endblock %}
     <main role="main" class="container" >
-      <div class = "container d-none d-md-block">
+      <div class = "container d-none d-md-block content-padding">
         {% block content%}
         {% endblock %}
       </div>
