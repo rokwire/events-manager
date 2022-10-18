@@ -125,8 +125,13 @@
                     <span class="date">{{post.startDate}} </span>
                 </div>
                 <div style="display:flex; overflow: hidden">
-                    <h6 style="padding-right: 5px">Ends: </h6>
-                    <span class="date">{{ post.endDate}}</span>
+                    {% if post.allDay == True and post.endDate %}
+                        <h6 style="padding-right: 5px; margin-left: 60px">Ends: </h6>
+                        <span class="date">{{ post.endDate }}</span>
+                    {% else %}
+                        <h6 style="padding-right: 5px">Ends: </h6>
+                        <span class="date">{{ post.endDate }}</span>
+                    {% endif %}
                 </div>
             </div>
           </div>
