@@ -14,11 +14,11 @@
  * limitations under the License.
  ******************************************************************************/
 
-/*my test*/
 body {
   background: #fafafa;
   color: #333333;
   margin-top: 5rem;
+  font-family: proxima-nova,sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -160,12 +160,9 @@ main.container {
 
 .user-events a{
   color: #ff552e;
-  /*width: 744px;*/
-  /*height: 24px;*/
-  /*margin: 16px 140px 8px;*/
   font-family: proxima-nova, sans-serif;
   font-size: 20px;
-  font-weight: normal;
+  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.2;
@@ -173,13 +170,10 @@ main.container {
 }
 
 .Events-Manager {
-  width: auto;
-  white-space: nowrap;
-  /*height: 36px;*/
-  /*margin: 15px 538.5px 13.2px 19.6px;*/
-  font-family: ProximaNova-Extrabld;
+  width: 5000px;
+  font-family: proxima-nova,sans-serif;
   font-size: 32px;
-  font-weight: normal;
+  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.13;
@@ -190,7 +184,7 @@ main.container {
 .Logout {
   width: 36px;
   height: 16px;
-  font-family: ProximaNova;
+  font-family: proxima-nova,sans-serif;
   font-size: 14px;
   font-weight: bold;
   font-stretch: normal;
@@ -201,8 +195,6 @@ main.container {
   color: #002855;
 }
 .Rectangle-Copy-4 {
-  /*width: 114px;*/
-  /*height: 32px;*/
   margin: 19px 0 13.2px 538.5px;
   padding: 9px 39px 7px;
   border-radius: 24px;
@@ -221,13 +213,10 @@ main.container {
 }
 
 .Rectangle-Copy-2 {
-  /*width: 1024px;*/
-  height: 192.8px;
   margin: 473px 0 0;
   padding: 83px 412px 31.9px 411px;
   transform: rotate(-360deg);
   background-color: #13294b;
-  clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%);
 }
 
 .Create-Event-Button {
