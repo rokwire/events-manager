@@ -153,7 +153,7 @@ class Config(object):
     TIMEZONES = json.loads(os.getenv("TIMEZONES", '{"US/Pacific": "US/Pacific","US/Mountain": "US/Mountain", '
                                                   '"US/Central": "US/Central", "US/Eastern": "US/Eastern"}'))
 
-    GROUPS_BUILDING_BLOCK_ENDPOINT = os.getenv("GROUPS_BUILDING_BLOCK_ENDPOINT", "https://api-dev.rokwire.illinois.edu/gr/api/int/user/")
+    GROUPS_BUILDING_BLOCK_BASE_URL = os.getenv("GROUPS_BUILDING_BLOCK_BASE_URL", "https://api-dev.rokwire.illinois.edu/gr/api/")
 
     # API key used to communicate with groups building block
     INTERNAL_API_KEY = os.getenv("INTERNAL_API_KEY", "")    # pragma: allowlist secret

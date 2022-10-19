@@ -111,6 +111,11 @@ def calendar(calendarId):
     __logger.info("sourceId: {}, calendarId: {}, number of events: {}".format(sourceId, calendarId, len(list(events))))
 
     calendarStatus = get_calendar_status(calendarId)
+    for event in events:
+        if event['allDay'] == True:
+            if event['endDate']:
+                event['endDate'] = datetime.strptime(event['endDate'], '%m/%d/%Y %I:%M %p').strftime('%m/%d/%Y')
+            event['startDate'] = datetime.strptime(event['startDate'], '%m/%d/%Y %I:%M %p').strftime('%m/%d/%Y')
     return render_template('events/calendar.html',
                             title=title, source=(sourceId, sourcetitle),
                             posts=events, calendarId=calendarId,isUser=False, page_config=Config.EVENTS_PER_PAGE,page=page,

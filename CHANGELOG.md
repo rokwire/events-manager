@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add title attribute to delete event image button. [#944](https://github.com/rokwire/events-manager/issues/944)
 - Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
 - Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
+- Send event id to group building block if event is published or group id has been updated. [#935](https://github.com/rokwire/events-manager/issues/935)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
@@ -22,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix changelog history. [#954](https://github.com/rokwire/events-manager/issues/954)
 - Fix that the screen reader is not able to read the dropdown list in campus event listing page. [#959](https://github.com/rokwire/events-manager/issues/959)
 - Fix that the screen reader is not able to read options of the dropdown lists as user navigates. [#961](https://github.com/rokwire/events-manager/issues/961)
+- Fix the issue that hours and seconds will be displayed for all day events in calendar events. [#958](https://github.com/rokwire/events-manager/issues/958)
 
 ## [3.3.1] - 2022-07-25
-
 ### Added
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
 
