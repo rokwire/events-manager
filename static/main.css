@@ -173,7 +173,8 @@ main.container {
 }
 
 .Events-Manager {
-  width: 5000px;
+  width: auto;
+  white-space: nowrap;
   /*height: 36px;*/
   /*margin: 15px 538.5px 13.2px 19.6px;*/
   font-family: ProximaNova-Extrabld;
@@ -226,4 +227,13 @@ main.container {
   padding: 83px 412px 31.9px 411px;
   transform: rotate(-360deg);
   background-color: #13294b;
+}
+
+.Create-Event-Button {
+  width: 140px;
+  margin-left:20px;
+  background-color: #D85536;
+  border-radius: 24px;
+  border: solid 2px #D85536;
+  font-family: ProximaNova;
 }
