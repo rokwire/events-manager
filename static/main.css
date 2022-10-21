@@ -217,4 +217,19 @@ main.container {
   padding: 83px 412px 31.9px 411px;
   transform: rotate(-360deg);
   background-color: #13294b;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%);
+}
+
+.Create-Event-Button {
+  width: 140px;
+  margin-left:20px;
+  background-color: #D85536;
+  border-radius: 24px;
+  border: solid 2px #D85536;
+  font-family: proxima-nova, sans-serif;
+}
+
+.Create-Event-Button:hover {
+  background-color: #D85536;
+  border: solid 2px #D85536;
 }
