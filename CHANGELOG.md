@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the screen reader is not able to read options of the dropdown lists as user navigates. [#961](https://github.com/rokwire/events-manager/issues/961)
 - Fix the issue that hours and seconds will be displayed for all day events in calendar events. [#958](https://github.com/rokwire/events-manager/issues/958)
 
+### Changed
+- Change the CSS class names to match the HTML controls. [#973](https://github.com/rokwire/events-manager/issues/973)
+
+
 ## [3.3.1] - 2022-07-25
 ### Added
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
