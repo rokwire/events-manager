@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for hybrid event. [#926](https://github.com/rokwire/events-manager/issues/926)
 - Add support for hybrid event in user events space. [#922](https://github.com/rokwire/events-manager/issues/922)
 - Send event id to group building block if event is published or group id has been updated. [#935](https://github.com/rokwire/events-manager/issues/935)
+- Update the style of create event button. [#967](https://github.com/rokwire/events-manager/issues/967)
+- Update the style of the footer. [#968](https://github.com/rokwire/events-manager/issues/968)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
