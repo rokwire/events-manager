@@ -25,6 +25,61 @@ h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
 
+h1 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.13;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h2 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h3 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ff552e;
+}
+
+h4 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h5 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #404040;
+}
+
 .bg-steel {
   margin: 0 0 40px;
   padding: 32px 36.5px 31.8px 32px;
