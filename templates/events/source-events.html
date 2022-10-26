@@ -44,7 +44,7 @@
     <div class="nav flex-column nav-pills calendar-event-listing-column" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       {% for key, value in allsources.items() %}
         {% if key == sourceId %}
-	       <a class="calendar-event-text calendar-event-button-button-active nav-link active" id="v-pills-school-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-school" aria-selected="true">{{value[0]}}</a>
+	       <a class="calendar-event-text calendar-event-button-active nav-link active" id="v-pills-school-tab" data-toggle="pill" href="#" role="tab" aria-controls="v-pills-school" aria-selected="true">{{value[0]}}</a>
         {% else %}
 	       <a class="nav-link calendar-event-text" id="v-pills-school-tab" href="{{url_for('event.source', sourceId=key)}}" role="tab" aria-selected="false">{{value[0]}}</a>
         {% endif %}
