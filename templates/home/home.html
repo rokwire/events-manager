@@ -24,22 +24,22 @@
         </div>
     {% endif %}
     <h1>Introduction</h1>
-    <p>
+    <p class="promo-body-text">
         Events Manager is the administrative interface to events in the Rokwire Platform. Through this web application,
         users can manage existing events coming from calendars and or create and manage user events.
     </p>
     <hr/>
-    <p>
+    <p class="small-body-text">
         Main features of Events Manager are as follows:
     </p>
     <h3 class="user-events"><a href="{{ url_for('user_events.user_events') }}"> User Events </a></h3>
-    <ul>
+    <ul class="small-body-text">
         <li>View events (published and pending)</li>
         <li>Manage events (create, view, edit, delete, and publish)</li>
         <li>Send notifications</li>
     </ul>
     <h3 class="user-events"><a href="{{ url_for('event.source', sourceId=0) }}"> Calendar Events </a></h3>
-    <ul>
+    <ul class="small-body-text">
         <li>View event sources</li>
         <li>View events (published and pending)</li>
         <li>Manage events (publish, make pending, and delete)</li>
