@@ -31,11 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change the CSS class names to match the HTML controls. [#973](https://github.com/rokwire/events-manager/issues/973)
 
-
 ## [3.3.1] - 2022-07-25
 ### Added
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
-
 ### Fixed
 - Fix the isInPerson field in campus events. [#928](https://github.com/rokwire/events-manager/issues/928)
 
