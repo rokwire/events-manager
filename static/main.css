@@ -31,7 +31,7 @@ h1 {
   font-weight: 800;
   font-stretch: normal;
   font-style: normal;
-  line-height: 1.13;
+  line-height: 1.5;
   letter-spacing: normal;
   color: #13294b;
 }
@@ -315,4 +315,12 @@ main.container {
   line-height: 1.14;
   letter-spacing: normal;
   color: #404040;
+}
+
+.badge {
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
 }
