@@ -324,3 +324,17 @@ main.container {
   font-stretch: normal;
   font-style: normal;
 }
+
+.super-event-badge-text {
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #fff;
+}
+
+.super-event-badge {
+  background-color: #1d58a7;
+}
