@@ -160,9 +160,6 @@ def user_events():
 def user_an_event(id):
     post = find_user_event(id)
     groups, _ = get_admin_groups()
-    if 'location' in post and post.get('location') is None:
-        post['location'] = dict()
-        post['location']['description'] = ""
     for group in groups:
         if group['id'] == post['createdByGroupId']:
             groupName = group['title']
@@ -407,7 +404,8 @@ def user_an_event_edit(id):
                 if location != '':
                     post_by_id['location'] = get_location_details(location, False)
                 else:
-                    post_by_id['location'] = None
+                    post_by_id['location'] = dict()
+                    post_by_id['location']['description'] = ""
             elif item == 'virtualEventUrl':
                 post_by_id['virtualEventUrl'] = request.form.get('virtualEventUrl')
 
