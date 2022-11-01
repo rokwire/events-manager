@@ -160,6 +160,9 @@ def user_events():
 def user_an_event(id):
     post = find_user_event(id)
     groups, _ = get_admin_groups()
+    if 'location' in post and post.get('location') is None:
+        post['location'] = dict()
+        post['location']['description'] = ""
     for group in groups:
         if group['id'] == post['createdByGroupId']:
             groupName = group['title']
