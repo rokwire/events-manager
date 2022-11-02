@@ -243,6 +243,7 @@ main.container {
   background-color: #fff;
   color:#002855;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .white-background-button:hover {
@@ -259,6 +260,7 @@ main.container {
   border: solid 2px #e84a27;
   background-color: #e84a27;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .orange-background-button:hover {
@@ -273,6 +275,7 @@ main.container {
   background: #ffffff;
   color: #002855;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .notification-button:hover {
@@ -288,6 +291,7 @@ main.container {
   background-color: #f5f5f5;
   border: solid 1px #f5f5f5;
   color: #404040;
+  font-size: 14px;
 }
 
 .grey-background-button:hover {
