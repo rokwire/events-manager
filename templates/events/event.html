@@ -119,14 +119,14 @@
       <div>
           {% if post.superEventID and post.superEventID != '' %}
               <div class="media" style="float: left; margin-right: 10px">
-                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+                <a class="btn btn-dark grey-background-button" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
               </div>
               <div class="media">
-                <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post.superEventID) }}" role="button">Back To Super Event</a>
+                <a class="btn btn-dark grey-background-button" href="{{ url_for('user_events.user_an_event', id=post.superEventID) }}" role="button">Back To Super Event</a>
               </div>
           {% else %}
               <div class="media">
-                <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+                <a class="btn btn-dark grey-background-button" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
               </div>
           {% endif %}
       </div>
@@ -629,25 +629,25 @@
         -->
         {% else %}
         <!-- temporarily change Approve to Publish-->
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmModal">Publish</button>
+        <button type="button" class="btn btn-success white-background-button" data-toggle="modal" data-target="#confirmModal">Publish</button>
         {% endif %}
       </div>
     {% endif %}
       <div class="btn-group mr-2" role="group" aria-label="Second group">
         {% if isUser %}
-        <a class="btn btn-block nav-link btn-secondary" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
+        <a class="btn btn-block nav-link btn-secondary white-background-button" href="{{ url_for('user_events.user_an_event_edit', id=post['_id']) }}" role="button">Edit</a>
         {% endif %}
       </div>
       {% if isUser %}
           <div class="btn-group mr-2" role="group" aria-label="Third group">
-            <button class="btn btn-block nav-link btn-dark"
+            <button class="btn btn-block nav-link btn-dark orange-background-button"
               data-toggle="modal" data-html="true" data-target="#DeleteModal">
                 Delete
             </button>
           </div>
           {% if post.eventStatus == "approved" %}
               <div class="btn-group mr-2" role="group" aria-label="Notification group">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
+                <button type="button" class="btn btn-success notification-button" data-toggle="modal" data-target="#notificationModal" id="notificationbutton">Notification</button>
               </div>
           {% endif %}
        {% else %}
@@ -663,7 +663,7 @@
 
           <div class="btn-group mr-2" role="group" aria-label="Third group">
 
-            <button class="btn btn-block nav-link btn-dark"
+            <button class="btn btn-block nav-link btn-dark orange-background-button"
               data-toggle="modal" data-html="true" data-target="#DeleteModal">
                 Delete
             </button>
