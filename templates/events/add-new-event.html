@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="selectpicker" title="Choose a group..." data-width="fit-content" required >
+                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="fit-content" required >
                   {% for group in groups %}
                       <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
                   {% endfor %}
@@ -97,7 +97,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="category" id = "category" class="selectpicker" title="Choose an event category..." data-width="fit-content" required>
+                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>
                   {% for key in eventTypeValues %}
                     <option value = "{{key}}" id = {{key}}>{{key}}</option>
                   {% endfor %}
@@ -114,9 +114,10 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="subcategory" id="subcategory" class="selectpicker" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                <select name="subcategory" id="subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                    <option id="subcategory-placeholder" value="" disabled selected>Choose an event subcategory (disabled) ...</option>
                   {% for key in subcategoriesMap['Athletics'] %}
-                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
+                    <option value="{{key}}" id={{key}} title={{key}}>{{key}}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -139,7 +140,7 @@
             </div>
             <div class="col-sm-9">
               <div class="form-group">
-                <select name="timezone" id="timezone" class="selectpicker" title="Choose the event timezone..." data-width="fit-content" required>
+                <select name="timezone" id="timezone" class="form-control w-auto" title="Choose the event timezone..." required>
                   {% for key, value in timezones.items() %}
                       {% if key == "US/Central" %}
                         <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
@@ -175,17 +176,37 @@
           <!-- isVirtual -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5>Virtual Event</h5>
+              <h5>Virtual Location?</h5>
             </div>
             <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="selectionChanged(this)"/> Yes
+              <input class="form_control" type="checkbox" id="isVirtual" name="isVirtual" onchange="virtualSelectionChanged(this)"/> Yes
             </div>
           </div>
 
-          <!-- location -->
+          <!-- Virtual Event URL -->
+          <div class="form-group row" id="Virtual Event URL" hidden>
+            <div class="col-12 col-sm-2">
+              <h5 type='text'>Virtual Event URL</h5>
+            </div>
+            <div class="col-sm-9">
+              <input id="virtualEventUrl" name="virtualEventUrl" class="form-control" type="text"/>
+            </div>
+          </div>
+
+          <!-- isInPerson -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
-              <h5 id="Location Header" type='text'>Location Address</h5>
+              <h5>Physical Location?</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isInPerson" name="isInPerson" onchange="inPersonSelectionChanged(this)" checked/> Yes
+            </div>
+          </div>
+
+          <!-- Location Address -->
+          <div class="form-group row" id="Location Address">
+            <div class="col-12 col-sm-2">
+              <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
               <input id="location" name="location" class="form-control" type="text"/>
@@ -194,15 +215,30 @@
 
           <!-- Script to handle changing header -->
           <script>
-            function selectionChanged(element) {
+            function virtualSelectionChanged(element) {
               if (element.checked) {
-                document.getElementById('Location Header').innerHTML = 'Virtual Event URL';
-                document.getElementById('location').type = 'url';
+                  document.getElementById('Virtual Event URL').hidden = false;
+              } else {
+                  if (document.getElementById('isInPerson').checked === false) {
+                      element.checked = true;
+                      alert("Either one of Physical Location? or Virtual Location? checkboxes need to be checked.")
+                  } else {
+                      document.getElementById('Virtual Event URL').hidden = true;
+                      document.getElementById('virtualEventUrl').value = '';
+                  }
               }
-              else {
-                document.getElementById('Location Header').innerHTML = 'Location Address';
-                document.getElementById('location').type = 'text';
-
+            }
+            function inPersonSelectionChanged(element) {
+              if (element.checked) {
+                  document.getElementById('Location Address').hidden = false;
+              } else {
+                  if (document.getElementById('isVirtual').checked === false) {
+                      element.checked = true;
+                      alert("Either one of Physical Location? or Virtual Location? checkboxes need to be checked.")
+                  } else {
+                    document.getElementById('Location Address').hidden = true;
+                    document.getElementById('location').value = '';
+                  }
               }
             }
           </script>
@@ -222,16 +258,6 @@
 <!--            </div>-->
 <!--          </div>-->
 
-          <!-- freeEvent -->
-          <div class="form-group row ">
-            <div class="col-12 col-sm-2">
-              <h5>Free Event</h5>
-            </div>
-            <div class="col-sm-1">
-              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
-            </div>
-          </div>
-
           <!-- isGroupPrivate -->
           <div class="form-group row ">
             <div class="col-12 col-sm-2">
@@ -239,6 +265,16 @@
             </div>
             <div class="col-sm-1">
               <input class="form_control" type="checkbox" id="isGroupPrivate" name="isGroupPrivate"/> Yes
+            </div>
+          </div>
+
+          <!-- freeEvent -->
+          <div class="form-group row ">
+            <div class="col-12 col-sm-2">
+              <h5>Free Event</h5>
+            </div>
+            <div class="col-sm-1">
+              <input class="form_control" type="checkbox" id="isEventFree" name="isEventFree"/> Yes
             </div>
           </div>
        
@@ -339,7 +375,7 @@
                   <label class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
                 </div>
                 <div class="input-group-append">
-                  <button class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
+                  <button title="Delete event image" class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
                 </div>
               </div>
             </div>
@@ -504,12 +540,14 @@
      $('#form select[name="category"]').on("change", function(event) {
        if(event.target.value != "Athletics"){
          $('#subcategory').prop("disabled", true);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory (disabled) ...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }else{
          $('#subcategory').prop("disabled", false);
-         $('#subcategory').selectpicker({title: 'Choose an event subcategory...'});
-         $('#subcategory').val('').selectpicker('refresh');
+         $('#subcategory').prop("title", "Choose an event subcategory ...");
+         $('#subcategory-placeholder').text('Choose an event subcategory ...');
+         $('#subcategory-placeholder').prop('selected', true)
        }
      })
 
@@ -537,8 +575,7 @@
    });
 
    $("document").ready(function(){
-        $('#timezone').selectpicker('val', 'US/Central');
-        $('#timezone').selectpicker('refresh');
+        $('#timezone').prop('value', 'US/Central');
         if (document.getElementById("super-event").checked === true) {
           document.getElementById('displayOnlyWithSuperEvent').disabled = true;
           document.getElementById('displayOnlyWithSuperEventBox').hidden = true;

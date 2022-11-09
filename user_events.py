@@ -348,6 +348,10 @@ def user_an_event_edit(id):
             post_by_id['isVirtual'] = True
         else:
             post_by_id['isVirtual'] = False
+        if 'isInPerson' in request.form and request.form.get('isInPerson') == 'on':
+            post_by_id['isInPerson'] = True
+        else:
+            post_by_id['isInPerson'] = False
 
         for item in request.form:
             if item == 'createdByGroupId':
@@ -398,9 +402,12 @@ def user_an_event_edit(id):
             elif item == 'location':
                 location = request.form.get('location')
                 if location != '':
-                    post_by_id['location'] = get_location_details(location, post_by_id.get('isVirtual'))
+                    post_by_id['location'] = get_location_details(location, False)
                 else:
-                    post_by_id['location'] = None
+                    post_by_id['location'] = dict()
+                    post_by_id['location']['description'] = ""
+            elif item == 'virtualEventUrl':
+                post_by_id['virtualEventUrl'] = request.form.get('virtualEventUrl')
 
         if post_by_id['category'] == "Athletics":
             post_by_id['subcategory'] = request.form['subcategory']
@@ -709,6 +716,9 @@ def add_new_event():
             new_event['isGroupPrivate'] = True
         if new_event.get('displayOnlyWithSuperEvent') == 'on':
             new_event['displayOnlyWithSuperEvent'] = True
+        if 'location' in new_event and new_event['location'] is None:
+            new_event['location'] = dict()
+            new_event['location']['description'] = ""
         # remove duplicates in sub event array
         if 'subEvents' in new_event and new_event['subEvents'] is not None:
             deduplicatedSubEvents = deduplicate_sub_events(new_event['subEvents'])

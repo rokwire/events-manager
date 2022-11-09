@@ -22,7 +22,7 @@ import os
 import re
 import tempfile
 import shutil
-from flask import current_app, session
+from flask import current_app, session, flash
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime, date
@@ -299,6 +299,18 @@ def delete_user_event(eventId):
             __logger.error("Local and remote event {} deletion failed".format(eventId))
             return
         else:
+            # delete from group BB
+            event = find_one(current_app.config['EVENT_COLLECTION'], condition={"_id": ObjectId(eventId)},
+                             projection={'_id': 0, 'eventStatus': 0})
+            url = "%sint/group/%s/events/%s" % (
+                current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'], event["platformEventId"])
+            result = requests.delete(url, headers={"Content-Type": "application/json",
+                                                   "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']})
+            # if failed then messagebox!
+            if result.status_code != 200:
+                flash(
+                    'An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
             __logger.info("Local and remote event {} deletion successful".format(eventId))
             return delete_event_local[0]
@@ -395,6 +407,15 @@ def publish_user_event(eventId):
             # if successful, change status of event to approved.
             else:
                 platform_event_id = result.json()['id']
+                # post eventid to group building block
+                url = "%sint/group/%s/events" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                result = requests.post(url, headers={"Content-Type": "application/json", "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
+                                       data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
+                if result.status_code != 200:
+                    flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                # else:
+                #     flash('successfully post event id to group building block!')
+
                 # Should upload user images
                 s3_client = boto3.client('s3')
                 imageId = s3_publish_user_image(eventId, platform_event_id, s3_client)
@@ -494,9 +515,17 @@ def put_user_event(eventId):
             # Generation of URL via platformEventId
             url = current_app.config['EVENT_BUILDING_BLOCK_URL'] + '/' + event.get('platformEventId')
             # Getting rid of platformEventId from PUT request
+            platform_event_id = event["platformEventId"]
             if "platformEventId" in event:
                 del event["platformEventId"]
 
+            # get previous groupid from events building block
+            result = requests.get(url, headers=headers)
+            previous_groupid = None
+            if result.status_code == 200:
+                previous_groupid = result.json().get('createdByGroupId')
+            else:
+                __logger.error("fail to get groupid {} from events building block".format(eventId))
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
 
@@ -516,6 +545,34 @@ def put_user_event(eventId):
                                           update={
                                               "$set": {"eventStatus": "approved"}
                                           })
+                if previous_groupid and previous_groupid != event['createdByGroupId'] and platform_event_id:
+                    url = "%sint/group/%s/events/%s" % (
+                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], previous_groupid, platform_event_id)
+                    result = requests.delete(url, headers={"Content-Type": "application/json",
+                                                         "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']})
+                    # if failed then messagebox!
+                    if result.status_code != 200:
+                        flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                        __logger.error("fail to delete user event {}'s group id from group building block".format(eventId))
+                    else:
+                        # post to group bb
+                        # post eventid to group building block
+                        url = "%sint/group/%s/events" % (
+                        current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], event['createdByGroupId'])
+                        result = requests.post(url, headers={"Content-Type": "application/json",
+                                                             "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']},
+                                               data=json.dumps({"event_id": platform_event_id,
+                                                                "creator": {"email": session['email'],
+                                                                            "name": session['name'],
+                                                                            "user_id": session['uin']}}))
+                        # if failed then messagebox!
+                        if result.status_code != 200:
+                            flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                            __logger.error("user event {} fail to post to group building block".format(eventId))
+
+                        else:
+                            __logger.info(
+                                'update event: {} groupid from {} to {} successful'.format(platform_event_id, previous_groupid, event['createdByGroupId']))
 
                 return True
 
@@ -565,6 +622,8 @@ def populate_event_from_form(post_form, email):
                 all_day_event = True
             elif item == 'isVirtual' and post_form.get(item) == 'on':
                 new_event['isVirtual'] = True
+            elif item == 'isInPerson' and post_form.get(item) == 'on':
+                new_event['isInPerson'] = True
             else:
                 new_event[item] = post_form.get(item)
     if not super_event:
@@ -604,9 +663,10 @@ def populate_event_from_form(post_form, email):
 
     location = post_form.get('location')
     if location != '':
-        new_event['location'] = get_location_details(location, new_event.get('isVirtual'))
+        new_event['location'] = get_location_details(location, False)
     else:
         new_event['location'] = None
+    new_event['virtualEventUrl'] = post_form.get('virtualEventUrl')
 
     new_event['createdBy'] = email
 
@@ -1172,7 +1232,7 @@ def get_admin_groups():
     # Retrieve UIN form session
     uin = session["uin"]
     #  Build request
-    url = "%s%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_ENDPOINT'], uin)
+    url = "%sint/user/%s/groups" % (current_app.config['GROUPS_BUILDING_BLOCK_BASE_URL'], uin)
     headers = {"Content-Type": "application/json", "INTERNAL-API-KEY": current_app.config['INTERNAL_API_KEY']}
     req = requests.get(url, headers=headers)
     group_info = list()

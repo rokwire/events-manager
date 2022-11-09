@@ -22,7 +22,7 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
+  <a class="btn btn-primary mr-2 create-event-button" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
   {% endif %}
 {% endblock %}
 
@@ -467,10 +467,37 @@
                 </div>
               {% endif %}
 
+              <!-- virtual event URL -->
+              {% if post.isVirtual == True %}
+                <div class="row">
+                  <div class="col-12 col-sm-2" id="longDes">
+                    <h5>Virtual Event URL</h5>
+                  </div>
+                  <p class="col-12 col-sm-9"><a href="{{post.virtualEventUrl}}">{{post.virtualEventUrl}}</a></p>
+                </div>
+              {% endif %}
+
+            <!-- In Person Event -->
+              {% if post.isInPerson %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>In Person Event</h5>
+                  </div>
+                      <p class = "col-sm-9">Yes</p>
+                </div>
+              {% else %}
+                <div class="row">
+                  <div class="col-12 col-sm-2">
+                    <h5>In Person Event</h5>
+                  </div>
+                      <p class = "col-sm-9">No</p>
+                </div>
+              {% endif %}
+
             <!-- location -->
             {% if post.location %}
               <!-- location.description -->
-              {% if post.location.description and (post.isVirtual == Null or post.isVirtual == False) %}
+              {% if post.location.description and (post.isInPerson) %}
                 <div class="row">
                   <div class="col-12 col-sm-2" id="longDes">
                     <h5>Location Address</h5>
@@ -478,15 +505,7 @@
                   <p class="col-12 col-sm-9">{{post.location.description}}</p>
                 </div>
               {% endif %}
-              <!-- virtual event URL -->
-              {% if post.location.description and post.isVirtual == True %}
-                <div class="row">
-                  <div class="col-12 col-sm-2" id="longDes">
-                    <h5>Virtual Event URL</h5>
-                  </div>
-                  <p class="col-12 col-sm-9"><a href="{{post.location.description}}">{{post.location.description}}</a></p>
-                </div>
-              {% endif %}
+
               <!-- location.address -->
               {% if post.location.latitude %}
                 <div class="row">

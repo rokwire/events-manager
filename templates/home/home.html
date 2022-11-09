@@ -16,7 +16,6 @@
 
 {% extends 'base.html' %}
 
-
 {% block title %} Events Manager {% endblock %}
 {% block content %}
     {% if error %}
@@ -33,13 +32,13 @@
     <p>
         Main features of Events Manager are as follows:
     </p>
-    <h3><a href="{{ url_for('user_events.user_events') }}"> User Events </a></h3>
+    <h3 class="user-events"><a href="{{ url_for('user_events.user_events') }}"> User Events </a></h3>
     <ul>
         <li>View events (published and pending)</li>
         <li>Manage events (create, view, edit, delete, and publish)</li>
         <li>Send notifications</li>
     </ul>
-    <h3><a href="{{ url_for('event.source', sourceId=0) }}"> Calendar Events </a></h3>
+    <h3 class="user-events"><a href="{{ url_for('event.source', sourceId=0) }}"> Calendar Events </a></h3>
     <ul>
         <li>View event sources</li>
         <li>View events (published and pending)</li>

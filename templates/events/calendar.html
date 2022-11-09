@@ -96,12 +96,12 @@
         </div>
 
         <div class="form-check form-check-inline row justify-content-end" >
-          <select id="per_page" class="selectpicker w-auto">
+          <select title="Events Per Page" id="per_page" class="w-auto">
             {% for key in page_config %}
-            <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
+            <option title="Events Per Page" value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
             {% endfor %}
           </select>
-          <span style="margin-top: 5px">Events Per Page</span>
+          <span style="margin-top: 5px; margin-left: 5px">Events Per Page</span>
         </div>
 
 </div>
@@ -109,24 +109,33 @@
 <div id = "accordion">
   {% for post in posts %}
       <div class="card">
-        <div class="card-header" role="tab" id = "head">
-        <h3 class="mb-0">
-            <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-left">
-              <h4 class="mb-0" align = "left">{{ post.title }}</h4>
-            </a>
-        </h3>
-
-        </div>
-        <div role="tabpanel" class="collapse" id="{{post._id}}">
-            <div class="card-body">
-              <p class="d-none d-sm-block">
-                {% autoescape false %}
-                {{post.description}}
-                {% endautoescape %}
-              </p>
+          <div class="card-header" role="tab", id = "head">
+            <div class = "col-12 col-md-11" style="overflow: hidden; padding-top: 3px; padding-bottom: 3px">
+              <a href="{{url_for('event.detail', eventId=post._id) }}" class="btn btn-default ml-auto float-left" >
+                  {% if post.title|length > 76 %}
+                  <h5 class="mb-0" align="left" style="width: 680px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ post.title }}</h5>
+                  {% else %}
+                  <h5 class="mb-0" align="left" style="overflow:hidden; white-space:nowrap">{{ post.title }}</h5>
+                  {% endif %}
+              </a>
             </div>
+            <div style="height: 17px; padding-left: 27px; display:flex">
+                <div style="display:flex; overflow: hidden; padding-right: 10px">
+                    <h6 style="padding-right: 5px">Starts:</h6>
+                    <span class="date">{{post.startDate}} </span>
+                </div>
+                <div style="display:flex; overflow: hidden">
+                    {% if post.allDay == True and post.endDate %}
+                        <h6 style="padding-right: 5px; margin-left: 60px">Ends: </h6>
+                        <span class="date">{{ post.endDate }}</span>
+                    {% else %}
+                        <h6 style="padding-right: 5px">Ends: </h6>
+                        <span class="date">{{ post.endDate }}</span>
+                    {% endif %}
+                </div>
+            </div>
+          </div>
         </div>
-    </div>
   {% endfor %}
 </div>
 
