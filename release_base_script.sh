@@ -27,5 +27,5 @@ if [[ "${GIT_BRANCH}" = "master" ]]; then
 elif [[ "${GIT_BRANCH}" = "develop" ]]; then
     VERSION="develop"
 else
-    exit 0
+    VERSION="release_3.4.0"
 fi
