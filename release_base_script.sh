@@ -26,6 +26,4 @@ if [[ "${GIT_BRANCH}" = "master" ]]; then
     VERSION=${VERSION:-"$(git describe --abbrev=0 --tags)"}
 elif [[ "${GIT_BRANCH}" = "develop" ]]; then
     VERSION="develop"
-else
-    VERSION="release_3.4.0"
 fi
