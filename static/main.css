@@ -338,3 +338,7 @@ main.container {
 .super-event-badge {
   background-color: #1d58a7;
 }
+
+.badge-publish {
+  background-color: #009fd4;
+}
