@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.4.0] - 2022-10-27
 ### Added
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
 - Add language attribute to HTML tag. [#937](https://github.com/rokwire/events-manager/issues/937)
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Send event id to group building block if event is published or group id has been updated. [#935](https://github.com/rokwire/events-manager/issues/935)
 - Update the style of create event button. [#967](https://github.com/rokwire/events-manager/issues/967)
 - Update the style of the footer. [#968](https://github.com/rokwire/events-manager/issues/968)
+- Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
@@ -26,16 +28,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the screen reader is not able to read the dropdown list in campus event listing page. [#959](https://github.com/rokwire/events-manager/issues/959)
 - Fix that the screen reader is not able to read options of the dropdown lists as user navigates. [#961](https://github.com/rokwire/events-manager/issues/961)
 - Fix the issue that hours and seconds will be displayed for all day events in calendar events. [#958](https://github.com/rokwire/events-manager/issues/958)
+- Set the empty location description if the user event is physical event and no location provided. [#981](https://github.com/rokwire/events-manager/issues/981)
 
 ### Changed
 - Change font size and color for text.[#975](https://github.com/rokwire/events-manager/issues/975)
 - Change the CSS class names to match the HTML controls. [#973](https://github.com/rokwire/events-manager/issues/973)
 
-
 ## [3.3.1] - 2022-07-25
 ### Added
 - Add campus hybrid event support. [#915](https://github.com/rokwire/events-manager/issues/915)
-
 ### Fixed
 - Fix the isInPerson field in campus events. [#928](https://github.com/rokwire/events-manager/issues/928)
 
@@ -423,7 +424,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.3.1...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.4.0...HEAD
+[3.4.0]: https://github.com/rokwire/events-manager/compare/3.3.1...3.4.0
 [3.3.1]: https://github.com/rokwire/events-manager/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/rokwire/events-manager/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/rokwire/events-manager/compare/3.1.0...3.2.0
