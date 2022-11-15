@@ -233,3 +233,48 @@ main.container {
   background-color: #D85536;
   border: solid 2px #D85536;
 }
+
+img.powered-by-rokwire-no-i-block {
+  width: 141px;
+  height: 45px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+
+.copyright {
+  display: inline-block;
+  width: 97px;
+  height: 16px;
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  color: #fff;
+  margin-right: 20px;
+}
+
+a.privacy-policy {
+  display: inline-block;
+  width: 84px;
+  height: 16px;
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  color: #e84a27 !important;
+  text-decoration: underline;
+}
+
+.footer-wrapper {
+  text-align: center;
+  width: auto;
+  margin: 0 auto;
+}
