@@ -338,3 +338,10 @@ main.container {
 .badge-publish {
   background-color: #009fd4;
 }
+
+.user-group-text {
+  float:left;
+  margin-top: 13px;
+  margin-left: 5px;
+  padding-right: 18px;
+}
