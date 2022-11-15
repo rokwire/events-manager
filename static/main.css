@@ -21,59 +21,8 @@ body {
   font-family: proxima-nova,sans-serif;
 }
 
-h1 {
-  font-family: proxima-nova,sans-serif;
-  font-size: 32px;
-  font-weight: 800;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  color: #13294b;
-}
-
-h2 {
-  font-family: proxima-nova,sans-serif;
-  font-size: 24px;
-  font-weight: 800;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.17;
-  letter-spacing: normal;
-  color: #13294b;
-}
-
-h3 {
-  font-family: proxima-nova,sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.2;
-  letter-spacing: normal;
-  color: #ff552e;
-}
-
-h4 {
-  font-family: proxima-nova,sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.25;
-  letter-spacing: normal;
-  color: #13294b;
-}
-
-h5 {
-  font-family: proxima-nova,sans-serif;
-  font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.25;
-  letter-spacing: normal;
-  color: #404040;
+h1, h2, h3, h4, h5, h6 {
+  color: #444444;
 }
 
 .bg-steel {
@@ -205,8 +154,8 @@ main.container {
   margin-bottom:0px;
 }
 
-.ui-autocomplete { 
-  z-index:2000; 
+.ui-autocomplete {
+  z-index:2000;
 }
 
 .user-events a{
@@ -285,28 +234,6 @@ main.container {
   border: solid 2px #D85536;
 }
 
-.promo-body-text {
-  /*width: 108px;*/
-  /*height: 24px;*/
-  /*margin: 17px 776px 15px 140px;*/
-  font-family: proxima-nova, sans-serif;
-  font-size: 20px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.2;
-  letter-spacing: normal;
-  color: #13294b;
-}
-
-.small-body-text {
-  /*width: 69px;*/
-  /*height: 16px;*/
-  /*margin: 22px 815px 278px 140px;*/
-  font-family: proxima-nova, sans-serif;
-  font-size: 14px;
-  font-weight: normal;
-
 img.powered-by-rokwire-no-i-block {
   width: 141px;
   height: 45px;
@@ -327,7 +254,98 @@ img.powered-by-rokwire-no-i-block {
   font-style: normal;
   line-height: 1.14;
   letter-spacing: normal;
+  color: #fff;
+  margin-right: 20px;
+}
+
+a.privacy-policy {
+  display: inline-block;
+  width: 84px;
+  height: 16px;
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  color: #e84a27 !important;
+  text-decoration: underline;
+}
+
+.footer-wrapper {
+  text-align: center;
+  width: auto;
+  margin: 0 auto;
+}
+
+h1 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h2 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h3 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ff552e;
+}
+
+h4 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h5 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
   color: #404040;
+}
+
+.promo-body-text {
+  /*width: 108px;*/
+  /*height: 24px;*/
+  /*margin: 17px 776px 15px 140px;*/
+  font-family: proxima-nova, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #13294b;
 }
 
 .badge {
@@ -361,27 +379,6 @@ img.powered-by-rokwire-no-i-block {
   margin-top: 13px;
   margin-left: 5px;
   padding-right: 18px;
-  color: #fff;
+  color: #000000;
   margin-right: 20px;
-}
-
-a.privacy-policy {
-  display: inline-block;
-  width: 84px;
-  height: 16px;
-  font-family: proxima-nova, sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.14;
-  letter-spacing: normal;
-  color: #e84a27 !important;
-  text-decoration: underline;
-}
-
-.footer-wrapper {
-  text-align: center;
-  width: auto;
-  margin: 0 auto;
 }
