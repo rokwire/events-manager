@@ -159,7 +159,10 @@
     <img src="{{ url_for('static', filename='powered-by-rokwire-no-i-block.svg') }}"
      class="powered-by-rokwire-no-i-block" alt="powered by rokwire">
     <div class='footer-wrapper'>
-        <span class="copyright">
+        <span class="footer-text version">
+          Version {{ get_version() }}
+        </span>
+        <span class="footer-text copyright">
           Copyright 2022
         </span>
         <a href="#" class="privacy-policy">

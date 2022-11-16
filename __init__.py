@@ -18,6 +18,7 @@ import logging
 from time import gmtime
 
 from flask import Flask, current_app, redirect, url_for, Blueprint, session, render_template
+from git import Repo
 
 from .config import Config
 from .db import init_db
@@ -73,6 +74,14 @@ def create_app(config_class=Config):
     @check_login
     def index():
         return redirect(url_for('home.home'))
+
+    @app.context_processor
+    def utility_processor():
+        def get_version():
+            repo = Repo(os.path.dirname(os.path.realpath(__file__)))
+            return repo.tags[-1]
+
+        return dict(get_version=get_version)
 
     @app.errorhandler(404)
     def page_not_found(e):
