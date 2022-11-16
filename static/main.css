@@ -220,7 +220,7 @@ main.container {
   clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%);
 }
 
-.create-event-button {
+.create-event-button, .create-event-button:hover, .create-event-button:active {
   width: 140px;
   margin-left:20px;
   background-color: #D85536;
@@ -229,12 +229,7 @@ main.container {
   font-family: proxima-nova, sans-serif;
 }
 
-.create-event-button:hover {
-  background-color: #D85536;
-  border: solid 2px #D85536;
-}
-
-.white-background-button {
+.white-background-button, .white-background-button:hover, .white-background-button:active {
   width: auto;
   height: auto;
   padding: 9px 20px 7px 19px;
@@ -244,15 +239,10 @@ main.container {
   color:#002855;
   font-weight: bold;
   font-size: 14px;
+  text-decoration: none;
 }
 
-.white-background-button:hover {
-  background-color: #fff;
-  border: solid 2px #e84a27;
-  color:#002855;
-}
-
-.orange-background-button {
+.orange-background-button, .orange-background-button:hover, .orange-background-button:active {
   width: auto;
   height: auto;
   padding: 9px 25px 7px 24px;
@@ -261,14 +251,10 @@ main.container {
   background-color: #e84a27;
   font-weight: bold;
   font-size: 14px;
+  color: #ffffff;
 }
 
-.orange-background-button:hover {
-  border: solid 2px #e84a27;
-  background-color: #e84a27;
-}
-
-.notification-button {
+.notification-button, .notification-button:hover, .notification-button:active {
   padding: 9px 19px 7px 18px;
   border-radius: 24px;
   border: solid 1px #002855;
@@ -278,26 +264,14 @@ main.container {
   font-size: 14px;
 }
 
-.notification-button:hover {
-  border-radius: 24px;
-  border: solid 1px #002855;
-  background: #ffffff;
-  color: #002855;
-}
-
-.grey-background-button {
+.grey-background-button, .grey-background-button:hover, .grey-background-button:active {
   padding: 10px 12px 8px 10px;
   border-radius: 4px;
   background-color: #f5f5f5;
   border: solid 1px #f5f5f5;
   color: #404040;
   font-size: 14px;
-}
-
-.grey-background-button:hover {
-  background-color: #f5f5f5;
-  border: solid 1px #f5f5f5;
-  color: #404040;
+  text-decoration: none;
 }
 
 img.powered-by-rokwire-no-i-block {
