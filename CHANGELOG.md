@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Send event id to group building block if event is published or group id has been updated. [#935](https://github.com/rokwire/events-manager/issues/935)
 - Update the style of create event button. [#967](https://github.com/rokwire/events-manager/issues/967)
 - Update the style of the footer. [#968](https://github.com/rokwire/events-manager/issues/968)
+- Update the style of buttons on the event detail page. [#984](https://github.com/rokwire/events-manager/issues/984)
 - Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
+- Update the GUI of the campus calendar listing page. [#972](https://github.com/rokwire/events-manager/issues/972)
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 
 ### Fixed
