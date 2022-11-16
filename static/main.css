@@ -154,8 +154,8 @@ main.container {
   margin-bottom:0px;
 }
 
-.ui-autocomplete { 
-  z-index:2000; 
+.ui-autocomplete {
+  z-index:2000;
 }
 
 .user-events a{
@@ -277,4 +277,108 @@ a.privacy-policy {
   text-align: center;
   width: auto;
   margin: 0 auto;
+}
+
+h1 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h2 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.17;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h3 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #ff552e;
+}
+
+h4 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+h5 {
+  font-family: proxima-nova,sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #404040;
+}
+
+.promo-body-text {
+  /*width: 108px;*/
+  /*height: 24px;*/
+  /*margin: 17px 776px 15px 140px;*/
+  font-family: proxima-nova, sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: #13294b;
+}
+
+.badge {
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+}
+
+.super-event-badge-text {
+  font-family: proxima-nova, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  color: #fff;
+}
+
+.super-event-badge {
+  background-color: #1d58a7;
+}
+
+.badge-publish {
+  background-color: #009fd4;
+}
+
+.user-group-text {
+  float:left;
+  margin-top: 13px;
+  margin-left: 5px;
+  padding-right: 18px;
+  color: #000000;
+  margin-right: 20px;
 }

@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the empty location description if the user event is physical event and no location provided. [#981](https://github.com/rokwire/events-manager/issues/981)
 
 ### Changed
+- Change font size and color for text.[#975](https://github.com/rokwire/events-manager/issues/975)
 - Change the CSS class names to match the HTML controls. [#973](https://github.com/rokwire/events-manager/issues/973)
 
 ## [3.3.1] - 2022-07-25
