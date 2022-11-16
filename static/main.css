@@ -384,6 +384,14 @@ h5 {
 }
 
 .text-input-field {
+  font-family: proxima-nova, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: #404040;
   border: solid 1px #002855;
   background-color: #fff;
 }
