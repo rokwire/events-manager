@@ -404,7 +404,8 @@ def user_an_event_edit(id):
                 if location != '':
                     post_by_id['location'] = get_location_details(location, False)
                 else:
-                    post_by_id['location'] = None
+                    post_by_id['location'] = dict()
+                    post_by_id['location']['description'] = ""
             elif item == 'virtualEventUrl':
                 post_by_id['virtualEventUrl'] = request.form.get('virtualEventUrl')
 
@@ -715,6 +716,9 @@ def add_new_event():
             new_event['isGroupPrivate'] = True
         if new_event.get('displayOnlyWithSuperEvent') == 'on':
             new_event['displayOnlyWithSuperEvent'] = True
+        if 'location' in new_event and new_event['location'] is None:
+            new_event['location'] = dict()
+            new_event['location']['description'] = ""
         # remove duplicates in sub event array
         if 'subEvents' in new_event and new_event['subEvents'] is not None:
             deduplicatedSubEvents = deduplicate_sub_events(new_event['subEvents'])

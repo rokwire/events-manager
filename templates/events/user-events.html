@@ -27,7 +27,7 @@
 {% endblock %}
 {% block content %}
     <div>
-    <h5 style="float:left;margin-top: 13px;margin-left: 5px;padding-right: 18px">Group</h5>
+    <h5 class="user-group-text">Group</h5>
     <select name="group" id="group" class="form-control w-auto float-left mt-2" data-style="btn-outline-primary" title="Group...">
           <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>
       {% for group in groups %}
@@ -50,7 +50,7 @@
           <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline1">
               <!-- temporary change Approved to Published-->
-            <span class="badge badge-pill badge-success">Published </span>
+            <span class="badge badge-pill badge-publish small-body-text">Published </span>
           </label>
         </div>
         <!-- comment out disapproved
@@ -70,13 +70,13 @@
         <div class="form-check form-check-inline">
           <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline4">
-            <span class="badge badge-pill badge-warning">Pending </span>
+            <span class="badge badge-pill badge-warning small-body-text">Pending </span>
           </label>
         </div>
         <div class="form-check form-check-inline col-sm-3">
           <input type="checkbox" class="form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline5">
-            <span class="badge badge-pill badge-secondary">Hide Past Events </span>
+            <span class="badge badge-pill badge-secondary small-body-text">Hide Past Events </span>
           </label>
         </div>
       </div>
@@ -127,7 +127,8 @@
                   </a>
                     <div style="margin-top: 11px">
                         {% if posts_dic[eventID][0].isSuperEvent %}
-                            <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary">Super Event</div>
+{#                            <div style="color:white; vertical-align: middle; float:left" class="badge badge-pill badge-primary small-body-text">Super Event</div>#}
+                            <div class="badge badge-pill badge-primary small-body-text super-event-badge super-event-badge-text">Super Event</div>
                         {% endif %}
                     </div>
                 </div>
