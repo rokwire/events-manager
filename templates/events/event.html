@@ -22,7 +22,7 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2 Create-Event-Button" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
+  <a class="btn btn-primary mr-2 create-event-button" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
   {% endif %}
 {% endblock %}
 
@@ -153,11 +153,11 @@
               <div class="col-12 col-sm-3">
                 <h5>Event Status </h5>
               </div>
-              <p class="col-sm-9">
+              <p class="col-sm-9 small-body-text">
                 {% if post.eventStatus == "approved" %}
                     <!-- temporily change to published -->
                     {% if isUser %}
-                        <span class="badge badge-pill badge-success"> published </span>
+                        <span class="badge badge-pill badge-publish"> published </span>
                     {% else %}
                         <span class="badge badge-pill badge-warning"> pending </span>
                     {% endif %}
@@ -181,7 +181,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Group </h5>
                 </div>
-                <p class="col-sm-9">{{groupName}}</p>
+                <p class="col-sm-9 small-body-text">{{groupName}}</p>
               </div>
           </div>
           <div style="grid-area: auto / left;">
@@ -190,7 +190,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Created By </h5>
                 </div>
-                <p class="col-sm-9">{{post.createdBy}}</p>
+                <p class="col-sm-9 small-body-text">{{post.createdBy}}</p>
               </div>
           </div>
 
@@ -201,7 +201,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Category </h5>
                 </div>
-                <p class="col-sm-9">{{post.category}}</p>
+                <p class="col-sm-9 small-body-text">{{post.category}}</p>
               </div>
             {% endif %}
 
@@ -211,7 +211,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Sub Category </h5>
                 </div>
-                <p class="col-sm-9">{{post.subcategory}}</p>
+                <p class="col-sm-9 small-body-text">{{post.subcategory}}</p>
               </div>
             {% endif %}
           </div>
@@ -222,14 +222,14 @@
                 <div class="col-12 col-sm-3">
                   <h5>All Day Event</h5>
                 </div>
-                    <p class = "col-sm-9">Yes</p>
+                    <p class = "col-sm-9 small-body-text">Yes</p>
               </div>
             {% else %}
               <div class="row">
                 <div class="col-12 col-sm-3">
                   <h5>All Day Event</h5>
                 </div>
-                    <p class = "col-sm-9">No</p>
+                    <p class = "col-sm-9 small-body-text">No</p>
               </div>
             {% endif %}
           </div>
@@ -241,7 +241,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Time Zone </h5>
                 </div>
-                <p class="col-sm-9">{{timezones[post.timezone]}}</p>
+                <p class="col-sm-9 small-body-text">{{timezones[post.timezone]}}</p>
               </div>
             {% endif %}
             <!-- startDate -->
@@ -250,7 +250,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>Start Date </h5>
                 </div>
-                <p class="col-sm-9" id="startDate">
+                <p class="col-sm-9 small-body-text" id="startDate">
                   {{post.startDate}}
                 </p>
               </div>
@@ -262,7 +262,7 @@
                 <div class="col-12 col-sm-3">
                   <h5>End Date </h5>
                 </div>
-                <p class="col-sm-8" id="endDate">
+                <p class="col-sm-8 small-body-text" id="endDate">
                   {{ post.endDate}}
                 </p>
               </div>
@@ -299,7 +299,7 @@
               <div class="col-12 col-sm-2">
                 <h5>Registration URL</h5>
               </div>
-              <a href="{{ post.registrationURL}}" class="col-sm-9"><span class="s1">{{post.registrationURL}}</span></a>
+              <a href="{{ post.registrationURL}}" class="col-sm-9 small-body-text"><span class="s1">{{post.registrationURL}}</span></a>
             </div>
             {% endif %}
 
@@ -309,7 +309,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>Event ID </h5>
                 </div>
-                <p class="col-sm-9">{{post.platformEventId}}</p>
+                <p class="col-sm-9 small-body-text">{{post.platformEventId}}</p>
               </div>
             {% endif %}
 
@@ -338,14 +338,14 @@
                 <div class="col-12 col-sm-2">
                   <h5>Free Event</h5>
                 </div>
-                    <p class = "col-sm-9">Yes</p>
+                    <p class = "col-sm-9 small-body-text">Yes</p>
               </div>
             {% else %}
               <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Free Event</h5>
                 </div>
-                    <p class = "col-sm-9">No</p>
+                    <p class = "col-sm-9 small-body-text">No</p>
               </div>
             {% endif %}
           </div>
@@ -357,14 +357,14 @@
                 <div class="col-12 col-sm-2">
                   <h5>Private Event</h5>
                 </div>
-                    <p class = "col-sm-9">Yes</p>
+                    <p class = "col-sm-9 small-body-text">Yes</p>
               </div>
             {% else %}
               <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Private Event</h5>
                 </div>
-                    <p class = "col-sm-9">No</p>
+                    <p class = "col-sm-9 small-body-text">No</p>
               </div>
             {% endif %}
           </div>
@@ -375,7 +375,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>Cost Description</h5>
                 </div>
-                <p class="col-sm-9">{{ post.cost}}</p>
+                <p class="col-sm-9 small-body-text">{{ post.cost}}</p>
               </div>
             {% endif %}
 
@@ -385,7 +385,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>Contacts </h5>
                 </div>
-                <table class="table table-hover col-sm-8">
+                <table class="table table-hover col-sm-8 small-body-text">
                   <thead>
                     <tr>
                       <th scope="col-sm-2">First Name</th>
@@ -416,7 +416,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>Tags </h5>
                 </div>
-                <div class = "col-sm-9">
+                <div class = "col-sm-9 small-body-text">
                   {%for i in range(post.tags | length)%}
                     {%if i == (post.tags | length) - 1 %}
                       <span>{{post.tags[i]}} </span>
@@ -434,7 +434,7 @@
                 <div class="col-12 col-sm-2">
                   <h5>Sponsor </h5>
                 </div>
-                <p class = "col-sm-9">{{post.sponsor}}</p>
+                <p class = "col-sm-9 small-body-text">{{post.sponsor}}</p>
               </div>
             {% endif %}
 
@@ -444,7 +444,7 @@
               <div class="col-12 col-sm-2">
                 <h5>Description </h5>
               </div>
-              <div class="col-12 col-sm-9" id="longDes">
+              <div class="col-12 col-sm-9 small-body-text" id="longDes">
                 {% autoescape false %}{{post.longDescription}}{% endautoescape %}
               </div>
             </div>
@@ -456,14 +456,14 @@
                   <div class="col-12 col-sm-2">
                     <h5>Virtual Event</h5>
                   </div>
-                      <p class = "col-sm-9">Yes</p>
+                      <p class = "col-sm-9 small-body-text">Yes</p>
                 </div>
               {% else %}
                 <div class="row">
                   <div class="col-12 col-sm-2">
                     <h5>Virtual Event</h5>
                   </div>
-                      <p class = "col-sm-9">No</p>
+                      <p class = "col-sm-9 small-body-text">No</p>
                 </div>
               {% endif %}
 
@@ -473,7 +473,7 @@
                   <div class="col-12 col-sm-2" id="longDes">
                     <h5>Virtual Event URL</h5>
                   </div>
-                  <p class="col-12 col-sm-9"><a href="{{post.virtualEventUrl}}">{{post.virtualEventUrl}}</a></p>
+                  <p class="col-12 col-sm-9 small-body-text"><a href="{{post.virtualEventUrl}}">{{post.virtualEventUrl}}</a></p>
                 </div>
               {% endif %}
 
@@ -483,14 +483,14 @@
                   <div class="col-12 col-sm-2">
                     <h5>In Person Event</h5>
                   </div>
-                      <p class = "col-sm-9">Yes</p>
+                      <p class = "col-sm-9 small-body-text">Yes</p>
                 </div>
               {% else %}
                 <div class="row">
                   <div class="col-12 col-sm-2">
                     <h5>In Person Event</h5>
                   </div>
-                      <p class = "col-sm-9">No</p>
+                      <p class = "col-sm-9 small-body-text">No</p>
                 </div>
               {% endif %}
 
@@ -502,7 +502,7 @@
                   <div class="col-12 col-sm-2" id="longDes">
                     <h5>Location Address</h5>
                   </div>
-                  <p class="col-12 col-sm-9">{{post.location.description}}</p>
+                  <p class="col-12 col-sm-9 small-body-text">{{post.location.description}}</p>
                 </div>
               {% endif %}
 
@@ -512,7 +512,7 @@
                   <div class="col-12 col-sm-2">
                     <h5>Latitude </h5>
                   </div>
-                  <p class="col-12 col-sm-9"> {{post.location.latitude}}</p>
+                  <p class="col-12 col-sm-9 small-body-text"> {{post.location.latitude}}</p>
                 </div>
               {% endif %}
               {% if post.location.longitude %}
@@ -520,7 +520,7 @@
                   <div class="col-12 col-sm-2">
                     <h5>Longitude </h5>
                   </div>
-                  <p class="col-12 col-sm-9">{{post.location.longitude}}</p>
+                  <p class="col-12 col-sm-9 small-body-text">{{post.location.longitude}}</p>
                 </div>
               {% endif %}
               <!-- google map API -->
@@ -540,14 +540,14 @@
                     <div class="col-12 col-sm-2">
                       <h5>Display Only with Super Event</h5>
                     </div>
-                        <p class = "col-sm-9">Yes</p>
+                        <p class = "col-sm-9 small-body-text">Yes</p>
                   </div>
                 {% else %}
                   <div class="row">
                     <div class="col-12 col-sm-2">
                       <h5>Display Only with Super Event</h5>
                     </div>
-                        <p class = "col-sm-9">No</p>
+                        <p class = "col-sm-9 small-body-text">No</p>
                   </div>
                 {% endif %}
               {% endif %}
@@ -558,14 +558,14 @@
                 <div class="col-12 col-sm-2">
                   <h5>Is Super Event</h5>
                 </div>
-                    <p class = "col-sm-9">Yes</p>
+                    <p class = "col-sm-9 small-body-text">Yes</p>
               </div>
             {% else %}
               <div class="row">
                 <div class="col-12 col-sm-2">
                   <h5>Is Super Event</h5>
                 </div>
-                    <p class = "col-sm-9">No</p>
+                    <p class = "col-sm-9 small-body-text">No</p>
               </div>
             {% endif %}
 
@@ -576,7 +576,7 @@
               <div class="col-12 col-sm-2">
                 <h5>Sub-Events</h5>
               </div>
-              <table class="table table-hover col-sm-9">
+              <table class="table table-hover col-sm-9 small-body-text">
                 <thead>
                   <tr>
                     <th scope="col-sm-2">Sub-Event Title</th>
