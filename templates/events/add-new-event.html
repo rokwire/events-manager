@@ -87,7 +87,7 @@
               <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
+              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
             </div>
           </div>
           <!-- event category -->
@@ -158,8 +158,8 @@
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
-              <input class="form-control" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -168,8 +168,8 @@
               <h5>End Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
-              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
             </div>
           </div>
 
@@ -209,7 +209,7 @@
               <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
-              <input id="location" name="location" class="form-control" type="text"/>
+              <input class="form-control text-input-field" id="location" name="location" type="text"/>
             </div>
           </div>
 
@@ -284,7 +284,7 @@
               <h5>Cost Description</h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
+              <input class="form-control text-input-field" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
             </div>
           </div>
           <!-- contacts -->
@@ -302,22 +302,22 @@
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+                <input class="form-control text-input-field" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                <input class="form-control text-input-field" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
                <div class="col-sm-3">
-                <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
+                <input class="form-control text-input-field" id="contactEmail" name="email" type="email" placeholder="Email"/>
               </div>
             </div>
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control text-input-field" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
                <div class="col-sm-3">
-                <input class="form-control" id="organization" name="organization" type="text" placeholder="Organization"/>
+                <input class="form-control text-input-field" id="organization" name="organization" type="text" placeholder="Organization"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -338,7 +338,7 @@
               <h5>Tags </h5>
             </div>
                 <div class="col-sm-9">
-                    <input id="tags" name="tags" class="form-control" type="text">
+                    <input id="tags" name="tags" class="form-control text-input-field" type="text">
                 </div>
           </div>
 
@@ -348,7 +348,7 @@
               <h5>Sponsor </h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="sponsor" name="sponsor"/>
+              <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor"/>
             </div>
           </div>
 
@@ -395,7 +395,7 @@
               <h5>Registration URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
             </div>
           </div>
 
@@ -405,7 +405,7 @@
               <h5>Registration Label</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
             </div>
           </div>
 
@@ -450,13 +450,13 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control search-id" name="name" type="text" placeholder="Sub-Event Title" />
-                            <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
-                            <input class="form-control" type="hidden" name="status" placeholder=''>
+                            <input class="form-control text-input-field search-id" name="name" type="text" placeholder="Sub-Event Title" />
+                            <input class="form-control text-input-field" type="hidden" name="id" placeholder=''>
+                            <input class="form-control text-input-field" type="hidden" name="eventId" placeholder=''>
+                            <input class="form-control text-input-field" type="hidden" name="status" placeholder=''>
                       </div>
                       <div class="col-sm-3 form-group" >
-                        <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
+                        <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track"/>
                       </div>
                       <div class="form-group dropdown show">
                           <div class="form-group">
