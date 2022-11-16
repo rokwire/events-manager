@@ -382,3 +382,8 @@ h5 {
   color: #000000;
   margin-right: 20px;
 }
+
+.text-input-field {
+  border: solid 1px #002855;
+  background-color: #fff;
+}
