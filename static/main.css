@@ -158,15 +158,18 @@ main.container {
   z-index:2000;
 }
 
-.user-events a{
+a {
   color: #ff552e;
   font-family: proxima-nova, sans-serif;
-  font-size: 20px;
-  font-weight: 800;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.2;
   letter-spacing: normal;
+}
+
+.user-events a{
+  font-size: 20px;
+  font-weight: 800;
 }
 
 .events-manager-navbar-title {
@@ -460,4 +463,10 @@ h5 {
   padding-right: 18px;
   color: #000000;
   margin-right: 20px;
+}
+
+.text-input {
+  border: solid 1px #002855;
+  background-color: #fff;
+  border-radius: 0;
 }

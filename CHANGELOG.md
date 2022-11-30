@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
 
 ## [3.4.0] - 2022-10-27
 ### Added
