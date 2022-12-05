@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Fixed
+- Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
 
 ## [3.4.0] - 2022-10-27
 ### Added

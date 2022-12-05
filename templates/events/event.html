@@ -157,16 +157,16 @@
                 {% if post.eventStatus == "approved" %}
                     <!-- temporily change to published -->
                     {% if isUser %}
-                        <span class="badge badge-pill badge-publish"> published </span>
+                        <span class="badge badge-pill badge-publish small-body-text">Published </span>
                     {% else %}
-                        <span class="badge badge-pill badge-warning"> pending </span>
+                        <span class="badge badge-pill badge-pending small-body-text">Pending </span>
                     {% endif %}
                 {% elif post.eventStatus == "disapproved"%}
                   <span class="badge badge-pill badge-danger">{{ post.eventStatus }} </span>
                 {% elif post.eventStatus == "pending"%}
-                  <span class="badge badge-pill badge-warning">{{ post.eventStatus }} </span>
+                  <span class="badge badge-pill badge-pending">{{ post.eventStatus }} </span>
                 {% else %}
-                  <span class="badge badge-pill badge-success">{{ post.eventStatus }} </span>
+                  <span class="badge badge-pill badge-publish">{{ post.eventStatus }} </span>
                 {% endif %}
               </p>
 

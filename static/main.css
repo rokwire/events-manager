@@ -450,7 +450,17 @@ h5 {
 }
 
 .badge-publish {
+  color: white;
   background-color: #009fd4;
+}
+
+.badge-pending {
+  background-color: #f5821e;
+}
+
+.badge-hide-past-events {
+  color: white;
+  background-color: #959494;
 }
 
 .user-group-text {
