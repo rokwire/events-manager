@@ -240,8 +240,8 @@
               <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." required >
+              <div class="eventsmanager-dropdown-menu">
+                <select name="category" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event category..." required >
                   {% for key in eventTypeValues %}
                     {% if post.category == key%}
                       <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
@@ -260,8 +260,8 @@
                 <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-                <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory..." data-width="fit-content">
+                <div class="eventsmanager-dropdown-menu">
+                  <select name="subcategory" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event subcategory..." data-width="fit-content">
                     <option id="subcategory-placeholder" value="" disabled></option>
                     <option value="">None</option>
                     {% for key in subcategoriesMap['Athletics'] %}
@@ -283,8 +283,8 @@
                     </div>
                 </div>
               <div class="col-sm-9">
-                <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                <div class="eventsmanager-dropdown-menu">
+                  <select name="subcategory" id = "subcategory" class="form-control text-input-field" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
                     {% for key in subcategoriesMap['Athletics'] %}
                       <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endfor %}
@@ -313,8 +313,8 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="timezone" id = "timezone" class="form-control w-auto" title="Choose the event timezone" required>
+              <div class="eventsmanager-dropdown-menu">
+                <select name="timezone" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose the event timezone" required>
                   {% for key, value in timezones.items() %}
                       {% if post.timezone == key%}
                           <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
