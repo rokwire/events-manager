@@ -474,3 +474,24 @@ h5 {
   border: solid 1px #002855;
   background-color: #fff;
 }
+
+.eventsmanager-dropdown-menu {
+  position: absolute;
+  width: 300px;
+  height:50px;
+}
+
+.eventsmanager-dropdown-menu::before {
+    content:"";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-color: #ff552e transparent transparent transparent;
+    position: absolute;
+    top: 16px;
+    right: 10px;
+}
+
+select#dropdown-menu-arrow {
+    appearance: none;
+}

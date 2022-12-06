@@ -188,8 +188,8 @@
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="auto" required>
+              <div class="eventsmanager-dropdown-menu">
+                  <select name="createdByGroupId" id="dropdown-menu-arrow" class="form-control text-input-field" title="Choose a group..." data-width="auto" required>
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
                       <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
