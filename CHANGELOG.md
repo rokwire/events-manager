@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
+
 ## [3.4.0] - 2022-10-27
 ### Added
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
