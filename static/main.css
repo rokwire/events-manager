@@ -463,8 +463,6 @@ h5 {
 }
 
 .pagination .page-item .page-link {
-  width: 31px;
-  height: 33px;
   background-color: #fff;
   border: solid 1px #d2d2d2;
   padding-top: 3.5px;
@@ -480,8 +478,6 @@ h5 {
 }
 
 .pagination-left {
-  width: 12px;
-  height: 6px;
   padding-top: 6px !important;
   padding-left: 11px !important;
   border-top-left-radius: 8px !important;
@@ -489,8 +485,6 @@ h5 {
 }
 
 .pagination-right {
-  width: 12px;
-  height: 15px;
   padding-top: 6px !important;
   padding-left: 11px !important;
   border-top-right-radius: 8px !important;

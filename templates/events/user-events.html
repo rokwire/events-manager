@@ -47,7 +47,7 @@
           <label class="form-check-label" for="materialInline1"><h4>Show </h4></label>
         </div>
         <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
+          <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in paginationselect_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline1">
               <!-- temporary change Approved to Published-->
             <span class="badge badge-pill badge-publish small-body-text">Published </span>
@@ -200,24 +200,25 @@
   <script src="..\static\js\user-events.js"></script>
   <script>
       $( document ).ready(function() {
+          debugger
           const pagination = $(".pagination")
-          const left_href = pagination.find(">:first-child").find(">:first-child").attr('href');
+          const left_href = pagination.children(":first").children(":first").attr('href');
           if (left_href === undefined) {
-              pagination.find(">:first-child").replaceWith(
+              pagination.children(":first").replaceWith(
                   $('<li class="page-item"><img class="page-link pagination-left" src="{{ url_for('static',filename = 'pagination-triangle-reversed.svg') }}"> </li>')
               );
           } else {
-              pagination.find(">:first-child").replaceWith(
+              pagination.children(":first").replaceWith(
                   $('<li class="page-item"> <a href="' + left_href + '"> <img class="page-link pagination-left" src="{{ url_for('static',filename = 'pagination-triangle-reversed.svg') }}"></a> </li>')
               );
           }
-          const right_href = pagination.find(">:last-child").find(">:first-child").attr('href');
+          const right_href = pagination.children(":last").children(":first").attr('href')
           if (right_href === undefined) {
-              pagination.find(">:last-child").replaceWith(
+              pagination.children(":last").replaceWith(
                   $('<li class="page-item"> <img class="page-link pagination-right" src="{{ url_for('static',filename = 'pagination-triangle.svg') }}"> </li>')
               );
           } else {
-              pagination.find(">:last-child").replaceWith(
+              pagination.children(":last").replaceWith(
                   $('<li class="page-item"> <a href="' + right_href + '"> <img class="page-link pagination-right" src="{{ url_for('static',filename = 'pagination-triangle.svg') }}"> </a> </li>')
               );
           }
