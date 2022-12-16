@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
+- Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 
 ## [3.4.0] - 2022-10-27
 ### Added
@@ -25,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of buttons on the event detail page. [#984](https://github.com/rokwire/events-manager/issues/984)
 - Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
 - Update the GUI of the campus calendar listing page. [#972](https://github.com/rokwire/events-manager/issues/972)
-- Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
