@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Add the version to footer. [#988](https://github.com/rokwire/events-manager/issues/988)
 
 ## [3.4.0] - 2022-10-27
 ### Added
@@ -22,7 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of buttons on the event detail page. [#984](https://github.com/rokwire/events-manager/issues/984)
 - Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
 - Update the GUI of the campus calendar listing page. [#972](https://github.com/rokwire/events-manager/issues/972)
-- Add the version to footer. [#988](https://github.com/rokwire/events-manager/issues/988)
 
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
