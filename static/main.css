@@ -181,6 +181,10 @@ main.container {
   color: #fff;
 }
 
+.events-manager-navbar-title-link:hover {
+  text-decoration: none;
+}
+
 .login-logout-text {
   width: 36px;
   height: 16px;
