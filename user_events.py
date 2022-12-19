@@ -150,7 +150,7 @@ def user_events():
 
     return render_template("events/user-events.html", posts_dic = posts_dic,
                             select_status=select_status, page=page,
-                            per_page=per_page, pagination=pagination,
+                            per_page=per_page, pagination_links=pagination.links,
                             isUser=True, start=start, end=end, page_config=Config.EVENTS_PER_PAGE,
                             groups=groups,
                             selected_group=session.get('group'))

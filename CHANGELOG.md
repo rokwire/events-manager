@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
+- Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 
 ## [3.4.0] - 2022-10-27
 ### Added
