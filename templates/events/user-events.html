@@ -189,7 +189,7 @@
   </div>
 
   <div class="d-flex justify-content-center">
-  {{ pagination.links }}
+  {{ pagination_links }}
   </div>
 
 {% endblock %}
@@ -198,6 +198,31 @@
   {{ super() }}
   {% include 'events/select_status.html' %}
   <script src="..\static\js\user-events.js"></script>
+  <script>
+      $( document ).ready(function() {
+          const pagination = $(".pagination")
+          const left_href = pagination.children(":first").children(":first").attr('href');
+          if (left_href === undefined) {
+              pagination.children(":first").replaceWith(
+                  $('<li class="page-item"><img class="page-link pagination-left" src="{{ url_for('static',filename = 'pagination-triangle-reversed.svg') }}"> </li>')
+              );
+          } else {
+              pagination.children(":first").replaceWith(
+                  $('<li class="page-item"> <a href="' + left_href + '"> <img class="page-link pagination-left" src="{{ url_for('static',filename = 'pagination-triangle-reversed.svg') }}"></a> </li>')
+              );
+          }
+          const right_href = pagination.children(":last").children(":first").attr('href')
+          if (right_href === undefined) {
+              pagination.children(":last").replaceWith(
+                  $('<li class="page-item"> <img class="page-link pagination-right" src="{{ url_for('static',filename = 'pagination-triangle.svg') }}"> </li>')
+              );
+          } else {
+              pagination.children(":last").replaceWith(
+                  $('<li class="page-item"> <a href="' + right_href + '"> <img class="page-link pagination-right" src="{{ url_for('static',filename = 'pagination-triangle.svg') }}"> </a> </li>')
+              );
+          }
+      });
+  </script>
   <!-- <script>
     $(".dataModified").each(function(index){
       console.log("hi");

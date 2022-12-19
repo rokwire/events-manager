@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
 
+### Changed
+- Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
+- Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
+
+### Added
+- Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
+
 ## [3.4.0] - 2022-10-27
 ### Added
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
