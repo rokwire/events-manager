@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
 
+### Added
+- Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
+- Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
+
 ## [3.4.0] - 2022-10-27
 ### Added
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)

@@ -229,7 +229,7 @@ main.container {
   font-family: proxima-nova, sans-serif;
 }
 
-.white-background-button, .white-background-button:hover, .white-background-button:active {
+.white-background-button {
   width: auto;
   height: auto;
   padding: 9px 20px 7px 19px;
@@ -241,8 +241,13 @@ main.container {
   font-size: 14px;
   text-decoration: none;
 }
+.white-background-button:hover, .white-background-button:active {
+  background-color: #e84a27;
+  border-radius: 24px;
+  border: solid 2px #e84a27;
+}
 
-.orange-background-button, .orange-background-button:hover, .orange-background-button:active {
+.orange-background-button, .orange-background-button:hover, .orange-background-button:active, .orange-background-button:disabled {
   width: auto;
   height: auto;
   padding: 9px 25px 7px 24px;
@@ -483,7 +488,32 @@ h5 {
   color: #404040;
   border: solid 1px #002855;
   background-color: #fff;
- }
+}
+
+.add-a-contact {
+  padding: 9px 20px 7px 19px;
+  border-radius: 24px;
+  border: solid 2px #e84a27;
+  background-color: #fff;
+  display:flex;
+  align-items:center;
+  height:32px;
+  width:min-content;
+  white-space:nowrap;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.add-a-contact:hover, .add-a-contact:active {
+  background-color: #fff;
+}
+
+.icon-add {
+  float:right;
+  margin-left:15px;
+  margin-right:-15px
+}
 
 .pagination .page-item .page-link {
   height: 33px;
