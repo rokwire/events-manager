@@ -37,12 +37,14 @@
   <body>
     <header class="sitebar">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="https://illinois.edu">
         <img src="{{url_for('static',filename = 'block-i-white-orange.png')}}">
       </a>
-      <h1 class="events-manager-navbar-title">
-          Events Manager
-      </h1>
+      <a class="events-manager-navbar-title-link" href="{{ url_for('home.home') }}">
+          <h1 class="events-manager-navbar-title">
+              Events Manager
+          </h1>
+      </a>
         <div class="container" style="justify-content: flex-start;">
       {% block create_event %}{% endblock %}
         </div>
@@ -165,7 +167,7 @@
         <span class="footer-text copyright">
           Copyright 2022
         </span>
-        <a href="#" class="privacy-policy">
+        <a href="https://www.vpaa.uillinois.edu/resources/web_privacy" class="privacy-policy">
           Privacy Policy
         </a>
     </div>
