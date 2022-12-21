@@ -16,8 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
-
-### Added
+- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
 - Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
 - Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
 
