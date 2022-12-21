@@ -508,3 +508,11 @@ h5 {
 .pagination {
   margin-top: 22px;
 }
+
+.login-logout-button, .login-logout-button:hover {
+  display:inline-block;
+  width: 123px;
+  height: 32px;
+  margin: 19px 0 13.2px 24px;
+  padding: 5px 39px 9px;
+}
