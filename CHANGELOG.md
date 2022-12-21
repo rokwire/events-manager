@@ -6,15 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-### Added
-- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
+### Fixed
+- Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
+- Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
+- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
+- Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
+- Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
 
 ## [3.4.0] - 2022-10-27
 ### Added
