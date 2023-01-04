@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
 
 ### Changed
+- Update the publish button on the campus event detail page. [#1014](https://github.com/rokwire/events-manager/issues/1014)
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 - Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
