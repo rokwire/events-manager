@@ -469,6 +469,14 @@ h5 {
 }
 
 .badge-publish {
+  height: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  padding-left: 10px;
+  padding-right: 10px;
   color: white;
   background-color: #009fd4;
 }
@@ -478,6 +486,8 @@ h5 {
 }
 
 .badge-hide-past-events {
+  padding-left: 15px;
+  padding-right: 15px;
   color: white;
   background-color: #959494;
 }
@@ -567,4 +577,58 @@ h5 {
 
 .pagination {
   margin-top: 22px;
+}
+
+:root {
+  --form-control-color: #20375c;
+  --form-control-disabled: #959495;
+}
+
+
+input[type=checkbox] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  -moz-appearance: none;
+       appearance: none;
+  /* For iOS < 15 */
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 0.7px solid #717372;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type=checkbox]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  background-image: url("/events-manager/static/icon-selected.svg");
+  -webkit-clip-path: polygon(14% 50%, 10% 60%, 50% 100%, 100% 16%, 90% 10%, 46% 80%);
+          clip-path: polygon(14% 50%, 10% 60%, 50% 100%, 100% 16%, 90% 10%, 46% 80%);
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 20px 20px var(--form-control-color);
+}
+
+input[type=checkbox]:checked::before {
+  transform: scale(1);
+  background-color: #20375c;
+}
+
+input[type=checkbox]:focus {
+  outline: max(2px, 0.15em) solid currentColor;
+  outline-offset: max(2px, 0.15em);
+}
+
+input[type=checkbox]:disabled {
+  --form-control-color: var(--form-control-disabled);
+  color: var(--form-control-disabled);
+  cursor: not-allowed;
 }
