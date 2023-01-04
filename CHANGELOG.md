@@ -10,11 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
 
 ### Changed
+- Update the buttons in the user event edit page. [#1013](https://github.com/rokwire/events-manager/issues/1013)
+- Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 - Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
-- Update the buttons in the user event edit page. [#1013](https://github.com/rokwire/events-manager/issues/1013)
-- Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
