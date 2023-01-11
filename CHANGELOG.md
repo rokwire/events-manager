@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
+- Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
