@@ -46,8 +46,8 @@
         <div class="form-check form-check-inline">
           <label class="form-check-label" for="materialInline1"><h4>Show </h4></label>
         </div>
-        <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
+        <div class="form-check form-check-inline align-middle">
+          <input type="checkbox" class="filter-checkbox form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline1">
               <!-- temporary change Approved to Published-->
             <span class="badge badge-pill badge-publish small-body-text">Published </span>
@@ -67,14 +67,14 @@
             </label>
         </div>
          -->
-        <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
+        <div class="form-check form-check-inline align-middle">
+          <input type="checkbox" class="filter-checkbox form-check-input" id="materialInline4" {% if "pending" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline4">
             <span class="badge badge-pill badge-pending small-body-text">Pending </span>
           </label>
         </div>
-        <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
+        <div class="form-check form-check-inline align-middle">
+          <input type="checkbox" class="filter-checkbox form-check-input" id="materialInline5" {% if "hide_past" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline5">
             <span class="badge badge-pill badge-hide-past-events small-body-text">Hide Past Events </span>
           </label>
