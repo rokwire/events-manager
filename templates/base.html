@@ -61,9 +61,9 @@
             </div>
           {% endif %} -->
           <div ><span class="text-light text-nowrap">Hello, {{ g.user["username"] }}</span></div>
-            <a role="button" class="white-background-button login-logout-button" href="{{ url_for('auth.logout') }}">Logout</a>
+            <a role="button" class="login-logout-button white-background-button" href="{{ url_for('auth.logout') }}">Logout</a>
         {% else %}
-            <a role="button" class="white-background-button login-logout-button" href="{{ url_for('auth.login') }}">Login</a>
+            <a role="button" class="login-logout-button white-background-button" href="{{ url_for('auth.login') }}">Login</a>
         {% endif %}
 
         </div>

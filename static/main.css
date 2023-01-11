@@ -575,7 +575,8 @@ h5 {
   width: 123px;
   height: 32px;
   margin: 19px 0 13.2px 24px;
-  padding: 5px 39px 9px;
+  padding: 6px 0px 9px;
+  text-align: center;
 }
 
 .login-logout-button:hover, .login-logout-button:active {
