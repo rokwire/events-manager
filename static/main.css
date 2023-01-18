@@ -231,6 +231,7 @@ a {
   width: 140px;
   margin-left:20px;
   background-color: #D85536;
+  font-weight: bold;
   border-radius: 24px;
   border: solid 2px #D85536;
   font-family: proxima-nova, sans-serif;
@@ -608,4 +609,18 @@ input[type="checkbox"]::before {
 input[type="checkbox"]:checked::before {
   transform: scale(1);
   background-color: #20375c;
+}
+
+.login-logout-button {
+  display: inline-block;
+  width: 123px;
+  height: 32px;
+  margin: 19px 0 13.2px 24px;
+  padding: 6px 0px 9px;
+  text-align: center;
+}
+
+.login-logout-button:hover, .login-logout-button:active {
+  color: white;
+  text-decoration: none;
 }
