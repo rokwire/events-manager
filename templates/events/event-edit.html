@@ -187,17 +187,23 @@
             <div class="col-12 col-sm-2">
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
+
             <div class="col-sm-9">
-              <div class="eventsmanager-dropdown-menu">
-                  <select name="createdByGroupId" id="dropdown-menu-arrow" class="form-control text-input-field" title="Choose a group..." data-width="auto" required>
+              <div class="user-group-menu eventsmanager-dropdown-menu">
+{#                <input type="text" id="createdByGroupId" class="form-control dropdown-menu-inputfield" placeholder="Choose user group" readonly>#}
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
-                      <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
-                      {% else %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                          <input type="text" name="createdByGroupId" id="createdByGroupId" value="{{group['title']}}" class="form-control dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
                       {% endif %}
                   {% endfor %}
-                  </select>
+                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-menu-option">
+                      {% for group in groups %}
+{#                        {% if post.createdByGroupId != group['id'] %}#}
+                            <div onclick="dropdownmenushow('createdByGroupId', '{{group['title']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+{#                        {% endif %}#}
+                        {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -240,16 +246,26 @@
               <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="eventsmanager-dropdown-menu">
-                <select name="category" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event category..." required >
-                  {% for key in eventTypeValues %}
-                    {% if post.category == key%}
-                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
-                    {% else %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
+{#              <div class="eventsmanager-dropdown-menu">#}
+{#                <select name="category" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event category..." required >#}
+{#                  {% for key in eventTypeValues %}#}
+{#                    {% if post.category == key%}#}
+{#                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>#}
+{#                    {% else %}#}
+{#                      <option value = "{{key}}" id = {{key}}>{{key}}</option>#}
+{#                    {% endif %}#}
+{#                  {% endfor %}#}
+{#                </select>#}
+{#              </div>#}
+
+              <div class="category-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in eventTypeValues %}
+                            <div onclick="dropdownmenushow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -272,6 +288,18 @@
                       {% endif %}
                     {% endfor %}
                   </select>
+
+{#                  <div class="subcategory-menu eventsmanager-dropdown-menu">#}
+{#                    <input type="text" id="dropdownmenu-subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>#}
+{#                      <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>#}
+{#                      <div class="dropdown-menu-option">#}
+{#                          {% for key in subcategoriesMap['Athletics'] %}#}
+{#                                <div onclick="dropdownmenushow('dropdownmenu-subcategory', '{{key}}')" class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>#}
+{#                          {% endfor %}#}
+{#                      </div>#}
+{#                  </div>#}
+
+
                 </div>
               </div>
             </div>
@@ -521,6 +549,35 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function dropdownmenushow(id, value) {
+                  if(document.getElementById(id).value != value) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = value
+              }
+              class Dropdownmenu {
+                  constructor(selector, display) {
+                      this.menu = document.querySelector(selector)
+                      this.display = display
+                  }
+                  onclick() {
+                     let self = this
+                     this.menu.onclick = function() {
+                         self.menu.classList.toggle('active')
+                         if (self.menu.classList.contains('active')) {
+                            $(self.display).css({"display": "block"})
+                         } else {
+                             $(self.display).css({"display": "none"})
+                         }
+                     }
+                  }
+              }
+              usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
+              usergroupmenu.onclick()
+              categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
+              categorymenu.onclick()
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;
@@ -1134,6 +1191,7 @@
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         }).on('change input', function(){  // event handler of input change
+            debugger
             $(this).find(':submit, input[type="image"]')
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
@@ -1436,6 +1494,15 @@
     function extractLast( term ) {
       return split( term ).pop();
     }
+
+    $("#createdByGroupId").on("change input", function () {
+        debugger;
+        console.log("#createdByGroupId");
+    })
+    $("#dropdownmenu-category").on("change input", function () {
+        debugger;
+        console.log("#dropdownmenu-category");
+    })
 
     $( "#tags" ).on( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
