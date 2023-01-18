@@ -628,3 +628,11 @@ h5 {
   color: white;
   text-decoration: none;
 }
+
+select#dropdown-menu-arrow {
+    appearance: none;
+}
+
+select#subcategory {
+    appearance: none;
+}
