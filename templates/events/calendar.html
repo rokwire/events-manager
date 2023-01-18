@@ -57,15 +57,15 @@
   <div class="col form-check mt-3 mb-3">
       <div class="form-check form-check-inline"><h4>Show</h4></div>
 
-      <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
+      <div class="form-check form-check-inline align-middle">
+          <input type="checkbox" class="filter-checkbox form-check-input" id="materialInline3" {% if "published" in select_status %}checked{%endif%}>
           <label class="form-check-label" for="materialInline3">
               <span class="badge badge-pill badge-publish small-body-text">Published </span>
           </label>
       </div>
 
-      <div class="form-check form-check-inline">
-        <input type="checkbox" class="form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
+      <div class="form-check form-check-inline align-middle">
+        <input type="checkbox" class="filter-checkbox form-check-input" id="materialInline1" {% if "approved" in select_status %}checked{%endif%}>
         <label class="form-check-label bage-warning" for="materialInline1">
             <span class="badge badge-pill badge-pending small-body-text">Pending </span>
         </label>
