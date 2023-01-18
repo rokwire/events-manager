@@ -228,9 +228,12 @@ a {
 }
 
 .create-event-button, .create-event-button:hover, .create-event-button:active {
-  width: 140px;
-  margin-left:20px;
+  width: 123px;
+  height: 32px;
+  margin: 19px 0 13.2px 24px;
+  padding: 4px 0px 9px;
   background-color: #D85536;
+  font-size: 14px;
   font-weight: bold;
   border-radius: 24px;
   border: solid 2px #D85536;
