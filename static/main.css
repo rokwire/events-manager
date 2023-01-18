@@ -470,15 +470,28 @@ h5 {
 }
 
 .badge-publish {
+  height: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  padding-left: 12px;
+  padding-right: 12px;
   color: white;
   background-color: #009fd4;
 }
 
 .badge-pending {
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #13294b;
   background-color: #f5821e;
 }
 
 .badge-hide-past-events {
+  padding-left: 15px;
+  padding-right: 15px;
   color: white;
   background-color: #959494;
 }
@@ -568,6 +581,33 @@ h5 {
 
 .pagination {
   margin-top: 22px;
+}
+
+.filter-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  margin: 0;
+  width: 20px;
+  height: 20px;
+  border: 0.7px solid #717372;
+  display: grid;
+  place-content: center;
+}
+
+.filter-checkbox::before {
+  content: "";
+  width: inherit;
+  height: inherit;
+  background-image: var(--background-url);
+  transform: scale(0);
+  transform-origin: center;
+  transition: 120ms transform ease-in-out;
+}
+
+.filter-checkbox:checked::before {
+  transform: scale(1);
+  background-color: #20375c;
 }
 
 .login-logout-button {
