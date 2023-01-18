@@ -686,6 +686,7 @@ h5 {
   letter-spacing: normal;
   color: #002855;
   background-color: #fff;
+  display: none;
   z-index: 1000000;
 }
 
