@@ -341,17 +341,25 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="eventsmanager-dropdown-menu">
-                <select name="timezone" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose the event timezone" required>
-                  {% for key, value in timezones.items() %}
-                      {% if post.timezone == key%}
-                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
-                      {% else %}
-                          <option value = "{{key}}" id = {{key}}>{{value}}</option>
-                      {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
+{#              <div class="eventsmanager-dropdown-menu">#}
+{#                <select name="timezone" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose the event timezone" required>#}
+{#                  {% for key, value in timezones.items() %}#}
+{#                      {% if post.timezone == key%}#}
+{#                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>#}
+{#                      {% else %}#}
+{#                          <option value = "{{key}}" id = {{key}}>{{value}}</option>#}
+{#                      {% endif %}#}
+{#                  {% endfor %}#}
+{#                </select>#}
+{#              </div>#}
+               <div class="timezone-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key, value in timezones.items() %}
+                            <div onclick="dropdownmenushow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
             </div>
           </div>
           <!-- startDate -->
@@ -578,6 +586,8 @@
               categorymenu.onclick()
               subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
               subcategorymenu.onclick()
+              timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
+              timezonemenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;

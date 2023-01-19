@@ -630,7 +630,7 @@ h5 {
 }
 
 .eventsmanager-dropdown-menu {
-  position: absolute;
+  position: relative;
   width: 300px;
   height:50px;
 }
@@ -666,6 +666,11 @@ h5 {
 }
 
 .subcategory-menu.active::before {
+  top:9px;
+  transform: rotate(-180deg);
+}
+
+.timezone-menu.active::before {
   top:9px;
   transform: rotate(-180deg);
 }
