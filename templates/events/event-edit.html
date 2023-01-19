@@ -276,31 +276,30 @@
                 <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-                <div class="eventsmanager-dropdown-menu">
-                  <select name="subcategory" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event subcategory..." data-width="fit-content">
-                    <option id="subcategory-placeholder" value="" disabled></option>
-                    <option value="">None</option>
-                    {% for key in subcategoriesMap['Athletics'] %}
-                      {% if post.subcategory == key%}
-                        <option value="{{key}}" id={{key}} selected>{{key}}</option>
-                      {% else %}
-                        <option value="{{key}}" id={{key}}>{{key}}</option>
-                      {% endif %}
-                    {% endfor %}
-                  </select>
+{#                <div class="eventsmanager-dropdown-menu">#}
+{#                  <select name="subcategory" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event subcategory..." data-width="fit-content">#}
+{#                    <option id="subcategory-placeholder" value="" disabled></option>#}
+{#                    <option value="">None</option>#}
+{#                    {% for key in subcategoriesMap['Athletics'] %}#}
+{#                      {% if post.subcategory == key%}#}
+{#                        <option value="{{key}}" id={{key}} selected>{{key}}</option>#}
+{#                      {% else %}#}
+{#                        <option value="{{key}}" id={{key}}>{{key}}</option>#}
+{#                      {% endif %}#}
+{#                    {% endfor %}#}
+{#                  </select>#}
+{#                </div>#}
 
-{#                  <div class="subcategory-menu eventsmanager-dropdown-menu">#}
-{#                    <input type="text" id="dropdownmenu-subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>#}
-{#                      <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>#}
-{#                      <div class="dropdown-menu-option">#}
-{#                          {% for key in subcategoriesMap['Athletics'] %}#}
-{#                                <div onclick="dropdownmenushow('dropdownmenu-subcategory', '{{key}}')" class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>#}
-{#                          {% endfor %}#}
-{#                      </div>#}
-{#                  </div>#}
+                  <div class="subcategory-menu eventsmanager-dropdown-menu">
+                    <input type="text" id="dropdownmenu-subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
+                      <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                      <div class="dropdown-menu-option">
+                          {% for key in subcategoriesMap['Athletics'] %}
+                                <div onclick="dropdownmenushow('dropdownmenu-subcategory', '{{key}}')" class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                          {% endfor %}
+                      </div>
+                  </div>
 
-
-                </div>
               </div>
             </div>
           {% else %}
@@ -573,13 +572,17 @@
                   onclick() {
                      let self = this
                      this.menu.onclick = function() {
+                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                            $(self.display).css({"display": "none"});
+                             return;
+                         }
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
                             $(self.display).css({"display": "block"})
                          } else {
                              $(self.display).css({"display": "none"})
                          }
-                     }
+                     };
                   }
               }
               usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
