@@ -259,7 +259,7 @@
 {#              </div>#}
 
               <div class="category-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
                   <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for key in eventTypeValues %}
@@ -270,28 +270,14 @@
             </div>
           </div>
           <!-- subcategory -->
-          {% if post['category'] == 'Athletics' %}
+{#          {% if post['category'] == 'Athletics' %}#}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-{#                <div class="eventsmanager-dropdown-menu">#}
-{#                  <select name="subcategory" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event subcategory..." data-width="fit-content">#}
-{#                    <option id="subcategory-placeholder" value="" disabled></option>#}
-{#                    <option value="">None</option>#}
-{#                    {% for key in subcategoriesMap['Athletics'] %}#}
-{#                      {% if post.subcategory == key%}#}
-{#                        <option value="{{key}}" id={{key}} selected>{{key}}</option>#}
-{#                      {% else %}#}
-{#                        <option value="{{key}}" id={{key}}>{{key}}</option>#}
-{#                      {% endif %}#}
-{#                    {% endfor %}#}
-{#                  </select>#}
-{#                </div>#}
-
                   <div class="subcategory-menu eventsmanager-dropdown-menu">
-                    <input type="text" id="dropdownmenu-subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
+                    <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
                       <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                       <div class="dropdown-menu-option">
                           {% for key in subcategoriesMap['Athletics'] %}
@@ -302,24 +288,7 @@
 
               </div>
             </div>
-          {% else %}
-            <div class="form-group row">
-                <div class="col-12 col-sm-2">
-                    <div class="mytooltip"><h5>Subcategory</h5>
-                        <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
-                    </div>
-                </div>
-              <div class="col-sm-9">
-                <div class="eventsmanager-dropdown-menu">
-                  <select name="subcategory" id = "subcategory" class="form-control text-input-field" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
-                    {% for key in subcategoriesMap['Athletics'] %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-            </div>
-          {% endif %}
+
 
           <!-- allDay -->
           <div class="form-group row ">
@@ -559,6 +528,7 @@
           <!-- Script to handle changing header -->
           <script>
               function dropdownmenushow(id, value) {
+                  debugger
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -574,7 +544,7 @@
                      this.menu.onclick = function() {
                          if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
-                             return;
+                            return;
                          }
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
@@ -585,12 +555,12 @@
                      };
                   }
               }
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
               usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
               usergroupmenu.onclick()
               categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
               categorymenu.onclick()
-              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
-              subcategorymenu.onclick()
               timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
               timezonemenu.onclick()
             function virtualSelectionChanged(element) {
