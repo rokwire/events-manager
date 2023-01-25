@@ -261,9 +261,8 @@
               </div>
               <div class="col-sm-9">
                 <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory..." data-width="fit-content">
-                    <option id="subcategory-placeholder" value="" disabled></option>
-                    <option value="">None</option>
+                  <select name="subcategory" id="subcategory" class="form-control w-auto" title="Choose an event subcategory..." data-width="fit-content">
+                    <option id="subcategory-placeholder" value="" disabled {% if post.subcategory == ""%} selected {% endif %}>Choose an event subcategory (disabled) ...</option>
                     {% for key in subcategoriesMap['Athletics'] %}
                       {% if post.subcategory == key%}
                         <option value="{{key}}" id={{key}} selected>{{key}}</option>
@@ -285,6 +284,7 @@
               <div class="col-sm-9">
                 <div class="form-group">
                   <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
+                    <option id="subcategory-placeholder" value="" disabled selected {% if post.subcategory == ""%} selected {% endif %}>Choose an event subcategory (disabled) ...</option>
                     {% for key in subcategoriesMap['Athletics'] %}
                       <option value = "{{key}}" id = {{key}}>{{key}}</option>
                     {% endfor %}
