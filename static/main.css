@@ -594,6 +594,7 @@ input[type="checkbox"] {
   border: 0.7px solid #717372;
   display: inline-grid;
   place-content: center;
+  position: inherit;
 }
 
 input[type="checkbox"]::before {
