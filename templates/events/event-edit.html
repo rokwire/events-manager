@@ -190,17 +190,17 @@
 
             <div class="col-sm-9">
               <div class="user-group-menu eventsmanager-dropdown-menu">
-{#                <input type="text" id="createdByGroupId" class="form-control dropdown-menu-inputfield" placeholder="Choose user group" readonly>#}
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
-                          <input type="text" name="createdByGroupId" id="createdByGroupId" value="{{group['title']}}" class="form-control dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
+                          <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" value="{{group['title']}}" class="form-control dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
+                          <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
                       {% endif %}
                   {% endfor %}
                   <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for group in groups %}
 {#                        {% if post.createdByGroupId != group['id'] %}#}
-                            <div onclick="dropdownmenushow('createdByGroupId', '{{group['title']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+                            <div onclick="groupdropdownmenushow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
 {#                        {% endif %}#}
                         {% endfor %}
                   </div>
@@ -527,9 +527,18 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function groupdropdownmenushow(title, titlevalue, id, idvalue) {
+                  if(document.getElementById(id).value != idvalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = idvalue
+                  if(document.getElementById(title).value != titlevalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(title).value = titlevalue
+              }
               function dropdownmenushow(id, value) {
-                  debugger
-                  console.log("dropdownmenushow click");
+                  debugger;
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
