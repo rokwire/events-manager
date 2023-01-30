@@ -281,7 +281,7 @@
                       <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                       <div class="dropdown-menu-option">
                           {% for key in subcategoriesMap['Athletics'] %}
-                                <div onclick="dropdownmenushow('dropdownmenu-subcategory', '{{key}}')" class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                                <div onclick='dropdownmenushow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                           {% endfor %}
                       </div>
                   </div>
@@ -322,7 +322,7 @@
 {#              </div>#}
 
                <div class="timezone-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
                   <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for key, value in timezones.items() %}
@@ -529,6 +529,7 @@
           <script>
               function dropdownmenushow(id, value) {
                   debugger
+                  console.log("dropdownmenushow click");
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -542,6 +543,7 @@
                   onclick() {
                      let self = this
                      this.menu.onclick = function() {
+                         console.log("onclick() click");
                          if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
                             return;
