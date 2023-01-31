@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 - Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
 - Update Login and Logout button. [#1009](https://github.com/rokwire/events-manager/issues/1009)
+- Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)

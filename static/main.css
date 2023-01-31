@@ -588,19 +588,21 @@ h5 {
   margin-top: 22px;
 }
 
-.filter-checkbox {
+input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
        appearance: none;
+  vertical-align: middle;
   margin: 0;
   width: 20px;
   height: 20px;
   border: 0.7px solid #717372;
-  display: grid;
+  display: inline-grid;
   place-content: center;
+  position: inherit;
 }
 
-.filter-checkbox::before {
+input[type="checkbox"]::before {
   content: "";
   width: inherit;
   height: inherit;
@@ -610,7 +612,7 @@ h5 {
   transition: 120ms transform ease-in-out;
 }
 
-.filter-checkbox:checked::before {
+input[type="checkbox"]:checked::before {
   transform: scale(1);
   background-color: #20375c;
 }
