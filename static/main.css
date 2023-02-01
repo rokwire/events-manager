@@ -253,6 +253,7 @@ a {
   background-color: #e84a27;
   border-radius: 24px;
   border: solid 2px #e84a27;
+  color: #ffffff;
 }
 
 .orange-background-button, .orange-background-button:hover, .orange-background-button:active, .orange-background-button:disabled {
