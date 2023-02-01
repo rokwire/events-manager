@@ -164,7 +164,7 @@
   {% if isUser %}
   <form id = "form" action = "{{url_for('user_events.user_an_event_edit', id=post['_id'])}}" method="POST" enctype="multipart/form-data">
   <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
+    <a class="grey-background-button btn btn-dark" href="{{ url_for('user_events.user_an_event', id=post['_id'])}}" role="button">Back To Event Details</a>
   </div>
   {% else %}
   <form id = "form" action = "{{url_for('event.edit', eventId=post['_id'])}}" method="POST">
@@ -624,7 +624,7 @@
               <h5>Contacts </h5>
             </div>
             <div class="col-sm-9">
-              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+              <span role="button" class="add-a-contact add-one btn">Add Contact <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
             </div>
           </div>
 
@@ -902,7 +902,7 @@
               </div>
 
               <div class="col-sm-9">
-                <span role="button" class="add-sub btn btn-outline-primary" id="addsub">+ Link a Sub-Event</span>
+                <span role="button" class="add-a-contact add-sub btn" id="addsub">Link Sub-Event <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
                 <label for="addsub">Enter a keyword of the subevent title, and select this subevent from the dropdown list</label><br><br>
               </div>
             </div>
@@ -1000,15 +1000,15 @@
    <div role="toolbar" aria-label="Toolbar with button groups">
      <div class="btn-group mr-2" role="group" aria-label="first group">
        {% if isUser %}
-       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
+       <a class="white-background-button btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
        {% else %}
-       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('event.detail', eventId=post['_id']) }}" role="button">Cancel</a>
+       <a class="white-background-button btn btn-block nav-link btn-outline-secondary" href="{{ url_for('event.detail', eventId=post['_id']) }}" role="button">Cancel</a>
        {% endif %}
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
        <!-- discard the modal use js to alarm Confirmation later -->
        <!-- <span class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</span> -->
-       <button id="submit-data" class="btn btn-block nav-link btn-primary" type="submit">Save</button>
+       <button id="submit-data" class="orange-background-button btn btn-block nav-link btn-primary" type="submit">Save</button>
      </div>
    </div>
   </div>

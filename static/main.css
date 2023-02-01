@@ -530,6 +530,7 @@ h5 {
 }
 
 .add-a-contact {
+  cursor: pointer;
   padding: 9px 20px 7px 19px;
   border-radius: 24px;
   border: solid 2px #e84a27;
@@ -545,10 +546,11 @@ h5 {
 }
 
 .add-a-contact:hover, .add-a-contact:active {
-  background-color: #fff;
+  background-color: #e84a27;
 }
 
 .icon-add {
+  cursor: pointer;
   float:right;
   margin-left:15px;
   margin-right:-15px
