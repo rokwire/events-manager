@@ -228,9 +228,12 @@ a {
 }
 
 .create-event-button, .create-event-button:hover, .create-event-button:active {
-  width: 140px;
-  margin-left:20px;
+  width: 123px;
+  height: 32px;
+  margin: 19px 0 13.2px 24px;
+  padding: 4px 0px 9px;
   background-color: #D85536;
+  font-size: 14px;
   font-weight: bold;
   border-radius: 24px;
   border: solid 2px #D85536;
@@ -254,6 +257,7 @@ a {
   border-radius: 24px;
   border: solid 2px #e84a27;
   color: #ffffff;
+  text-decoration: none;
 }
 
 .orange-background-button, .orange-background-button:hover, .orange-background-button:active, .orange-background-button:disabled {
@@ -471,15 +475,28 @@ h5 {
 }
 
 .badge-publish {
+  height: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  padding-left: 12px;
+  padding-right: 12px;
   color: white;
   background-color: #009fd4;
 }
 
 .badge-pending {
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #13294b;
   background-color: #f5821e;
 }
 
 .badge-hide-past-events {
+  padding-left: 15px;
+  padding-right: 15px;
   color: white;
   background-color: #959494;
 }
@@ -569,6 +586,35 @@ h5 {
 
 .pagination {
   margin-top: 22px;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  vertical-align: middle;
+  margin: 0;
+  width: 20px;
+  height: 20px;
+  border: 0.7px solid #717372;
+  display: inline-grid;
+  place-content: center;
+  position: inherit;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: inherit;
+  height: inherit;
+  background-image: var(--background-url);
+  transform: scale(0);
+  transform-origin: center;
+  transition: 120ms transform ease-in-out;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+  background-color: #20375c;
 }
 
 .login-logout-button {
