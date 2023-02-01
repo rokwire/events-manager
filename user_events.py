@@ -410,7 +410,7 @@ def user_an_event_edit(id):
                 post_by_id['virtualEventUrl'] = request.form.get('virtualEventUrl')
 
         if post_by_id['category'] == "Athletics":
-            post_by_id['subcategory'] = request.form['subcategory']
+            post_by_id['subcategory'] = request.form.get('subcategory')
         else:
             post_by_id['subcategory'] = None
 
