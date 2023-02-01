@@ -527,6 +527,18 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function disableScroll() {
+                // Get the current page scroll position
+                scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+                    // if any scroll is attempted, set this to the previous value
+                    window.onscroll = function() {
+                        window.scrollTo(scrollLeft, scrollTop);
+                    };
+              }
+              function enableScroll() {
+                window.onscroll = function() {};
+              }
               function groupdropdownmenushow(title, titlevalue, id, idvalue) {
                   if(document.getElementById(id).value != idvalue) {
                       document.getElementById("submit-data").disabled = false;
@@ -555,13 +567,16 @@
                          console.log("onclick() click");
                          if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
+                            enableScroll()
                             return;
                          }
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
                             $(self.display).css({"display": "block"})
+                             disableScroll()
                          } else {
                              $(self.display).css({"display": "none"})
+                             enableScroll()
                          }
                      };
                   }
