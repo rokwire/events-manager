@@ -706,3 +706,7 @@ select#dropdown-menu-arrow {
 select#subcategory {
     appearance: none;
 }
+
+.dropdown-line {
+  display: none;
+}

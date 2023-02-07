@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
 - Fix the height of Create Event button. [#1021](https://github.com/rokwire/events-manager/issues/1021)
 - Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the display of line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)

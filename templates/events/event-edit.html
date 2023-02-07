@@ -196,7 +196,7 @@
                           <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
                       {% endif %}
                   {% endfor %}
-                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for group in groups %}
 {#                        {% if post.createdByGroupId != group['id'] %}#}
@@ -260,7 +260,7 @@
 
               <div class="category-menu eventsmanager-dropdown-menu">
                 <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
-                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for key in eventTypeValues %}
                             <div onclick="dropdownmenushow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
@@ -278,7 +278,7 @@
               <div class="col-sm-9">
                   <div class="subcategory-menu eventsmanager-dropdown-menu">
                     <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
-                      <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                      <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                       <div class="dropdown-menu-option">
                           {% for key in subcategoriesMap['Athletics'] %}
                                 <div onclick='dropdownmenushow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
@@ -323,7 +323,7 @@
 
                <div class="timezone-menu eventsmanager-dropdown-menu">
                 <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
-                  <div style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
                   <div class="dropdown-menu-option">
                       {% for key, value in timezones.items() %}
                             <div onclick="dropdownmenushow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
@@ -572,11 +572,15 @@
                          }
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
-                            $(self.display).css({"display": "block"})
-                             disableScroll()
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                              $(self.display).css({"display": "block"})
+                              disableScroll()
                          } else {
-                             $(self.display).css({"display": "none"})
-                             enableScroll()
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                              $(self.display).css({"display": "none"})
+                              enableScroll()
                          }
                      };
                   }
