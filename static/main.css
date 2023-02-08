@@ -277,10 +277,11 @@ a {
   height: auto;
   padding: 9px 25px 7px 24px;
   border-radius: 24px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   border: solid 2px #dadde1;
   background-color: #ffffff;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   color: #dadde1;
 }
 
