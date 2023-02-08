@@ -260,7 +260,7 @@ a {
   text-decoration: none;
 }
 
-.orange-background-button, .orange-background-button:hover, .orange-background-button:active, .orange-background-button:disabled {
+.orange-background-button, .orange-background-button:hover, .orange-background-button:active {
   width: auto;
   height: auto;
   padding: 9px 25px 7px 24px;
@@ -270,6 +270,18 @@ a {
   font-weight: bold;
   font-size: 14px;
   color: #ffffff;
+}
+
+ .orange-background-button:disabled {
+  width: auto;
+  height: auto;
+  padding: 9px 25px 7px 24px;
+  border-radius: 24px;
+  border: solid 2px #dadde1;
+  background-color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  color: #dadde1;
 }
 
 .notification-button, .notification-button:hover, .notification-button:active {
