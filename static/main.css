@@ -272,6 +272,14 @@ a {
   color: #ffffff;
 }
 
+.white-background-button:hover, .white-background-button .orange-background-button, .orange-background-button:hover, .orange-background-button:active, .orange-background-button:focus {
+  width: auto;
+  height: auto;
+  padding: 8px 24px 6px 23px;
+  border-radius: 24px;
+  border: solid 1px #009fd4;
+}
+
 .notification-button, .notification-button:hover, .notification-button:active {
   padding: 9px 19px 7px 18px;
   border-radius: 24px;
