@@ -244,7 +244,7 @@
               <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-            {# customized drop-down menu for category #}
+            <!-- customized drop-down menu for category -->
               <div class="category-menu eventsmanager-dropdown-menu">
                 <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
                   <div class="dropdown-line"></div>
@@ -513,7 +513,6 @@
                   document.getElementById(title).value = titlevalue
               }
               function dropDownMenuShow(id, value) {
-                  debugger;
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -1169,7 +1168,6 @@
         $('form').each(function(index){
           $(this).data('serialized', $(this).serialize()) //store the original serialize data into attr 'serialized'
         }).on('change input', function(){  // event handler of input change
-            debugger
             $(this).find(':submit, input[type="image"]')
                 .prop('disabled', $(this).serialize() == $(this).data('serialized'));
 
@@ -1472,15 +1470,6 @@
     function extractLast( term ) {
       return split( term ).pop();
     }
-
-    $("#createdByGroupId").on("change input", function () {
-        debugger;
-        console.log("#createdByGroupId");
-    })
-    $("#dropdownmenu-category").on("change input", function () {
-        debugger;
-        console.log("#dropdownmenu-category");
-    })
 
     $( "#tags" ).on( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
