@@ -709,4 +709,5 @@ select#subcategory {
 
 .dropdown-line {
   display: none;
+  width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;
 }

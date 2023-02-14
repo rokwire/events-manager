@@ -196,12 +196,10 @@
                           <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
                       {% endif %}
                   {% endfor %}
-                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for group in groups %}
-{#                        {% if post.createdByGroupId != group['id'] %}#}
-                            <div onclick="groupdropdownmenushow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
-{#                        {% endif %}#}
+                            <div onclick="groupDropDownMenuShow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
                         {% endfor %}
                   </div>
               </div>
@@ -246,24 +244,13 @@
               <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-{#              <div class="eventsmanager-dropdown-menu">#}
-{#                <select name="category" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose an event category..." required >#}
-{#                  {% for key in eventTypeValues %}#}
-{#                    {% if post.category == key%}#}
-{#                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>#}
-{#                    {% else %}#}
-{#                      <option value = "{{key}}" id = {{key}}>{{key}}</option>#}
-{#                    {% endif %}#}
-{#                  {% endfor %}#}
-{#                </select>#}
-{#              </div>#}
-
+            {# customized drop-down menu for category #}
               <div class="category-menu eventsmanager-dropdown-menu">
                 <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
-                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key in eventTypeValues %}
-                            <div onclick="dropdownmenushow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                            <div onclick="dropDownMenuShow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                       {% endfor %}
                   </div>
               </div>
@@ -278,10 +265,10 @@
               <div class="col-sm-9">
                   <div class="subcategory-menu eventsmanager-dropdown-menu">
                     <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
-                      <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                      <div class="dropdown-line"></div>
                       <div class="dropdown-menu-option">
                           {% for key in subcategoriesMap['Athletics'] %}
-                                <div onclick='dropdownmenushow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                                <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                           {% endfor %}
                       </div>
                   </div>
@@ -309,24 +296,12 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-{#              <div class="eventsmanager-dropdown-menu">#}
-{#                <select name="timezone" id = "dropdown-menu-arrow" class="form-control text-input-field" title="Choose the event timezone" required>#}
-{#                  {% for key, value in timezones.items() %}#}
-{#                      {% if post.timezone == key%}#}
-{#                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>#}
-{#                      {% else %}#}
-{#                          <option value = "{{key}}" id = {{key}}>{{value}}</option>#}
-{#                      {% endif %}#}
-{#                  {% endfor %}#}
-{#                </select>#}
-{#              </div>#}
-
                <div class="timezone-menu eventsmanager-dropdown-menu">
                 <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
-                  <div class="dropdown-line" style="width:100%;height:2px;border:1px solid #e84a27;background: #e84a27;border-width: 1px;"></div>
+                  <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key, value in timezones.items() %}
-                            <div onclick="dropdownmenushow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                            <div onclick="dropDownMenuShow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                       {% endfor %}
                   </div>
                </div>
@@ -527,7 +502,7 @@
 
           <!-- Script to handle changing header -->
           <script>
-              function groupdropdownmenushow(title, titlevalue, id, idvalue) {
+              function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
                   if(document.getElementById(id).value != idvalue) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -537,7 +512,7 @@
                   }
                   document.getElementById(title).value = titlevalue
               }
-              function dropdownmenushow(id, value) {
+              function dropDownMenuShow(id, value) {
                   debugger;
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
