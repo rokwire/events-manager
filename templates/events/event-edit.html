@@ -187,17 +187,21 @@
             <div class="col-12 col-sm-2">
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
+
             <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="auto" required>
+              <div class="user-group-menu eventsmanager-dropdown-menu">
                   {% for group in groups %}
                       {% if post.createdByGroupId == group['id'] %}
-                      <option value="{{group['id']}}" id={{group['id']}} selected>{{group['title']}}</option>
-                      {% else %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                          <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" value="{{group['title']}}" class="form-control dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
+                          <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
                       {% endif %}
                   {% endfor %}
-                  </select>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for group in groups %}
+                            <div onclick="groupDropDownMenuShow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+                        {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -240,59 +244,38 @@
               <h5>Category<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." required >
-                  {% for key in eventTypeValues %}
-                    {% if post.category == key%}
-                      <option value = "{{key}}" id = {{key}} selected = true>{{key}}</option>
-                    {% else %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
+            <!-- customized drop-down menu for category -->
+              <div class="category-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in eventTypeValues %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
           <!-- subcategory -->
-          {% if post['category'] == 'Athletics' %}
+{#          {% if post['category'] == 'Athletics' %}#}
             <div class="form-group row ">
               <div class="col-12 col-sm-2">
                 <h5>Subcategory </h5>
               </div>
               <div class="col-sm-9">
-                <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory..." data-width="fit-content">
-                    <option id="subcategory-placeholder" value="" disabled></option>
-                    <option value="">None</option>
-                    {% for key in subcategoriesMap['Athletics'] %}
-                      {% if post.subcategory == key%}
-                        <option value="{{key}}" id={{key}} selected>{{key}}</option>
-                      {% else %}
-                        <option value="{{key}}" id={{key}}>{{key}}</option>
-                      {% endif %}
-                    {% endfor %}
-                  </select>
-                </div>
+                  <div class="subcategory-menu eventsmanager-dropdown-menu">
+                    <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
+                      <div class="dropdown-line"></div>
+                      <div class="dropdown-menu-option">
+                          {% for key in subcategoriesMap['Athletics'] %}
+                                <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                          {% endfor %}
+                      </div>
+                  </div>
+
               </div>
             </div>
-          {% else %}
-            <div class="form-group row">
-                <div class="col-12 col-sm-2">
-                    <div class="mytooltip"><h5>Subcategory</h5>
-                        <span class="mytooltiptext">Subcategories are currently available only for Athletics Category.</span>
-                    </div>
-                </div>
-              <div class="col-sm-9">
-                <div class="form-group">
-                  <select name="subcategory" id = "subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
-                    {% for key in subcategoriesMap['Athletics'] %}
-                      <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-            </div>
-          {% endif %}
+
 
           <!-- allDay -->
           <div class="form-group row ">
@@ -313,17 +296,15 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="timezone" id = "timezone" class="form-control w-auto" title="Choose the event timezone" required>
-                  {% for key, value in timezones.items() %}
-                      {% if post.timezone == key%}
-                          <option value = "{{key}}" id = {{key}} selected>{{value}}</option>
-                      {% else %}
-                          <option value = "{{key}}" id = {{key}}>{{value}}</option>
-                      {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
+               <div class="timezone-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key, value in timezones.items() %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
+               </div>
             </div>
           </div>
           <!-- startDate -->
@@ -521,6 +502,59 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
+                  if(document.getElementById(id).value != idvalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = idvalue
+                  if(document.getElementById(title).value != titlevalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(title).value = titlevalue
+              }
+              function dropDownMenuShow(id, value) {
+                  if(document.getElementById(id).value != value) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = value
+              }
+              class Dropdownmenu {
+                  constructor(selector, display) {
+                      this.menu = document.querySelector(selector)
+                      this.display = display
+                  }
+                  onclick() {
+                     let self = this
+                     this.menu.onclick = function() {
+                         console.log("onclick() click");
+                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                            $(self.display).css({"display": "none"});
+                            enableScroll()
+                            return;
+                         }
+                         self.menu.classList.toggle('active')
+                         if (self.menu.classList.contains('active')) {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                              $(self.display).css({"display": "block"})
+                              disableScroll()
+                         } else {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                              $(self.display).css({"display": "none"})
+                              enableScroll()
+                         }
+                     };
+                  }
+              }
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
+              usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
+              usergroupmenu.onclick()
+              categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
+              categorymenu.onclick()
+              timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
+              timezonemenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;
@@ -1022,7 +1056,7 @@
    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
