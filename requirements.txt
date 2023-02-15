@@ -18,7 +18,7 @@ itsdangerous==1.1.0
 Jinja2==3.0.3
 MarkupSafe>=2.0
 pymongo[tls,srv]==3.10.0
-Werkzeug==0.15.5
+Werkzeug==2.2.3
 googlemaps==3.0.2
 flask_paginate
 boto3==1.9.188
