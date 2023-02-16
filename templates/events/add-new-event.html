@@ -63,12 +63,17 @@
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="fit-content" required >
+              <div class="user-group-menu eventsmanager-dropdown-menu">
                   {% for group in groups %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
+                      <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" value="{{group['title']}}" class="form-control dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
+                      <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
                   {% endfor %}
-                  </select>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for group in groups %}
+                            <div onclick="groupDropDownMenuShow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+                        {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -96,12 +101,22 @@
               <h5>Category<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>
-                  {% for key in eventTypeValues %}
-                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                  {% endfor %}
-                </select>
+{#              <div class="form-group">#}
+{#                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>#}
+{#                  {% for key in eventTypeValues %}#}
+{#                    <option value = "{{key}}" id = {{key}}>{{key}}</option>#}
+{#                  {% endfor %}#}
+{#                </select>#}
+{#              </div>#}
+            <!-- customized drop-down menu for category -->
+              <div class="category-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-category-create" name="category" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in eventTypeValues %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-category-create', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -215,6 +230,62 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
+                  debugger;
+                  if(document.getElementById(id).value != idvalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = idvalue
+                  if(document.getElementById(title).value != titlevalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(title).value = titlevalue
+              }
+              function dropDownMenuShow(id, value) {
+                  debugger;
+                  if(document.getElementById(id).value != value) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = value
+              }
+              class Dropdownmenu {
+                  constructor(selector, display) {
+                      this.menu = document.querySelector(selector)
+                      this.display = display
+                  }
+                  onclick() {
+                     let self = this
+                     this.menu.onclick = function() {
+                         console.log("onclick() click");
+                         if(document.getElementById('dropdownmenu-category-create').value != "Athletics" && self.display == ".subcategory-display-none") {
+                            $(self.display).css({"display": "none"});
+                            enableScroll()
+                            return;
+                         }
+                         self.menu.classList.toggle('active')
+                         if (self.menu.classList.contains('active')) {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                              $(self.display).css({"display": "block"})
+                              disableScroll()
+                         } else {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                              $(self.display).css({"display": "none"})
+                              enableScroll()
+                         }
+                     };
+                  }
+              }
+              debugger
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
+              usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
+              usergroupmenu.onclick()
+              categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
+              categorymenu.onclick()
+              timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
+              timezonemenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;
