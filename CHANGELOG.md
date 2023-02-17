@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the publish button and pending button on the campus event detail page. [#1014](https://github.com/rokwire/events-manager/issues/1014)
 - Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
 - Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
+- Update the hover and focus style of all buttons. Refactored and cleaned unused styles. [#1048](https://github.com/rokwire/events-manager/issues/1048)
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)

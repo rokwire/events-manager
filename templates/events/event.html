@@ -22,7 +22,7 @@
 
 {% block create_event %}
   {% if g.user["access"] == "both" or g.user["access"] == "user" or g.user["access"] == "source" %}
-  <a class="btn btn-primary mr-2 create-event-button" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
+  <a class="orange-background-button" style="margin-left:20px" href="{{ url_for('user_events.add_new_event') }}" role="button">Create Event</a>
   {% endif %}
 {% endblock %}
 
@@ -653,11 +653,11 @@
        {% else %}
           {% if post.eventStatus == "published" %}
               <div class="btn-group mr-2" role="group" aria-label="Third group">
-                <button type="button" class="btn btn-warning white-background-button" data-toggle="modal" data-target="#PendingModal">Pending</button>
+                <button type="button" class="white-background-button" data-toggle="modal" data-target="#PendingModal">Pending</button>
               </div>
               {%  else %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button type="button" class="btn btn-success white-background-button" data-toggle="modal" data-target="#PublishModal">Publish</button>
+                <button type="button" class="white-background-button" data-toggle="modal" data-target="#PublishModal">Publish</button>
               </div>
           {% endif %}
 
