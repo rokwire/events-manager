@@ -12,12 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the height of Create Event button. [#1021](https://github.com/rokwire/events-manager/issues/1021)
 - Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
 - Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
 - Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
 - Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
 - Update Login and Logout button. [#1009](https://github.com/rokwire/events-manager/issues/1009)
+- Update the buttons in the user event edit page. [#1013](https://github.com/rokwire/events-manager/issues/1013)
+- Update the publish button and pending button on the campus event detail page. [#1014](https://github.com/rokwire/events-manager/issues/1014)
+- Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
+- Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
+- Update the hover and focus style of all buttons. Refactored and cleaned unused styles. [#1048](https://github.com/rokwire/events-manager/issues/1048)
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
