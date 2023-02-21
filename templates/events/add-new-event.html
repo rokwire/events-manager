@@ -249,25 +249,24 @@
                          console.log("onclick() click");
                          if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
-                            enableScroll()
                             return;
+                         } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
+                             console.log("show subcategories");
+                             document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
                          }
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
                               Array.from($(self)[0].menu.children)
                                  .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
                               $(self.display).css({"display": "block"})
-                              disableScroll()
                          } else {
                               Array.from($(self)[0].menu.children)
                                  .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
                               $(self.display).css({"display": "none"})
-                              enableScroll()
                          }
                      };
                   }
               }
-              debugger
               subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
               subcategorymenu.onclick()
               usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
