@@ -732,3 +732,7 @@ select#subcategory {
   letter-spacing: normal;
   color: #717372;
 }
+
+.dropdown-menu-inputfield-selected {
+  color: #002855 !important;
+}

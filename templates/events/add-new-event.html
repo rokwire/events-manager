@@ -229,9 +229,9 @@
                       document.getElementById("submit-data").disabled = false;
                   }
                   document.getElementById(title).value = titlevalue
+                  document.getElementById(title).classList.add("dropdown-menu-inputfield-selected")
               }
               function dropDownMenuShow(id, value) {
-                  debugger;
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -245,6 +245,7 @@
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
                       {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
                   }
+                  document.getElementById(id).classList.add("dropdown-menu-inputfield-selected")
               }
               class Dropdownmenu {
                   constructor(selector, display) {
@@ -265,6 +266,7 @@
 
                          self.menu.classList.toggle('active')
                          if (self.menu.classList.contains('active')) {
+                             self.menu.children[0].classList.remove("dropdown-menu-inputfield-selected")
                               Array.from($(self)[0].menu.children)
                                  .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
                               $(self.display).css({"display": "block"})
