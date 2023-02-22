@@ -1034,15 +1034,15 @@
    <div role="toolbar" aria-label="Toolbar with button groups">
      <div class="btn-group mr-2" role="group" aria-label="first group">
        {% if isUser %}
-       <a class="white-background-button btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
+       <a class="white-background-button" href="{{ url_for('user_events.user_an_event', id=post['_id']) }}" role="button">Cancel</a>
        {% else %}
-       <a class="white-background-button btn btn-block nav-link btn-outline-secondary" href="{{ url_for('event.detail', eventId=post['_id']) }}" role="button">Cancel</a>
+       <a class="white-background-button" href="{{ url_for('event.detail', eventId=post['_id']) }}" role="button">Cancel</a>
        {% endif %}
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
        <!-- discard the modal use js to alarm Confirmation later -->
        <!-- <span class="btn btn-block nav-link btn-primary" role="button" data-toggle="modal" data-html="true" data-target="#SaveModal">Save</span> -->
-       <button id="submit-data" class="orange-background-button btn btn-block nav-link btn-primary" type="submit">Save</button>
+       <button id="submit-data" class="orange-background-button" type="submit">Save</button>
      </div>
    </div>
   </div>
