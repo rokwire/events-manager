@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="user-group-menu eventsmanager-dropdown-menu">
-                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group..." class="form-control dropdown-menu-inputfield" placeholder="Choose a group..." readonly>
+                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group..." class="form-control  dropdown-menu-inputfield" placeholder="Choose a group..." readonly>
                   <input type="hidden" name="createdByGroupId" id="createdByGroupId">
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
@@ -221,7 +221,6 @@
           <!-- Script to handle changing header -->
           <script>
               function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
-                  debugger;
                   if(document.getElementById(id).value != idvalue) {
                       document.getElementById("submit-data").disabled = false;
                   }
@@ -237,6 +236,15 @@
                       document.getElementById("submit-data").disabled = false;
                   }
                   document.getElementById(id).value = value
+                  if(document.getElementById('dropdownmenu-category').value != "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = ""
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
+                      {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
+                  }
               }
               class Dropdownmenu {
                   constructor(selector, display) {
@@ -247,13 +255,8 @@
                      let self = this
                      this.menu.onclick = function() {
                          console.log("onclick() click");
-                         if(document.getElementById('dropdownmenu-category').value != "Athletics") {
-                             document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
-                         }
                          if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
-                            document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
-
                             return;
                          } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
                              console.log("show subcategories");
