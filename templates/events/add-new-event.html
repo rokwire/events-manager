@@ -63,12 +63,15 @@
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="fit-content" required >
-                  {% for group in groups %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
-                  {% endfor %}
-                  </select>
+              <div class="user-group-menu eventsmanager-dropdown-menu">
+                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group..." class="form-control  dropdown-menu-inputfield" placeholder="Choose a group..." readonly>
+                  <input type="hidden" name="createdByGroupId" id="createdByGroupId">
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for group in groups %}
+                            <div onclick="groupDropDownMenuShow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+                        {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -96,12 +99,15 @@
               <h5>Category<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>
-                  {% for key in eventTypeValues %}
-                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                  {% endfor %}
-                </select>
+            <!-- customized drop-down menu for category -->
+              <div class="category-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-category" name="category" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in eventTypeValues %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -113,13 +119,14 @@
                 </div>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="subcategory" id="subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
-                    <option id="subcategory-placeholder" value="" disabled selected>Choose an event subcategory (disabled) ...</option>
-                  {% for key in subcategoriesMap['Athletics'] %}
-                    <option value="{{key}}" id={{key}} title={{key}}>{{key}}</option>
-                  {% endfor %}
-                </select>
+              <div class="subcategory-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory (disabled) ..." readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in subcategoriesMap['Athletics'] %}
+                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -139,17 +146,15 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="timezone" id="timezone" class="form-control w-auto" title="Choose the event timezone..." required>
-                  {% for key, value in timezones.items() %}
-                      {% if key == "US/Central" %}
-                        <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
-                      {% else %}
-                        <option value="{{key}}" id="{{key}}">{{value}}</option>
-                      {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
+               <div class="timezone-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-timezone" name="timezone" placeholder="Choose the event timezone..." class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key, value in timezones.items() %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
+               </div>
             </div>
           </div>
           <!-- startDate -->
@@ -215,6 +220,72 @@
 
           <!-- Script to handle changing header -->
           <script>
+              function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
+                  if(document.getElementById(id).value != idvalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = idvalue
+                  if(document.getElementById(title).value != titlevalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(title).value = titlevalue
+                  document.getElementById(title).classList.add("dropdown-menu-inputfield-selected")
+              }
+              function dropDownMenuShow(id, value) {
+                  if(document.getElementById(id).value != value) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = value
+                  if(document.getElementById('dropdownmenu-category').value != "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = ""
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
+                      {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
+                  }
+                  document.getElementById(id).classList.add("dropdown-menu-inputfield-selected")
+              }
+              class Dropdownmenu {
+                  constructor(selector, display) {
+                      this.menu = document.querySelector(selector)
+                      this.display = display
+                  }
+                  onclick() {
+                     let self = this
+                     this.menu.onclick = function() {
+                         console.log("onclick() click");
+                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                            $(self.display).css({"display": "none"});
+                            return;
+                         } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
+                             console.log("show subcategories");
+                             document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory ..."
+                         }
+
+                         self.menu.classList.toggle('active')
+                         if (self.menu.classList.contains('active')) {
+                             self.menu.children[0].classList.remove("dropdown-menu-inputfield-selected")
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                              $(self.display).css({"display": "block"})
+                         } else {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                              $(self.display).css({"display": "none"})
+                         }
+                     };
+                  }
+              }
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
+              usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
+              usergroupmenu.onclick()
+              categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
+              categorymenu.onclick()
+              timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
+              timezonemenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;
