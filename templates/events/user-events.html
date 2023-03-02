@@ -28,12 +28,34 @@
 {% block content %}
     <div>
     <h5 class="user-group-text">Group</h5>
-    <select name="group" id="group" class="form-control w-auto float-left mt-2" data-style="btn-outline-primary" title="Group...">
-          <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>
-      {% for group in groups %}
-          <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>
-      {% endfor %}
-    </select>
+{#    <select name="group" id="group" class="form-control w-auto float-left mt-2" data-style="btn-outline-primary" title="Group...">#}
+{#          <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>#}
+{#      {% for group in groups %}#}
+{#          <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>#}
+{#      {% endfor %}#}
+{#    </select>#}
+    <div class="user-group-create-menu eventsmanager-create-dropdown-menu">
+      {% if selected_group == 'all' or selected_group == none %}
+          <input type="text" name="group" id="group" class="dropdown-menu-inputfield" placeholder="All Groups" readonly>
+          <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="all">
+      {% else %}
+          {% for group in groups %}
+              {% if selected_group == group['title'] %}
+                <input type="text" name="group" id="group" value="{{group['title']}}" class="dropdown-menu-inputfield" placeholder="{{group['title']}}" readonly>
+                  <input type="hidden" name="createdByGroupId" id="createdByGroupId" value="{{group['id']}}">
+              {% endif %}
+          {% endfor %}
+      {% endif %}
+
+      <div class="dropdown-line"></div>
+      <div class="dropdown-menu-option">
+        <div onclick="groupDropDownMenuShow('group', 'All Groups', 'createdByGroupId', 'all')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> All Groups </div>
+          {% for group in groups %}
+                <div onclick="groupDropDownMenuShow('group', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+            {% endfor %}
+      </div>
+    </div>
+
     <div class="row justify-content-center" style="margin-right:300px">
       <h1>User Events</h1>&nbsp
     </div>
@@ -199,6 +221,55 @@
   {% include 'events/select_status.html' %}
   <script src="..\static\js\user-events.js"></script>
   <script>
+        $(document).on("input keypress paste change", ".dropdown-menu-inputfield", function () {
+            console.log("usergroup change");
+        });
+        function usergroupChange() {
+            console.log("usereventGroupChange");
+            data = document.getElementById('group').value
+            if("all" == document.getElementById('createdByGroupId').value) {
+                data = "all"
+            }
+             $.ajax({
+                url: "{{ url_for('user_events.user_events') }}",
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    group: data,
+                },
+            }).always(function () {
+                location.reload(true);
+            });
+        }
+        function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
+          document.getElementById(id).value = idvalue
+          document.getElementById(title).value = titlevalue
+      }
+      class Dropdownmenu {
+          constructor(selector, display) {
+              this.menu = document.querySelector(selector)
+              this.display = display
+          }
+          onclick() {
+             let self = this
+             this.menu.onclick = function() {
+                 console.log("onclick() click");
+                 self.menu.classList.toggle('active')
+                 if (self.menu.classList.contains('active')) {
+                      Array.from($(self)[0].menu.children)
+                         .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                      $(self.display).css({"display": "block"})
+                 } else {
+                      Array.from($(self)[0].menu.children)
+                         .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                      $(self.display).css({"display": "none"})
+                     usergroupChange()
+                 }
+             };
+          }
+      }
+      usergroupmenu = new Dropdownmenu('.user-group-create-menu', '.usergroup-display-none')
+      usergroupmenu.onclick()
       $( document ).ready(function() {
           const pagination = $(".pagination")
           const left_href = pagination.children(":first").children(":first").attr('href');
