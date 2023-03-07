@@ -112,11 +112,23 @@
             <button id="time-range-reset" type="button" class="btn btn-outline-secondary btn-sm" style="margin-bottom: 3px" onclick="document.getElementById('from').value='';document.getElementById('to').value=''">Reset</button>
         </div>
 
-      <select title="Events Per Page" id="per_page" class="form-control w-auto">
-          {% for key in page_config %}
-              <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>
-          {% endfor %}
-      </select>
+{#      <select title="Events Per Page" id="per_page" class="form-control w-auto">#}
+{#          {% for key in page_config %}#}
+{#              <option value = "{{key}}"{% if per_page == key %}selected{% endif %}>{{key}}</option>#}
+{#          {% endfor %}#}
+{#      </select>#}
+
+      <div class="perpage-create-menu eventsmanager-perpage-dropdown-menu">
+        <input type="text" id="per_page" name="per_page" value='{{ per_page }}' class="form-control dropdown-menu-inputfield" placeholder="Choose events per page" readonly>
+          <div class="dropdown-line"></div>
+          <div class="dropdown-menu-option">
+              {% for key in page_config %}
+                    <div onclick="dropDownMenuShow('per_page', '{{key}}')" class="perpage-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+              {% endfor %}
+          </div>
+       </div>
+    </div>
+
       <span title="Events Per Page" style="margin-top: 5px">Events Per Page</span>
       </div>
     <!-- comment out search GUI
@@ -221,6 +233,9 @@
   {% include 'events/select_status.html' %}
   <script src="..\static\js\user-events.js"></script>
   <script>
+          function dropDownMenuShow(id, value) {
+              document.getElementById(id).value = value
+          }
         $(document).on("input keypress paste change", ".dropdown-menu-inputfield", function () {
             console.log("usergroup change");
         });
@@ -233,6 +248,19 @@
                 type: 'POST',
                 data: {
                     group: data,
+                },
+            }).always(function () {
+                location.reload(true);
+            });
+        }
+        function perpageChange() {
+            console.log("per page change");
+            $.ajax({
+                url: "{{ url_for('user_events.user_events') }}",
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    per_page: document.getElementById('per_page').value,
                 },
             }).always(function () {
                 location.reload(true);
@@ -260,13 +288,21 @@
                       Array.from($(self)[0].menu.children)
                          .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
                       $(self.display).css({"display": "none"})
-                     usergroupChange()
+                     {#usergroupChange()#}
+                     if (self.menu.classList.contains('perpage-create-menu')) {
+                         perpageChange()
+                     }
+                     if (self.menu.classList.contains('user-group-create-menu')) {
+                         usergroupChange()
+                     }
                  }
              };
           }
       }
       usergroupmenu = new Dropdownmenu('.user-group-create-menu', '.usergroup-display-none')
       usergroupmenu.onclick()
+      perpagemenu = new Dropdownmenu('.perpage-create-menu', '.perpage-display-none')
+      perpagemenu.onclick()
       $( document ).ready(function() {
           const pagination = $(".pagination")
           const left_href = pagination.children(":first").children(":first").attr('href');

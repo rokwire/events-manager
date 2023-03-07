@@ -680,6 +680,12 @@ input[type="checkbox"]:checked::before {
   height:50px;
 }
 
+.eventsmanager-perpage-dropdown-menu {
+  position: relative;
+  width: 55px;
+  height:50px;
+}
+
 .eventsmanager-dropdown-menu input {
   cursor: pointer;
 }
@@ -706,6 +712,17 @@ input[type="checkbox"]:checked::before {
     right: 10px;
 }
 
+.eventsmanager-perpage-dropdown-menu::before {
+    content:"";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-color: #ff552e transparent transparent transparent;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
 .eventsmanager-dropdown-menu .dropdown-menu-option {
   cursor: pointer;
 }
@@ -717,6 +734,11 @@ input[type="checkbox"]:checked::before {
 
 .user-group-create-menu.active::before {
   top:45px;
+  transform: rotate(-180deg);
+}
+
+.perpage-create-menu.active::before {
+  top:5px;
   transform: rotate(-180deg);
 }
 
