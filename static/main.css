@@ -562,6 +562,7 @@ h5 {
   color: #404040;
   border: solid 1px #002855;
   background-color: #fff;
+  border-radius: 0;
 }
 
 .add-a-contact {
