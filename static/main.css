@@ -771,3 +771,7 @@ select#subcategory {
 .dropdown-menu-inputfield-selected {
   color: #002855 !important;
 }
+
+.eventsmanager-flash {
+  top: 59px;
+}
