@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
 - Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
 - Fix the mouse shape to be pointer when hovering on buttons. [#1059](https://github.com/rokwire/events-manager/issues/1042)
+- Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
 - Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
 - Update the hover and focus style of all buttons. Refactored and cleaned unused styles. [#1048](https://github.com/rokwire/events-manager/issues/1048)
+- Update the style of modals/pop-up windows. [#1054](https://github.com/rokwire/events-manager/issues/1054)
 - Update the style of reset button. [#1061](https://github.com/rokwire/events-manager/issues/1061)
 
 ### Added
