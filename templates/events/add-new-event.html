@@ -364,7 +364,7 @@
               <h5>Contacts </h5>
             </div>
             <div class="col-sm-9">
-              <span role="button" class="add-a-contact add-one btn">Add Contact <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
+              <span role="button" class="add-a-contact add-one btn" onmouseleave="changeNextImage(this, `orange`)" onmouseover="changeNextImage(this, `white`)">Add Contact <img onmouseleave="changeImage(this, `orange`)" onmouseover="changeImage(this, `white`)" src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
             </div>
           </div>
 
@@ -574,6 +574,24 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
    <script>
+   function changeImage(element, img) {
+       if (img === "white")
+            element.src="{{url_for('static',filename = 'icon-add-white.svg')}}";
+       if (img === "orange")
+           element.src = "{{url_for('static',filename = 'icon-add.svg')}}";
+   }
+   function changeNextImage(element, img) {
+       console.log($(element).find('.icon-add'));
+       if (img === "white")
+            $(element).find('.icon-add').attr("src", "{{url_for('static',filename = 'icon-add-white.svg')}}");
+       if (img === "orange")
+            $(element).find('.icon-add').attr("src", "{{url_for('static',filename = 'icon-add.svg')}}");
+   }
+   const elements = document.getElementsByClassName("icon-add");
+   for (let i = 0; i < elements.length; i++) {
+       elements[i].addEventListener('mouseover', changeImage, false);
+   }
+
     var quill = new Quill('#htmlDescription', {
       modules: {
         toolbar: [
