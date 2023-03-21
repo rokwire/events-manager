@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
 - Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
 - Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
+- Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
