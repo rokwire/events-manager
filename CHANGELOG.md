@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
 - Fix the mouse shape to be pointer when hovering on buttons. [#1059](https://github.com/rokwire/events-manager/issues/1042)
 - Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
+- Fix the required fields validation when creating a new user event. [#1072](https://github.com/rokwire/events-manager/issues/1072)
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
