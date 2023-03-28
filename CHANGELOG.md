@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
 - Fix the required fields validation when creating a new user event. [#1072](https://github.com/rokwire/events-manager/issues/1072)
 - Fix the style of add icon. [#1041](https://github.com/rokwire/events-manager/issues/1041)
+- Fix Detect secrets GitHub action build error and updated baseline. [#1070](https://github.com/rokwire/events-manager/issues/1070)
+
 
 ### Changed
 - Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
