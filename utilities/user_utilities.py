@@ -413,7 +413,7 @@ def publish_user_event(eventId):
                                        data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
                 if result.status_code != 200:
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                    __logger.error('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                    __logger.error(result.reason + " fail to get group building block {} ".format(result.status_code))
                     return False
                 # else:
                 #     flash('successfully post event id to group building block!')
