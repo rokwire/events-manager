@@ -781,6 +781,10 @@ select#subcategory {
   color: #002855 !important;
 }
 
+.eventsmanager-flash {
+  top: 59px;
+}
+
 input[dropdown-readonly] {
   pointer-events: none;
 }
