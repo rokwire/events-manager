@@ -27,14 +27,20 @@
 {% endblock %}
 {% block content %}
     <div>
-    <h5 class="user-group-text">Group</h5>
+    <div class="row justify-content-center" style="margin-right:300px">
+    <div class="col form-check">
+{#            <h5 class="user-group-text">Group</h5>#}
+            <div class="form-check form-check-inline">
+          <label class="form-check-label" for="materialInline1"><h5> Group </h5></label>
+        </div>
+    <div class="form-check form-check-inline align-middle">
 {#    <select name="group" id="group" class="form-control w-auto float-left mt-2" data-style="btn-outline-primary" title="Group...">#}
 {#          <option value="all" {% if selected_group == 'all' %}selected{% endif %}>All Groups</option>#}
 {#      {% for group in groups %}#}
 {#          <option value="{{group['id']}}" id={{group['id']}} {% if selected_group == group['id'] %}selected{% endif %}>{{group['title']}}</option>#}
 {#      {% endfor %}#}
 {#    </select>#}
-    <div class="user-group-create-menu eventsmanager-create-dropdown-menu">
+    <div class="eventsmanager-create-dropdown-menu user-group-create-menu">
       {% if selected_group == 'all' or selected_group == none %}
           <input type="text" name="createdByGroupId" id="createdByGroupId" class="dropdown-menu-inputfield" placeholder="All Groups" readonly>
           <input type="hidden" name="group" id="group" value="all">
@@ -55,11 +61,13 @@
             {% endfor %}
       </div>
     </div>
-
-    <div class="row justify-content-center" style="margin-right:300px">
+    </div>
+    <div class="form-check form-check-inline align-middle left-title">
       <h1>User Events</h1>&nbsp
     </div>
     </div>
+    </div>
+
     <!-- filter and select operations -->
     <div class="row justify-content-around">
       <!--  checkbox group -->

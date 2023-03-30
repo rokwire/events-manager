@@ -708,7 +708,7 @@ input[type="checkbox"]:checked::before {
     border: 7px solid transparent;
     border-color: #ff552e transparent transparent transparent;
     position: absolute;
-    top: 50px;
+    top: 16px;
     right: 10px;
 }
 
@@ -733,7 +733,7 @@ input[type="checkbox"]:checked::before {
 }
 
 .user-group-create-menu.active::before {
-  top:45px;
+  top:6px;
   transform: rotate(-180deg);
 }
 
@@ -814,4 +814,8 @@ select#subcategory {
 
 .dropdown-menu-inputfield-selected {
   color: #002855 !important;
+}
+
+.left-title {
+  left:150px;
 }
