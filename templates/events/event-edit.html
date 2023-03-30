@@ -212,7 +212,7 @@
               <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="text" id="title" name="title" value="{{post.title}}" required/>
+              <input class="form-control text-input-field" type="text" id="title" name="title" value="{{post.title}}" placeholder="Add a title that describes the event in a few words." required/>
             </div>
           </div>
 
@@ -224,7 +224,7 @@
                 <h5>Event URL </h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" placeholder="Link to additional event information"/>
+                <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" value="{{post.titleURL}}" placeholder="If there is a URL with additional event information, add it here."/>
               </div>
             </div>
           {% else %}
@@ -233,7 +233,7 @@
               <h5>Event URL </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
+              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="If there is a URL with additional event information, add it here."/>
             </div>
           </div>
           {% endif %}
@@ -246,7 +246,7 @@
             <div class="col-sm-9">
             <!-- customized drop-down menu for category -->
               <div class="category-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." readonly>
+                <input type="text" id="dropdownmenu-category" name="category" value="{{post.category}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category" readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key in eventTypeValues %}
@@ -264,7 +264,7 @@
               </div>
               <div class="col-sm-9">
                   <div class="subcategory-menu eventsmanager-dropdown-menu">
-                    <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory..." readonly>
+                    <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory." readonly>
                       <div class="dropdown-line"></div>
                       <div class="dropdown-menu-option">
                           {% for key in subcategoriesMap['Athletics'] %}
@@ -297,7 +297,7 @@
             </div>
             <div class="col-sm-9">
                <div class="timezone-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                <input type="text" id="dropdownmenu-timezone" name="timezone" value="{{post.timezone}}" class="form-control dropdown-menu-inputfield" placeholder="Choose the event's time zone." readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key, value in timezones.items() %}
@@ -495,7 +495,7 @@
               <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" id="location" name="location" type="text"
+              <input class="form-control text-input-field" id="location" name="location" type="text" placeholder="Add the event location's complete address or a description of the location."
               {% if post.isInPerson == True %}value="{{post.location.description}}"{% endif %}/>
             </div>
           </div>
@@ -752,7 +752,7 @@
               <h5>Tags </h5>
             </div>
                 <div class="col-sm-9">
-                    <input id="tags" name="tags" class="form-control text-input-field" type="text" value="{{ tags_text }}">
+                    <input id="tags" name="tags" class="form-control text-input-field" type="text" value="{{ tags_text }}" placeholder="Start typing to select and add one or more keyword tags related to this event.">
                 </div>
           </div>
 
@@ -763,7 +763,7 @@
                 <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor" value="{{post.sponsor}}" />
+                <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor" value="{{post.sponsor}}" placeholder="Add the name of the person or organization conducting this event." />
               </div>
             </div>
           {% else %}
@@ -772,7 +772,7 @@
                 <h5>Sponsor </h5>
               </div>
               <div class="col-sm-9">
-                <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor"/>
+                <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor" placeholder="Add the name of the person or organization conducting this event."/>
               </div>
             </div>
           {% endif %}
@@ -797,7 +797,7 @@
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
-                  <label id="custom-file-label" class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
+                  <label id="custom-file-label" class="custom-file-label" for="file">Choose an image (Max file size {{ size_limit }} MB).)</label>
                 </div>
                 <div class="input-group-append">
                   {% if image %}
@@ -863,7 +863,7 @@
               <h5>Registration URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Add a link to the event registration page (if any)."/>
             </div>
           </div>
           {% endif %}
@@ -875,7 +875,7 @@
                 <h5>Registration Label</h5>
               </label>
               <div class="col-sm-9">
-                <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" value="{{post.registrationLabel}}" placeholder="Register Here!"/>
+                <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" value="{{post.registrationLabel}}" placeholder="Add a text label to display on the event registration button (e.g., Register Here!)."/>
               </div>
             </div>
           {% else %}
@@ -884,7 +884,7 @@
               <h5>Registration Label</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Add a text label to display on the event registration button (e.g., Register Here!)."/>
             </div>
           </div>
           {% endif %}
@@ -892,7 +892,7 @@
           <!-- freeEvent -->
           <div class="form-group row" id="displayOnlyWithSuperEventBox">
             <div class="col-12 col-sm-2">
-              <h5>Display Only with Super Event</h5>
+              <h5>Display Only as Part of a Super Event.</h5>
             </div>
             <div class="col-sm-1">
                {% if post.displayOnlyWithSuperEvent == True %}
@@ -937,7 +937,7 @@
 
               <div class="col-sm-9">
                 <span role="button" class="add-a-contact add-sub btn" id="addsub">Link Sub-Event <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
-                <label for="addsub">Enter a keyword of the subevent title, and select this subevent from the dropdown list</label><br><br>
+                <label for="addsub">Add one or more sub-events (e.g., separate sessions in a conference) to this super event.</label><br><br>
               </div>
             </div>
           </div>
@@ -945,14 +945,14 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control text-input-field search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
+                            <input class="form-control text-input-field search-id" id="sub-id" name="name" type="text" placeholder="Search sub-events by title." />
                             <input class="form-control text-input-field" type="hidden" name="id" placeholder=''>
                             <input class="form-control text-input-field" type="hidden" name="eventId" placeholder=''>
                             <input class="form-control text-input-field" type="hidden" name="status" placeholder=''>
                       </div>
 
                       <div class="col-sm-3 form-group" >
-                        <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track"/>
+                        <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track (e.g., a session track)."/>
                       </div>
 
                       <div class="form-group dropdown show">
@@ -977,7 +977,7 @@
                             <div class = "form-group row" >
                                   <div class="form-group col-sm-3 offset-sm-2">
                                         {% if sub.name %}
-                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" value="{{sub.name}}" />
+                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Search sub-events by words in the title." value="{{sub.name}}" />
                                             <input type="hidden" name="id" value="{{sub.id}}"/>
                                             {% if sub.eventId %}
                                             <input type="hidden" name="eventId" value="{{sub.eventId}}"/>
@@ -991,15 +991,15 @@
                                             <input type="hidden" name="status" value=""/>
                                             {% endif %}
                                         {% else %}
-                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Enter a keyword of subevent title, and select the subevent from the dropdown list" />
+                                            <input class="form-control search-id" id="sub-id" name="name" type="text" placeholder="Search sub-events by words in the title." />
                                         {% endif %}
                                   </div>
 
                                   <div class="col-sm-3 form-group" >
                                     {% if sub.track %}
-                                    <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track" value="{{sub.track}}"/>
+                                    <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track (e.g., a conference session track)." value="{{sub.track}}"/>
                                     {% else %}
-                                    <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track"/>
+                                    <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track (e.g., a conference session track)."/>
                                     {% endif %}
                                   </div>
 
@@ -1071,7 +1071,7 @@
             [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         ]
       },
-      placeholder: 'Please add a description...',
+      placeholder: 'Add a detailed event description, including as many details as possible.',
       theme: 'snow'  // or 'bubble'
     });
 
