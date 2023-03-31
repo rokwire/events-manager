@@ -680,7 +680,19 @@ input[type="checkbox"]:checked::before {
 .eventsmanager-dropdown-menu {
   position: relative;
   width: 300px;
-  height:50px;
+  height:44px;
+}
+
+.eventsmanager-create-dropdown-menu {
+  position: relative;
+  width: 250px;
+  height:44px;
+}
+
+.eventsmanager-perpage-dropdown-menu {
+  position: relative;
+  width: 55px;
+  height:44px;
 }
 
 .eventsmanager-dropdown-menu input {
@@ -698,12 +710,44 @@ input[type="checkbox"]:checked::before {
     right: 10px;
 }
 
+.eventsmanager-create-dropdown-menu::before {
+    content:"";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-color: #ff552e transparent transparent transparent;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+
+.eventsmanager-perpage-dropdown-menu::before {
+    content:"";
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-color: #ff552e transparent transparent transparent;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+}
+
 .eventsmanager-dropdown-menu .dropdown-menu-option {
   cursor: pointer;
 }
 
 .user-group-menu.active::before {
   top:9px;
+  transform: rotate(-180deg);
+}
+
+.user-group-create-menu.active::before {
+  top:10px;
+  transform: rotate(-180deg);
+}
+
+.perpage-create-menu.active::before {
+  top:7px;
   transform: rotate(-180deg);
 }
 
@@ -779,6 +823,10 @@ select#subcategory {
 
 .dropdown-menu-inputfield-selected {
   color: #002855 !important;
+}
+
+.left-title {
+  left:150px;
 }
 
 .eventsmanager-flash {

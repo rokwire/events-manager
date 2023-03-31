@@ -31,9 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
 - Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
 - Update the hover and focus style of all buttons. Refactored and cleaned unused styles. [#1048](https://github.com/rokwire/events-manager/issues/1048)
+- Update the dropdown menu on user list page. [#1063](https://github.com/rokwire/events-manager/issues/1063)
 - Update the style of modals/pop-up windows. [#1054](https://github.com/rokwire/events-manager/issues/1054)
 - Update the style of reset button. [#1061](https://github.com/rokwire/events-manager/issues/1061)
 - Update the placeholder for user events. [#1062](https://github.com/rokwire/events-manager/issues/1062)
+
 
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
