@@ -829,6 +829,10 @@ select#subcategory {
   left:150px;
 }
 
+.eventsmanager-flash {
+  top: 59px;
+}
+
 input[dropdown-readonly] {
   pointer-events: none;
 }

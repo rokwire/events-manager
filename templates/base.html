@@ -71,9 +71,9 @@
     </header>
 
     {% for message in get_flashed_messages() %}
-        <div class="flash alert alert-primary" role="alert">
-  {{ message }}
-</div>
+        <div class="flash alert alert-danger eventsmanager-flash" role="alert">
+            {{ message }}
+        </div>
     {% endfor %}
 
     {% block modals %}
