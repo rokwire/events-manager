@@ -36,8 +36,8 @@
              <label class="col-12 col-form-label"><center>You are about to add this event. </center></label>
          </div>
          <div class="offset-md-2 col-md-10">
-             <button type="button" class="white-background-button" data-dismiss="modal">Cancel</button>
-             <button type="submit" class="orange-background-button">Confirm</button>
+             <button type="button" class="btn btn-secondary btn-sm-1" data-dismiss="modal">Cancel</button>
+             <button type="submit" class="btn btn-primary btn-sm-1">Confirm</button>
          </div>
        </div>
      </div>
@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-9">
               <div class="user-group-menu eventsmanager-dropdown-menu">
-                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group..." class="form-control  dropdown-menu-inputfield" placeholder="Choose a group..." required dropdown-readonly>
+                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group for this event." class="form-control  dropdown-menu-inputfield" placeholder="Choose a group for this event." readonly>
                   <input type="hidden" name="createdByGroupId" id="createdByGroupId">
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
@@ -81,7 +81,7 @@
               <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="text" id="title" name="title" required/>
+              <input class="form-control text-input-field" type="text" id="title" name="title" placeholder="Add a title that describes the event in a few words." required/>
             </div>
           </div>
           <!-- event url -->
@@ -90,7 +90,7 @@
               <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
+              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="If there is a URL with additional event information, add it here."/>
             </div>
           </div>
           <!-- event category -->
@@ -101,7 +101,7 @@
             <div class="col-sm-9">
             <!-- customized drop-down menu for category -->
               <div class="category-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-category" name="category" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category..." required dropdown-readonly>
+                <input type="text" id="dropdownmenu-category" name="category" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category" readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key in eventTypeValues %}
@@ -120,7 +120,7 @@
             </div>
             <div class="col-sm-9">
               <div class="subcategory-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose an event subcategory (disabled) ..." readonly>
+                <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory (disabled)." readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key in subcategoriesMap['Athletics'] %}
@@ -147,7 +147,7 @@
             </div>
             <div class="col-sm-9">
                <div class="timezone-menu eventsmanager-dropdown-menu">
-                <input type="text" id="dropdownmenu-timezone" name="timezone" placeholder="Choose the event timezone..." class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" required dropdown-readonly>
+                <input type="text" id="dropdownmenu-timezone" name="timezone" placeholder="Choose the event's time zone." class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
                       {% for key, value in timezones.items() %}
@@ -214,7 +214,7 @@
               <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" id="location" name="location" type="text"/>
+              <input class="form-control text-input-field" id="location" name="location" type="text" placeholder="Add the event location's complete address or a description of the location."/>
             </div>
           </div>
 
@@ -409,7 +409,7 @@
               <h5>Tags </h5>
             </div>
                 <div class="col-sm-9">
-                    <input id="tags" name="tags" class="form-control text-input-field" type="text">
+                    <input id="tags" name="tags" class="form-control text-input-field" type="text" placeholder="Start typing to select and add one or more keyword tags related to this event.">
                 </div>
           </div>
 
@@ -419,7 +419,7 @@
               <h5>Sponsor </h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor"/>
+              <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor" placeholder="Add the name of the person or organization conducting this event. "/>
             </div>
           </div>
 
@@ -443,7 +443,7 @@
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
-                  <label class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
+                  <label class="custom-file-label" for="file">Choose an image (Max file size {{ size_limit }} MB).</label>
                 </div>
                 <div class="input-group-append">
                   <button title="Delete event image" class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
@@ -466,7 +466,7 @@
               <h5>Registration URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Add a link to the event registration page (if any)."/>
             </div>
           </div>
 
@@ -476,7 +476,7 @@
               <h5>Registration Label</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Add a text label to display on the event registration button (e.g., Register Here!)."/>
             </div>
           </div>
 
@@ -581,7 +581,7 @@
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         ]
       },
-      placeholder: 'Please add a description...',
+      placeholder: 'Add a detailed event description, including as many details as possible.',
       theme: 'snow'  // or 'bubble'
     });
 
