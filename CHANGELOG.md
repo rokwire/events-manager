@@ -63,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
 - Update the GUI of the campus calendar listing page. [#972](https://github.com/rokwire/events-manager/issues/972)
 
+
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
 - Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
@@ -463,7 +464,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - References to AWS keys and variables.
-
 
 
 [Unreleased]: https://github.com/rokwire/events-manager/compare/3.5.0...HEAD
