@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [3.5.0] - 2023-04-02
 ### Fixed
 - Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
 - Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
@@ -464,7 +466,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.4.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.5.0...HEAD
+[3.5.0]: https://github.com/rokwire/events-manager/compare/3.4.1...3.5.0
 [3.4.0]: https://github.com/rokwire/events-manager/compare/3.3.1...3.4.0
 [3.3.1]: https://github.com/rokwire/events-manager/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/rokwire/events-manager/compare/3.2.0...3.3.0
