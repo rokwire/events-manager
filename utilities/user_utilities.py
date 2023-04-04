@@ -415,6 +415,7 @@ def publish_user_event(eventId):
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                     __logger.error(result.reason + " fail to get group building block {} ".format(result.status_code))
                     return False
+
                 # else:
                 #     flash('successfully post event id to group building block!')
 
