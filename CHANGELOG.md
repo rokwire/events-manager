@@ -8,19 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [3.5.0] - 2023-04-02
-### Fixed
-- Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
-- Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
-- Fix the height of Create Event button. [#1021](https://github.com/rokwire/events-manager/issues/1021)
-- Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
-- Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
-- Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
-- Fix flash message and group building block failure. [#1075](https://github.com/rokwire/events-manager/pull/1075)
-- Fix the mouse shape to be pointer when hovering on buttons. [#1059](https://github.com/rokwire/events-manager/issues/1042)
-- Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
-- Fix the required fields validation when creating a new user event. [#1072](https://github.com/rokwire/events-manager/issues/1072)
-- Fix the style of add icon. [#1041](https://github.com/rokwire/events-manager/issues/1041)
-- Fix Detect secrets GitHub action build error and updated baseline. [#1070](https://github.com/rokwire/events-manager/issues/1070)
+### Added
+- Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
+- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
+- Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
+- Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
+- Add the version to footer. [#988](https://github.com/rokwire/events-manager/issues/988)
+- Add the syle to the dropdown menu in user event create page. [#1039](https://github.com/rokwire/events-manager/issues/1039)
 
 
 ### Changed
@@ -38,14 +32,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of reset button. [#1061](https://github.com/rokwire/events-manager/issues/1061)
 - Update the placeholder for user events. [#1062](https://github.com/rokwire/events-manager/issues/1062)
 
+### Fixed
+- Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
+- Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
+- Fix the height of Create Event button. [#1021](https://github.com/rokwire/events-manager/issues/1021)
+- Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
+- Fix flash message and group building block failure. [#1075](https://github.com/rokwire/events-manager/pull/1075)
+- Fix the mouse shape to be pointer when hovering on buttons. [#1059](https://github.com/rokwire/events-manager/issues/1042)
+- Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
+- Fix the required fields validation when creating a new user event. [#1072](https://github.com/rokwire/events-manager/issues/1072)
+- Fix the style of add icon. [#1041](https://github.com/rokwire/events-manager/issues/1041)
+- Fix Detect secrets GitHub action build error and updated baseline. [#1070](https://github.com/rokwire/events-manager/issues/1070)
 
-### Added
-- Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
-- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
-- Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
-- Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
-- Add the version to footer. [#988](https://github.com/rokwire/events-manager/issues/988)
-- Add the syle to the dropdown menu in user event create page. [#1039](https://github.com/rokwire/events-manager/issues/1039)
+
 
 ## [3.4.0] - 2022-10-27
 ### Added
