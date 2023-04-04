@@ -37,12 +37,14 @@
   <body>
     <header class="sitebar">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="https://illinois.edu">
         <img src="{{url_for('static',filename = 'block-i-white-orange.png')}}">
       </a>
-      <h1 class="events-manager-navbar-title">
-          Events Manager
-      </h1>
+      <a class="events-manager-navbar-title-link" href="{{ url_for('home.home') }}">
+          <h1 class="events-manager-navbar-title">
+              Events Manager
+          </h1>
+      </a>
         <div class="container" style="justify-content: flex-start;">
       {% block create_event %}{% endblock %}
         </div>
@@ -59,13 +61,9 @@
             </div>
           {% endif %} -->
           <div ><span class="text-light text-nowrap">Hello, {{ g.user["username"] }}</span></div>
-            <div class="logout-button">
-                <a role="button" class="login-logout-text Button-Primary-center" href="{{ url_for('auth.logout') }}">Logout</a>
-            </div>
+            <a role="button" class="login-logout-button white-background-button" href="{{ url_for('auth.logout') }}">Logout</a>
         {% else %}
-            <div class="login-button">
-                <a role="button" class="login-logout-text Button-Primary-center" href="{{ url_for('auth.login') }}">Login</a>
-            </div>
+            <a role="button" class="login-logout-button white-background-button" href="{{ url_for('auth.login') }}">Login</a>
         {% endif %}
 
         </div>
@@ -73,9 +71,9 @@
     </header>
 
     {% for message in get_flashed_messages() %}
-        <div class="flash alert alert-primary" role="alert">
-  {{ message }}
-</div>
+        <div class="flash alert alert-danger eventsmanager-flash" role="alert">
+            {{ message }}
+        </div>
     {% endfor %}
 
     {% block modals %}
@@ -155,5 +153,24 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     {% endblock %}
   </body>
-<div class="footer">  </div>
+<div class="footer">
+    <img src="{{ url_for('static', filename='powered-by-rokwire-no-i-block.svg') }}"
+     class="powered-by-rokwire-no-i-block" alt="powered by rokwire">
+    <div class='footer-wrapper'>
+        <span class="footer-text version">
+          Version {{ get_version() }}
+        </span>
+        <span class="footer-text copyright">
+          Copyright 2022
+        </span>
+        <a href="https://www.vpaa.uillinois.edu/resources/web_privacy" class="privacy-policy">
+          Privacy Policy
+        </a>
+    </div>
+</div>
+<style>
+    :root {
+        --background-url: url('{{ url_for('static', filename='icon-selected.svg', _external=True) }}');
+    }
+</style>
 </html>

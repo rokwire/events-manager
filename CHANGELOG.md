@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] - 2023-04-02
+### Added
+- Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
+- Update the style of the settings page in the campus event. [#994](https://github.com/rokwire/events-manager/issues/994)
+- Update the style for buttons on add new event page. [#996](https://github.com/rokwire/events-manager/issues/996)
+- Update the style for white background buttons on hover. [#1006](https://github.com/rokwire/events-manager/issues/1006)
+- Add the version to footer. [#988](https://github.com/rokwire/events-manager/issues/988)
+- Add the syle to the dropdown menu in user event create page. [#1039](https://github.com/rokwire/events-manager/issues/1039)
+- Update the style of buttons on the event detail page. [#984](https://github.com/rokwire/events-manager/issues/984)
+- Add elements to the footer. [#969](https://github.com/rokwire/events-manager/issues/969)
+- Update the GUI of the campus calendar listing page. [#972](https://github.com/rokwire/events-manager/issues/972)
+
+### Changed
+- Change the GUI of text input field box. [#991](https://github.com/rokwire/events-manager/issues/991)
+- Update the style of pagination in user event listing page. [#989](https://github.com/rokwire/events-manager/issues/989)
+- Update the home page icon and events manager hyperlink redirection. [#1008](https://github.com/rokwire/events-manager/issues/1008)
+- Update Login and Logout button. [#1009](https://github.com/rokwire/events-manager/issues/1009)
+- Update the buttons in the user event edit page. [#1013](https://github.com/rokwire/events-manager/issues/1013)
+- Update the publish button and pending button on the campus event detail page. [#1014](https://github.com/rokwire/events-manager/issues/1014)
+- Update the style of the "Link a Sub-Event" button. [#1015](https://github.com/rokwire/events-manager/issues/1015)
+- Update the style of all checkboxes. [#1022](https://github.com/rokwire/events-manager/issues/1022)
+- Update the hover and focus style of all buttons. Refactored and cleaned unused styles. [#1048](https://github.com/rokwire/events-manager/issues/1048)
+- Update the dropdown menu on user list page. [#1063](https://github.com/rokwire/events-manager/issues/1063)
+- Update the style of modals/pop-up windows. [#1054](https://github.com/rokwire/events-manager/issues/1054)
+- Update the style of reset button. [#1061](https://github.com/rokwire/events-manager/issues/1061)
+- Update the placeholder for user events. [#1062](https://github.com/rokwire/events-manager/issues/1062)
+- Change font size and color for text.[#975](https://github.com/rokwire/events-manager/issues/975)
+
+### Fixed
+- Fix the color of publish, pending and hide the past. [#995](https://github.com/rokwire/events-manager/issues/995)
+- Fix the style of badge and checkbox of the filter. [#1011](https://github.com/rokwire/events-manager/issues/1011)
+- Fix the height of Create Event button. [#1021](https://github.com/rokwire/events-manager/issues/1021)
+- Fix the hover text decoration and color of Edit button in the event detail page. [#1023](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the scheduler to take the input from setting page. [#1030](https://github.com/rokwire/events-manager/issues/1023)
+- Fix the display of the orange line under the dropdown menu. [#1042](https://github.com/rokwire/events-manager/issues/1042)
+- Fix flash message and group building block failure. [#1075](https://github.com/rokwire/events-manager/pull/1075)
+- Fix the mouse shape to be pointer when hovering on buttons. [#1059](https://github.com/rokwire/events-manager/issues/1042)
+- Fix the round corners for the input text fields. [#1060](https://github.com/rokwire/events-manager/issues/1060)
+- Fix the required fields validation when creating a new user event. [#1072](https://github.com/rokwire/events-manager/issues/1072)
+- Fix the style of add icon. [#1041](https://github.com/rokwire/events-manager/issues/1041)
+- Fix Detect secrets GitHub action build error and updated baseline. [#1070](https://github.com/rokwire/events-manager/issues/1070)
+
+
+
 ## [3.4.0] - 2022-10-27
 ### Added
 - Add title attribute "Events per page" to page number drop down list. [#939](https://github.com/rokwire/events-manager/issues/939)
@@ -20,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the style of create event button. [#967](https://github.com/rokwire/events-manager/issues/967)
 - Update the style of the footer. [#968](https://github.com/rokwire/events-manager/issues/968)
 
+
 ### Fixed
 - Fix that the header is not in the correct hierarchy. [#940](https://github.com/rokwire/events-manager/issues/940)
 - Fix config.py env. [#955](https://github.com/rokwire/events-manager/issues/955)
@@ -28,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix that the screen reader is not able to read options of the dropdown lists as user navigates. [#961](https://github.com/rokwire/events-manager/issues/961)
 - Fix the issue that hours and seconds will be displayed for all day events in calendar events. [#958](https://github.com/rokwire/events-manager/issues/958)
 - Set the empty location description if the user event is physical event and no location provided. [#981](https://github.com/rokwire/events-manager/issues/981)
+
 ### Changed
 - Change the CSS class names to match the HTML controls. [#973](https://github.com/rokwire/events-manager/issues/973)
 
@@ -420,8 +466,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.4.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.5.0...HEAD
+[3.5.0]: https://github.com/rokwire/events-manager/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/rokwire/events-manager/compare/3.3.1...3.4.0
 [3.3.1]: https://github.com/rokwire/events-manager/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/rokwire/events-manager/compare/3.2.0...3.3.0

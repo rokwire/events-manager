@@ -50,7 +50,7 @@
   <!-- back to all events button -->
   <form id = "form" action = "{{url_for('user_events.add_new_event')}}" method="POST" enctype="multipart/form-data">
   <div class="media">
-    <a class="btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
+    <a class="grey-background-button btn btn-dark" href="{{ url_for('user_events.user_events') }}" role="button">Back To All Events</a>
   </div>
   <!-- form inputs -->
      <article class="media content-section">
@@ -63,12 +63,15 @@
               <h5>Group<span style="color: red">*</span> </h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                  <select name="createdByGroupId" id="createdByGroupId" class="form-control w-auto" title="Choose a group..." data-width="fit-content" required >
-                  {% for group in groups %}
-                      <option value="{{group['id']}}" id={{group['id']}}>{{group['title']}}</option>
-                  {% endfor %}
-                  </select>
+              <div class="user-group-menu eventsmanager-dropdown-menu">
+                  <input type="text" name="createdByGroupTitle" id="createdByGroupTitle" title="Choose a group for this event." class="form-control  dropdown-menu-inputfield" placeholder="Choose a group for this event." readonly>
+                  <input type="hidden" name="createdByGroupId" id="createdByGroupId">
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for group in groups %}
+                            <div onclick="groupDropDownMenuShow('createdByGroupTitle', '{{group['title']}}', 'createdByGroupId', '{{group['id']}}')" class="usergroup-display-none dropdown-menu-option-item menu-item-text"> {{group['title']}} </div>
+                        {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -78,7 +81,7 @@
               <h5>Event Title<span style="color: red">*</span> </h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="title" name="title" required/>
+              <input class="form-control text-input-field" type="text" id="title" name="title" placeholder="Add a title that describes the event in a few words." required/>
             </div>
           </div>
           <!-- event url -->
@@ -87,7 +90,7 @@
               <h5>Event URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="titleURL" name="titleURL" placeholder="Link to additional event information"/>
+              <input class="form-control text-input-field" type="url" id="titleURL" name="titleURL" placeholder="If there is a URL with additional event information, add it here."/>
             </div>
           </div>
           <!-- event category -->
@@ -96,12 +99,15 @@
               <h5>Category<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="category" id = "category" class="form-control w-auto" title="Choose an event category..." data-width="fit-content" required>
-                  {% for key in eventTypeValues %}
-                    <option value = "{{key}}" id = {{key}}>{{key}}</option>
-                  {% endfor %}
-                </select>
+            <!-- customized drop-down menu for category -->
+              <div class="category-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-category" name="category" class="form-control dropdown-menu-inputfield" placeholder="Choose an event category" readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in eventTypeValues %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-category', '{{key}}')" class="category-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -113,13 +119,14 @@
                 </div>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="subcategory" id="subcategory" class="form-control w-auto" title="Choose an event subcategory (disabled) ..." data-width="fit-content" disabled>
-                    <option id="subcategory-placeholder" value="" disabled selected>Choose an event subcategory (disabled) ...</option>
-                  {% for key in subcategoriesMap['Athletics'] %}
-                    <option value="{{key}}" id={{key}} title={{key}}>{{key}}</option>
-                  {% endfor %}
-                </select>
+              <div class="subcategory-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory (disabled)." readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key in subcategoriesMap['Athletics'] %}
+                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
               </div>
             </div>
           </div>
@@ -139,17 +146,15 @@
               <h5>Time Zone<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-9">
-              <div class="form-group">
-                <select name="timezone" id="timezone" class="form-control w-auto" title="Choose the event timezone..." required>
-                  {% for key, value in timezones.items() %}
-                      {% if key == "US/Central" %}
-                        <option value="{{key}}" id="{{key}}" selected>{{value}}</option>
-                      {% else %}
-                        <option value="{{key}}" id="{{key}}">{{value}}</option>
-                      {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
+               <div class="timezone-menu eventsmanager-dropdown-menu">
+                <input type="text" id="dropdownmenu-timezone" name="timezone" placeholder="Choose the event's time zone." class="form-control dropdown-menu-inputfield" placeholder="Choose the event timezone" readonly>
+                  <div class="dropdown-line"></div>
+                  <div class="dropdown-menu-option">
+                      {% for key, value in timezones.items() %}
+                            <div onclick="dropDownMenuShow('dropdownmenu-timezone', '{{key}}')" class="timezone-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                  </div>
+               </div>
             </div>
           </div>
           <!-- startDate -->
@@ -158,8 +163,8 @@
               <h5>Start Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
-              <input class="form-control" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="date" id="startDate" name="startDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="time" id="startTime" name="startTime" style="width:170px; float:left" required/>
             </div>
           </div>
           <!-- endDate -->
@@ -168,8 +173,8 @@
               <h5>End Date<span style="color: red">*</span></h5>
             </div>
             <div class="col-sm-6">
-              <input class="form-control" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
-              <input class="form-control" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="date" id="endDate" name="endDate" max="9999-12-31" style="width:170px; float:left" required/>
+              <input class="form-control text-input-field" type="time" id="endTime" name="endTime"  style="width:170px; float:left" required/>
             </div>
           </div>
 
@@ -209,12 +214,78 @@
               <h5 type='text'>Location Address</h5>
             </div>
             <div class="col-sm-9">
-              <input id="location" name="location" class="form-control" type="text"/>
+              <input class="form-control text-input-field" id="location" name="location" type="text" placeholder="Add the event location's complete address or a description of the location."/>
             </div>
           </div>
 
           <!-- Script to handle changing header -->
           <script>
+              function groupDropDownMenuShow(title, titlevalue, id, idvalue) {
+                  if(document.getElementById(id).value != idvalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = idvalue
+                  if(document.getElementById(title).value != titlevalue) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(title).value = titlevalue
+                  document.getElementById(title).classList.add("dropdown-menu-inputfield-selected")
+              }
+              function dropDownMenuShow(id, value) {
+                  if(document.getElementById(id).value != value) {
+                      document.getElementById("submit-data").disabled = false;
+                  }
+                  document.getElementById(id).value = value
+                  if(document.getElementById('dropdownmenu-category').value != "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
+                      document.getElementById('dropdownmenu-subcategory').value = ""
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
+                      {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
+                  }
+                  document.getElementById(id).classList.add("dropdown-menu-inputfield-selected")
+              }
+              class Dropdownmenu {
+                  constructor(selector, display) {
+                      this.menu = document.querySelector(selector)
+                      this.display = display
+                  }
+                  onclick() {
+                     let self = this
+                     this.menu.onclick = function() {
+                         console.log("onclick() click");
+                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                            $(self.display).css({"display": "none"});
+                            return;
+                         } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
+                             console.log("show subcategories");
+                             document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory ..."
+                         }
+
+                         self.menu.classList.toggle('active')
+                         if (self.menu.classList.contains('active')) {
+                             self.menu.children[0].classList.remove("dropdown-menu-inputfield-selected")
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
+                              $(self.display).css({"display": "block"})
+                         } else {
+                              Array.from($(self)[0].menu.children)
+                                 .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
+                              $(self.display).css({"display": "none"})
+                         }
+                     };
+                  }
+              }
+              subcategorymenu = new Dropdownmenu('.subcategory-menu', '.subcategory-display-none')
+              subcategorymenu.onclick()
+              usergroupmenu = new Dropdownmenu('.user-group-menu', '.usergroup-display-none')
+              usergroupmenu.onclick()
+              categorymenu = new Dropdownmenu('.category-menu', '.category-display-none')
+              categorymenu.onclick()
+              timezonemenu = new Dropdownmenu('.timezone-menu', '.timezone-display-none')
+              timezonemenu.onclick()
             function virtualSelectionChanged(element) {
               if (element.checked) {
                   document.getElementById('Virtual Event URL').hidden = false;
@@ -284,7 +355,7 @@
               <h5>Cost Description</h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
+              <input class="form-control text-input-field" type="text" name="cost" placeholder="Details about the cost associated with this event or expected donations, etc. (if any)"/>
             </div>
           </div>
           <!-- contacts -->
@@ -293,7 +364,7 @@
               <h5>Contacts </h5>
             </div>
             <div class="col-sm-9">
-              <span role="button" class="add-one btn btn-outline-primary">+ Add A Contact</span>
+              <span role="button" class="add-a-contact add-one btn">Add Contact <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
             </div>
           </div>
 
@@ -302,22 +373,22 @@
             <!-- contact fields : first&lastName + email + phone -->
             <div class = "form-group row" >
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
+                <input class="form-control text-input-field" id="firstName" name="firstName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="First Name" />
               </div>
               <div class="col-sm-3">
-                <input class="form-control" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
+                <input class="form-control text-input-field" id="lastName" name="lastName" type="text"  pattern="[A-Za-z0-9]{1,20}" placeholder="Last Name"/>
               </div>
                <div class="col-sm-3">
-                <input class="form-control" id="contactEmail" name="email" type="email" placeholder="Email"/>
+                <input class="form-control text-input-field" id="contactEmail" name="email" type="email" placeholder="Email"/>
               </div>
             </div>
             <div class = "form-group row" >
               <!-- contact fields : first&lastName + email + phone -->
               <div class="col-sm-3 offset-sm-2">
-                <input class="form-control" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
+                <input class="form-control text-input-field" id="contactPhone" name="phone" type="text" pattern="^\+?\d{10,13}" placeholder="Phone (10 to 13 digits)"/>
               </div>
                <div class="col-sm-3">
-                <input class="form-control" id="organization" name="organization" type="text" placeholder="Organization"/>
+                <input class="form-control text-input-field" id="organization" name="organization" type="text" placeholder="Organization"/>
               </div>
               <!-- End of fields-->
               <div class="col-md-1">
@@ -338,7 +409,7 @@
               <h5>Tags </h5>
             </div>
                 <div class="col-sm-9">
-                    <input id="tags" name="tags" class="form-control" type="text">
+                    <input id="tags" name="tags" class="form-control text-input-field" type="text" placeholder="Start typing to select and add one or more keyword tags related to this event.">
                 </div>
           </div>
 
@@ -348,7 +419,7 @@
               <h5>Sponsor </h5>
             </div>
             <div class="col-sm-9">
-              <input class="form-control" type="text" id="sponsor" name="sponsor"/>
+              <input class="form-control text-input-field" type="text" id="sponsor" name="sponsor" placeholder="Add the name of the person or organization conducting this event. "/>
             </div>
           </div>
 
@@ -372,7 +443,7 @@
               <div class="input-group mb-3">
                 <div class="custom-file">
                   <input type="file" accept={{extensions}} class="custom-file-input" name = "file" id="file" data-toggle="popover" data-trigger="manual" data-placement="bottom" data-content="Failed to upload. Only support no larger than {{ size_limit }} MB">
-                  <label class="custom-file-label" for="file">Choose image (Only support no larger than {{ size_limit }} MB)</label>
+                  <label class="custom-file-label" for="file">Choose an image (Max file size {{ size_limit }} MB).</label>
                 </div>
                 <div class="input-group-append">
                   <button title="Delete event image" class="btn btn-outline-danger delete-image" type="button" id="inputGroupFileAddon04">Delete</button>
@@ -395,7 +466,7 @@
               <h5>Registration URL</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" type="url" id="registrationURL" name="registrationURL" placeholder="Link to the event registration page"/>
+              <input class="form-control text-input-field" type="url" id="registrationURL" name="registrationURL" placeholder="Add a link to the event registration page (if any)."/>
             </div>
           </div>
 
@@ -405,7 +476,7 @@
               <h5>Registration Label</h5>
             </label>
             <div class="col-sm-9">
-              <input class="form-control" id="registrationLabel" name="registrationLabel" placeholder="Register Here!"/>
+              <input class="form-control text-input-field" id="registrationLabel" name="registrationLabel" placeholder="Add a text label to display on the event registration button (e.g., Register Here!)."/>
             </div>
           </div>
 
@@ -442,7 +513,7 @@
               </div>
 
               <div class="col-sm-9">
-                <span role="button" class="add-sub btn btn-outline-primary">+ Link a Sub-Event</span>
+                <span role="button" class="add-a-contact add-sub btn">Link Sub-Event <img src="{{url_for('static',filename = 'icon-add.svg')}}" class="icon-add"></span>
               </div>
             </div>
           </div>
@@ -450,13 +521,13 @@
            <div class="form-group sub-group dynamic-element-sub" style="display:none">
                 <div class = "form-group row" >
                       <div class="form-group col-sm-3 offset-sm-2">
-                            <input class="form-control search-id" name="name" type="text" placeholder="Sub-Event Title" />
-                            <input class="form-control" type="hidden" name="id" placeholder=''>
-                            <input class="form-control" type="hidden" name="eventId" placeholder=''>
-                            <input class="form-control" type="hidden" name="status" placeholder=''>
+                            <input class="form-control text-input-field search-id" name="name" type="text" placeholder="Sub-Event Title" />
+                            <input class="form-control text-input-field" type="hidden" name="id" placeholder=''>
+                            <input class="form-control text-input-field" type="hidden" name="eventId" placeholder=''>
+                            <input class="form-control text-input-field" type="hidden" name="status" placeholder=''>
                       </div>
                       <div class="col-sm-3 form-group" >
-                        <input class="form-control" id="track" name="track" type="text" placeholder="Track"/>
+                        <input class="form-control text-input-field" id="track" name="track" type="text" placeholder="Track"/>
                       </div>
                       <div class="form-group dropdown show">
                           <div class="form-group">
@@ -483,10 +554,10 @@
   <div class="row justify-content-center">
    <div role="toolbar" aria-label="Toolbar with button groups">
      <div class="btn-group mr-2" role="group" aria-label="first group">
-       <a class="btn btn-block nav-link btn-outline-secondary" href="{{ url_for('user_events.user_events') }}" role="button">Cancel</a>
+       <a class="white-background-button" href="{{ url_for('user_events.user_events') }}" role="button">Cancel</a>
      </div>
      <div class="btn-group mr-2" role="group" aria-label="Second group">
-       <button id="submit-data" class="btn btn-block nav-link btn-primary" type="submit" >Add </button>
+       <button id="submit-data" class="orange-background-button" type="submit" >Add </button>
      </div>
    </div>
   </div>
@@ -510,7 +581,7 @@
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         ]
       },
-      placeholder: 'Please add a description...',
+      placeholder: 'Add a detailed event description, including as many details as possible.',
       theme: 'snow'  // or 'bubble'
     });
 
