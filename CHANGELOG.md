@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Skip all day events in imported events. [#1086](https://github.com/rokwire/events-manager/issues/1086)
+
 ## [3.5.0] - 2023-04-02
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
