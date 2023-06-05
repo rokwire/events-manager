@@ -139,7 +139,9 @@ def parse(content, gmaps):
                 notSharedWithMobileList.append(result["_id"])
             continue
 
-
+        # Exclude events from WebTools with certain categories
+        if pe.get('eventType') in ['Informational', 'Meeting', 'Community/Service', 'Ceremony/Service']:
+            continue
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
         else:
