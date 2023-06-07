@@ -272,16 +272,6 @@ def parse(content, gmaps):
         if pe['timeType'] == "ALL_DAY":
             # skip all day event. (https://github.com/rokwire/events-manager/issues/1086)
             continue
-            # entry['allDay'] = True
-            # startDate = pe['startDate']
-            # endDate = pe['endDate']
-            # startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
-            # endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
-            # # normalize event datetime to UTC
-            # # TODO: current default time zone is CDT
-            # entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
-            # entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
-
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
             startTime = pe['startTime']
