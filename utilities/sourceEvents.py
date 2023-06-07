@@ -139,9 +139,6 @@ def parse(content, gmaps):
                 notSharedWithMobileList.append(result["_id"])
             continue
 
-        # Exclude events from WebTools with certain categories
-        if pe.get('eventType') in ['Informational', 'Meeting', 'Community/Service', 'Ceremony/Service']:
-            continue
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
         else:
@@ -162,6 +159,9 @@ def parse(content, gmaps):
             __logger.warning("find unknown eventType: {}".format(entry['category']))
         else:
             entry['category'] = eventTypeMap[entry['category']]
+            # Exclude events from WebTools with certain categories
+            if entry['category'] in ['Informational', 'Meeting', 'Community/Service', 'Ceremony/Service']:
+                continue
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
