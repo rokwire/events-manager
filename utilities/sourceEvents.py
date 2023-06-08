@@ -128,6 +128,14 @@ def parse(content, gmaps):
         # if not pe.get('location'):
         #     continue
         entry = dict()
+        entry['category'] = pe['eventType'] if 'eventType' in pe else ""
+        if entry['category'] not in eventTypeMap:
+            __logger.warning("find unknown eventType: {}".format(entry['category']))
+            # Exclude events from WebTools with certain categories
+            continue
+        else:
+            entry['category'] = eventTypeMap[entry['category']]
+
         entry['originatingCalendarId'] = pe['originatingCalendarId']
         if pe.get("shareWithIllinoisMobileApp", "false") == "false":
             dataSourceEventId = pe.get("eventId", "")
@@ -154,14 +162,6 @@ def parse(content, gmaps):
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
-        entry['category'] = pe['eventType'] if 'eventType' in pe else ""
-        if entry['category'] not in eventTypeMap:
-            __logger.warning("find unknown eventType: {}".format(entry['category']))
-        else:
-            entry['category'] = eventTypeMap[entry['category']]
-            # Exclude events from WebTools with certain categories
-            if entry['category'] in ['Informational', 'Meeting', 'Community/Service', 'Ceremony/Service']:
-                continue
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
