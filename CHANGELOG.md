@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Skip all day events in imported events. [#1086](https://github.com/rokwire/events-manager/issues/1086)
+- Exclude events from WebTools with certain categories. [#1085](https://github.com/rokwire/events-manager/issues/1085)
 
 ## [3.5.0] - 2023-04-02
 ### Added
