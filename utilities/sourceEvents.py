@@ -139,6 +139,9 @@ def parse(content, gmaps):
                 notSharedWithMobileList.append(result["_id"])
             continue
 
+        if pe['timeType'] == "ALL_DAY":
+            # skip all day event. (https://github.com/rokwire/events-manager/issues/1086)
+            continue
 
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
@@ -269,9 +272,6 @@ def parse(content, gmaps):
             entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
             entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
 
-        if pe['timeType'] == "ALL_DAY":
-            # skip all day event. (https://github.com/rokwire/events-manager/issues/1086)
-            continue
         elif pe['timeType'] == "START_AND_END_TIME":
             startDate = pe['startDate']
             startTime = pe['startTime']
