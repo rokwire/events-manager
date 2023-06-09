@@ -130,7 +130,7 @@ def parse(content, gmaps):
         entry = dict()
         entry['category'] = pe['eventType'] if 'eventType' in pe else ""
         if entry['category'] not in eventTypeMap:
-            __logger.warning("find unknown eventType: {}".format(entry['category']))
+            __logger.warning("Found unknown eventType: {}".format(entry['category']))
             # Exclude events from WebTools with certain categories
             continue
         else:
