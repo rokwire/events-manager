@@ -63,7 +63,7 @@ eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
-    "Athletics": [
+    "Big 10 Athletics": [
         "Men's Basketball",
         "Women's Basketball",
         "Men's Cross Country",
