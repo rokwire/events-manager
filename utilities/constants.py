@@ -38,25 +38,19 @@ tip4CalALoc = [
 
 # Mapping between webtool calendar event type to Rokwire categories
 eventTypeMap = {
-    "Exhibition":               "Entertainment",
-    "Festival/Celebration":     "Entertainment",
-    "Film Screening":           "Entertainment",
-    "Performance":              "Entertainment",
-    "Informational":            "Academic",
-    "Lecture":                  "Academic",
-    "Meeting":                  "Academic",
-    "Reception/Open House":     "Academic",
-    "Seminar/Symposium":        "Academic",
-    "Religious/Cultural":       "Community",
-    "Ceremony/Service":         "Community",
-    "Community Service":        "Community",
-    "Social/Informal Event":    "Community",
-    "Conference/Workshop":      "Career Development",
+    "Exhibition":               "Exhibits",
+    "Festival/Celebration":     "Festivals & Celebrations",
+    "Film Screening":           "Film Screenings",
+    "Performance":              "Performances",
+    "Lecture":                  "Seminars & Speakers",
+    "Seminar/Symposium":        "Seminars & Speakers",
+    "Conference/Workshop":      "Conferences & Workshops",
+    "Reception/Open House":    "Receptions & Open House",
+    "Social/Informal Event":    "Social & Informal Events",
     "Professional Development": "Career Development",
-    "Health/Fitness":           "Recreation",
-    "Sporting Event":           "Athletics",
-    "Sidearm":                  "Athletics",
-    "Other":                    "Other",
+    "Health/Fitness":           "Recreation, Health & Fitness",
+    "Sporting Event":           "Club Athletics",
+    "Sidearm":                  "Big 10 Athletics",
 }
 
 # Rokwire Categories
@@ -69,7 +63,7 @@ eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
-    "Athletics": [
+    "Big 10 Athletics": [
         "Men's Basketball",
         "Women's Basketball",
         "Men's Cross Country",
@@ -89,6 +83,15 @@ subcategoriesMap = {
         "Swim & Dive",
         "Wrestling",
         "Volleyball"
+    ],
+    "Recreation, Health & Fitness": [
+        "Group Fitness",
+        "Aquatics",
+        "Ice Skating",
+        "Personal Training",
+        "Student Wellness",
+        "Adventure Rec",
+        "Summer Camp"
     ]
 }
 
