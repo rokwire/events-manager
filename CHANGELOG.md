@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exclude events from WebTools with certain categories. [#1085](https://github.com/rokwire/events-manager/issues/1085)
 - Update categories and subcategories mapping using the latest information. [#1084](https://github.com/rokwire/events-manager/issues/1084)
 
+### Fixed
+- Category name mappings. [#1092](https://github.com/rokwire/events-manager/issues/1092)
+
 ## [3.5.0] - 2023-04-02
 ### Added
 - Add hyperlink to Privacy Policy in footer. [#997](https://github.com/rokwire/events-manager/issues/997)
