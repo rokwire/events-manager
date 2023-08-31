@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.0] - 2023-08-31
 ### Changed
 - Skip all day events in imported events. [#1086](https://github.com/rokwire/events-manager/issues/1086)
 - Exclude events from WebTools with certain categories. [#1085](https://github.com/rokwire/events-manager/issues/1085)
@@ -475,7 +476,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.5.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.6.0...HEAD
+[3.6.0]: https://github.com/rokwire/events-manager/compare/3.5.0...3.6.0
 [3.5.0]: https://github.com/rokwire/events-manager/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/rokwire/events-manager/compare/3.3.1...3.4.0
 [3.3.1]: https://github.com/rokwire/events-manager/compare/3.3.0...3.3.1
