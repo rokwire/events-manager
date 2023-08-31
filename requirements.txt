@@ -23,7 +23,7 @@ gunicorn==19.9.0
 APScheduler>=3.3.0,<4
 python-ldap==3.4.0
 pytz==2019.2
-timezonefinder==4.1.0
+timezonefinder==6.2.0
 pyfcm==1.4.7
 GitPython==3.1.32
 python-dotenv==0.20.0

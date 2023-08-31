@@ -1,7 +1,7 @@
-FROM python:3.8-slim-buster as base
+FROM python:3.9-slim-buster as base
 
 LABEL maintainer="Bing Zhang <bing@illinois.edu>"
-LABEL contributor="Siheng Pan <span14@illinois.edu>, Han Jiang <hanj2@illinois.edu>, Phoebe Tang <panqiut2@illinois.edu>, Bing Zhang <bing@illinois.edu>"
+LABEL contributor="Puthanveetil Satheesan, Sandeep <sandeeps@illinois.edu>, Mathew, Minu <minum@illinois.edu>, Bing Zhang <bing@illinois.edu>"
 
 # Libraries needed to run python-ldap and GitPython
 RUN apt-get update && apt-get install -y \
