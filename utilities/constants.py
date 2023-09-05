@@ -51,6 +51,7 @@ eventTypeMap = {
     "Health/Fitness":           "Recreation, Health & Fitness",
     "Sporting Event":           "Club Athletics",
     "Sidearm":                  "Big 10 Athletics",
+    "Campus Visits":            "Campus Visits",
 }
 
 # Rokwire Categories
