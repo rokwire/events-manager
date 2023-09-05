@@ -123,7 +123,10 @@
                 <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory (disabled)." readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
-                      {% for key in subcategoriesMap['Athletics'] %}
+                      {% for key in subcategoriesMap['Big 10 Athletics'] %}
+                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                      {% for key in subcategoriesMap['Recreation, Health & Fitness'] %}
                             <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                       {% endfor %}
                   </div>
@@ -236,12 +239,12 @@
                       document.getElementById("submit-data").disabled = false;
                   }
                   document.getElementById(id).value = value
-                  if(document.getElementById('dropdownmenu-category').value != "Athletics") {
+                  if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" || document.getElementById('dropdownmenu-category').value != "Recreation, Health & Fitness") {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = ""
                   }
-                  if(document.getElementById('dropdownmenu-category').value == "Athletics") {
+                  if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" || document.getElementById('dropdownmenu-category').value == "Recreation, Health & Fitness" ) {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
                       {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
                   }
