@@ -258,11 +258,10 @@
                   onclick() {
                      let self = this
                      this.menu.onclick = function() {
-                         console.log("onclick() click");
-                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                         if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
                             return;
-                         } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
+                         } else if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics"){
                              console.log("show subcategories");
                              document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory ..."
                          }
@@ -612,7 +611,7 @@
      ;
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
-       if(event.target.value != "Athletics"){
+       if(event.target.value != "Big 10 Athletics"){
          $('#subcategory').prop("disabled", true);
          $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
          $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
