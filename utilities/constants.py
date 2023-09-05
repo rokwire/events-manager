@@ -41,7 +41,7 @@ eventTypeMap = {
     "Sidearm":                  "Big 10 Athletics",
     "Campus Visits":            "Campus Visits",
     "Professional Development": "Career Development",
-    "Caremonies & Services":    "Ceremonies & Services",
+    "Ceremonies & Services":    "Ceremonies & Services",
     "Sporting Event":           "Club Athletics",
     "Conference/Workshop":      "Conferences & Workshops",
     "Exhibition":               "Exhibits",
