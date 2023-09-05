@@ -267,7 +267,10 @@
                     <input type="text" id="dropdownmenu-subcategory" name="subcategory" value="{{post.subcategory}}" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory." readonly>
                       <div class="dropdown-line"></div>
                       <div class="dropdown-menu-option">
-                          {% for key in subcategoriesMap['Athletics'] %}
+                          {% for key in subcategoriesMap['Big 10 Athletics'] %}
+                                <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                          {% endfor %}
+                          {% for key in subcategoriesMap['Recreation, Health & Fitness'] %}
                                 <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                           {% endfor %}
                       </div>
@@ -526,8 +529,7 @@
                   onclick() {
                      let self = this
                      this.menu.onclick = function() {
-                         console.log("onclick() click");
-                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                         if((document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" || document.getElementById('dropdownmenu-category').value != "Recreation, Health & Fitness") && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
                             return;
                          }
@@ -1182,7 +1184,7 @@
 
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
-       if(event.target.value != "Athletics"){
+       if(event.target.value != "Big 10 Athletics" || event.target.value != "Recreation, Health & Fitness"){
          $('#subcategory').prop("disabled", true);
          $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
          $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
