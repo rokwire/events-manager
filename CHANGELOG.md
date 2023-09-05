@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Category name mappings. [#1092](https://github.com/rokwire/events-manager/issues/1092)
 - Fix cannot import name 'open_binary' from 'importlib_resources'. [#1097](https://github.com/rokwire/events-manager/issues/1097)
+- Added Campus Visits category and changed ordering of categories. [#1101](https://github.com/rokwire/events-manager/issues/1101)
 
 ## [3.5.0] - 2023-04-02
 ### Added
