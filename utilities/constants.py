@@ -42,6 +42,7 @@ eventTypeMap = {
     "Campus Visits":            "Campus Visits",
     "Professional Development": "Career Development",
     "Ceremonies & Services":    "Ceremonies and Services",
+    "Ceremonies and Services":    "Ceremonies and Services",
     "Sporting Event":           "Club Athletics",
     "Conference/Workshop":      "Conferences and Workshops",
     "Exhibition":               "Exhibits",
