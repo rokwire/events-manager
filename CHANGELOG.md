@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skip all day events in imported events. [#1086](https://github.com/rokwire/events-manager/issues/1086)
 - Exclude events from WebTools with certain categories. [#1085](https://github.com/rokwire/events-manager/issues/1085)
 - Update categories and subcategories mapping using the latest information. [#1084](https://github.com/rokwire/events-manager/issues/1084)
+- Change category names. [#1107](https://github.com/rokwire/events-manager/issues/1107)
 
 ### Fixed
 - Category name mappings. [#1092](https://github.com/rokwire/events-manager/issues/1092)

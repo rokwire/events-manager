@@ -41,18 +41,18 @@ eventTypeMap = {
     "Sidearm":                  "Big 10 Athletics",
     "Campus Visits":            "Campus Visits",
     "Professional Development": "Career Development",
-    "Ceremonies & Services":    "Ceremonies & Services",
+    "Ceremonies & Services":    "Ceremonies and Services",
     "Sporting Event":           "Club Athletics",
-    "Conference/Workshop":      "Conferences & Workshops",
+    "Conference/Workshop":      "Conferences and Workshops",
     "Exhibition":               "Exhibits",
-    "Festival/Celebration":     "Festivals & Celebrations",
+    "Festival/Celebration":     "Festivals and Celebrations",
     "Film Screening":           "Film Screenings",
     "Performance":              "Performances",
-    "Reception/Open House":     "Receptions & Open House Events",
-    "Health/Fitness":           "Recreation, Health & Fitness",
-    "Social/Informal Event":    "Social & Informal Events",
-    "Lecture":                  "Speakers & Seminars",
-    "Seminar/Symposium":        "Speakers & Seminars",
+    "Reception/Open House":     "Receptions and Open House Events",
+    "Health/Fitness":           "Recreation, Health and Fitness",
+    "Social/Informal Event":    "Social and Informal Events",
+    "Lecture":                  "Speakers and Seminars",
+    "Seminar/Symposium":        "Speakers and Seminars",
 }
 
 # Rokwire Categories
@@ -86,7 +86,7 @@ subcategoriesMap = {
         "Wrestling",
         "Volleyball"
     ],
-    "Recreation, Health & Fitness": [
+    "Recreation, Health and Fitness": [
         "Group Fitness",
         "Aquatics",
         "Ice Skating",
