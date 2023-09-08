@@ -128,18 +128,6 @@ def parse(content, gmaps):
         # if not pe.get('location'):
         #     continue
         entry = dict()
-        entry['category'] = pe['eventType'] if 'eventType' in pe else ""
-        if entry['category'] not in eventTypeMap:
-            __logger.warning("Found unknown eventType: {}".format(entry['category']))
-            # Exclude events from WebTools with certain categories
-            continue
-        else:
-            entry['category'] = eventTypeMap[entry['category']]
-
-        if pe['timeType'] == "ALL_DAY":
-            # skip all day event. (https://github.com/rokwire/events-manager/issues/1086)
-            continue
-            
         entry['originatingCalendarId'] = pe['originatingCalendarId']
         if pe.get("shareWithIllinoisMobileApp", "false") == "false":
             dataSourceEventId = pe.get("eventId", "")
@@ -150,6 +138,7 @@ def parse(content, gmaps):
             if result:
                 notSharedWithMobileList.append(result["_id"])
             continue
+
 
         if pe.get("virtualEvent", "false") == "true":
             entry['isVirtual'] = True
@@ -166,6 +155,11 @@ def parse(content, gmaps):
         # Required Field
         entry['dataSourceEventId'] = pe['eventId'] if 'eventId' in pe else ""
         # entry['eventId'] = pe['eventId'] if 'eventId' in pe else ""
+        entry['category'] = pe['eventType'] if 'eventType' in pe else ""
+        if entry['category'] not in eventTypeMap:
+            __logger.warning("find unknown eventType: {}".format(entry['category']))
+        else:
+            entry['category'] = eventTypeMap[entry['category']]
         entry['sponsor'] = pe['sponsor'] if 'sponsor' in pe else ""
         entry['title'] = pe['title'] if 'title' in pe else ""
         entry['calendarId'] = pe['calendarId'] if 'calendarId' in pe else ""
@@ -269,6 +263,17 @@ def parse(content, gmaps):
             startTime = pe['startTime']
             startDateObj = datetime.strptime(startDate + ' ' + startTime + '', '%m/%d/%Y %I:%M %p')
             endDate = pe['endDate']
+            endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
+            # normalize event datetime to UTC
+            # TODO: current default time zone is CDT
+            entry['startDate'] = event_time_conversion.utctime(startDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+            entry['endDate'] = event_time_conversion.utctime(endDateObj, entry_location.get('latitude', 40.1153287), entry_location.get('longitude', -88.2280659))
+
+        if pe['timeType'] == "ALL_DAY":
+            entry['allDay'] = True
+            startDate = pe['startDate']
+            endDate = pe['endDate']
+            startDateObj = datetime.strptime(startDate + ' 12:00 am', '%m/%d/%Y %I:%M %p')
             endDateObj = datetime.strptime(endDate + ' 11:59 pm', '%m/%d/%Y %I:%M %p')
             # normalize event datetime to UTC
             # TODO: current default time zone is CDT
