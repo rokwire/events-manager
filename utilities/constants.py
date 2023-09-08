@@ -38,21 +38,25 @@ tip4CalALoc = [
 
 # Mapping between webtool calendar event type to Rokwire categories
 eventTypeMap = {
-    "Sidearm":                  "Big 10 Athletics",
-    "Campus Visits":            "Campus Visits",
+    "Exhibition":               "Entertainment",
+    "Festival/Celebration":     "Entertainment",
+    "Film Screening":           "Entertainment",
+    "Performance":              "Entertainment",
+    "Informational":            "Academic",
+    "Lecture":                  "Academic",
+    "Meeting":                  "Academic",
+    "Reception/Open House":     "Academic",
+    "Seminar/Symposium":        "Academic",
+    "Religious/Cultural":       "Community",
+    "Ceremony/Service":         "Community",
+    "Community Service":        "Community",
+    "Social/Informal Event":    "Community",
+    "Conference/Workshop":      "Career Development",
     "Professional Development": "Career Development",
-    "Ceremonies & Services":    "Ceremonies & Services",
-    "Sporting Event":           "Club Athletics",
-    "Conference/Workshop":      "Conferences & Workshops",
-    "Exhibition":               "Exhibits",
-    "Festival/Celebration":     "Festivals & Celebrations",
-    "Film Screening":           "Film Screenings",
-    "Performance":              "Performances",
-    "Reception/Open House":     "Receptions & Open House Events",
-    "Health/Fitness":           "Recreation, Health & Fitness",
-    "Social/Informal Event":    "Social & Informal Events",
-    "Lecture":                  "Speakers & Seminars",
-    "Seminar/Symposium":        "Speakers & Seminars",
+    "Health/Fitness":           "Recreation",
+    "Sporting Event":           "Athletics",
+    "Sidearm":                  "Athletics",
+    "Other":                    "Other",
 }
 
 # Rokwire Categories
@@ -65,7 +69,7 @@ eventTypeValues = list(eventTypeValues.keys())
 
 # Mapping between Rokwire event type and its subcategory(if the event type do have it)
 subcategoriesMap = {
-    "Big 10 Athletics": [
+    "Athletics": [
         "Men's Basketball",
         "Women's Basketball",
         "Men's Cross Country",
@@ -85,15 +89,6 @@ subcategoriesMap = {
         "Swim & Dive",
         "Wrestling",
         "Volleyball"
-    ],
-    "Recreation, Health & Fitness": [
-        "Group Fitness",
-        "Aquatics",
-        "Ice Skating",
-        "Personal Training",
-        "Student Wellness",
-        "Adventure Rec",
-        "Summer Camp"
     ]
 }
 
