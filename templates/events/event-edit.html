@@ -270,7 +270,7 @@
                           {% for key in subcategoriesMap['Big 10 Athletics'] %}
                                 <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="create-big-10-athletics subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                           {% endfor %}
-                          {% for key in subcategoriesMap['Recreation, Health & Fitness'] %}
+                          {% for key in subcategoriesMap['Recreation, Health and Fitness'] %}
                                 <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="create-recreation-health-fitness subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                           {% endfor %}
                       </div>
@@ -523,7 +523,7 @@
                   }
                   const oldValue = document.getElementById(id).value
                   document.getElementById(id).value = value
-                  if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health & Fitness") {
+                  if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health and Fitness") {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = ""
@@ -531,13 +531,13 @@
                   if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics") {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
                   }
-                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health & Fitness" ) {
+                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" ) {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
                   }
-                  if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" && oldValue == "Recreation, Health & Fitness") {
+                  if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" && oldValue == "Recreation, Health and Fitness") {
                       document.getElementById('dropdownmenu-subcategory').value = ""
                   }
-                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health & Fitness" && oldValue == "Big 10 Athletics") {
+                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" && oldValue == "Big 10 Athletics") {
                       document.getElementById('dropdownmenu-subcategory').value = ""
                   }
                   document.getElementById(id).classList.add("dropdown-menu-inputfield-selected")
@@ -551,7 +551,7 @@
                      let self = this
                      this.menu.onclick = function() {
                          console.log("onclick() click");
-                         if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health & Fitness" && self.display == ".subcategory-display-none") {
+                         if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health and Fitness" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
                             return;
                          }
@@ -567,7 +567,7 @@
                                          for (let i = 0; i < children.length; i++) {
                                             if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" && children[i].classList.contains('create-recreation-health-fitness')) {
                                                 children[i].style.display = "none";
-                                            }else if (document.getElementById('dropdownmenu-category').value == "Recreation, Health & Fitness" && children[i].classList.contains('create-big-10-athletics')) {
+                                            }else if (document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" && children[i].classList.contains('create-big-10-athletics')) {
                                                 children[i].style.display = "none";
                                             }
                                          }
