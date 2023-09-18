@@ -254,7 +254,7 @@ def delete_user_event_in_building_block(objectId_list):
         try:
             result = requests.delete(url, headers=headers)
             if result.status_code != 202:
-                __logger.error("Event {} deletion fails".format(_id))
+                __logger.error("Event {} deletion fails. Reason {} Status code {}".format(_id, result.reason, result.status_code))
                 fail_count += 1
             else:
                 delete_success_list.append(_id)
@@ -310,6 +310,7 @@ def delete_user_event(eventId):
             if result.status_code != 200:
                 flash(
                     'An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
+                __logger.error(result.reason + " fail to delete group building block {} ".format(result.status_code))
 
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
             __logger.info("Local and remote event {} deletion successful".format(eventId))
@@ -329,7 +330,8 @@ def approve_user_event(objectId):
         "$set": {"eventStatus": "approved"}
     })
     if not result:
-        __logger.error("Approve event {} fails in approve_event".format(id))
+        __logger.error("Approve event {} fails in approve_event. Reason {} Status code {}.".format(id, result.reason,
+                                                                                               result.status_code))
 
 
 def publish_user_event(eventId):
@@ -398,7 +400,7 @@ def publish_user_event(eventId):
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
-                __logger.error("Event {} submission fails".format(eventId))
+                __logger.error("Event {} submission fails. Reason {} Status code {}".format(eventId, result.reason, result.status_code))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
@@ -413,7 +415,7 @@ def publish_user_event(eventId):
                                        data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
                 if result.status_code != 200:
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                    __logger.error(result.reason + " fail to get group building block {} ".format(result.status_code))
+                    __logger.error(result.reason + " {} fail to get group building block eventId {} ".format(result.status_code, platform_event_id))
                     return False
 
                 # else:
@@ -448,6 +450,7 @@ def publish_user_event(eventId):
                     if not put_status:
                         #TODO: think to notify user failure of upload image url to events building block
                         print("Event image {} upload fails".format(eventId))
+                        __logger.error("Event image {} upload fails".format(eventId))
                 return True
     except Exception as ex:
         __logger.exception(ex)
@@ -534,7 +537,7 @@ def put_user_event(eventId):
 
             # If PUT request fails, print that out and change status back to pending
             if result.status_code != 200:
-                __logger.error("Event {} submission fails".format(eventId))
+                __logger.error("Event {} submission fails. Reason {} Status code {}".format(eventId, result.reason, result.status_code))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
