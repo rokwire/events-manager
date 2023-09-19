@@ -254,7 +254,7 @@ def delete_user_event_in_building_block(objectId_list):
         try:
             result = requests.delete(url, headers=headers)
             if result.status_code != 202:
-                __logger.error("Event {} deletion fails. Status code {}".format(_id, result.status_code))
+                __logger.error("Event {} deletion fails. Response {} {}".format(_id, result.status_code, result.text))
                 fail_count += 1
             else:
                 delete_success_list.append(_id)
@@ -310,7 +310,7 @@ def delete_user_event(eventId):
             if result.status_code != 200:
                 flash(
                     'An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                __logger.error(result.reason + " fail to delete group building block {} ".format(result.status_code))
+                __logger.error(result.reason + " fail to delete group building block {} {}".format(result.status_code, result.text))
 
             delete_event_local = delete_events_in_list(current_app.config['EVENT_COLLECTION'], successfull_delete_list)
             __logger.info("Local and remote event {} deletion successful".format(eventId))
@@ -399,11 +399,12 @@ def publish_user_event(eventId):
 
             # if event submission fails, print that out and change status back to pending
             if result.status_code != 201:
-                __logger.error("Event {} POST submission fails. Status code {}".format(eventId, result.status_code))
+                __logger.error("Event {} POST submission fails. Response {} {}".format(eventId, result.status_code, result.text))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
                     })
+                __logger.info("Event {} status changed back to pending".format(eventId))
                 return False
             # if successful, change status of event to approved.
             else:
@@ -414,7 +415,7 @@ def publish_user_event(eventId):
                                        data=json.dumps({"event_id": platform_event_id, "creator":{"email": session['email'], "name": session['name'], "user_id": session['uin']} }))
                 if result.status_code != 200:
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                    __logger.error(result.reason + " {} fail to get group building block eventId {} ".format(result.status_code, platform_event_id))
+                    __logger.error(result.reason + " {} {} Fail to get group building block eventId {} ".format(result.status_code, result.text, platform_event_id))
                     return False
 
                 # else:
@@ -529,17 +530,18 @@ def put_user_event(eventId):
             if result.status_code == 200:
                 previous_groupid = result.json().get('createdByGroupId')
             else:
-                __logger.error("fail to get groupid {} from events building block. Status code {}".format(eventId, result.status_code))
+                __logger.error("fail to get groupid {} from events building block. Response {} {}".format(eventId, result.status_code, result.text))
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
 
             # If PUT request fails, print that out and change status back to pending
             if result.status_code != 200:
-                __logger.error("Event {} PUT submission fails. Status code {}".format(eventId, result.status_code))
+                __logger.error("Event {} PUT submission fails. Response {} {}".format(eventId, result.status_code, result.text))
                 failed_event = find_one_and_update(current_app.config['EVENT_COLLECTION'],
                                                    condition={"_id": ObjectId(eventId)}, update={
                         "$set": {"eventStatus": "pending"}
                     })
+                __logger.info("Event {} status changed back to pending".format(eventId))
                 return False
 
             # If PUT request successful, change status to approved
@@ -557,7 +559,7 @@ def put_user_event(eventId):
                     # if failed then messagebox!
                     if result.status_code != 200:
                         flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                        __logger.error("fail to delete user event {}'s group id from group building block. Status code {}".format(eventId, result.status_code))
+                        __logger.error("fail to delete user event {}'s group id from group building block. Response {} {}".format(eventId, result.status_code, result.text))
                     else:
                         # post to group bb
                         # post eventid to group building block
@@ -572,7 +574,7 @@ def put_user_event(eventId):
                         # if failed then messagebox!
                         if result.status_code != 200:
                             flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
-                            __logger.error("user event {} fail to post to group building block. Status code {}".format(eventId, result.status_code))
+                            __logger.error("User event {} fail to post to group building block. Response {} {}".format(eventId, result.status_code, result.text))
 
                         else:
                             __logger.info(
