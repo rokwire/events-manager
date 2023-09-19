@@ -330,7 +330,7 @@ def approve_user_event(objectId):
         "$set": {"eventStatus": "approved"}
     })
     if not result:
-        __logger.error("Approve event {} fails in approve_event. Status code {}.".format(id, result.status_code))
+        __logger.error("Approve event {} fails in approve_event".format(id))
 
 
 def publish_user_event(eventId):
