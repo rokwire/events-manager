@@ -101,6 +101,7 @@ def find_one_and_update(co_or_ta, condition=None, update=None, **kwargs):
             collection = db.get_collection(co_or_ta)
             result = collection.find_one_and_update(condition, update, **kwargs)
             if not result:
+                __logger.error("No matching record found in MongoDB")
                 return {}
             return result
         except TypeError:

@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-
+### Fixed
+- Detailed logging for user events. [#1113](https://github.com/rokwire/events-manager/issues/1113)
 ## [3.6.0] - 2023-09-08
 ### Changed
 - Skip all day events in imported events. [#1086](https://github.com/rokwire/events-manager/issues/1086)
