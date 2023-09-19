@@ -38,19 +38,21 @@ tip4CalALoc = [
 
 # Mapping between webtool calendar event type to Rokwire categories
 eventTypeMap = {
+    "Sidearm":                  "Big 10 Athletics",
+    "Campus Visits":            "Campus Visits",
+    "Professional Development": "Career Development",
+    "Ceremonies and Services":    "Ceremonies and Services",
+    "Sporting Event":           "Club Athletics",
+    "Conference/Workshop":      "Conferences and Workshops",
     "Exhibition":               "Exhibits",
-    "Festival/Celebration":     "Festivals & Celebrations",
+    "Festival/Celebration":     "Festivals and Celebrations",
     "Film Screening":           "Film Screenings",
     "Performance":              "Performances",
-    "Lecture":                  "Speakers & Seminars",
-    "Seminar/Symposium":        "Speakers & Seminars",
-    "Conference/Workshop":      "Conferences & Workshops",
-    "Reception/Open House":     "Receptions & Open House Events",
-    "Social/Informal Event":    "Social & Informal Events",
-    "Professional Development": "Career Development",
-    "Health/Fitness":           "Recreation, Health & Fitness",
-    "Sporting Event":           "Club Athletics",
-    "Sidearm":                  "Big 10 Athletics",
+    "Reception/Open House":     "Receptions and Open House Events",
+    "Health/Fitness":           "Recreation, Health and Fitness",
+    "Social/Informal Event":    "Social and Informal Events",
+    "Lecture":                  "Speakers and Seminars",
+    "Seminar/Symposium":        "Speakers and Seminars",
 }
 
 # Rokwire Categories
@@ -84,7 +86,7 @@ subcategoriesMap = {
         "Wrestling",
         "Volleyball"
     ],
-    "Recreation, Health & Fitness": [
+    "Recreation, Health and Fitness": [
         "Group Fitness",
         "Aquatics",
         "Ice Skating",

@@ -123,8 +123,11 @@
                 <input type="text" id="dropdownmenu-subcategory" name="subcategory" class="form-control dropdown-menu-inputfield" placeholder="Choose a subcategory (disabled)." readonly>
                   <div class="dropdown-line"></div>
                   <div class="dropdown-menu-option">
-                      {% for key in subcategoriesMap['Athletics'] %}
-                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% for key in subcategoriesMap['Big 10 Athletics'] %}
+                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="create-big-10-athletics subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
+                      {% endfor %}
+                      {% for key in subcategoriesMap['Recreation, Health and Fitness'] %}
+                            <div onclick='dropDownMenuShow("dropdownmenu-subcategory", "{{key}}")' class="create-recreation-health-fitness subcategory-display-none dropdown-menu-option-item menu-item-text"> {{key}} </div>
                       {% endfor %}
                   </div>
               </div>
@@ -235,15 +238,24 @@
                   if(document.getElementById(id).value != value) {
                       document.getElementById("submit-data").disabled = false;
                   }
+                  const oldValue = document.getElementById(id).value
                   document.getElementById(id).value = value
-                  if(document.getElementById('dropdownmenu-category').value != "Athletics") {
+                  if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health and Fitness") {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = "Choose an event subcategory (disabled) ..."
                       document.getElementById('dropdownmenu-subcategory').value = ""
                   }
-                  if(document.getElementById('dropdownmenu-category').value == "Athletics") {
+                  if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics") {
                       document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
-                      {#if(document.getElementById('dropdownmenu-subcategory').value = None#}
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" ) {
+                      document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory"
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" && oldValue == "Recreation, Health and Fitness") {
+                      document.getElementById('dropdownmenu-subcategory').value = ""
+                  }
+                  if(document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" && oldValue == "Big 10 Athletics") {
+                      document.getElementById('dropdownmenu-subcategory').value = ""
                   }
                   document.getElementById(id).classList.add("dropdown-menu-inputfield-selected")
               }
@@ -255,12 +267,12 @@
                   onclick() {
                      let self = this
                      this.menu.onclick = function() {
-                         console.log("onclick() click");
-                         if(document.getElementById('dropdownmenu-category').value != "Athletics" && self.display == ".subcategory-display-none") {
+                         if(document.getElementById('dropdownmenu-category').value != "Big 10 Athletics" && document.getElementById('dropdownmenu-category').value != "Recreation, Health and Fitness" && self.display == ".subcategory-display-none") {
                             $(self.display).css({"display": "none"});
                             return;
-                         } else if(document.getElementById('dropdownmenu-category').value == "Athletics"){
-                             console.log("show subcategories");
+                         } else if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics"){
+                             document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory ..."
+                         } else if(document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness"){
                              document.getElementById('dropdownmenu-subcategory').placeholder = "Choose an event subcategory ..."
                          }
 
@@ -270,6 +282,19 @@
                               Array.from($(self)[0].menu.children)
                                  .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "inherit"
                               $(self.display).css({"display": "block"})
+                              Array.from($(self)[0].menu.children)
+                                 .filter(function (child) {
+                                     if (child.classList.contains("dropdown-menu-option")) {
+                                         const children = child.children;
+                                         for (let i = 0; i < children.length; i++) {
+                                            if(document.getElementById('dropdownmenu-category').value == "Big 10 Athletics" && children[i].classList.contains('create-recreation-health-fitness')) {
+                                                children[i].style.display = "none";
+                                            }else if (document.getElementById('dropdownmenu-category').value == "Recreation, Health and Fitness" && children[i].classList.contains('create-big-10-athletics')) {
+                                                children[i].style.display = "none";
+                                            }
+                                         }
+                                     }
+                                 })
                          } else {
                               Array.from($(self)[0].menu.children)
                                  .filter(child => child.classList.contains("dropdown-line"))[0].style.display = "none"
@@ -609,7 +634,7 @@
      ;
      //only allow subcategory to be choose when the category is Athletics
      $('#form select[name="category"]').on("change", function(event) {
-       if(event.target.value != "Athletics"){
+       if(event.target.value != "Big 10 Athletics"){
          $('#subcategory').prop("disabled", true);
          $('#subcategory').prop("title", "Choose an event subcategory (disabled) ...");
          $('#subcategory-placeholder').text('Choose an event subcategory (disabled) ...');
