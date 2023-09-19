@@ -6,6 +6,7 @@ Patches for **Events Manager** in this repository will only be applied to the fo
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 3.6.1   | :white_check_mark: |
 | 3.6.0   | :white_check_mark: |
 | 3.5.0   | :white_check_mark: |
 | 3.4.0   | :white_check_mark: |
