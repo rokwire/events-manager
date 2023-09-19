@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+
+## [3.6.1] - 2023-09-19
 ### Fixed
 - Detailed logging for user events. [#1113](https://github.com/rokwire/events-manager/issues/1113)
 ## [3.6.0] - 2023-09-08
@@ -479,7 +481,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - References to AWS keys and variables.
 
 
-[Unreleased]: https://github.com/rokwire/events-manager/compare/3.6.0...HEAD
+[Unreleased]: https://github.com/rokwire/events-manager/compare/3.6.1...HEAD
+[3.6.1]: https://github.com/rokwire/events-manager/compare/3.6.0...3.6.1
 [3.6.0]: https://github.com/rokwire/events-manager/compare/3.5.0...3.6.0
 [3.5.0]: https://github.com/rokwire/events-manager/compare/3.4.0...3.5.0
 [3.4.0]: https://github.com/rokwire/events-manager/compare/3.3.1...3.4.0
