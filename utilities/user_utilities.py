@@ -416,6 +416,7 @@ def publish_user_event(eventId):
                 if result.status_code != 200:
                     flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                     __logger.error(result.reason + " {} {} Fail to get group building block eventId {} ".format(result.status_code, result.text, platform_event_id))
+
                     return False
 
                 # else:
@@ -531,6 +532,7 @@ def put_user_event(eventId):
                 previous_groupid = result.json().get('createdByGroupId')
             else:
                 __logger.error("fail to get groupid {} from events building block. Response {} {}".format(eventId, result.status_code, result.text))
+
             # PUT request
             result = requests.put(url, headers=headers, data=json.dumps(event))
 
@@ -560,6 +562,7 @@ def put_user_event(eventId):
                     if result.status_code != 200:
                         flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                         __logger.error("fail to delete user event {}'s group id from group building block. Response {} {}".format(eventId, result.status_code, result.text))
+
                     else:
                         # post to group bb
                         # post eventid to group building block
@@ -575,6 +578,7 @@ def put_user_event(eventId):
                         if result.status_code != 200:
                             flash('An error occurred when registering this event with the selected Group. Please contact an administrator to resolve this issue.')
                             __logger.error("User event {} fail to post to group building block. Response {} {}".format(eventId, result.status_code, result.text))
+
 
                         else:
                             __logger.info(
