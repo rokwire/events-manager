@@ -305,6 +305,7 @@ def user_an_event_edit(id):
                 file.save(
                     path.join(Config.WEBTOOL_IMAGE_MOUNT_POINT, id + '.' + filename.rsplit('.', 1)[1].lower()))
             else:
+                __logger.error("Abort 400 error")
                 abort(400)  # TODO: Error page
         elif request.form['delete-image'] == '1':
             if image_record:
